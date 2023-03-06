@@ -3,8 +3,8 @@ import './App.css';
 import {
     ListItem, ListItemButton, ListItemText, ListItemAvatar, MenuItem,
     Avatar, IconButton, Button, TextField, Popper, Fade, Typography, ListItemIcon,
+    Menu,
 } from '@mui/material';
-import PopupState, { bindToggle, bindPopper } from 'material-ui-popup-state';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Session } from './types'
 import ChatIcon from '@mui/icons-material/Chat';
@@ -12,6 +12,8 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 
 const { useState } = React
 
@@ -26,22 +28,26 @@ export interface Props {
 
 export default function SessionItem(props: Props) {
     const { session, selected, switchMe, deleteMe, copyMe, updateMe } = props
-    const [hovering, setHovering] = useState(false)
     const [editMode, setEditMode] = useState(false)
     const [nameEdit, setNameEdit] = useState(session.name)
     const saveNameEdit = () => {
         updateMe({ ...session, name: nameEdit })
         setEditMode(false)
     }
+    const [confirmedDelete, setconfirmedDelete] = useState(false)
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setconfirmedDelete(false)
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <MenuItem
             key={session.id}
-            onMouseEnter={() => {
-                setHovering(true)
-            }}
-            onMouseLeave={() => {
-                setHovering(false)
-            }}
             selected={selected}
             onClick={() => {
                 if (!editMode) {
@@ -50,7 +56,7 @@ export default function SessionItem(props: Props) {
             }}
         >
             <ListItemIcon>
-                <IconButton><ChatIcon fontSize="small" /></IconButton>
+                <IconButton><ChatBubbleOutlineOutlinedIcon fontSize="small" /></IconButton>
             </ListItemIcon>
             <ListItemText>
                 {
@@ -68,62 +74,74 @@ export default function SessionItem(props: Props) {
                 }
             </ListItemText>
             {
-                hovering ? (
-                    editMode ? (
-                        <>
-                            <IconButton edge="end" onClick={saveNameEdit}>
-                                <CheckIcon fontSize='small' />
-                            </IconButton>
-                            <IconButton edge="end"
-                                onClick={() => {
-                                    setNameEdit(session.name)
-                                    setEditMode(false)
-                                }}
-                            >
-                                <CloseIcon fontSize='small' />
-                            </IconButton>
-                        </>
-                    ) : (
-                        <>
-                            <IconButton edge="end"
-                                onClick={() => setEditMode(true)}
-                            >
-                                <EditIcon fontSize='small' />
-                            </IconButton>
-                            <IconButton edge="end"
-                                onClick={() => {
-                                    copyMe()
-                                }}
-                            >
-                                <FileCopyIcon fontSize='small' />
-                            </IconButton>
-
-                            <PopupState variant='popper' popupId={"delete-popper-" + session.id}>
-                                {(popupState) => (
-                                    <>
-                                        <IconButton edge="end"
-                                            {...bindToggle(popupState)}
-                                        >
-                                            <DeleteIcon fontSize='small' />
-                                        </IconButton>
-                                        <Popper {...bindPopper(popupState)} transition>
-                                            {({ TransitionProps }) => (
-                                                <Fade {...TransitionProps} timeout={350}>
-                                                    <Button variant="contained" color="error" onClick={deleteMe} >
-                                                        Delete
-                                                    </Button>
-                                                </Fade>
-                                            )}
-                                        </Popper>
-                                    </>
-                                )}
-                            </PopupState>
-                        </>
-                    )
+                editMode ? (
+                    <>
+                        <IconButton edge="end" onClick={saveNameEdit}>
+                            <CheckIcon fontSize='small' />
+                        </IconButton>
+                        <IconButton edge="end"
+                            onClick={() => {
+                                setNameEdit(session.name)
+                                setEditMode(false)
+                            }}
+                        >
+                            <CloseIcon fontSize='small' />
+                        </IconButton>
+                    </>
                 ) : (
-                    <Typography variant="body2" color="text.secondary">
-                        ⌘X
-                    </Typography>
+                    <>
+                        <IconButton
+                            aria-label="more"
+                            id="long-button"
+                            aria-controls={open ? 'long-menu' : undefined}
+                            aria-expanded={open ? 'true' : undefined}
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                        >
+                            <MoreHorizOutlinedIcon fontSize='small' />
+                        </IconButton>
+                        <Menu
+                            id="long-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'long-button',
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            PaperProps={{
+                                style: {
+                                    // maxHeight: ITEM_HEIGHT * 4.5,
+                                    width: '20ch',
+                                },
+                            }}
+                        >
+                            <MenuItem key={session.id + 'edit'} onClick={() => setEditMode(true)}>
+                                <EditIcon fontSize='small' />
+                                rename
+                            </MenuItem>
+                            <MenuItem key={session.id + 'copy'} onClick={() => copyMe()}>
+                                <FileCopyIcon fontSize='small' />
+                                copy
+                            </MenuItem>
+                            {
+                                !confirmedDelete ? (
+                                    <MenuItem key={session.id + 'delete'} onClick={() => setconfirmedDelete(true)}>
+                                        <DeleteIcon fontSize='small' />
+                                        delete
+                                    </MenuItem>
+                                ) : (
+                                    <MenuItem key={session.id + 'delete-confirmed'} onClick={() => {
+                                        handleClose()
+                                        deleteMe()
+                                    }}>
+                                        <DeleteIcon fontSize='small' />
+                                        delete confirmed
+                                    </MenuItem>
+                                )
+                            }
+
+                        </Menu>
+                    </>
                 )
             }
         </MenuItem>

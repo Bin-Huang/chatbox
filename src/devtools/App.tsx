@@ -159,12 +159,12 @@ function App() {
                     }
                 </Stack>
                 <Block msg={msgEdit} setMsg={setMsgEdit} />
-                <button onClick={attemptAddEditMsg}>Add</button>
-                <button onClick={async () => {
+                <Button onClick={attemptAddEditMsg}>Add</Button>
+                <Button onClick={async () => {
                     const msgs = attemptAddEditMsg()
                     const msg = await client.replay(store.settings.openaiKey, msgs)
                     updateCurrrentMessages([...msgs, msg])
-                }}>Replay</button>
+                }}>Replay</Button>
             </Grid>
             <Grid item xs={2}>
             </Grid>

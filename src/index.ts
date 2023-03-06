@@ -23,8 +23,8 @@ const onReady = (): void => {
 
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        height: 800,
-        width: 1000,
+        height: 1000,
+        width: 1400,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
             nodeIntegration: true,
