@@ -1,13 +1,12 @@
 import React from 'react';
 import './App.css';
 import {
-    ListItem, ListItemButton, ListItemText, ListItemAvatar, MenuItem,
+    ListItemText, ListItemAvatar, MenuItem,
     Avatar, IconButton, Button, TextField, Popper, Fade, Typography, ListItemIcon,
     Menu,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Session } from './types'
-import ChatIcon from '@mui/icons-material/Chat';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
