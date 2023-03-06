@@ -1,21 +1,17 @@
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai'
-// import * as secret from './secret'
 import { v4 as uuidv4 } from 'uuid';
 
-const configuration = new Configuration({
-    // TODO:
-    // apiKey: secret.getSecret(),
-});
-
-export const openai = new OpenAIApi(configuration);
-
-export async function replay(msgs: ChatCompletionRequestMessage[]) {
+export async function replay(apiKey: string, msgs: ChatCompletionRequestMessage[]) {
     msgs = msgs.map((msg) => {
         return {
             content: msg.content,
             role: msg.role,
         }
     })
+    const config = new Configuration({
+        apiKey,
+    });
+    const openai = new OpenAIApi(config);
     const res = await openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
         messages: msgs,

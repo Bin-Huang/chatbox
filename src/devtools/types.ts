@@ -28,5 +28,5 @@ export function createSession(name: string = "Untitled"): Session {
 }
 
 export interface Settings {
-    openaiKey?: string
+    openaiKey: string
 }

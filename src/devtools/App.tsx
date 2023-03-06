@@ -162,7 +162,7 @@ function App() {
                 <button onClick={attemptAddEditMsg}>Add</button>
                 <button onClick={async () => {
                     const msgs = attemptAddEditMsg()
-                    const msg = await client.replay(msgs)
+                    const msg = await client.replay(store.settings.openaiKey, msgs)
                     updateCurrrentMessages([...msgs, msg])
                 }}>Replay</button>
             </Grid>

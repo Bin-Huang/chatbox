@@ -9,7 +9,9 @@ const readStore = (key: string) => {
 }
 
 export default function useStore() {
-    const [settings, _setSettings] = useState<Settings>({})
+    const [settings, _setSettings] = useState<Settings>({
+        openaiKey: '',
+    })
     useEffect(() => {
         readStore('settings').then((settings: Settings) => {
             _setSettings(settings)
