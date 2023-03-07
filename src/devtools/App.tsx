@@ -32,15 +32,17 @@ function App() {
 
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
 
+    useEffect(() => {
+        if (store.needSetting) {
+            setOpenSettingWindow(true)
+        }
+    }, [store.needSetting])
+
     const generate = async (msgs: Message[]) => {
         const msg = await client.replay(store.settings.openaiKey, msgs)
         const newMessages = [...msgs, msg]
         store.updateChatSession({ ...store.currentSession, messages: newMessages })
     }
-
-    useEffect(() => {
-        document.getElementById('message-input')?.focus() // better way?
-    }, [store.currentSession])
 
     return (
         <Box sx={{
@@ -100,7 +102,10 @@ function App() {
                                 store.chatSessions.map((session, ix) => (
                                     <SessionItem selected={store.currentSession.id === session.id}
                                         session={session}
-                                        switchMe={() => store.switchCurrentSession(session)}
+                                        switchMe={() => {
+                                            store.switchCurrentSession(session)
+                                            document.getElementById('message-input')?.focus() // better way?
+                                        }}
                                         deleteMe={() => store.deleteChatSession(session)}
                                         copyMe={() => {
                                             const newSession = createSession(session.name + ' Copyed')

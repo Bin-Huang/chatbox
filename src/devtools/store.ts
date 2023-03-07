@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Settings, createSession, Session, Message } from './types'
+import * as defaults from './defaults'
 
 // ipc
 
@@ -32,7 +33,7 @@ export async function writeSettings(settings: Settings) {
 export async function readSessions(): Promise<Session[]> {
     let sessions = await readStore('chat-sessions')
     if (!sessions) {
-        return [createSession()]
+        return defaults.sessions
     }
     if (sessions.length === 0) {
         return [createSession()]
@@ -48,8 +49,14 @@ export async function writeSessions(sessions: Session[]) {
 
 export default function useStore() {
     const [settings, _setSettings] = useState<Settings>(getDefaultSettings())
+    const [needSetting, setNeedSetting] = useState(false)
     useEffect(() => {
-        readSettings().then(_setSettings)
+        readSettings().then((settings) => {
+            _setSettings(settings)
+            if (settings.openaiKey === '') {
+                setNeedSetting(true)
+            }
+        })
     }, [])
     const setSettings = (settings: Settings) => {
         _setSettings(settings)
@@ -110,6 +117,8 @@ export default function useStore() {
     return {
         settings,
         setSettings,
+
+        needSetting,
 
         chatSessions,
         createChatSession,
