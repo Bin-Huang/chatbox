@@ -18,6 +18,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -45,6 +46,7 @@ export interface Props {
     msg: Message
     setMsg?: (msg: Message) => void
     delMsg?: () => void
+    refreshMsg?: () => void
 }
 
 export default function Block(props: Props) {
@@ -143,12 +145,17 @@ export default function Block(props: Props) {
                     <Grid item xs={1}>
                         {
                             isEditing ? (
+                                <>
                                 <Button onClick={() => setIsEditing(false)}>
                                     <CheckIcon fontSize='small' />
                                 </Button>
+                                </>
                             ) : (
                                 isHovering && (
                                     <>
+                                        <Button onClick={() => props.refreshMsg()}>
+                                            <RefreshIcon fontSize='small' />
+                                        </Button>
                                         <Button onClick={handleClick}>
                                             <MoreHorizOutlinedIcon />
                                         </Button>

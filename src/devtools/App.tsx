@@ -30,6 +30,12 @@ function App() {
 
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
 
+    const generate = async (msgs: Message[]) => {
+        const msg = await client.replay(store.settings.openaiKey, msgs)
+        const newMessages = [...msgs, msg]
+        store.updateChatSession({ ...store.currentSession, messages: newMessages })
+    }
+
     return (
         <Box sx={{
             height: '100%',
@@ -201,19 +207,25 @@ function App() {
                             }}
                         >
                             {
-                                store.currentSession.messages.map((msg) => (
-                                    <Block msg={msg} setMsg={(updated) => {
-                                        const newMsgs = store.currentSession.messages.map((m) => {
-                                            if (m.id === updated.id) {
-                                                return updated
-                                            }
-                                            return m
-                                        })
-                                        store.updateChatSession({ ...store.currentSession, messages: newMsgs })
-                                    }}
+                                store.currentSession.messages.map((msg, ix) => (
+                                    <Block msg={msg}
+                                        setMsg={(updated) => {
+                                            const newMsgs = store.currentSession.messages.map((m) => {
+                                                if (m.id === updated.id) {
+                                                    return updated
+                                                }
+                                                return m
+                                            })
+                                            store.updateChatSession({ ...store.currentSession, messages: newMsgs })
+                                        }}
                                         delMsg={() => {
                                             const newMsgs = store.currentSession.messages.filter((m) => m.id !== msg.id)
                                             store.updateChatSession({ ...store.currentSession, messages: newMsgs })
+                                        }}
+                                        refreshMsg={() => {
+                                            const msgs = store.currentSession.messages.slice(0, ix)
+                                            store.updateChatSession({ ...store.currentSession, messages: msgs })
+                                            generate(msgs)
                                         }}
                                     />
                                 ))
@@ -221,11 +233,9 @@ function App() {
                         </List>
                         <Box>
                             <MessageInput onSubmit={async (newMsg: Message) => {
-                                store.currentSession.messages.push(newMsg)
-                                store.updateChatSession({ ...store.currentSession })
-                                const msg = await client.replay(store.settings.openaiKey, store.currentSession.messages)
-                                store.currentSession.messages.push(msg)
-                                store.updateChatSession({ ...store.currentSession })
+                                const newMessages = [...store.currentSession.messages, newMsg]
+                                store.updateChatSession({ ...store.currentSession, messages: newMessages })
+                                generate(newMessages)
                             }} />
                         </Box>
                     </Stack>
