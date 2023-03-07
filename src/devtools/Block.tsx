@@ -1,19 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-import { Button, ListItem, Typography, Grid, TextField } from '@mui/material';
+import { Button, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import 'katex/dist/katex.min.css'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CheckIcon from '@mui/icons-material/Check';
+import EditIcon from '@mui/icons-material/Edit';
+import { styled, alpha } from '@mui/material/styles';
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -45,17 +49,29 @@ export interface Props {
 
 export default function Block(props: Props) {
     const { msg, setMsg } = props
+    const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <ListItem
+            key={msg.id}
             onMouseEnter={() => {
-                setIsEditing(true)
+                setIsHovering(true)
             }}
             onMouseLeave={() => {
-                setIsEditing(false)
+                setIsHovering(false)
             }}
             sx={{
-                padding: '22px 28px'
+                padding: '22px 28px',
             }}
         >
             <Grid container spacing={2}>
@@ -68,6 +84,7 @@ export default function Block(props: Props) {
                                     setMsg && setMsg({ ...msg, role: e.target.value as ChatCompletionRequestMessageRoleEnum })
                                 }}
                                 size='small'
+                                id={msg.id + 'select'}
                             >
                                 <MenuItem value={ChatCompletionRequestMessageRoleEnum.System}>
                                     <Avatar ><SettingsIcon /></Avatar>
@@ -88,7 +105,7 @@ export default function Block(props: Props) {
                         )
                     }
                 </Grid>
-                <Grid item xs={12} sm container>
+                <Grid item xs={11} sm container>
                     <Grid item xs container direction="column" spacing={2}>
                         <Grid item xs>
                             <Typography gutterBottom variant="subtitle1" component="div">
@@ -104,6 +121,7 @@ export default function Block(props: Props) {
                                         placeholder="prompt"
                                         value={msg.content}
                                         onChange={(e) => { setMsg && setMsg({ ...msg, content: e.target.value }) }}
+                                        id={msg.id + 'input'}
                                     />
                                 ) : (
                                     <Box
@@ -119,10 +137,50 @@ export default function Block(props: Props) {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item>
-                        <Button onClick={props.delMsg}>
-                            <HighlightOffIcon />
-                        </Button>
+                    <Grid item xs={1}>
+                        {
+                            isEditing ? (
+                                <Button onClick={() => setIsEditing(false)}>
+                                    <CheckIcon fontSize='small' />
+                                </Button>
+                            ) : (
+                                isHovering && (
+                                    <>
+                                        <Button onClick={handleClick}>
+                                            <MoreHorizOutlinedIcon />
+                                        </Button>
+                                        <StyledMenu
+                                            MenuListProps={{
+                                                'aria-labelledby': 'demo-customized-button',
+                                            }}
+                                            anchorEl={anchorEl}
+                                            open={open}
+                                            onClose={handleClose}
+                                            key={msg.id + 'menu'}
+                                        >
+                                            <MenuItem key={msg.id + 'edit'} onClick={() => {
+                                                setIsHovering(false)
+                                                setAnchorEl(null)
+                                                setIsEditing(true)
+                                            }} disableRipple>
+                                                <EditIcon />
+                                                Edit
+                                            </MenuItem>
+                                            <Divider sx={{ my: 0.5 }} />
+                                            <MenuItem key={msg.id + 'del'} onClick={() => {
+                                                setIsEditing(false)
+                                                setIsHovering(false)
+                                                setAnchorEl(null)
+                                                props.delMsg()
+                                            }} disableRipple
+                                            >
+                                                <DeleteForeverIcon />
+                                                Delete
+                                            </MenuItem>
+                                        </StyledMenu>
+                                    </>)
+                            )
+                        }
                     </Grid>
                 </Grid>
             </Grid>
@@ -131,3 +189,44 @@ export default function Block(props: Props) {
 }
 
 // <Divider variant="middle" light />
+const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        minWidth: 140,
+        color:
+            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
+        },
+        '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+                fontSize: 18,
+                color: theme.palette.text.secondary,
+                marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity,
+                ),
+            },
+        },
+    },
+}));
+
