@@ -141,7 +141,7 @@ function App() {
                             }
                         </List>
                     </Box>
-                    <Box >
+                    <Box>
                         <MessageInput onSubmit={async (newMsg: Message) => {
                             store.currentSession.messages.push(newMsg)
                             store.updateChatSession({ ...store.currentSession })
