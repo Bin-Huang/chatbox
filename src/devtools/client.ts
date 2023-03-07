@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai'
+import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum  } from 'openai'
 import { v4 as uuidv4 } from 'uuid';
 
 export async function replay(apiKey: string, msgs: ChatCompletionRequestMessage[]) {

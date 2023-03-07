@@ -278,7 +278,7 @@ function MessageInput(props: {
             <Stack direction="row" spacing={1} alignItems="center">
                 <TextField
                     multiline
-                    label="Message"
+                    label="Prompt"
                     value={messageText}
                     onChange={(event) => setMessageText(event.target.value)}
                     fullWidth
