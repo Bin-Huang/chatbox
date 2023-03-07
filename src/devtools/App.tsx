@@ -15,6 +15,8 @@ import ChatIcon from '@mui/icons-material/Chat';
 import useStore from './store'
 import SettingWindow from './SettingWindow'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AddIcon from '@mui/icons-material/Add';
 
 const { useEffect, useState } = React
 
@@ -35,6 +37,10 @@ function App() {
         const newMessages = [...msgs, msg]
         store.updateChatSession({ ...store.currentSession, messages: newMessages })
     }
+
+    useEffect(() => {
+        document.getElementById('message-input')?.focus() // better way?
+    }, [store.currentSession])
 
     return (
         <Box sx={{
@@ -76,7 +82,8 @@ function App() {
                                 bgcolor: '#F7F7F7',
                                 position: 'relative',
                                 overflow: 'auto',
-                                height: '30vh',
+                                // height: '30vh',
+                                height: '60vh',
                                 '& ul': { padding: 0 },
                             }}
                             subheader={
@@ -106,7 +113,7 @@ function App() {
                             }
                         </MenuList>
 
-                        <MenuList
+                        {/* <MenuList
                             sx={{
                                 width: '100%',
                                 // bgcolor: 'background.paper',
@@ -144,19 +151,19 @@ function App() {
                                     />
                                 ))
                             }
-                        </MenuList>
+                        </MenuList> */}
 
                         <Divider />
 
                         <MenuItem onClick={() => store.createEmptyChatSession()} >
                             <ListItemIcon>
-                                <IconButton><AddCircleOutlineIcon fontSize="small" /></IconButton>
+                                <IconButton><AddIcon fontSize="small" /></IconButton>
                             </ListItemIcon>
                             <ListItemText>
-                                New Session
+                                New Chat
                             </ListItemText>
                             <Typography variant="body2" color="text.secondary">
-                                ⌘N
+                                {/* ⌘N */}
                             </Typography>
                         </MenuItem>
                         <MenuItem onClick={() => {
@@ -164,13 +171,13 @@ function App() {
                         }}
                         >
                             <ListItemIcon>
-                                <IconButton><AddCircleOutlineIcon fontSize="small" /></IconButton>
+                                <IconButton><SettingsIcon fontSize="small" /></IconButton>
                             </ListItemIcon>
                             <ListItemText>
                                 Settings
                             </ListItemText>
                             <Typography variant="body2" color="text.secondary">
-                                ⌘N
+                                {/* ⌘N */}
                             </Typography>
                         </MenuItem>
 
@@ -275,6 +282,8 @@ function MessageInput(props: {
                     value={messageText}
                     onChange={(event) => setMessageText(event.target.value)}
                     fullWidth
+                    autoFocus
+                    id='message-input'
                 />
                 <Button type="submit" variant="contained">
                     Send

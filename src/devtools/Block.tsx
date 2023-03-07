@@ -138,7 +138,7 @@ export default function Block(props: Props) {
                                 )
                             }
                             <Typography variant="body2" color="text.secondary">
-                                100 tokens
+                                {/* 100 tokens */}
                             </Typography>
                         </Grid>
                     </Grid>

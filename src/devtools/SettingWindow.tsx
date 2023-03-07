@@ -26,15 +26,13 @@ export default function SettingWindow(props: Props) {
             <DialogTitle>Settings</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    To subscribe to this website, please enter your email address here. We
-                    will send updates occasionally.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="apikey"
                     label="OpenAI API Key"
-                    type="text"
+                    type="password"
                     fullWidth
                     variant="outlined"
                     value={apiKeyInput}
