@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
-import { ButtonGroup, Button, Card } from '@mui/material';
+import { ButtonGroup, Button, Card, ListItem } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -26,7 +26,7 @@ export default function Block(props: Props) {
     const { msg, setMsg } = props
     const [isEditing, setIsEditing] = useState(false)
     return (
-        <Card
+        <ListItem
             onMouseEnter={() => {
                 setIsEditing(true)
             }}
@@ -99,7 +99,7 @@ export default function Block(props: Props) {
                 }
             </Box>
 
-        </Card>
+        </ListItem>
     );
 
 }

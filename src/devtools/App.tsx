@@ -5,10 +5,12 @@ import * as client from './client'
 import * as hooks from './hooks'
 import SessionItem from './SessionItem'
 import {
+    Toolbar, AppBar, Card, Box,
     List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemAvatar, MenuList,
     Avatar, IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Session, createSession, Message, createMessage } from './types'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -46,22 +48,19 @@ function App() {
         saveCurrentSession({ ...currentSession, messages })
     }
 
-    const [msgEdit, setMsgEdit] = useState<Message>(createMessage())
-
-
-    const attemptAddEditMsg = () => {
-        if (isMessageEmpty(msgEdit)) {
-            return currentSession.messages
-        }
-        const newMsgs = [...currentSession.messages, msgEdit]
-        updateCurrrentMessages(newMsgs)
-        setMsgEdit(createMessage())
-        return newMsgs
-    }
-
     return (
         <Grid container spacing={2} sx={{ background: "#FFFFFF" }}>
-            <Grid item xs={2}>
+            <Grid item xs={4}>
+                <Toolbar variant="dense">
+                    <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                        <ChatIcon />
+                    </IconButton>
+                    <Typography variant="h6" color="inherit" component="div">
+                        ChatBox
+                    </Typography>
+                    <Divider />
+                </Toolbar>
+                <Divider />
                 <MenuList
                     sx={{ width: '100%', maxWidth: 360, bgcolor: '#F7F7F7' }}
                     component="nav"
@@ -105,7 +104,6 @@ function App() {
                             />
                         ))
                     }
-                    <Divider />
 
                     <MenuItem onClick={() => {
                         saveCurrentSession(createSession())
@@ -138,35 +136,55 @@ function App() {
                 </MenuList>
             </Grid>
             <Grid item xs={8}>
-                <Stack spacing={1}>
-                    {
-                        currentSession.messages.map((msg) => (
-                            <Block msg={msg} setMsg={(updated) => {
-                                const newMsgs = currentSession.messages.map((m) => {
-                                    if (m.id === updated.id) {
-                                        return updated
-                                    }
-                                    return m
-                                })
-                                updateCurrrentMessages(newMsgs)
+                <Box sx={{ height: '90vh', bgcolor: '#F7F7F7' }}>
+                    <Toolbar variant="dense" >
+                        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                            <ChatIcon />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" component="div">
+                            {currentSession.name}
+                        </Typography>
+                        <Divider />
+                    </Toolbar>
+                    <Box sx={{ height: '80vh' }} >
+                        <List
+                            sx={{
+                                width: '100%',
+                                "height": '80vh',
+                                bgcolor: 'background.paper',
+                                overflow: 'auto',
+                                '& ul': { padding: 0 },
                             }}
-                                delMsg={() => {
-                                    const newMsgs = currentSession.messages.filter((m) => m.id !== msg.id)
-                                    updateCurrrentMessages(newMsgs)
-                                }}
-                            />
-                        ))
-                    }
-                </Stack>
-                <Block msg={msgEdit} setMsg={setMsgEdit} />
-                <Button onClick={attemptAddEditMsg}>Add</Button>
-                <Button onClick={async () => {
-                    const msgs = attemptAddEditMsg()
-                    const msg = await client.replay(store.settings.openaiKey, msgs)
-                    updateCurrrentMessages([...msgs, msg])
-                }}>Replay</Button>
-            </Grid>
-            <Grid item xs={2}>
+                        >
+                            {
+                                currentSession.messages.map((msg) => (
+                                    <Block msg={msg} setMsg={(updated) => {
+                                        const newMsgs = currentSession.messages.map((m) => {
+                                            if (m.id === updated.id) {
+                                                return updated
+                                            }
+                                            return m
+                                        })
+                                        updateCurrrentMessages(newMsgs)
+                                    }}
+                                        delMsg={() => {
+                                            const newMsgs = currentSession.messages.filter((m) => m.id !== msg.id)
+                                            updateCurrrentMessages(newMsgs)
+                                        }}
+                                    />
+                                ))
+                            }
+                        </List>
+                    </Box>
+                    <Box >
+                        <MessageInput onSubmit={async (newMsg: Message) => {
+                            const msgs = [...currentSession.messages, newMsg]
+                            updateCurrrentMessages(msgs)
+                            const msg = await client.replay(store.settings.openaiKey, msgs)
+                            updateCurrrentMessages([...msgs, msg])
+                        }} />
+                    </Box>
+                </Box>
             </Grid>
 
             <SettingWindow open={openSettingWindow}
@@ -181,8 +199,27 @@ function App() {
     );
 }
 
-function isMessageEmpty(msg: Message): boolean {
-    return !msg.content
-}
-
 export default App;
+
+function MessageInput(props: {
+    onSubmit: (newMsg: Message) => void
+}) {
+    const [messageText, setMessageText] = useState<string>('')
+    return (
+        <form
+            onSubmit={() => props.onSubmit(createMessage('user', messageText))}
+        >
+            <Stack direction="row" spacing={1} alignItems="center">
+                <TextField
+                    label="Message"
+                    value={messageText}
+                    onChange={(event) => setMessageText(event.target.value)}
+                    fullWidth
+                />
+                <Button type="submit" variant="contained">
+                    Send
+                </Button>
+            </Stack>
+        </form>
+    )
+}
