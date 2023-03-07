@@ -73,8 +73,6 @@ function App() {
                                 height: '30vh',
                                 '& ul': { padding: 0 },
                             }}
-                            component="nav"
-                            aria-labelledby="nested-list-subheader"
                             subheader={
                                 <ListSubheader component="div"
                                     sx={{
@@ -84,7 +82,6 @@ function App() {
                                     CHAT
                                 </ListSubheader>
                             }
-
                         >
                             {
                                 store.chatSessions.map((session, ix) => (

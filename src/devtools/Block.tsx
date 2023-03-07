@@ -67,6 +67,9 @@ export default function Block(props: Props) {
             onMouseEnter={() => {
                 setIsHovering(true)
             }}
+            onMouseOver={() => {
+                setIsHovering(true)
+            }}
             onMouseLeave={() => {
                 setIsHovering(false)
             }}

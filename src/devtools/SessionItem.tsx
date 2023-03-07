@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './App.css';
 import {
-    ListItemText, ListItemAvatar, MenuItem,
+    ListItemText, ListItemAvatar, MenuItem, Divider,
     Avatar, IconButton, Button, TextField, Popper, Fade, Typography, ListItemIcon,
-    Menu,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Session } from './types'
@@ -13,6 +12,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import StyledMenu from './StyledMenu';
 
 const { useState } = React
 
@@ -29,20 +30,27 @@ export default function SessionItem(props: Props) {
     const { session, selected, switchMe, deleteMe, copyMe, updateMe } = props
     const [editMode, setEditMode] = useState(false)
     const [nameEdit, setNameEdit] = useState(session.name)
-    const saveNameEdit = () => {
-        updateMe({ ...session, name: nameEdit })
-        setEditMode(false)
-    }
-    const [confirmedDelete, setconfirmedDelete] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setconfirmedDelete(false)
+        event.preventDefault()
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const saveNameEdit = () => {
+        handleClose()
+        updateMe({ ...session, name: nameEdit })
+        setEditMode(false)
+    }
+
+    const inputEl = useRef(null)
+    useEffect(() => {
+        if (editMode) {
+            inputEl.current.focus()
+        }
+    }, [editMode])
 
     return (
         <MenuItem
@@ -61,10 +69,17 @@ export default function SessionItem(props: Props) {
                 {
 
                     editMode ? (
-                        <TextField variant="standard" value={nameEdit}
-                            onBlur={saveNameEdit}
-                            onChange={(e) => { setNameEdit(e.target.value) }}
+                        <form onSubmit={(event) => {
+                            event.preventDefault()
+                            saveNameEdit()
+                        }}>
+                        <TextField variant="standard" value={nameEdit} inputRef={inputEl}
+                            onChange={(e) => {
+                                e.preventDefault()
+                                setNameEdit(e.target.value)
+                            }}
                         />
+                        </form>
                     ) : (
                         <Typography variant="inherit" noWrap>
                             {session.name}
@@ -75,71 +90,54 @@ export default function SessionItem(props: Props) {
             {
                 editMode ? (
                     <>
-                        <IconButton edge="end" onClick={saveNameEdit}>
-                            <CheckIcon fontSize='small' />
-                        </IconButton>
-                        <IconButton edge="end"
-                            onClick={() => {
-                                setNameEdit(session.name)
-                                setEditMode(false)
-                            }}
-                        >
-                            <CloseIcon fontSize='small' />
+                        <IconButton onClick={saveNameEdit}>
+                            <CheckIcon />
                         </IconButton>
                     </>
                 ) : (
                     <>
                         <IconButton
-                            aria-label="more"
-                            id="long-button"
-                            aria-controls={open ? 'long-menu' : undefined}
-                            aria-expanded={open ? 'true' : undefined}
-                            aria-haspopup="true"
                             onClick={handleClick}
                         >
-                            <MoreHorizOutlinedIcon fontSize='small' />
+                            <MoreHorizOutlinedIcon />
                         </IconButton>
-                        <Menu
-                            id="long-menu"
+                        <StyledMenu
                             MenuListProps={{
                                 'aria-labelledby': 'long-button',
                             }}
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
-                            PaperProps={{
-                                style: {
-                                    // maxHeight: ITEM_HEIGHT * 4.5,
-                                    width: '20ch',
-                                },
-                            }}
                         >
-                            <MenuItem key={session.id + 'edit'} onClick={() => setEditMode(true)}>
-                                <EditIcon fontSize='small' />
-                                rename
+                            <MenuItem key={session.id + 'edit'} onClick={() => {
+                                setEditMode(true)
+                            }} disableRipple
+                            >
+                                <EditIcon />
+                                Rename
                             </MenuItem>
-                            <MenuItem key={session.id + 'copy'} onClick={() => copyMe()}>
-                                <FileCopyIcon fontSize='small' />
-                                copy
-                            </MenuItem>
-                            {
-                                !confirmedDelete ? (
-                                    <MenuItem key={session.id + 'delete'} onClick={() => setconfirmedDelete(true)}>
-                                        <DeleteIcon fontSize='small' />
-                                        delete
-                                    </MenuItem>
-                                ) : (
-                                    <MenuItem key={session.id + 'delete-confirmed'} onClick={() => {
-                                        handleClose()
-                                        deleteMe()
-                                    }}>
-                                        <DeleteIcon fontSize='small' />
-                                        delete confirmed
-                                    </MenuItem>
-                                )
-                            }
 
-                        </Menu>
+                            <MenuItem key={session.id + 'copy'} onClick={() => {
+                                copyMe()
+                            }} disableRipple
+                            >
+                                <FileCopyIcon fontSize='small' />
+                                Copy
+                            </MenuItem>
+
+                            <Divider sx={{ my: 0.5 }} />
+
+                            <MenuItem key={session.id + 'del'} onClick={() => {
+                                setAnchorEl(null)
+                                handleClose()
+                                deleteMe()
+                            }} disableRipple
+                            >
+                                <DeleteForeverIcon />
+                                Delete
+                            </MenuItem>
+
+                        </StyledMenu>
                     </>
                 )
             }
