@@ -87,3 +87,5 @@ typings/
 
 # Electron-Forge
 out/
+
+publish.sh

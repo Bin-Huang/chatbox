@@ -2,7 +2,7 @@
   "name": "chatbox",
   "productName": "chatbox",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "cross-platform desktop client for OpenAI API",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -24,6 +24,7 @@
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
     "@electron-forge/plugin-webpack": "^6.0.5",
+    "@electron-forge/publisher-github": "^6.0.5",
     "@types/highlight.js": "^10.1.0",
     "@types/markdown-it": "^12.2.3",
     "@types/react": "^18.0.28",
