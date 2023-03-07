@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import './App.css';
 import Block from './Block'
 import * as client from './client'
-import * as hooks from './hooks'
 import SessionItem from './SessionItem'
 import {
     Toolbar, AppBar, Card, Box,
@@ -10,7 +9,6 @@ import {
     Avatar, IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { Session, createSession, Message, createMessage } from './types'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -21,39 +19,15 @@ const { useEffect, useState } = React
 
 function App() {
     const store = useStore()
-    const [sessions, _setSessions] = hooks.useLocalStorage<Session[]>("openai_sessions", [createSession()])
-    const [currentSession, _setCurrentSession] = useState<Session>(sessions[0])
 
     const listRef = useRef<any>(null)
     useEffect(() => {
         if (listRef.current) {
             listRef.current.scrollTop = listRef.current.scrollHeight
         }
-    }, [currentSession.messages])
+    }, [store.currentSession.messages])
 
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
-
-    const switchCurrentSession = (session: Session) => {
-        _setCurrentSession(session)
-    }
-    const saveCurrentSession = (session: Session) => {
-        _setCurrentSession(session)
-        let isNew = true
-        const newSessions = sessions.map((s) => {
-            if (s.id === session.id) {
-                isNew = false
-                return session
-            }
-            return s
-        })
-        if (isNew) {
-            newSessions.push(session)
-        }
-        _setSessions(newSessions)
-    }
-    const updateCurrrentMessages = (messages: Message[]) => {
-        saveCurrentSession({ ...currentSession, messages })
-    }
 
     return (
         <Grid container spacing={2} sx={{ background: "#FFFFFF" }}>
@@ -79,43 +53,22 @@ function App() {
                     }
                 >
                     {
-                        sessions.map((session, ix) => (
-                            <SessionItem selected={currentSession.id === session.id}
+                        store.chatSessions.map((session, ix) => (
+                            <SessionItem selected={store.currentSession.id === session.id}
                                 session={session}
-                                switchMe={() => switchCurrentSession(session)}
-                                deleteMe={() => {
-                                    const newSessions = sessions.filter((s) => s.id !== session.id)
-                                    if (newSessions.length === 0) {
-                                        newSessions.push(createSession())
-                                    }
-                                    _setSessions(newSessions)
-                                    if (currentSession.id === session.id) {
-                                        switchCurrentSession(newSessions[0])
-                                    }
-                                }}
+                                switchMe={() => store.switchCurrentSession(session)}
+                                deleteMe={() => store.deleteChatSession(session)}
                                 copyMe={() => {
                                     const newSession = createSession(session.name + ' Copyed')
                                     newSession.messages = session.messages
-                                    sessions.splice(ix + 1, 0, newSession)
-                                    saveCurrentSession(newSession)
+                                    store.createChatSession(newSession, ix)
                                 }}
-                                updateMe={(updated) => {
-                                    const newSessions = sessions.map((s) => {
-                                        if (s.id === updated.id) {
-                                            return updated
-                                        }
-                                        return s
-                                    })
-                                    _setSessions(newSessions)
-                                }}
+                                updateMe={(updated) => store.updateChatSession(updated)}
                             />
                         ))
                     }
 
-                    <MenuItem onClick={() => {
-                        saveCurrentSession(createSession())
-                    }}
-                    >
+                    <MenuItem onClick={() => store.createEmptyChatSession()} >
                         <ListItemIcon>
                             <IconButton><AddCircleOutlineIcon fontSize="small" /></IconButton>
                         </ListItemIcon>
@@ -149,7 +102,7 @@ function App() {
                             <ChatIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" component="div">
-                            {currentSession.name}
+                            {store.currentSession.name}
                         </Typography>
                         <Divider />
                     </Toolbar>
@@ -165,19 +118,19 @@ function App() {
                             }}
                         >
                             {
-                                currentSession.messages.map((msg) => (
+                                store.currentSession.messages.map((msg) => (
                                     <Block msg={msg} setMsg={(updated) => {
-                                        const newMsgs = currentSession.messages.map((m) => {
+                                        const newMsgs = store.currentSession.messages.map((m) => {
                                             if (m.id === updated.id) {
                                                 return updated
                                             }
                                             return m
                                         })
-                                        updateCurrrentMessages(newMsgs)
+                                        store.updateChatSession({ ...store.currentSession, messages: newMsgs })
                                     }}
                                         delMsg={() => {
-                                            const newMsgs = currentSession.messages.filter((m) => m.id !== msg.id)
-                                            updateCurrrentMessages(newMsgs)
+                                            const newMsgs = store.currentSession.messages.filter((m) => m.id !== msg.id)
+                                            store.updateChatSession({ ...store.currentSession, messages: newMsgs })
                                         }}
                                     />
                                 ))
@@ -186,10 +139,11 @@ function App() {
                     </Box>
                     <Box >
                         <MessageInput onSubmit={async (newMsg: Message) => {
-                            const msgs = [...currentSession.messages, newMsg]
-                            updateCurrrentMessages(msgs)
-                            const msg = await client.replay(store.settings.openaiKey, msgs)
-                            updateCurrrentMessages([...msgs, msg])
+                            store.currentSession.messages.push(newMsg)
+                            store.updateChatSession({ ...store.currentSession })
+                            const msg = await client.replay(store.settings.openaiKey, store.currentSession.messages)
+                            store.currentSession.messages.push(msg)
+                            store.updateChatSession({ ...store.currentSession })
                         }} />
                     </Box>
                 </Box>
