@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './App.css';
 import Block from './Block'
 import * as client from './client'
@@ -23,6 +23,13 @@ function App() {
     const store = useStore()
     const [sessions, _setSessions] = hooks.useLocalStorage<Session[]>("openai_sessions", [createSession()])
     const [currentSession, _setCurrentSession] = useState<Session>(sessions[0])
+
+    const listRef = useRef<any>(null)
+    useEffect(() => {
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight
+        }
+    }, [currentSession.messages])
 
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
 
@@ -148,9 +155,10 @@ function App() {
                     </Toolbar>
                     <Box sx={{ height: '80vh' }} >
                         <List
+                            ref={listRef}
                             sx={{
                                 width: '100%',
-                                "height": '80vh',
+                                height: '80vh',
                                 bgcolor: 'background.paper',
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },
@@ -207,7 +215,11 @@ function MessageInput(props: {
     const [messageText, setMessageText] = useState<string>('')
     return (
         <form
-            onSubmit={() => props.onSubmit(createMessage('user', messageText))}
+            onSubmit={(event) => {
+                event.preventDefault()
+                props.onSubmit(createMessage('user', messageText))
+                setMessageText('')
+            }}
         >
             <Stack direction="row" spacing={1} alignItems="center">
                 <TextField
