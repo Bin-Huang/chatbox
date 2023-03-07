@@ -113,7 +113,7 @@ export default function Block(props: Props) {
                 <Grid item xs={11} sm container>
                     <Grid item xs container direction="column" spacing={2}>
                         <Grid item xs>
-                            <Typography gutterBottom variant="subtitle1" component="div">
+                            <Typography gutterBottom variant="overline" component="div">
                                 {msg.role}
                             </Typography>
                             {
