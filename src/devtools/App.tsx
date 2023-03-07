@@ -32,43 +32,103 @@ function App() {
     return (
         <Grid container spacing={2} sx={{ background: "#FFFFFF" }}>
             <Grid item xs={4}>
-                <Toolbar variant="dense">
-                    <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                        <ChatIcon />
-                    </IconButton>
-                    <Typography variant="h6" color="inherit" component="div">
-                        ChatBox
-                    </Typography>
-                    <Divider />
-                </Toolbar>
-                <Divider />
-                <MenuList
+                <Stack
                     sx={{
-                        width: '100%',
-                        maxWidth: 360,
                         bgcolor: '#F7F7F7',
+                        height: '90vh',
                     }}
-                    component="nav"
-                    aria-labelledby="nested-list-subheader"
+                    spacing={2}
                 >
-                    <ListSubheader>
-                        Chat
-                    </ListSubheader>
-                    {
-                        store.chatSessions.map((session, ix) => (
-                            <SessionItem selected={store.currentSession.id === session.id}
-                                session={session}
-                                switchMe={() => store.switchCurrentSession(session)}
-                                deleteMe={() => store.deleteChatSession(session)}
-                                copyMe={() => {
-                                    const newSession = createSession(session.name + ' Copyed')
-                                    newSession.messages = session.messages
-                                    store.createChatSession(newSession, ix)
+                    <Toolbar variant="dense">
+                        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                            <ChatIcon />
+                        </IconButton>
+                        <Typography variant="h5" color="inherit" component="div">
+                            ChatBox
+                        </Typography>
+                    </Toolbar>
+
+                    <Divider />
+
+                    <MenuList
+                        sx={{
+                            width: '100%',
+                            // bgcolor: 'background.paper',
+                            bgcolor: '#F7F7F7',
+                            position: 'relative',
+                            overflow: 'auto',
+                            height: '30vh',
+                            '& ul': { padding: 0 },
+                        }}
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                        subheader={
+                            <ListSubheader component="div"
+                                sx={{
+                                    bgcolor: '#F7F7F7',
                                 }}
-                                updateMe={(updated) => store.updateChatSession(updated)}
-                            />
-                        ))
-                    }
+                            >
+                                Chat
+                            </ListSubheader>
+                        }
+
+                    >
+                        {
+                            store.chatSessions.map((session, ix) => (
+                                <SessionItem selected={store.currentSession.id === session.id}
+                                    session={session}
+                                    switchMe={() => store.switchCurrentSession(session)}
+                                    deleteMe={() => store.deleteChatSession(session)}
+                                    copyMe={() => {
+                                        const newSession = createSession(session.name + ' Copyed')
+                                        newSession.messages = session.messages
+                                        store.createChatSession(newSession, ix)
+                                    }}
+                                    updateMe={(updated) => store.updateChatSession(updated)}
+                                />
+                            ))
+                        }
+                    </MenuList>
+
+                    <MenuList
+                        sx={{
+                            width: '100%',
+                            // bgcolor: 'background.paper',
+                            bgcolor: '#F7F7F7',
+                            position: 'relative',
+                            overflow: 'auto',
+                            height: '30vh',
+                            '& ul': { padding: 0 },
+                        }}
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                        subheader={
+                            <ListSubheader component="div"
+                                sx={{
+                                    bgcolor: '#F7F7F7',
+                                }}
+                            >
+                                Chat
+                            </ListSubheader>
+                        }
+
+                    >
+                        {
+                            store.chatSessions.map((session, ix) => (
+                                <SessionItem selected={store.currentSession.id === session.id}
+                                    session={session}
+                                    switchMe={() => store.switchCurrentSession(session)}
+                                    deleteMe={() => store.deleteChatSession(session)}
+                                    copyMe={() => {
+                                        const newSession = createSession(session.name + ' Copyed')
+                                        newSession.messages = session.messages
+                                        store.createChatSession(newSession, ix)
+                                    }}
+                                    updateMe={(updated) => store.updateChatSession(updated)}
+                                />
+                            ))
+                        }
+                    </MenuList>
 
                     <Divider />
 
@@ -97,7 +157,9 @@ function App() {
                             ⌘N
                         </Typography>
                     </MenuItem>
-                </MenuList>
+
+                </Stack>
+
             </Grid>
             <Grid item xs={8}>
                 <Box sx={{ height: '90vh', bgcolor: '#F7F7F7' }}>
@@ -105,7 +167,7 @@ function App() {
                         <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                             <ChatIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" component="div">
+                        <Typography variant="h6" color="inherit" component="div" noWrap>
                             {store.currentSession.name}
                         </Typography>
                         <Divider />
