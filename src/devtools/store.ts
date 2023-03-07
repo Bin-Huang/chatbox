@@ -87,6 +87,9 @@ export default function useStore() {
             return s
         })
         setSessions(sessions)
+        if (session.id === currentSession.id) {
+            switchCurrentSession(session)
+        }
     }
     const createChatSession = (session: Session, ix?: number) => {
         const sessions = [...chatSessions, session]

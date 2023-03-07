@@ -25,7 +25,7 @@ function App() {
         if (listRef.current) {
             listRef.current.scrollTop = listRef.current.scrollHeight
         }
-    }, [store.currentSession.messages])
+    }, [store.currentSession])
 
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
 
@@ -43,15 +43,17 @@ function App() {
                 </Toolbar>
                 <Divider />
                 <MenuList
-                    sx={{ width: '100%', maxWidth: 360, bgcolor: '#F7F7F7' }}
+                    sx={{
+                        width: '100%',
+                        maxWidth: 360,
+                        bgcolor: '#F7F7F7',
+                    }}
                     component="nav"
                     aria-labelledby="nested-list-subheader"
-                    subheader={
-                        <ListSubheader component="div" id="nested-list-subheader">
-                            Nested List Items
-                        </ListSubheader>
-                    }
                 >
+                    <ListSubheader>
+                        Chat
+                    </ListSubheader>
                     {
                         store.chatSessions.map((session, ix) => (
                             <SessionItem selected={store.currentSession.id === session.id}
@@ -67,6 +69,8 @@ function App() {
                             />
                         ))
                     }
+
+                    <Divider />
 
                     <MenuItem onClick={() => store.createEmptyChatSession()} >
                         <ListItemIcon>
