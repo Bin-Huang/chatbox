@@ -11,6 +11,10 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bin-Huang/chatbox.git"
+  },
   "keywords": [],
   "author": {
     "name": "bennhuang",
