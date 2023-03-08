@@ -1,12 +1,13 @@
 # ChatBox
 
-A Cross-Platform Desktop Client for OPENAI API.
+A Cross-Platform Desktop Client for **OPENAI API**.
 
-- budget alternative for ChatGPT Plus
+- budget alternative for ChatGPT Plus(with OpenAI Developer API)
 - OpenAI Devtools
-- Prompt Console
+- Prompt Debugging Console
 
 ![](./doc/demo.png)
+![](./doc/demo2.png)
 
 # Roadmap
 
@@ -20,7 +21,10 @@ A Cross-Platform Desktop Client for OPENAI API.
 
 # Installation
 
-- Download the latest release from [here](https://github.com/Bin-Huang/chatbox/releases)
+- Window, Mac, Linux
+- AMD64, ARM64
+
+[>>Download here<<](https://github.com/Bin-Huang/chatbox/releases)
 
 # License
 
