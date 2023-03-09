@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './openai-node';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';

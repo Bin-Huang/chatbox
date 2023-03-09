@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Settings, createSession, Session, Message } from './types'
 import * as defaults from './defaults'
+import * as openai from './openai-node'
 
 // ipc
 
@@ -22,6 +23,7 @@ export const openLink = (link: string) => {
 export function getDefaultSettings(): Settings {
     return {
         openaiKey: '',
+        apiHost: 'https://api.openai.com',
     }
 }
 
@@ -31,6 +33,11 @@ export async function readSettings(): Promise<Settings> {
 }
 
 export async function writeSettings(settings: Settings) {
+    if (!settings.apiHost) {
+        settings.apiHost = getDefaultSettings().apiHost
+    }
+    console.log('writeSettings.apiHost', settings.apiHost)
+    openai.setHost(settings.apiHost)
     return writeStore('settings', settings)
 }
 

@@ -1,4 +1,4 @@
-import {ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum} from 'openai'
+import {ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum} from './openai-node'
 import { v4 as uuidv4 } from 'uuid';
 
 export type Message = ChatCompletionRequestMessage & {
@@ -29,4 +29,5 @@ export function createSession(name: string = "Untitled"): Session {
 
 export interface Settings {
     openaiKey: string
+    apiHost: string
 }

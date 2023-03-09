@@ -1,0 +1,31 @@
+{
+  "name": "openai",
+  "version": "3.2.1",
+  "description": "Node.js library for the OpenAI API",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:openai/openai-node.git"
+  },
+  "keywords": [
+    "openai",
+    "open",
+    "ai",
+    "gpt-3",
+    "gpt3"
+  ],
+  "author": "OpenAI",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --outDir dist/"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.5",
+    "typescript": "^3.6.4"
+  }
+}

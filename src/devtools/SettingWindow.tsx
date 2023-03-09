@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
 import {
-    Button,
+    Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
 } from '@mui/material';
 import { Settings } from './types'
+import { getDefaultSettings } from './store'
 
 const { useEffect } = React
 
@@ -16,10 +17,10 @@ interface Props {
 }
 
 export default function SettingWindow(props: Props) {
-    const [apiKeyInput, setApiKeyInput] = React.useState('');
+    const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings);
     useEffect(() => {
-        setApiKeyInput(props.settings.openaiKey)
-    }, [props.settings.openaiKey])
+        setSettingsEdit(props.settings)
+    }, [props.settings])
 
     return (
         <Dialog open={props.open} onClose={props.close}>
@@ -30,24 +31,53 @@ export default function SettingWindow(props: Props) {
                 <TextField
                     autoFocus
                     margin="dense"
-                    id="apikey"
                     label="OpenAI API Key"
                     type="password"
                     fullWidth
                     variant="outlined"
-                    value={apiKeyInput}
-                    onChange={(e) => setApiKeyInput(e.target.value)}
+                    value={settingsEdit.openaiKey}
+                    onChange={(e) => setSettingsEdit({ ...settingsEdit, openaiKey: e.target.value.trim() })}
                 />
+                <TextField
+                    margin="dense"
+                    label="API Host"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={settingsEdit.apiHost}
+                    onChange={(e) => setSettingsEdit({ ...settingsEdit, apiHost: e.target.value.trim() })}
+                />
+                {
+                    !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
+                        <Alert severity="warning">
+                            Your API Key and all messages will be sent to <b>{settingsEdit.apiHost}</b>.
+                            Please confirm that you trust this address. Otherwise, there is a risk of API Key and data leakage.
+                            <Button onClick={() => setSettingsEdit({ ...settingsEdit, apiHost: getDefaultSettings().apiHost })}>Reset</Button>
+                        </Alert>
+                    )
+                }
+                {
+                    settingsEdit.apiHost.startsWith('http://') && (
+                        <Alert severity="warning">
+                            All data transfers are being conducted through the <b>HTTP</b> protocol, which may lead to the risk of API key and data leakage.
+                            Unless you are completely certain and understand the potential risks involved, please consider using the HTTPS protocol instead.
+                        </Alert>
+                    )
+                }
+                {
+                    !settingsEdit.apiHost.startsWith('http') && (
+                        <Alert severity="error">
+                            Please starts with https:// or http://
+                        </Alert>
+                    )
+                }
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => {
                     props.close()
-                    setApiKeyInput(props.settings.openaiKey)
+                    setSettingsEdit(props.settings)
                 }}>Cancel</Button>
-                <Button onClick={() => props.save({
-                    ...props.settings,
-                    openaiKey: apiKeyInput,
-                })}>Save</Button>
+                <Button onClick={() => props.save(settingsEdit)}>Save</Button>
             </DialogActions>
         </Dialog>
     );
