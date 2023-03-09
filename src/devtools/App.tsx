@@ -42,9 +42,36 @@ function App() {
     }, [store.needSetting])
 
     const generate = async (msgs: Message[]) => {
-        const msg = await client.replay(store.settings.openaiKey, msgs)
+        const msg = createMessage('assistant', '...')
         const newMessages = [...msgs, msg]
         store.updateChatSession({ ...store.currentSession, messages: newMessages })
+        await client.replay(
+            store.settings.openaiKey,
+            store.settings.apiHost,
+            msgs,
+            (text) => {
+                store.updateChatSession({
+                    ...store.currentSession,
+                    messages: newMessages.map((m) => {
+                        if (m.id === msg.id) {
+                            return { ...m, content: text }
+                        }
+                        return m
+                    }),
+                })
+            },
+            (err) => {
+                store.updateChatSession({
+                    ...store.currentSession,
+                    messages: newMessages.map((m) => {
+                        if (m.id === msg.id) {
+                            return { ...m, content: 'API Request Failed: \n```\n' + err.message + '\n```' }
+                        }
+                        return m
+                    }),
+                })
+            }
+        )
     }
 
     return (
