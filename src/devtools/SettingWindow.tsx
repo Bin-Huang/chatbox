@@ -40,7 +40,10 @@ export default function SettingWindow(props: Props) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.close}>Cancel</Button>
+                <Button onClick={() => {
+                    props.close()
+                    setApiKeyInput(props.settings.openaiKey)
+                }}>Cancel</Button>
                 <Button onClick={() => props.save({
                     ...props.settings,
                     openaiKey: apiKeyInput,
