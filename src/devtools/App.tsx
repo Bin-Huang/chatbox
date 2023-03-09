@@ -4,7 +4,7 @@ import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
 import {
-    Toolbar, AppBar, Card, Box,
+    Toolbar, AppBar, Card, Box, Badge,
     List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemAvatar, MenuList,
     Avatar, IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
@@ -23,6 +23,8 @@ const { useEffect, useState } = React
 
 function App() {
     const store = useStore()
+
+    const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
     const listRef = useRef<any>(null)
     useEffect(() => {
@@ -188,18 +190,22 @@ function App() {
                         </MenuItem>
 
                         <MenuItem onClick={() => {
+                            setNeedCheckUpdate(false)
                             openLink('https://github.com/Bin-Huang/chatbox/releases')
                         }}>
                             <ListItemIcon>
-                                <IconButton><InfoOutlinedIcon fontSize="small" /></IconButton>
+                                <IconButton>
+                                    <InfoOutlinedIcon fontSize="small" />
+                                </IconButton>
                             </ListItemIcon>
                             <ListItemText>
                                 <Typography color="GrayText">
-                                    Version: {store.version}
+                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ padding: '0 8px' }} >
+                                        Version: {store.version}
+                                    </Badge>
                                 </Typography>
                             </ListItemText>
                         </MenuItem>
-
                     </Stack>
 
                 </Grid>
@@ -276,7 +282,7 @@ function App() {
                     close={() => setOpenSettingWindow(false)}
                 />
             </Grid>
-        </Box>
+        </Box >
     );
 }
 
@@ -315,7 +321,7 @@ function MessageInput(props: {
                     flexDirection: 'column',
                 }} >
                     <Typography variant='button'>SEND</Typography>
-                    <Typography variant='caption' style={{opacity: 0.5}}>Ctrl↵</Typography>
+                    <Typography variant='caption' style={{ opacity: 0.5 }}>Ctrl↵</Typography>
                 </Button>
             </Stack>
         </form>
