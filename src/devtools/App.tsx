@@ -199,11 +199,11 @@ function App() {
                                 </IconButton>
                             </ListItemIcon>
                             <ListItemText>
-                                <Typography color="GrayText">
-                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ padding: '0 8px' }} >
+                                <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                    <Typography color="GrayText">
                                         Version: {store.version}
-                                    </Badge>
-                                </Typography>
+                                    </Typography>
+                                </Badge>
                             </ListItemText>
                         </MenuItem>
                     </Stack>
