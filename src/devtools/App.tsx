@@ -286,14 +286,15 @@ function MessageInput(props: {
     onSubmit: (newMsg: Message) => void
 }) {
     const [messageText, setMessageText] = useState<string>('')
+    const submit = (event?: any) => {
+        if (event) {
+            event.preventDefault()
+        }
+        props.onSubmit(createMessage('user', messageText))
+        setMessageText('')
+    }
     return (
-        <form
-            onSubmit={(event) => {
-                event.preventDefault()
-                props.onSubmit(createMessage('user', messageText))
-                setMessageText('')
-            }}
-        >
+        <form onSubmit={submit}>
             <Stack direction="row" spacing={1} alignItems="center">
                 <TextField
                     multiline
@@ -303,9 +304,18 @@ function MessageInput(props: {
                     fullWidth
                     autoFocus
                     id='message-input'
+                    onKeyDown={(event) => {
+                        if ((event.key === 'Enter' && event.ctrlKey) || (event.key === 'Enter' && event.metaKey)) {
+                            submit()
+                        }
+                    }}
                 />
-                <Button type="submit" variant="contained">
-                    Send
+                <Button type="submit" variant="contained" sx={{
+                    textTransform: 'none',
+                    flexDirection: 'column',
+                }} >
+                    <Typography variant='button'>SEND</Typography>
+                    <Typography variant='caption' style={{opacity: 0.5}}>Ctrl↵</Typography>
                 </Button>
             </Stack>
         </form>
