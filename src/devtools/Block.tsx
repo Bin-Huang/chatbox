@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef ,useMemo } from 'react';
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './openai-node';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -49,7 +49,7 @@ export interface Props {
     refreshMsg?: () => void
 }
 
-export default function Block(props: Props) {
+function _Block(props: Props) {
     const { msg, setMsg } = props
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -240,3 +240,8 @@ const StyledMenu = styled((props: MenuProps) => (
     },
 }));
 
+export default function Block(props: Props) {
+    return useMemo(() => {
+        return <_Block {...props} />
+    }, [props.msg])
+}

@@ -31,7 +31,6 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
                 let items = raw.split('\n\n')
                 items = items.map(item => item.slice(6)).filter(item => item.length > 0).filter(item => item !== '[DONE]')
                 const datas = items.map(item => {
-                    console.log(item)
                     try {
                         return JSON.parse(item)
                     } catch (error) {
