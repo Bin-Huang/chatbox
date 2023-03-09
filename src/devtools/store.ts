@@ -10,6 +10,12 @@ export const writeStore = (key: string, value: any) => {
 export const readStore = (key: string) => {
     return (window as any).api.invoke('getStoreValue', key)
 }
+export const getVersion = () => {
+    return (window as any).api.invoke('getVersion')
+}
+export const openLink = (link: string) => {
+    return (window as any).api.invoke('openLink', link)
+}
 
 // setting store
 
@@ -48,6 +54,13 @@ export async function writeSessions(sessions: Session[]) {
 // react hook
 
 export default function useStore() {
+    const [version, _setVersion] = useState('unknown')
+    useEffect(() => {
+        getVersion().then((version: any) => {
+            _setVersion(version)
+        })
+    }, [])
+
     const [settings, _setSettings] = useState<Settings>(getDefaultSettings())
     const [needSetting, setNeedSetting] = useState(false)
     useEffect(() => {
@@ -115,6 +128,8 @@ export default function useStore() {
     }
 
     return {
+        version,
+
         settings,
         setSettings,
 

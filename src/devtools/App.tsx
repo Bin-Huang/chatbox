@@ -12,11 +12,12 @@ import {
 import { Session, createSession, Message, createMessage } from './types'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ChatIcon from '@mui/icons-material/Chat';
-import useStore from './store'
+import useStore, { openLink } from './store'
 import SettingWindow from './SettingWindow'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddIcon from '@mui/icons-material/Add';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const { useEffect, useState } = React
 
@@ -184,6 +185,19 @@ function App() {
                             <Typography variant="body2" color="text.secondary">
                                 {/* ⌘N */}
                             </Typography>
+                        </MenuItem>
+
+                        <MenuItem onClick={() => {
+                            openLink('https://github.com/Bin-Huang/chatbox/releases')
+                        }}>
+                            <ListItemIcon>
+                                <IconButton><InfoOutlinedIcon fontSize="small" /></IconButton>
+                            </ListItemIcon>
+                            <ListItemText>
+                                <Typography color="GrayText">
+                                    Version: {store.version}
+                                </Typography>
+                            </ListItemText>
                         </MenuItem>
 
                     </Stack>
