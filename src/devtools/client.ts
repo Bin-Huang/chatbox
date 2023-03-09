@@ -2,6 +2,9 @@ import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionR
 import { Message } from './types'
 
 export async function replay(apiKey: string, host: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
+    if (msgs.length > 5) {
+        msgs = msgs.slice(msgs.length - 5)
+    }
     try {
         const messages: ChatCompletionRequestMessage[] = msgs.map(msg => ({ role: msg.role, content: msg.content }))
         const response = await fetch(`${host}/v1/chat/completions`, {
