@@ -342,16 +342,7 @@ function MessageInput(props: {
                         autoFocus
                         id='message-input'
                         onKeyDown={(event) => {
-                            if (
-                                (event.key === 'Enter' && event.ctrlKey)
-                                || (event.key === 'Enter' && event.metaKey)
-                                || (event.key === 'Enter' && event.shiftKey)
-                            ) {
-                                event.preventDefault()
-                                setMessageText(messageText + '\n')
-                                return
-                            }
-                            if (event.keyCode === 13) {
+                            if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
                                 event.preventDefault()
                                 submit()
                                 return
@@ -362,7 +353,7 @@ function MessageInput(props: {
                         SEND
                     </Button>
                 </Stack>
-                <Typography variant='caption' style={{ opacity: 0.3 }}>[Enter] send, [Shift/Ctrl+Enter] line break</Typography>
+                <Typography variant='caption' style={{ opacity: 0.3 }}>[Enter] send, [Shift+Enter] line break</Typography>
             </Stack>
         </form>
     )
