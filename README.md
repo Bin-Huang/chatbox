@@ -25,10 +25,9 @@ Feasible. Compared to ChatGPT Plus, the OpenAI Developer API can achieve exactly
 
 Supported platforms and architectures:
 
-- **Mac**: x64(tested), amd64(ready but untested)
-- **Windows**: x64(tested), amd64(prepared but untested)
-- **Linux**: arm64(prepared but untested), amd64(prepared but untested)
-- All platforms and architectures see release page.
+- **Mac**: x64, arm64(compatibility with x64 tested)
+- **Windows**: x64
+- **Linux**: x64
 
 ## Roadmap
 
