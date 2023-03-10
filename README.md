@@ -32,9 +32,9 @@ Supported platforms and architectures:
 ## Roadmap
 
 - [x] AI chat and session management
-- [x] Local storage of chat messages and sessions
-- [x] Formatting of session message content (markdown)
-- [x] Streaming API
+- [x] Store all your important message data locally.
+- [x] Markdown
+- [x] Streaming reply
 - [x] Api Host configuration
 - [_] Prompt Devtools
 - More...
