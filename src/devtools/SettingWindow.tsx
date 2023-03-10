@@ -22,8 +22,13 @@ export default function SettingWindow(props: Props) {
         setSettingsEdit(props.settings)
     }, [props.settings])
 
+    const onCancel = () => {
+        props.close()
+        setSettingsEdit(props.settings)
+    }
+
     return (
-        <Dialog open={props.open} onClose={props.close}>
+        <Dialog open={props.open} onClose={onCancel}>
             <DialogTitle>Settings</DialogTitle>
             <DialogContent>
                 <DialogContentText>
@@ -73,10 +78,7 @@ export default function SettingWindow(props: Props) {
                 }
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => {
-                    props.close()
-                    setSettingsEdit(props.settings)
-                }}>Cancel</Button>
+                <Button onClick={onCancel}>Cancel</Button>
                 <Button onClick={() => props.save(settingsEdit)}>Save</Button>
             </DialogActions>
         </Dialog>
