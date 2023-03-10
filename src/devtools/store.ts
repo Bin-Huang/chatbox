@@ -29,7 +29,14 @@ export function getDefaultSettings(): Settings {
 
 export async function readSettings(): Promise<Settings> {
     const setting = await readStore('settings')
-    return setting || getDefaultSettings()
+    if (!setting) {
+        return getDefaultSettings()
+    }
+    // 兼容早期版本
+    if (!setting.apiHost) {
+        setting.apiHost = getDefaultSettings().apiHost
+    }
+    return setting
 }
 
 export async function writeSettings(settings: Settings) {
