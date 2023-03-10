@@ -14,6 +14,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ChatIcon from '@mui/icons-material/Chat';
 import useStore, { openLink } from './store'
 import SettingWindow from './SettingWindow'
+import ChatConfigWindow from './ChatConfigWindow'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddIcon from '@mui/icons-material/Add';
@@ -40,6 +41,8 @@ function App() {
             setOpenSettingWindow(true)
         }
     }, [store.needSetting])
+
+    const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
 
     const generate = async (msgs: Message[]) => {
         const msg = createMessage('assistant', '...')
@@ -142,7 +145,7 @@ function App() {
                                             newSession.messages = session.messages
                                             store.createChatSession(newSession, ix)
                                         }}
-                                        updateMe={(updated) => store.updateChatSession(updated)}
+                                        editMe={() => setConfigureChatConfig(session)}
                                     />
                                 ))
                             }
@@ -308,6 +311,18 @@ function App() {
                     }}
                     close={() => setOpenSettingWindow(false)}
                 />
+                {
+                    configureChatConfig !== null && (
+                        <ChatConfigWindow open={configureChatConfig !== null}
+                            session={configureChatConfig}
+                            save={(session) => {
+                                store.updateChatSession(session)
+                                setConfigureChatConfig(null)
+                            }}
+                            close={() => setConfigureChatConfig(null)}
+                        />
+                    )
+                }
             </Grid>
         </Box >
     );

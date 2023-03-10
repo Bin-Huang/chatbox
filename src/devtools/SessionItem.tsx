@@ -23,13 +23,11 @@ export interface Props {
     switchMe: () => void
     deleteMe: () => void
     copyMe: () => void
-    updateMe: (session: Session) => void
+    editMe: () => void
 }
 
 export default function SessionItem(props: Props) {
-    const { session, selected, switchMe, deleteMe, copyMe, updateMe } = props
-    const [editMode, setEditMode] = useState(false)
-    const [nameEdit, setNameEdit] = useState(session.name)
+    const { session, selected, switchMe, deleteMe, copyMe, editMe } = props
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,108 +37,61 @@ export default function SessionItem(props: Props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const saveNameEdit = () => {
-        handleClose()
-        updateMe({ ...session, name: nameEdit })
-        setEditMode(false)
-    }
-
-    const inputEl = useRef(null)
-    useEffect(() => {
-        if (editMode) {
-            inputEl.current.focus()
-        }
-    }, [editMode])
 
     return (
         <MenuItem
             key={session.id}
             selected={selected}
-            onClick={() => {
-                if (!editMode) {
-                    switchMe()
-                }
-            }}
+            onClick={() => switchMe()}
         >
             <ListItemIcon>
                 <IconButton><ChatBubbleOutlineOutlinedIcon fontSize="small" /></IconButton>
             </ListItemIcon>
             <ListItemText>
-                {
-
-                    editMode ? (
-                        <form onSubmit={(event) => {
-                            event.preventDefault()
-                            saveNameEdit()
-                        }}>
-                        <TextField variant="standard" value={nameEdit} inputRef={inputEl}
-                            onChange={(e) => {
-                                e.preventDefault()
-                                setNameEdit(e.target.value)
-                            }}
-                        />
-                        </form>
-                    ) : (
-                        <Typography variant="inherit" noWrap>
-                            {session.name}
-                        </Typography>
-                    )
-                }
+                <Typography variant="inherit" noWrap>
+                    {session.name}
+                </Typography>
             </ListItemText>
-            {
-                editMode ? (
-                    <>
-                        <IconButton onClick={saveNameEdit}>
-                            <CheckIcon />
-                        </IconButton>
-                    </>
-                ) : (
-                    <>
-                        <IconButton
-                            onClick={handleClick}
-                        >
-                            <MoreHorizOutlinedIcon />
-                        </IconButton>
-                        <StyledMenu
-                            MenuListProps={{
-                                'aria-labelledby': 'long-button',
-                            }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <MenuItem key={session.id + 'edit'} onClick={() => {
-                                setEditMode(true)
-                            }} disableRipple
-                            >
-                                <EditIcon />
-                                Rename
-                            </MenuItem>
+            <IconButton onClick={handleClick}>
+                <MoreHorizOutlinedIcon />
+            </IconButton>
+            <StyledMenu
+                MenuListProps={{
+                    'aria-labelledby': 'long-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+            >
+                <MenuItem key={session.id + 'edit'} onClick={() => {
+                    editMe()
+                    handleClose()
+                }} disableRipple>
+                    <EditIcon />
+                    Rename
+                </MenuItem>
 
-                            <MenuItem key={session.id + 'copy'} onClick={() => {
-                                copyMe()
-                            }} disableRipple
-                            >
-                                <FileCopyIcon fontSize='small' />
-                                Copy
-                            </MenuItem>
+                <MenuItem key={session.id + 'copy'} onClick={() => {
+                    copyMe()
+                    handleClose()
+                }} disableRipple>
+                    <FileCopyIcon fontSize='small' />
+                    Copy
+                </MenuItem>
 
-                            <Divider sx={{ my: 0.5 }} />
+                <Divider sx={{ my: 0.5 }} />
 
-                            <MenuItem key={session.id + 'del'} onClick={() => {
-                                setAnchorEl(null)
-                                handleClose()
-                                deleteMe()
-                            }} disableRipple
-                            >
-                                <DeleteForeverIcon />
-                                Delete
-                            </MenuItem>
+                <MenuItem key={session.id + 'del'} onClick={() => {
+                    setAnchorEl(null)
+                    handleClose()
+                    deleteMe()
+                }} disableRipple
+                >
+                    <DeleteForeverIcon />
+                    Delete
+                </MenuItem>
 
-                        </StyledMenu>
-                    </>
-                )
-            }
+            </StyledMenu>
         </MenuItem>
     )
 }
