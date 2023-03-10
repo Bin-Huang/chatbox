@@ -36,14 +36,14 @@ export default function ChatConfigWindow(props: Props) {
 
     return (
         <Dialog open={props.open} onClose={onCancel}>
-            <DialogTitle>Chat Config</DialogTitle>
+            <DialogTitle>Renaming</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Chat Title"
+                    label="Title"
                     type="text"
                     fullWidth
                     variant="outlined"
