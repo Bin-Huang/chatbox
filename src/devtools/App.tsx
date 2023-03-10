@@ -323,6 +323,9 @@ function MessageInput(props: {
         if (event) {
             event.preventDefault()
         }
+        if (messageText.length === 0) {
+            return
+        }
         props.onSubmit(createMessage('user', messageText))
         setMessageText('')
     }
