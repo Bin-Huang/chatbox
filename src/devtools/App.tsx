@@ -331,28 +331,38 @@ function MessageInput(props: {
     }
     return (
         <form onSubmit={submit}>
-            <Stack direction="row" spacing={1} alignItems="center">
-                <TextField
-                    multiline
-                    label="Prompt"
-                    value={messageText}
-                    onChange={(event) => setMessageText(event.target.value)}
-                    fullWidth
-                    autoFocus
-                    id='message-input'
-                    onKeyDown={(event) => {
-                        if ((event.key === 'Enter' && event.ctrlKey) || (event.key === 'Enter' && event.metaKey)) {
-                            submit()
-                        }
-                    }}
-                />
-                <Button type="submit" variant="contained" sx={{
-                    textTransform: 'none',
-                    flexDirection: 'column',
-                }} >
-                    <Typography variant='button'>SEND</Typography>
-                    <Typography variant='caption' style={{ opacity: 0.5 }}>Ctrl↵</Typography>
-                </Button>
+            <Stack direction="column" spacing={1}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                    <TextField
+                        multiline
+                        label="Prompt"
+                        value={messageText}
+                        onChange={(event) => setMessageText(event.target.value)}
+                        fullWidth
+                        autoFocus
+                        id='message-input'
+                        onKeyDown={(event) => {
+                            if (
+                                (event.key === 'Enter' && event.ctrlKey)
+                                || (event.key === 'Enter' && event.metaKey)
+                                || (event.key === 'Enter' && event.shiftKey)
+                            ) {
+                                event.preventDefault()
+                                setMessageText(messageText + '\n')
+                                return
+                            }
+                            if (event.keyCode === 13) {
+                                event.preventDefault()
+                                submit()
+                                return
+                            }
+                        }}
+                    />
+                    <Button type='submit' variant="contained" size='large'>
+                        SEND
+                    </Button>
+                </Stack>
+                <Typography variant='caption' style={{ opacity: 0.3 }}>[Enter] send, [Shift/Ctrl+Enter] line break</Typography>
             </Stack>
         </form>
     )
