@@ -24,9 +24,9 @@ ChatBox 是一个开源的 OpenAI API 跨平台桌面客户端。prompt 的调�
 
 支持的平台与架构：
 
-- Mac: x64(tested), amd64(ready but untested)
-- Windows: x64(tested), amd64(prepared but untested)
-- Linux: arm64(prepared but untested), amd64(prepared but untested)
+- **Mac**: x64(tested), amd64(ready but untested)
+- **Windows**: x64(tested), amd64(prepared but untested)
+- **Linux**: arm64(prepared but untested), amd64(prepared but untested)
 - All platforms and architectures see release page.
 
 ## Roadmap
@@ -34,7 +34,8 @@ ChatBox 是一个开源的 OpenAI API 跨平台桌面客户端。prompt 的调�
 - [x] AI 聊天与会话管理
 - [x] 聊天消息与会话的本地存储
 - [x] 会话消息内容的格式美化（markdown）
-- [_] Streaming API
+- [x] Streaming 打字机特效
+- [x] API Host 配置
 - [_] Prompt Devtools
 - More...
 
