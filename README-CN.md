@@ -1,6 +1,33 @@
-[EN](./README.md) | [中文](./README-CN.md)
+<h1 align="center">Chatbox</h1>
+<p align="center">
+    <a href="./README.md">English</a> | 中文
+</p>
+<p align="center">
+    <em>开源的 OpenAI API 跨平台桌面客户端，Prompt 的调试与管理工具，也可以用作 ChatGPT Plus 平替</em>
+</p>
 
-ChatBox 是一个开源的 OpenAI API 跨平台桌面客户端。prompt 的调试与管理工具，也可以用来替代 ChatGPT Plus 服务。
+
+<p align="center">
+<a href="LICENSE" target="_blank">
+    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" />
+</a>
+
+<!-- TypeScript Badge -->
+<img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-blue?style=flat-square&logo=typescript&logoColor=white" />
+
+<a href="https://github.com/yetone/openai-translator/releases" target="_blank">
+<img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
+</a>
+
+<a href="https://github.com/yetone/openai-translator/releases" target="_blank">
+<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
+</a>
+
+<a href="https://github.com/yetone/openai-translator/releases" target="_blank">
+<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
+</a>
+
+</p>
 
 ![](./doc/demo.png)
 ![](./doc/demo2.png)
