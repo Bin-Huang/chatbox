@@ -27,12 +27,14 @@ function App() {
 
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
+    const [needScroll, setNeedScroll] = useState(false)
     const listRef = useRef<any>(null)
     useEffect(() => {
         if (listRef.current) {
             listRef.current.scrollTop = listRef.current.scrollHeight
         }
-    }, [store.currentSession])
+        setNeedScroll(false)
+    }, [needScroll, store.currentSession])
 
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
 
@@ -44,35 +46,35 @@ function App() {
 
     const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
 
-    const generate = async (msgs: Message[]) => {
+    const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
         const msg = createMessage('assistant', '...')
-        const newMessages = [...msgs, msg]
-        store.updateChatSession({ ...store.currentSession, messages: newMessages })
         await client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
-            msgs,
+            promptMsgs,
             (text) => {
-                store.updateChatSession({
-                    ...store.currentSession,
-                    messages: newMessages.map((m) => {
-                        if (m.id === msg.id) {
-                            return { ...m, content: text }
+                for (let i = 0; i < session.messages.length; i++) {
+                    if (session.messages[i].id === targetMsg.id) {
+                        session.messages[i] = {
+                            ...session.messages[i],
+                            content: text,
                         }
-                        return m
-                    }),
-                })
+                        break
+                    }
+                }
+                store.updateChatSession(session)
             },
             (err) => {
-                store.updateChatSession({
-                    ...store.currentSession,
-                    messages: newMessages.map((m) => {
-                        if (m.id === msg.id) {
-                            return { ...m, content: 'API Request Failed: \n```\n' + err.message + '\n```' }
+                for (let i = 0; i < session.messages.length; i++) {
+                    if (session.messages[i].id === targetMsg.id) {
+                        session.messages[i] = {
+                            ...session.messages[i],
+                            content: 'API Request Failed: \n```\n' + err.message + '\n```',
                         }
-                        return m
-                    }),
-                })
+                        break
+                    }
+                }
+                store.updateChatSession(session)
             }
         )
     }
@@ -285,19 +287,22 @@ function App() {
                                             store.updateChatSession({ ...store.currentSession, messages: newMsgs })
                                         }}
                                         refreshMsg={() => {
-                                            const msgs = store.currentSession.messages.slice(0, ix)
-                                            store.updateChatSession({ ...store.currentSession, messages: msgs })
-                                            generate(msgs)
+                                            const promptMsgs = store.currentSession.messages.slice(0, ix)
+                                            generate(store.currentSession, promptMsgs, msg)
                                         }}
                                     />
                                 ))
                             }
                         </List>
                         <Box>
-                            <MessageInput onSubmit={async (newMsg: Message) => {
-                                const newMessages = [...store.currentSession.messages, newMsg]
-                                store.updateChatSession({ ...store.currentSession, messages: newMessages })
-                                generate(newMessages)
+                            <MessageInput onSubmit={async (newUserMsg: Message) => {
+                                store.currentSession.messages.push(newUserMsg)
+                                const promptsMsgs = [...store.currentSession.messages]
+                                const newAssistantMsg = createMessage('assistant', '....')
+                                store.currentSession.messages.push(newAssistantMsg)
+                                store.updateChatSession(store.currentSession)
+                                generate(store.currentSession, promptsMsgs, newAssistantMsg)
+                                setNeedScroll(true)
                             }} />
                         </Box>
                     </Stack>
