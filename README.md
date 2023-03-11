@@ -89,7 +89,7 @@ Any form of contribution is welcome, including but not limited to:
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
-<a style='font-size: 30px' href='https://www.paypal.me/tobennhuang'>Paypal</a>
+[**`Paypal`**](https://www.paypal.me/tobennhuang)
 
 <img src="./doc/wechat_pay.JPG" width="200" />
 
