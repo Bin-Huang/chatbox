@@ -63,7 +63,6 @@ Supported platforms and architectures:
 - [x] Markdown
 - [x] Streaming reply
 - [x] Api Host configuration
-- [ ] Prompt Devtools
 - [ ] Chinese language support
 - [ ] Copy button for code blocks
 - [ ] Night/Dark mode
@@ -71,6 +70,7 @@ Supported platforms and architectures:
 - [ ] Automatically generate tab titles
 - [ ] Drag-and-drop sorting of tabs
 - [ ] Button for clearing messages.
+- [ ] Prompt and parameter configuration
 - More...
 
 ## How to contribute
