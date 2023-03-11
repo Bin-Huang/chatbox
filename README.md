@@ -40,11 +40,10 @@
 
 ## Alternative to ChatGPT Plus?
 
-Feasible. Compared to ChatGPT Plus, the OpenAI Developer API can achieve exactly the same results, and has the following advantages:
+The idea is feasible. OpenAI also provides a developer API service, which offers the same functionality as ChatGPT Plus and some additional benefits as follows: 
 
-- Unlike ChatGPT Plus's fixed monthly charge of $20, OpenAI Developer API is pay-as-you-go, and hence has lower overall usage cost.
-- The OpenAI Developer API can more directly use the GPT model behind ChatGPT, such as flexible prompt role debugging and parameter debugging.
-- ChatBox is a cross-platform desktop client, which is more convenient to use than the web interface.
+1. Unlike ChatGPT Plus, which charges a fixed monthly fee of $20, the developer API service charges based on usage, resulting in lower overall costs.
+2. The developer API service enables more direct use of the model behind ChatGPT, such as using more flexible prompt role debugging and parameter debugging.
 
 ## Download
 
