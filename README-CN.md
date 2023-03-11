@@ -35,7 +35,14 @@ ChatBox 是一个开源的 OpenAI API 跨平台桌面客户端。prompt 的调�
 - [x] 会话消息内容的格式美化（markdown）
 - [x] Streaming 打字机特效
 - [x] API Host 配置
-- [_] Prompt Devtools
+- [ ] Prompt Devtools
+- [ ] 中文菜单
+- [ ] 代码块的复制按钮
+- [ ] 夜间模式
+- [ ] 停止生成的按钮
+- [ ] 自动生成标签页的标题
+- [ ] 标签页的拖拽排序
+- [ ] 消息清理的按钮
 - More...
 
 ## 如何贡献
