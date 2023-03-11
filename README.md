@@ -58,6 +58,16 @@ Any form of contribution is welcome, including but not limited to:
 - Submitting translations
 - Submitting any other form of contribution
 
+## Buy me a coffee
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
+
+<a style='font-size: 30px' href='https://www.paypal.me/tobennhuang'>Paypal</a>
+
+<img src="./doc/wechat_pay.JPG" width="200" />
+
+<img src="./doc/ali_pay.PNG" width="200" />
+
 ## License
 
 MIT

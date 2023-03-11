@@ -57,6 +57,16 @@ ChatBox 是一个开源的 OpenAI API 跨平台桌面客户端。prompt 的调�
 - 提交翻译
 - 提交其他任何形式的贡献
 
+## 请我喝杯咖啡
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
+
+<a style='font-size: 30px' href='https://www.paypal.me/tobennhuang'>Paypal</a>
+
+<img src="./doc/wechat_pay.JPG" width="200" />
+
+<img src="./doc/ali_pay.PNG" width="200" />
+
 ## License
 
 MIT
