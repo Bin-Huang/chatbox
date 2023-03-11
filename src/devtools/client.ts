@@ -32,13 +32,18 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
             } else {
                 const raw = d.decode(value)
                 let items = raw.split('\n\n')
-                items = items.map(item => item.slice(6)).filter(item => item.length > 0).filter(item => item !== '[DONE]')
+                items = items.map(item => item.replace(/^data: /, '')).filter(item => item.length > 0).filter(item => item !== '[DONE]')
                 const datas = items.map(item => {
+                    let json: any
                     try {
-                        return JSON.parse(item)
+                        json = JSON.parse(item)
                     } catch (error) {
                         throw new Error(`Error parsing item: ${item}.\nError Details: ${error}`)
                     }
+                    if (json.error) {
+                        throw new Error(`Error from OpenAI: ${JSON.stringify(json)}`)
+                    }
+                    return json
                 })
                 for (const data of datas) {
                     const text = data.choices[0]?.delta?.content
