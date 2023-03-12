@@ -4,10 +4,10 @@ import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
 import {
-    Toolbar, AppBar, Card, Box, Badge,
-    List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemAvatar, MenuList,
-    Avatar, IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
-    Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
+    Toolbar, Box, Badge, Snackbar,
+    List, ListSubheader,  ListItemText, MenuList,
+    IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
+    TextField,
 } from '@mui/material';
 import { Session, createSession, Message, createMessage } from './types'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -290,6 +290,10 @@ function App() {
                                             const promptMsgs = store.currentSession.messages.slice(0, ix)
                                             generate(store.currentSession, promptMsgs, msg)
                                         }}
+                                        copyMsg={() => {
+                                            navigator.clipboard.writeText(msg.content)
+                                            store.addToast('Copied to clipboard')
+                                        }}
                                     />
                                 ))
                             }
@@ -327,6 +331,16 @@ function App() {
                             close={() => setConfigureChatConfig(null)}
                         />
                     )
+                }
+                {
+                    store.toasts.map((toast) => (
+                        <Snackbar
+                            open
+                            onClose={() => store.removeToast(toast.id)}
+                            message={toast.content}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        />
+                    ))
                 }
             </Grid>
         </Box >

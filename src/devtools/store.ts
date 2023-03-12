@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Settings, createSession, Session, Message } from './types'
 import * as defaults from './defaults'
 import * as openai from './openai-node'
+import { v4 as uuidv4 } from 'uuid';
 
 // ipc
 
@@ -141,6 +142,15 @@ export default function useStore() {
         })
     }
 
+    const [toasts, _setToasts] = useState<{id: string, content: string}[]>([])
+    const addToast = (content: string) => {
+        const id = uuidv4()
+        _setToasts([...toasts, {id, content}])
+    }
+    const removeToast = (id: string) => {
+        _setToasts(toasts.filter((t) => t.id !== id))
+    }
+
     return {
         version,
 
@@ -157,5 +167,9 @@ export default function useStore() {
 
         currentSession,
         switchCurrentSession,
+
+        toasts,
+        addToast,
+        removeToast,
     }
 }

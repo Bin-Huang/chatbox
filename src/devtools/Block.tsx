@@ -19,6 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -44,9 +45,10 @@ export type Message = ChatCompletionRequestMessage & {
 
 export interface Props {
     msg: Message
-    setMsg?: (msg: Message) => void
-    delMsg?: () => void
-    refreshMsg?: () => void
+    setMsg: (msg: Message) => void
+    delMsg: () => void
+    refreshMsg: () => void
+    copyMsg: () => void
 }
 
 function _Block(props: Props) {
@@ -168,6 +170,14 @@ function _Block(props: Props) {
                                             onClose={handleClose}
                                             key={msg.id + 'menu'}
                                         >
+                                            <MenuItem key={msg.id + 'copy'} onClick={() => {
+                                                props.copyMsg()
+                                                setAnchorEl(null)
+                                            }} disableRipple>
+                                                <ContentCopyIcon />
+                                                Copy content
+                                            </MenuItem>
+
                                             <MenuItem key={msg.id + 'edit'} onClick={() => {
                                                 setIsHovering(false)
                                                 setAnchorEl(null)
