@@ -2,11 +2,29 @@ import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionR
 import { Message } from './types'
 
 export async function replay(apiKey: string, host: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
-    if (msgs.length > 5) {
-        msgs = msgs.slice(msgs.length - 5)
+    if (msgs.length === 0) {
+        throw new Error('No messages to replay')
     }
+    const head = msgs[0]
+    msgs = msgs.slice(1)
+
+
+    const maxLen = 1800
+    let totalLen = head.content.length
+
+    let prompts: Message[] = []
+    for (let i = msgs.length - 1; i >= 0; i--) {
+        const msg = msgs[i]
+        if (msg.content.length + totalLen > maxLen) {
+            break
+        }
+        prompts = [msg, ...prompts]
+        totalLen += msg.content.length
+    }
+    prompts = [head, ...prompts]
+
     try {
-        const messages: ChatCompletionRequestMessage[] = msgs.map(msg => ({ role: msg.role, content: msg.content }))
+        const messages: ChatCompletionRequestMessage[] = prompts.map(msg => ({ role: msg.role, content: msg.content }))
         const response = await fetch(`${host}/v1/chat/completions`, {
             method: 'POST',
             headers: {
