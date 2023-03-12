@@ -17,9 +17,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -159,7 +159,7 @@ function _Block(props: Props) {
                                             <RefreshIcon fontSize='small' />
                                         </Button>
                                         <Button onClick={handleClick}>
-                                            <MoreHorizOutlinedIcon />
+                                            <MoreVertIcon />
                                         </Button>
                                         <StyledMenu
                                             MenuListProps={{
@@ -175,7 +175,7 @@ function _Block(props: Props) {
                                                 setAnchorEl(null)
                                             }} disableRipple>
                                                 <ContentCopyIcon />
-                                                Copy content
+                                                Copy
                                             </MenuItem>
 
                                             <MenuItem key={msg.id + 'edit'} onClick={() => {
