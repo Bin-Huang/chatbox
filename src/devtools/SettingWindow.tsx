@@ -3,6 +3,7 @@ import './App.css';
 import {
     Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
+    FormGroup, FormControlLabel, Switch,
 } from '@mui/material';
 import { Settings } from './types'
 import { getDefaultSettings } from './store'
@@ -76,6 +77,14 @@ export default function SettingWindow(props: Props) {
                         </Alert>
                     )
                 }
+
+                <FormGroup>
+                    <FormControlLabel control={<Switch />} label="Show word count"
+                        checked={settingsEdit.showWordCount}
+                        onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showWordCount: checked })}
+                    />
+                </FormGroup>
+
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel}>Cancel</Button>

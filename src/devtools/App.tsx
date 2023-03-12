@@ -272,7 +272,7 @@ function App() {
                         >
                             {
                                 store.currentSession.messages.map((msg, ix) => (
-                                    <Block msg={msg}
+                                    <Block msg={msg} showWordCount={store.settings.showWordCount}
                                         setMsg={(updated) => {
                                             const newMsgs = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {

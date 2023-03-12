@@ -20,6 +20,7 @@ import { styled, alpha } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import * as wordCount from './utils'
 
 const md = new MarkdownIt({
     linkify: true,
@@ -45,6 +46,7 @@ export type Message = ChatCompletionRequestMessage & {
 
 export interface Props {
     msg: Message
+    showWordCount: boolean
     setMsg: (msg: Message) => void
     delMsg: () => void
     refreshMsg: () => void
@@ -140,7 +142,11 @@ function _Block(props: Props) {
                                 )
                             }
                             <Typography variant="body2" color="text.secondary">
-                                {/* 100 tokens */}
+                                {
+                                    props.showWordCount && (
+                                        <>word count: {wordCount.countWord(msg.content)}</>
+                                    )
+                                }
                             </Typography>
                         </Grid>
                     </Grid>
@@ -253,5 +259,5 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Block(props: Props) {
     return useMemo(() => {
         return <_Block {...props} />
-    }, [props.msg])
+    }, [props.msg, props.showWordCount])
 }

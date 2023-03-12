@@ -25,6 +25,7 @@ export function getDefaultSettings(): Settings {
     return {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
+        showWordCount: false,
     }
 }
 
@@ -36,6 +37,9 @@ export async function readSettings(): Promise<Settings> {
     // 兼容早期版本
     if (!setting.apiHost) {
         setting.apiHost = getDefaultSettings().apiHost
+    }
+    if (setting.showWordCount === undefined) {
+        setting.showWordCount = getDefaultSettings().showWordCount
     }
     return setting
 }
