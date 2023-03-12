@@ -96,4 +96,4 @@ Any form of contribution is welcome, including but not limited to:
 
 ## License
 
-MIT
+[GNU General Public License v3.0](./LICENSE)
