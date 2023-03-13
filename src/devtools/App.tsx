@@ -10,7 +10,6 @@ import {
     TextField,
 } from '@mui/material';
 import { Session, createSession, Message, createMessage } from './types'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ChatIcon from '@mui/icons-material/Chat';
 import useStore, { openLink } from './store'
 import SettingWindow from './SettingWindow'
@@ -47,7 +46,6 @@ function App() {
     const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
-        const msg = createMessage('assistant', '...')
         await client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
@@ -153,46 +151,6 @@ function App() {
                             }
                         </MenuList>
 
-                        {/* <MenuList
-                            sx={{
-                                width: '100%',
-                                // bgcolor: 'background.paper',
-                                bgcolor: '#F7F7F7',
-                                position: 'relative',
-                                overflow: 'auto',
-                                height: '30vh',
-                                '& ul': { padding: 0 },
-                            }}
-                            component="nav"
-                            aria-labelledby="nested-list-subheader"
-                            subheader={
-                                <ListSubheader component="div"
-                                    sx={{
-                                        bgcolor: '#F7F7F7',
-                                    }}
-                                >
-                                    Chat
-                                </ListSubheader>
-                            }
-
-                        >
-                            {
-                                store.chatSessions.map((session, ix) => (
-                                    <SessionItem selected={store.currentSession.id === session.id}
-                                        session={session}
-                                        switchMe={() => store.switchCurrentSession(session)}
-                                        deleteMe={() => store.deleteChatSession(session)}
-                                        copyMe={() => {
-                                            const newSession = createSession(session.name + ' Copyed')
-                                            newSession.messages = session.messages
-                                            store.createChatSession(newSession, ix)
-                                        }}
-                                        updateMe={(updated) => store.updateChatSession(updated)}
-                                    />
-                                ))
-                            }
-                        </MenuList> */}
-
                         <Divider />
 
                         <MenuItem onClick={() => store.createEmptyChatSession()} >
@@ -274,17 +232,17 @@ function App() {
                                 store.currentSession.messages.map((msg, ix) => (
                                     <Block msg={msg} showWordCount={store.settings.showWordCount}
                                         setMsg={(updated) => {
-                                            const newMsgs = store.currentSession.messages.map((m) => {
+                                            store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {
                                                     return updated
                                                 }
                                                 return m
                                             })
-                                            store.updateChatSession({ ...store.currentSession, messages: newMsgs })
+                                            store.updateChatSession(store.currentSession)
                                         }}
                                         delMsg={() => {
-                                            const newMsgs = store.currentSession.messages.filter((m) => m.id !== msg.id)
-                                            store.updateChatSession({ ...store.currentSession, messages: newMsgs })
+                                            store.currentSession.messages = store.currentSession.messages.filter((m) => m.id !== msg.id)
+                                            store.updateChatSession(store.currentSession)
                                         }}
                                         refreshMsg={() => {
                                             const promptMsgs = store.currentSession.messages.slice(0, ix)
