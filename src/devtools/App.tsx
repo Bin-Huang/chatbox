@@ -77,7 +77,10 @@ function App() {
 
     // 会话名称自动生成
     useEffect(() => {
-        if (store.currentSession.name === 'Untitled' && store.currentSession.messages.length > 3) {
+        if (
+            store.currentSession.name === 'Untitled'
+            && store.currentSession.messages.findIndex(msg => msg.role === 'assistant') !== -1
+        ) {
             generateName(store.currentSession)
         }
     }, [store.currentSession.messages])
