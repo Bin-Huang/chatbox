@@ -160,7 +160,6 @@ export default function useStore() {
 
         settings,
         setSettings,
-
         needSetting,
 
         chatSessions,

@@ -18,6 +18,7 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import * as prompts from './prompts'
 
 const { useEffect, useState } = React
 
@@ -35,6 +36,12 @@ function App() {
         setNeedScroll(false)
     }, [needScroll, store.currentSession])
 
+    useEffect(() => {
+        if (store.currentSession.name === 'Untitled' && store.currentSession.messages.length > 3) {
+            generateName(store.currentSession)
+        }
+    }, [store.currentSession.messages])
+
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
 
     useEffect(() => {
@@ -44,6 +51,22 @@ function App() {
     }, [store.needSetting])
 
     const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
+
+    const generateName = async (session: Session) => {
+        client.replay(
+            store.settings.openaiKey,
+            store.settings.apiHost,
+            prompts.nameConversation(session.messages.slice(0, 3)),
+            (name) => {
+                name = name.replace(/['"“”]/g, '')
+                session.name = name
+                store.updateChatSession(session)
+            },
+            (err) => {
+                console.log(err)
+            }
+        )
+    }
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
         await client.replay(
@@ -230,7 +253,8 @@ function App() {
                         >
                             {
                                 store.currentSession.messages.map((msg, ix) => (
-                                    <Block msg={msg} showWordCount={store.settings.showWordCount}
+                                    <Block key={msg.id} msg={msg}
+                                        showWordCount={store.settings.showWordCount}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {
