@@ -282,10 +282,9 @@ function App() {
                         </List>
                         <Box>
                             <MessageInput onSubmit={async (newUserMsg: Message) => {
-                                store.currentSession.messages.push(newUserMsg)
-                                const promptsMsgs = [...store.currentSession.messages]
+                                const promptsMsgs = [...store.currentSession.messages, newUserMsg]
                                 const newAssistantMsg = createMessage('assistant', '....')
-                                store.currentSession.messages.push(newAssistantMsg)
+                                store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
                                 store.updateChatSession(store.currentSession)
                                 generate(store.currentSession, promptsMsgs, newAssistantMsg)
                                 setNeedScroll(true)
