@@ -5,7 +5,7 @@ import * as client from './client'
 import SessionItem from './SessionItem'
 import {
     Toolbar, Box, Badge, Snackbar,
-    List, ListSubheader,  ListItemText, MenuList,
+    List, ListSubheader, ListItemText, MenuList,
     IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     TextField,
 } from '@mui/material';
@@ -25,7 +25,44 @@ const { useEffect, useState } = React
 function App() {
     const store = useStore()
 
+    // 是否展示设置窗口
+    const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
+    useEffect(() => {
+        if (store.needSetting) {
+            setOpenSettingWindow(true)
+        }
+    }, [store.needSetting])
+
+    // 是否展示应用更新提示
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
+
+    const [scrollToMsg, setScrollToMsg] = useState<{msgId: string, smooth?: boolean}>(null)
+    useEffect(() => {
+        if (!scrollToMsg) {
+            return
+        }
+        const container = document.getElementById('message-list')
+        const element = document.getElementById(scrollToMsg.msgId)
+        if (!container || !element) {
+            return
+        }
+        const elementRect = element.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const isInsideLeft = elementRect.left >= containerRect.left;
+        const isInsideRight = elementRect.right <= containerRect.right;
+        const isInsideTop = elementRect.top >= containerRect.top;
+        const isInsideBottom = elementRect.bottom <= containerRect.bottom;
+        if (isInsideLeft && isInsideRight && isInsideTop && isInsideBottom) {
+            return
+        }
+        // 平滑滚动
+        element.scrollIntoView({
+            behavior: scrollToMsg.smooth ? 'smooth' : 'auto',
+            block: 'end',
+            inline: 'nearest',
+        })
+        setScrollToMsg(null)
+    }, [scrollToMsg])
 
     // 切换到当前会话，自动滚动到最后一条消息
     useEffect(() => {
@@ -33,22 +70,15 @@ function App() {
             return
         }
         const last = store.currentSession.messages[store.currentSession.messages.length - 1]
-        document.getElementById(last.id)?.scrollIntoView(false)
+        setScrollToMsg({msgId: last.id, smooth: false})
     }, [store.currentSession])
 
+    // 会话名称自动生成
     useEffect(() => {
         if (store.currentSession.name === 'Untitled' && store.currentSession.messages.length > 3) {
             generateName(store.currentSession)
         }
     }, [store.currentSession.messages])
-
-    const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
-
-    useEffect(() => {
-        if (store.needSetting) {
-            setOpenSettingWindow(true)
-        }
-    }, [store.needSetting])
 
     const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
 
@@ -84,7 +114,7 @@ function App() {
                     }
                 }
                 store.updateChatSession(session)
-                document.getElementById(targetMsg.id)?.scrollIntoView(false)
+                setScrollToMsg({msgId: targetMsg.id, smooth: false})
             },
             (err) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -243,6 +273,7 @@ function App() {
                         </Toolbar>
                         <Divider />
                         <List
+                            id="message-list"
                             sx={{
                                 width: '100%',
                                 height: '80%',
@@ -287,6 +318,7 @@ function App() {
                                 store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
                                 store.updateChatSession(store.currentSession)
                                 generate(store.currentSession, promptsMsgs, newAssistantMsg)
+                                setScrollToMsg({msgId: newAssistantMsg.id, smooth: true})
                             }} />
                         </Box>
                     </Stack>
