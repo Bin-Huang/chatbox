@@ -19,6 +19,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import * as prompts from './prompts'
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import CleanWidnow from './CleanWindow';
 
 const { useEffect, useState } = React
 
@@ -36,7 +38,7 @@ function App() {
     // 是否展示应用更新提示
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
-    const [scrollToMsg, setScrollToMsg] = useState<{msgId: string, smooth?: boolean}>(null)
+    const [scrollToMsg, setScrollToMsg] = useState<{ msgId: string, smooth?: boolean }>(null)
     useEffect(() => {
         if (!scrollToMsg) {
             return
@@ -70,7 +72,7 @@ function App() {
             return
         }
         const last = store.currentSession.messages[store.currentSession.messages.length - 1]
-        setScrollToMsg({msgId: last.id, smooth: false})
+        setScrollToMsg({ msgId: last.id, smooth: false })
     }, [store.currentSession])
 
     // 会话名称自动生成
@@ -81,6 +83,8 @@ function App() {
     }, [store.currentSession.messages])
 
     const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
+
+    const [sessionClean, setSessionClean] = React.useState<Session | null>(null);
 
     const generateName = async (session: Session) => {
         client.replay(
@@ -114,7 +118,7 @@ function App() {
                     }
                 }
                 store.updateChatSession(session)
-                setScrollToMsg({msgId: targetMsg.id, smooth: false})
+                setScrollToMsg({ msgId: targetMsg.id, smooth: false })
             },
             (err) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -267,9 +271,14 @@ function App() {
                             <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                                 <ChatBubbleOutlineOutlinedIcon />
                             </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" noWrap>
+                            <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
                                 {store.currentSession.name}
                             </Typography>
+                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                                onClick={() => setSessionClean(store.currentSession)}
+                            >
+                                <CleaningServicesIcon />
+                            </IconButton>
                         </Toolbar>
                         <Divider />
                         <List
@@ -318,7 +327,7 @@ function App() {
                                 store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
                                 store.updateChatSession(store.currentSession)
                                 generate(store.currentSession, promptsMsgs, newAssistantMsg)
-                                setScrollToMsg({msgId: newAssistantMsg.id, smooth: true})
+                                setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
                             }} />
                         </Box>
                     </Stack>
@@ -341,6 +350,18 @@ function App() {
                                 setConfigureChatConfig(null)
                             }}
                             close={() => setConfigureChatConfig(null)}
+                        />
+                    )
+                }
+                {
+                    sessionClean !== null && (
+                        <CleanWidnow open={sessionClean !== null}
+                            session={sessionClean}
+                            save={(session) => {
+                                store.updateChatSession(session)
+                                setSessionClean(null)
+                            }}
+                            close={() => setSessionClean(null)}
                         />
                     )
                 }
