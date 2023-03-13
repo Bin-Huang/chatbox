@@ -45,6 +45,7 @@ export type Message = ChatCompletionRequestMessage & {
 }
 
 export interface Props {
+    id?: string
     msg: Message
     showWordCount: boolean
     setMsg: (msg: Message) => void
@@ -69,6 +70,7 @@ function _Block(props: Props) {
 
     return (
         <ListItem
+            id={props.id}
             key={msg.id}
             onMouseEnter={() => {
                 setIsHovering(true)

@@ -27,14 +27,14 @@ function App() {
 
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
-    const [needScroll, setNeedScroll] = useState(false)
-    const listRef = useRef<any>(null)
+    // 切换到当前会话，自动滚动到最后一条消息
     useEffect(() => {
-        if (listRef.current) {
-            listRef.current.scrollTop = listRef.current.scrollHeight
+        if (store.currentSession.messages.length === 0) {
+            return
         }
-        setNeedScroll(false)
-    }, [needScroll, store.currentSession])
+        const last = store.currentSession.messages[store.currentSession.messages.length - 1]
+        document.getElementById(last.id)?.scrollIntoView(false)
+    }, [store.currentSession])
 
     useEffect(() => {
         if (store.currentSession.name === 'Untitled' && store.currentSession.messages.length > 3) {
@@ -84,6 +84,7 @@ function App() {
                     }
                 }
                 store.updateChatSession(session)
+                document.getElementById(targetMsg.id)?.scrollIntoView(false)
             },
             (err) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -242,7 +243,6 @@ function App() {
                         </Toolbar>
                         <Divider />
                         <List
-                            ref={listRef}
                             sx={{
                                 width: '100%',
                                 height: '80%',
@@ -253,7 +253,7 @@ function App() {
                         >
                             {
                                 store.currentSession.messages.map((msg, ix) => (
-                                    <Block key={msg.id} msg={msg}
+                                    <Block id={msg.id} key={msg.id} msg={msg}
                                         showWordCount={store.settings.showWordCount}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
@@ -287,7 +287,6 @@ function App() {
                                 store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
                                 store.updateChatSession(store.currentSession)
                                 generate(store.currentSession, promptsMsgs, newAssistantMsg)
-                                setNeedScroll(true)
                             }} />
                         </Box>
                     </Stack>
