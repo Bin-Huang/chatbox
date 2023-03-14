@@ -312,8 +312,19 @@ function App() {
                                             store.updateChatSession(store.currentSession)
                                         }}
                                         refreshMsg={() => {
-                                            const promptMsgs = store.currentSession.messages.slice(0, ix)
-                                            generate(store.currentSession, promptMsgs, msg)
+                                            if (msg.role === 'assistant') {
+                                                const promptMsgs = store.currentSession.messages.slice(0, ix)
+                                                generate(store.currentSession, promptMsgs, msg)
+                                            } else {
+                                                const promptsMsgs = store.currentSession.messages.slice(0, ix + 1)
+                                                const newAssistantMsg = createMessage('assistant', '....')
+                                                const newMessages = [...store.currentSession.messages]
+                                                newMessages.splice(ix + 1, 0, newAssistantMsg)
+                                                store.currentSession.messages = newMessages
+                                                store.updateChatSession(store.currentSession)
+                                                generate(store.currentSession, promptsMsgs, newAssistantMsg)
+                                                setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
+                                            }
                                         }}
                                         copyMsg={() => {
                                             navigator.clipboard.writeText(msg.content)
