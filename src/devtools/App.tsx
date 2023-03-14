@@ -138,6 +138,11 @@ function App() {
         )
     }
 
+    const [ messageInput, setMessageInput ] = useState('')
+    useEffect(() => {
+        document.getElementById('message-input')?.focus() // better way?
+    }, [messageInput])
+
     return (
         <Box sx={{
             height: '100%',
@@ -329,20 +334,29 @@ function App() {
                                         copyMsg={() => {
                                             navigator.clipboard.writeText(msg.content)
                                             store.addToast('Copied to clipboard')
+                                        }} 
+                                        quoteMsg={() => {
+                                            let input = msg.content.split('\n').map(line => `> ${line}`).join('\n')
+                                            input += '\n\n-------------------\n\n'
+                                            setMessageInput(input)
                                         }}
                                     />
                                 ))
                             }
                         </List>
                         <Box>
-                            <MessageInput onSubmit={async (newUserMsg: Message) => {
-                                const promptsMsgs = [...store.currentSession.messages, newUserMsg]
-                                const newAssistantMsg = createMessage('assistant', '....')
-                                store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
-                                store.updateChatSession(store.currentSession)
-                                generate(store.currentSession, promptsMsgs, newAssistantMsg)
-                                setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
-                            }} />
+                            <MessageInput 
+                                messageInput={messageInput}
+                                setMessageInput={setMessageInput}
+                                onSubmit={async (newUserMsg: Message) => {
+                                    const promptsMsgs = [...store.currentSession.messages, newUserMsg]
+                                    const newAssistantMsg = createMessage('assistant', '....')
+                                    store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
+                                    store.updateChatSession(store.currentSession)
+                                    generate(store.currentSession, promptsMsgs, newAssistantMsg)
+                                    setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
+                                }}
+                            />
                         </Box>
                     </Stack>
                 </Grid>
@@ -398,17 +412,19 @@ export default App;
 
 function MessageInput(props: {
     onSubmit: (newMsg: Message) => void
+    messageInput: string
+    setMessageInput: (value: string) => void
 }) {
-    const [messageText, setMessageText] = useState<string>('')
+    const {messageInput, setMessageInput} = props
     const submit = (event?: any) => {
         if (event) {
             event.preventDefault()
         }
-        if (messageText.length === 0) {
+        if (messageInput.length === 0) {
             return
         }
-        props.onSubmit(createMessage('user', messageText))
-        setMessageText('')
+        props.onSubmit(createMessage('user', messageInput))
+        setMessageInput('')
     }
     return (
         <form onSubmit={submit}>
@@ -417,9 +433,10 @@ function MessageInput(props: {
                     <TextField
                         multiline
                         label="Prompt"
-                        value={messageText}
-                        onChange={(event) => setMessageText(event.target.value)}
+                        value={messageInput}
+                        onChange={(event) => setMessageInput(event.target.value)}
                         fullWidth
+                        maxRows={12}
                         autoFocus
                         id='message-input'
                         onKeyDown={(event) => {

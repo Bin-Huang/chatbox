@@ -21,6 +21,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import * as wordCount from './utils'
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -52,6 +53,7 @@ export interface Props {
     delMsg: () => void
     refreshMsg: () => void
     copyMsg: () => void
+    quoteMsg: () => void
 }
 
 function _Block(props: Props) {
@@ -193,6 +195,14 @@ function _Block(props: Props) {
                                             }} disableRipple>
                                                 <EditIcon />
                                                 Edit
+                                            </MenuItem>
+                                            <MenuItem key={msg.id + 'quote'} onClick={() => {
+                                                setIsHovering(false)
+                                                setAnchorEl(null)
+                                                props.quoteMsg()
+                                            }} disableRipple>
+                                                <FormatQuoteIcon />
+                                                Quote
                                             </MenuItem>
                                             <Divider sx={{ my: 0.5 }} />
                                             <MenuItem key={msg.id + 'del'} onClick={() => {
