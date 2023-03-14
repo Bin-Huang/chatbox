@@ -62,13 +62,13 @@ Supported platforms and architectures:
 - [x] Markdown
 - [x] Streaming reply
 - [x] Api Host configuration
+- [x] Automatically generate tab titles
+- [x] Button for clearing messages.
 - [ ] Chinese language support
 - [ ] Copy button for code blocks
 - [ ] Night/Dark mode
 - [ ] Stop button for generation process
-- [ ] Automatically generate tab titles
 - [ ] Drag-and-drop sorting of tabs
-- [ ] Button for clearing messages.
 - [ ] Prompt and parameter configuration
 - More...
 
