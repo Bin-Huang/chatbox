@@ -3560,6 +3560,11 @@
     "call-bind" "^1.0.2"
     "get-intrinsic" "^1.1.1"
 
+"github-markdown-css@^5.2.0":
+  "integrity" "sha512-hq5RaCInSUZ48bImOZpkppW2/MT44StRgsbsZ8YA4vJFwLKB/Vo3k7R2t+pUGqO+ThG0QDMi96TewV/B3vyItg=="
+  "resolved" "https://registry.npmjs.org/github-markdown-css/-/github-markdown-css-5.2.0.tgz"
+  "version" "5.2.0"
+
 "github-url-to-object@^4.0.4":
   "integrity" "sha512-NaqbYHMUAlPcmWFdrAB7bcxrNIiiJWJe8s/2+iOc9vlcHlwHqSGrPk+Yi3nu6ebTwgsZEa7igz+NH2vEq3gYwQ=="
   "resolved" "https://registry.npmjs.org/github-url-to-object/-/github-url-to-object-4.0.6.tgz"

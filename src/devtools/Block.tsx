@@ -22,6 +22,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import * as wordCount from './utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import 'github-markdown-css/github-markdown.css'
 
 const md = new MarkdownIt({
     linkify: true,
@@ -141,6 +142,7 @@ function _Block(props: Props) {
                                         sx={{
                                             bgcolor: "Background",
                                         }}
+                                        className="markdown-body"
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
                                     />
                                 )

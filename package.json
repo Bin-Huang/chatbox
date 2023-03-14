@@ -59,6 +59,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "form-data": "^4.0.0",
+    "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.7.0",
     "markdown-it": "^13.0.1",
     "material-ui-popup-state": "^5.0.4",
