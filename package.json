@@ -1,7 +1,7 @@
 {
   "name": "chatbox",
   "productName": "chatbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "cross-platform desktop client for OpenAI API",
   "main": ".webpack/main",
   "scripts": {
