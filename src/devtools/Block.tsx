@@ -50,6 +50,7 @@ export interface Props {
     id?: string
     msg: Message
     showWordCount: boolean
+    showTokenCount: boolean
     setMsg: (msg: Message) => void
     delMsg: () => void
     refreshMsg: () => void
@@ -151,6 +152,13 @@ function _Block(props: Props) {
                                 {
                                     props.showWordCount && (
                                         <>word count: {wordCount.countWord(msg.content)}</>
+                                    )
+                                }
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {
+                                    props.showTokenCount && (
+                                        <>token estimate: {wordCount.estimateTokens(msg.content)}</>
                                     )
                                 }
                             </Typography>
@@ -273,5 +281,5 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Block(props: Props) {
     return useMemo(() => {
         return <_Block {...props} />
-    }, [props.msg, props.showWordCount])
+    }, [props.msg, props.showWordCount, props.showTokenCount])
 }

@@ -85,6 +85,13 @@ export default function SettingWindow(props: Props) {
                     />
                 </FormGroup>
 
+                <FormGroup>
+                    <FormControlLabel control={<Switch />} label="Show estimated token count"
+                        checked={settingsEdit.showTokenCount}
+                        onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showTokenCount: checked })}
+                    />
+                </FormGroup>
+
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel}>Cancel</Button>
