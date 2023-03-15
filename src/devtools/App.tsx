@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import './App.css';
 import Block from './Block'
 import * as client from './client'
@@ -21,10 +21,11 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import * as prompts from './prompts'
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import CleanWidnow from './CleanWindow';
+import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 
 const { useEffect, useState } = React
 
-function App() {
+function Main() {
     const store = useStore()
 
     // 是否展示设置窗口
@@ -149,7 +150,6 @@ function App() {
             width: '100%',
         }}>
             <Grid container spacing={2} sx={{
-                background: "#FFFFFF",
                 height: '100%',
             }}>
                 <Grid item xs={3}
@@ -159,7 +159,6 @@ function App() {
                 >
                     <Stack
                         sx={{
-                            bgcolor: '#F7F7F7',
                             height: '100%',
                             padding: '20px 0',
                         }}
@@ -180,7 +179,6 @@ function App() {
                             sx={{
                                 width: '100%',
                                 // bgcolor: 'background.paper',
-                                bgcolor: '#F7F7F7',
                                 position: 'relative',
                                 overflow: 'auto',
                                 // height: '30vh',
@@ -188,11 +186,7 @@ function App() {
                                 '& ul': { padding: 0 },
                             }}
                             subheader={
-                                <ListSubheader component="div"
-                                    sx={{
-                                        bgcolor: '#F7F7F7',
-                                    }}
-                                >
+                                <ListSubheader component="div">
                                     CHAT
                                 </ListSubheader>
                             }
@@ -272,7 +266,6 @@ function App() {
                 >
                     <Stack sx={{
                         height: '100%',
-                        // bgcolor: '#F7F7F7',
                         padding: '20px 0',
                     }} spacing={2}>
                         <Toolbar variant="dense">
@@ -335,7 +328,7 @@ function App() {
                                         copyMsg={() => {
                                             navigator.clipboard.writeText(msg.content)
                                             store.addToast('Copied to clipboard')
-                                        }} 
+                                        }}
                                         quoteMsg={() => {
                                             let input = msg.content.split('\n').map(line => `> ${line}`).join('\n')
                                             input += '\n\n-------------------\n\n'
@@ -346,7 +339,7 @@ function App() {
                             }
                         </List>
                         <Box>
-                            <MessageInput 
+                            <MessageInput
                                 messageInput={messageInput}
                                 setMessageInput={setMessageInput}
                                 onSubmit={async (newUserMsg: Message) => {
@@ -409,7 +402,14 @@ function App() {
     );
 }
 
-export default App;
+export default function App() {
+    return (
+        <ThemeSwitcherProvider>
+            <Main />
+        </ThemeSwitcherProvider>
+    )
+}
+
 
 function MessageInput(props: {
     onSubmit: (newMsg: Message) => void

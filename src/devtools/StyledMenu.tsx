@@ -1,5 +1,4 @@
 import { Menu, MenuProps } from '@mui/material';
-import 'highlight.js/styles/github.css'
 import 'katex/dist/katex.min.css'
 import { styled, alpha } from '@mui/material/styles';
 
