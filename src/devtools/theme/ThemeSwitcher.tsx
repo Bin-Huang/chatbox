@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import { ThemeMode, fetchThemeDesign } from './index';
 
 export interface ThemeSwitcherAction {
@@ -8,7 +8,7 @@ export interface ThemeSwitcherAction {
     setMode: (mode: ThemeMode) => void;
 }
 
-const ThemeSwitchContext = createContext<ThemeSwitcherAction>(null);
+const ThemeSwitchContext = createContext<[ThemeMode, ThemeSwitcherAction]>(null);
 
 interface ThemeSwitcherProviderProps {
     children: React.ReactNode;
@@ -17,26 +17,33 @@ interface ThemeSwitcherProviderProps {
 export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
     const [mode, setMode] = useState<ThemeMode>(ThemeMode.Light);
 
-    const modeActions = useMemo<ThemeSwitcherAction>(
-        () => ({
-            toggleMode() {
-                setMode(curMode => (curMode === ThemeMode.Light ? ThemeMode.Dark : ThemeMode.Light));
+    const themeSwitcherContext = useMemo<[ThemeMode, ThemeSwitcherAction]>(
+        () => [
+            mode,
+            {
+                toggleMode() {
+                    setMode(curMode => (curMode === ThemeMode.Light ? ThemeMode.Dark : ThemeMode.Light));
+                },
+                setMode,
             },
-            setMode,
-        }),
-        []
+        ],
+        [mode]
     );
 
     const theme = useMemo(() => createTheme(fetchThemeDesign(mode)), [mode]);
 
     return (
-        <ThemeSwitchContext.Provider value={modeActions}>
+        <ThemeSwitchContext.Provider value={themeSwitcherContext}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 {props.children}
             </ThemeProvider>
         </ThemeSwitchContext.Provider>
     );
+}
+
+export function useThemeSwicher() {
+    return useContext(ThemeSwitchContext);
 }
 
 export default ThemeSwitchContext;
