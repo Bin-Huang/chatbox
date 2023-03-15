@@ -3,7 +3,7 @@
     English | <a href="./README-CN.md">中文</a>
 </p>
 <p align="center">
-    <em>Cross-platform desktop client for <b>OpenAI API</b>, also a prompt debugging and management tool</em>
+    <em>Cross-platform desktop application for <b>OpenAI API</b>, also a prompt debugging and management tool</em>
 </p>
 
 
@@ -32,11 +32,11 @@
 ![](./doc/demo.png)
 ![](./doc/demo2.png)
 
-## Why use ChatBox?
+## Why Use Chatbox?
 
-- Directly using or testing the OpenAI API can be quite challenging, requiring an understanding of programming, and may lack convenience. ChatBox can help you handle all of the underlying things.
-- ChatBox also saves all chat messages and prompts locally, preventing data loss in online services.
-- ChatBox can help you design, debug, and manage prompts, giving you greater control over the AI interface.
+- Directly testing OpenAI API might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
+- Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
+- Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
 
 ## Alternative to ChatGPT Plus?
 
@@ -51,7 +51,7 @@ The idea is feasible. OpenAI also provides a developer API service, which offers
 
 Supported platforms and architectures:
 
-- **Mac**: x64, arm64(compatibility with x64 tested)
+- **Mac**: x64, arm64 (compatibility with x64 tested)
 - **Windows**: x64
 - **Linux**: x64
 
@@ -61,7 +61,7 @@ Supported platforms and architectures:
 - [x] Store all your important message data locally.
 - [x] Markdown
 - [x] Streaming reply
-- [x] Api Host configuration
+- [x] API Host configuration
 - [x] Automatically generate tab titles
 - [x] Button for clearing messages.
 - [ ] Chinese language support
@@ -72,7 +72,7 @@ Supported platforms and architectures:
 - [ ] Prompt and parameter configuration
 - More...
 
-## How to contribute
+## How to Contribute
 
 Any form of contribution is welcome, including but not limited to:
 
@@ -82,9 +82,9 @@ Any form of contribution is welcome, including but not limited to:
 - Submitting bug reports
 - Submitting documentation revisions
 - Submitting translations
-- Submitting any other form of contribution
+- Submitting any other forms of contribution
 
-## Buy me a coffee
+## Buy Me a Coffee
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
