@@ -43,13 +43,24 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
         const reader = response.body.getReader();
         const d = new TextDecoder('utf8');
         let fullText = ''
+        let partialData = '';
         while (true) {
             const { value, done } = await reader.read();
             if (done) {
                 break;
             } else {
                 const raw = d.decode(value)
-                let items = raw.split('\n\n')
+                if (partialData == '') {
+                    partialData = raw
+                } else {
+                    partialData += raw;
+                }
+                const delimiterIndex = partialData.indexOf('\n\n');
+                if (delimiterIndex === -1) {
+                    continue;
+                }
+                let items = partialData.split('\n\n')
+                partialData = ''
                 items = items.map(item => item.replace(/^data: /, '')).filter(item => item.length > 0).filter(item => item !== '[DONE]')
                 const datas = items.map(item => {
                     let json: any
