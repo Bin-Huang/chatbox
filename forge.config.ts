@@ -4,7 +4,7 @@ import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerDMG } from '@electron-forge/maker-dmg';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
-import { PublisherGitHubConfig, PublisherGithub } from '@electron-forge/publisher-github'
+import { PublisherGitHubConfig, PublisherGithub } from '@electron-forge/publisher-github';
 // import { MakerRpm } from '@electron-forge/maker-rpm';
 
 import { mainConfig } from './webpack.main.config';
@@ -21,6 +21,11 @@ const config: ForgeConfig = {
         // new MakerRpm({}),
         new MakerDeb({}),
         new MakerDMG({}),
+        {
+            name: 'electron-forge-maker-appimage',
+            platforms: ['linux'],
+            config: {},
+        },
     ],
     plugins: [
         new WebpackPlugin({
@@ -47,7 +52,7 @@ const config: ForgeConfig = {
                 name: 'chatbox',
             },
             prerelease: true,
-        })
+        }),
     ],
 };
 
