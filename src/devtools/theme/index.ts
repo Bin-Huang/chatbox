@@ -4,16 +4,17 @@ import { ThemeOptions } from '@mui/material/styles';
 export enum ThemeMode {
     Dark,
     Light,
-    // TODO: impl
-    // System,
+    System,
 }
 
-const ThemeModeMapPaletteMode: Record<ThemeMode, PaletteMode> = {
+export type RealThemeMode = Exclude<ThemeMode, ThemeMode.System>;
+
+const ThemeModeMapPaletteMode: Record<RealThemeMode, PaletteMode> = {
     [ThemeMode.Dark]: 'dark',
     [ThemeMode.Light]: 'light',
 };
 
-export function fetchThemeDesign(mode: ThemeMode): ThemeOptions {
+export function fetchThemeDesign(mode: RealThemeMode): ThemeOptions {
     return {
         palette: {
             mode: ThemeModeMapPaletteMode[mode],

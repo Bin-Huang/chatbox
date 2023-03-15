@@ -1,20 +1,20 @@
 import { IconButton, ListItemIcon, MenuItem, MenuList, Tooltip } from '@mui/material';
 import { ThemeMode } from '.';
 import { useThemeSwicher } from './ThemeSwitcher';
-// import BrightnessMediumIcon from '@mui/icons-material/BrightnessMedium';
+import BrightnessMediumIcon from '@mui/icons-material/BrightnessMedium';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 const ThemeModeMapIcon: Record<ThemeMode, React.ReactNode> = {
     [ThemeMode.Dark]: <DarkModeIcon />,
     [ThemeMode.Light]: <WbSunnyIcon />,
-    // [ThemeMode.System]: BrightnessMediumIcon,
+    [ThemeMode.System]: <BrightnessMediumIcon />,
 };
+
+const menuItems = [ThemeMode.System, ThemeMode.Dark, ThemeMode.Light];
 
 export default function ThemeChangeIcon() {
     const [mode, { setMode }] = useThemeSwicher();
-
-    const menuItems = [ThemeMode.Dark, ThemeMode.Light];
 
     return (
         <Tooltip

@@ -19,6 +19,10 @@ export const openLink = (link: string) => {
     return (window as any).api.invoke('openLink', link)
 }
 
+export const shouldUseDarkColors = (): Promise<boolean> => {
+    return api.invoke('shouldUseDarkColors');
+};
+
 // setting store
 
 export function getDefaultSettings(): Settings {
