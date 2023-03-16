@@ -51,6 +51,9 @@ export async function readSettings(): Promise<Settings> {
     if (setting.showTokenCount === undefined) {
         setting.showTokenCount = getDefaultSettings().showTokenCount
     }
+    if (setting.theme === undefined) {
+        setting.theme = getDefaultSettings().theme;
+    }
     return setting
 }
 
