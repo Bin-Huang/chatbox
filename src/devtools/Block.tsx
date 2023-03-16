@@ -28,17 +28,18 @@ import mila from 'markdown-it-link-attributes'
 const md = new MarkdownIt({
     linkify: true,
     highlight: (str: string, lang: string, attrs: string): string => {
+        let content = str
         if (lang && hljs.getLanguage(lang)) {
             try {
-                return '<pre class="hljs"><code>' +
-                    hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
-                    '</code></pre>';
+                content = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
             } catch (e) {
                 console.log(e)
                 return str
             }
+        } else {
+            content = md.utils.escapeHtml(str)
         }
-        return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+        return `<pre class="hljs" style="max-width: 50vw; overflow: auto"><code>${content}</code></pre>`;
     }
 });
 md.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
