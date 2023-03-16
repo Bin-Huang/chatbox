@@ -21,7 +21,7 @@ export default function ThemeChangeButton(props: ThemeChangeIconProps) {
     return (
         <ButtonGroup>
             {menuItems.map(item => (
-                <Button key={item} color={item === props.value ? 'secondary' : 'inherit'} onClick={() => props.onChange(item)}>
+                <Button key={item} color={item === props.value ? 'primary' : 'inherit'} onClick={() => props.onChange(item)}>
                     {ThemeModeMapIcon[item]}
                 </Button>
             ))}

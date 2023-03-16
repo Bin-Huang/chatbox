@@ -107,10 +107,11 @@ export default function SettingWindow(props: Props) {
                     />
                 </FormGroup>
 
-                <FormControl>
-                    <FormLabel>Theme:</FormLabel>
-                    <ThemeChangeButton value={settingsEdit.theme} onChange={(theme) => changeModeWithPreview(theme)} />
+                <FormControl sx={{ flexDirection: 'row', alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                    <ThemeChangeButton value={settingsEdit.theme} onChange={theme => changeModeWithPreview(theme)} />
+                    <span style={{ marginLeft: 10 }}>Theme</span>
                 </FormControl>
+
 
             </DialogContent>
             <DialogActions>
