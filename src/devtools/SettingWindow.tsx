@@ -3,10 +3,13 @@ import './App.css';
 import {
     Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
-    FormGroup, FormControlLabel, Switch,
+    FormGroup, FormControlLabel, Switch, FormLabel, FormControl,
 } from '@mui/material';
 import { Settings } from './types'
 import { getDefaultSettings } from './store'
+import ThemeChangeButton from './theme/ThemeChangeIcon';
+import { ThemeMode } from './theme/index';
+import { useThemeSwicher } from './theme/ThemeSwitcher';
 
 const { useEffect } = React
 
@@ -19,13 +22,24 @@ interface Props {
 
 export default function SettingWindow(props: Props) {
     const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings);
+    const [, { setMode }] = useThemeSwicher();
     useEffect(() => {
         setSettingsEdit(props.settings)
     }, [props.settings])
 
+
     const onCancel = () => {
         props.close()
         setSettingsEdit(props.settings)
+
+        // need to restore the previous theme
+        setMode(props.settings.theme || ThemeMode.System);
+    }
+
+    // preview theme
+    const changeModeWithPreview = (newMode: ThemeMode) => {
+        setSettingsEdit({ ...settingsEdit, theme: newMode });
+        setMode(newMode);
     }
 
     return (
@@ -53,6 +67,13 @@ export default function SettingWindow(props: Props) {
                     value={settingsEdit.apiHost}
                     onChange={(e) => setSettingsEdit({ ...settingsEdit, apiHost: e.target.value.trim() })}
                 />
+
+                <FormControl>
+                    <FormLabel>Theme:</FormLabel>
+                    <ThemeChangeButton value={settingsEdit.theme} onChange={(theme) => changeModeWithPreview(theme)} />
+                </FormControl>
+
+
                 {
                     !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
                         <Alert severity="warning">

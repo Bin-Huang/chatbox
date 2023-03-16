@@ -1,7 +1,8 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
-import { shouldUseDarkColors } from '../store';
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import useEvent from '../hooks/useEvent';
+import useStore, { shouldUseDarkColors } from '../store';
 import { ThemeMode, fetchThemeDesign, RealThemeMode } from './index';
 
 export interface ThemeSwitcherAction {
@@ -27,20 +28,25 @@ function getThemeModeFromLocal<T>(key: string, defaultValue: T) {
 }
 
 export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
+    const { settings } = useStore();
     const [mode, setMode] = useState<ThemeMode>(getThemeModeFromLocal(THEME_MODE, ThemeMode.System));
     // `shouldUseDarkColors` becomes asynchronous after being called by electron,
     // here need to use a useState to convert `shouldUseDarkColors` to synchronous
     const [realMode, setRealMode] = useState<RealThemeMode>(getThemeModeFromLocal(REAL_THEME_MODE, ThemeMode.Dark));
 
-    function changeRealMode(mode: RealThemeMode) {
-        setRealMode(mode);
-        localStorage.setItem(REAL_THEME_MODE, mode.toString());
-    }
-    function changeMode(mode: ThemeMode) {
-        setMode(mode);
-        localStorage.setItem(THEME_MODE, mode.toString());
-        if (mode !== ThemeMode.System) {
-            changeRealMode(mode);
+    // "shouldUseDarkColors" is asynchronous, after calling "changeRealMode", "mode" may have changed (eg: System -> Dark),
+    // then "shouldUseDarkColors" should not be used to determine "realMode"
+    const changeRealMode = useEvent((scopeMode: ThemeMode, newMode: RealThemeMode) => {
+        if (scopeMode !== mode) return;
+        setRealMode(newMode);
+        localStorage.setItem(REAL_THEME_MODE, newMode.toString());
+    });
+
+    function changeMode(newMode: ThemeMode) {
+        setMode(newMode);
+        localStorage.setItem(THEME_MODE, newMode.toString());
+        if (newMode !== ThemeMode.System) {
+            changeRealMode(mode, newMode);
         }
     }
 
@@ -60,21 +66,31 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
         if (mode !== ThemeMode.System) return;
         // watch system theme change
         const handleModeChange = async () => {
-            changeRealMode((await shouldUseDarkColors()) ? ThemeMode.Dark : ThemeMode.Light);
+            const isDark = await shouldUseDarkColors();
+            changeRealMode(mode, isDark ? ThemeMode.Dark : ThemeMode.Light);
         };
 
         handleModeChange();
         const dispose = api.onSystemThemeChange(handleModeChange);
-        return () => dispose()
+        return () => dispose();
     }, [mode]);
 
-    return (
-        <ThemeSwitchContext.Provider value={themeSwitcherContext}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                {props.children}
-            </ThemeProvider>
-        </ThemeSwitchContext.Provider>
+    useEffect(() => {
+        if (settings.theme !== mode) {
+            changeMode(settings.theme);
+        }
+    }, [settings.theme]);
+
+    return useMemo(
+        () => (
+            <ThemeSwitchContext.Provider value={themeSwitcherContext}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    {props.children}
+                </ThemeProvider>
+            </ThemeSwitchContext.Provider>
+        ),
+        [themeSwitcherContext, theme, props.children]
     );
 }
 

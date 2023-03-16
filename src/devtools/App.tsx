@@ -22,7 +22,6 @@ import * as prompts from './prompts'
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import CleanWidnow from './CleanWindow';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
-import ThemeChangeIcon from './theme/ThemeChangeIcon';
 
 const { useEffect, useState } = React
 
@@ -281,7 +280,6 @@ function Main() {
                             >
                                 <CleaningServicesIcon />
                             </IconButton>
-                            <ThemeChangeIcon />
                         </Toolbar>
                         <Divider />
                         <List

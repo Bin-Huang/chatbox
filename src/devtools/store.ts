@@ -3,6 +3,7 @@ import { Settings, createSession, Session, Message } from './types'
 import * as defaults from './defaults'
 import * as openai from './openai-node'
 import { v4 as uuidv4 } from 'uuid';
+import { ThemeMode } from './theme';
 
 // ipc
 
@@ -31,6 +32,7 @@ export function getDefaultSettings(): Settings {
         apiHost: 'https://api.openai.com',
         showWordCount: false,
         showTokenCount: false,
+        theme: ThemeMode.System,
     }
 }
 
