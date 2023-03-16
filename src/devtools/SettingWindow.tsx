@@ -68,12 +68,6 @@ export default function SettingWindow(props: Props) {
                     onChange={(e) => setSettingsEdit({ ...settingsEdit, apiHost: e.target.value.trim() })}
                 />
 
-                <FormControl>
-                    <FormLabel>Theme:</FormLabel>
-                    <ThemeChangeButton value={settingsEdit.theme} onChange={(theme) => changeModeWithPreview(theme)} />
-                </FormControl>
-
-
                 {
                     !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
                         <Alert severity="warning">
@@ -112,6 +106,11 @@ export default function SettingWindow(props: Props) {
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showTokenCount: checked })}
                     />
                 </FormGroup>
+
+                <FormControl>
+                    <FormLabel>Theme:</FormLabel>
+                    <ThemeChangeButton value={settingsEdit.theme} onChange={(theme) => changeModeWithPreview(theme)} />
+                </FormControl>
 
             </DialogContent>
             <DialogActions>
