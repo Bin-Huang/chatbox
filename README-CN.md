@@ -15,15 +15,15 @@
 <!-- TypeScript Badge -->
 <img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-blue?style=flat-square&logo=typescript&logoColor=white" />
 
-<a href="https://github.com/yetone/openai-translator/releases" target="_blank">
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
 </a>
 
-<a href="https://github.com/yetone/openai-translator/releases" target="_blank">
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
 </a>
 
-<a href="https://github.com/yetone/openai-translator/releases" target="_blank">
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
 </a>
 
