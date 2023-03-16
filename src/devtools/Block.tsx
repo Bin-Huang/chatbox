@@ -23,6 +23,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import * as wordCount from './utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
+import mila from 'markdown-it-link-attributes'
 
 const md = new MarkdownIt({
     linkify: true,
@@ -41,6 +42,7 @@ const md = new MarkdownIt({
     }
 });
 md.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
+md.use(mila, { attrs: { target: "_blank", rel: "noopener" } })
 
 export type Message = ChatCompletionRequestMessage & {
     id: string

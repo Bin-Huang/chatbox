@@ -40,6 +40,14 @@ const onReady = (): void => {
     if (process.env.NODE_ENV==='development') {
         mainWindow.webContents.openDevTools();
     }
+
+    mainWindow.webContents.setWindowOpenHandler((details) => {
+        if (details.url.startsWith('http')) {
+            shell.openExternal(details.url)
+            return { action: 'deny' }
+        }
+        return { action: 'allow' }
+    })
 };
 
 // This method will be called when Electron has finished
