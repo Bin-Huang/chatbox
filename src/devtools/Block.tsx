@@ -72,6 +72,14 @@ function _Block(props: Props) {
         setAnchorEl(null);
     };
 
+
+    const tips: string[] = []
+    if (props.showWordCount) {
+        tips.push(`word count: ${wordCount.countWord(msg.content)}`)
+    }
+    if (props.showTokenCount) {
+        tips.push(`token estimate: ${wordCount.estimateTokens(msg.content)}`)
+    }
     return (
         <ListItem
             id={props.id}
@@ -123,7 +131,7 @@ function _Block(props: Props) {
                 <Grid item xs={11} sm container>
                     <Grid item xs container direction="column" spacing={2}>
                         <Grid item xs>
-                            <Typography gutterBottom variant="overline" component="div">
+                            <Typography variant="overline" component="div">
                                 {msg.role}
                             </Typography>
                             {
@@ -148,18 +156,9 @@ function _Block(props: Props) {
                                     />
                                 )
                             }
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="GrayText" sx={{opacity: 0.5}} >
                                 {
-                                    props.showWordCount && (
-                                        <>word count: {wordCount.countWord(msg.content)}</>
-                                    )
-                                }
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {
-                                    props.showTokenCount && (
-                                        <>token estimate: {wordCount.estimateTokens(msg.content)}</>
-                                    )
+                                    tips.join(', ')
                                 }
                             </Typography>
                         </Grid>
