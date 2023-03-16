@@ -185,6 +185,7 @@ function Main() {
                                 height: '60vh',
                                 '& ul': { padding: 0 },
                             }}
+                            className="scroll"
                             subheader={
                                 <ListSubheader component="div">
                                     CHAT
@@ -284,6 +285,7 @@ function Main() {
                         <Divider />
                         <List
                             id="message-list"
+                            className='scroll'
                             sx={{
                                 width: '100%',
                                 height: '80%',

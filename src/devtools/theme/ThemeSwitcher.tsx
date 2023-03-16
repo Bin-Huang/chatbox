@@ -81,6 +81,10 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
         }
     }, [settings.theme]);
 
+    useLayoutEffect(() => {
+        document.querySelector('html').setAttribute('data-theme', realMode === ThemeMode.Dark ? 'dark' : 'light');
+    }, [realMode]);
+
     return useMemo(
         () => (
             <ThemeSwitchContext.Provider value={themeSwitcherContext}>
