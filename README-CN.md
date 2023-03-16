@@ -8,13 +8,6 @@
 
 
 <p align="center">
-<a href="LICENSE" target="_blank">
-    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" />
-</a>
-
-<!-- TypeScript Badge -->
-<img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-blue?style=flat-square&logo=typescript&logoColor=white" />
-
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
 </a>
