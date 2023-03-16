@@ -26,6 +26,7 @@ export function getDefaultSettings(): Settings {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
         showWordCount: false,
+        showTokenCount: false,
     }
 }
 
@@ -40,6 +41,9 @@ export async function readSettings(): Promise<Settings> {
     }
     if (setting.showWordCount === undefined) {
         setting.showWordCount = getDefaultSettings().showWordCount
+    }
+    if (setting.showTokenCount === undefined) {
+        setting.showTokenCount = getDefaultSettings().showTokenCount
     }
     return setting
 }

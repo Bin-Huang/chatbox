@@ -303,6 +303,7 @@ function App() {
                                 store.currentSession.messages.map((msg, ix) => (
                                     <Block id={msg.id} key={msg.id} msg={msg}
                                         showWordCount={store.settings.showWordCount}
+                                        showTokenCount={store.settings.showTokenCount}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {

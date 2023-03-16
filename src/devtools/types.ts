@@ -31,4 +31,5 @@ export interface Settings {
     openaiKey: string
     apiHost: string
     showWordCount?: boolean
+    showTokenCount?: boolean
 }
