@@ -24,10 +24,9 @@ export function countWord(data: string): number {
     return count;
 };
 
-import { encoding_for_model } from "@dqbd/tiktoken";
-const enc = encoding_for_model("text-davinci-003");
-export function estimateTokens(text: string): number | string {
-    const encoded = enc.encode(text);
-    return encoded.length;
+import GPT3Tokenizer from 'gpt3-tokenizer';
+const tokenizer = new GPT3Tokenizer({ type: 'gpt3' });
+export function estimateTokens(str: string): number | string {
+    const encoded: { bpe: number[]; text: string[] } = tokenizer.encode(str);
+    return encoded.bpe.length;
 }
-
