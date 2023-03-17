@@ -9,8 +9,15 @@ html > body {
     margin: auto;
 }
 
-/* 设置滚动条的宽度, 背景色与边框 */
 html[data-theme='dark'] {
+    // ------------ highlight.js ---------------
+
+    // https://stackoverflow.com/questions/59257368/how-to-dynamically-change-the-theme-using-highlight-js
+    @include meta.load-css('highlight.js/styles/github-dark');
+
+    // ------------ 滚动条 ---------------
+
+    /* 设置滚动条的宽度, 背景色与边框 */
     .scroll::-webkit-scrollbar {
         width: 5px;
         background-color: #333333;
@@ -51,8 +58,15 @@ html[data-theme='dark'] {
     }
 }
 
-/* 设置滚动条的宽度, 背景色与边框 */
 html[data-theme='light'] {
+    // ------------ highlight.js ---------------
+
+    // https://stackoverflow.com/questions/59257368/how-to-dynamically-change-the-theme-using-highlight-js
+    @include meta.load-css('highlight.js/styles/github');
+
+    // ------------ 滚动条 ---------------
+
+    /* 设置滚动条的宽度, 背景色与边框 */
     .scroll::-webkit-scrollbar {
         width: 5px;
         background-color: #f5f5f5;
@@ -85,11 +99,4 @@ html[data-theme='light'] {
     .scroll::-webkit-scrollbar-button {
         display: none;
     }
-}
-
-html[data-theme='light'] {
-    @include meta.load-css('highlight.js/styles/github');
-}
-html[data-theme='dark'] {
-    @include meta.load-css('highlight.js/styles/github-dark');
 }
