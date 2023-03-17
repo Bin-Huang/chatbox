@@ -30,6 +30,7 @@ export function createSession(name: string = "Untitled"): Session {
 export interface Settings {
     openaiKey: string
     apiHost: string
+    model: string
     showWordCount?: boolean
     showTokenCount?: boolean
 }

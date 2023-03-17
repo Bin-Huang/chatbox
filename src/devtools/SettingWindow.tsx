@@ -3,13 +3,13 @@ import './App.css';
 import {
     Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
-    FormGroup, FormControlLabel, Switch,
+    FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import { Settings } from './types'
 import { getDefaultSettings } from './store'
 
 const { useEffect } = React
-
+const models = ['gpt-3.5-turbo', 'gpt-4'];
 interface Props {
     open: boolean
     settings: Settings
@@ -77,6 +77,22 @@ export default function SettingWindow(props: Props) {
                         </Alert>
                     )
                 }
+
+                <FormControl fullWidth variant="outlined" margin="dense">
+                    <InputLabel htmlFor="model-select">Model</InputLabel>
+                    <Select
+                    label="Model"
+                    id="model-select"
+                    value={settingsEdit.model}
+                    onChange={(e) => setSettingsEdit({ ...settingsEdit, model: e.target.value })}
+                    >
+                    {models.map((model) => (
+                        <MenuItem key={model} value={model}>
+                        {model}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
 
                 <FormGroup>
                     <FormControlLabel control={<Switch />} label="Show word count"

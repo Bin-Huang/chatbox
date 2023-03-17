@@ -25,6 +25,7 @@ export function getDefaultSettings(): Settings {
     return {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
+        model: "gpt-3.5-turbo",
         showWordCount: false,
         showTokenCount: false,
     }
