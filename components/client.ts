@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './openai-node'
+import { ChatCompletionRequestMessage } from '../utils/openai-node/api'
 import { Message } from './types'
 
 export async function replay(apiKey: string, host: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
@@ -88,7 +88,7 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
         return fullText
     } catch (error) {
         if (onError) {
-            onError(error)
+            onError(error as any)
         }
         throw error
     }

@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
@@ -39,7 +38,7 @@ function Main() {
     // 是否展示应用更新提示
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
-    const [scrollToMsg, setScrollToMsg] = useState<{ msgId: string, smooth?: boolean }>(null)
+    const [scrollToMsg, setScrollToMsg] = useState<{ msgId: string, smooth?: boolean }|null>(null)
     useEffect(() => {
         if (!scrollToMsg) {
             return
@@ -194,7 +193,8 @@ function Main() {
                         >
                             {
                                 store.chatSessions.map((session, ix) => (
-                                    <SessionItem selected={store.currentSession.id === session.id}
+                                    <SessionItem key={session.id}
+                                        selected={store.currentSession.id === session.id}
                                         session={session}
                                         switchMe={() => {
                                             store.switchCurrentSession(session)
@@ -297,8 +297,8 @@ function Main() {
                             {
                                 store.currentSession.messages.map((msg, ix) => (
                                     <Block id={msg.id} key={msg.id} msg={msg}
-                                        showWordCount={store.settings.showWordCount}
-                                        showTokenCount={store.settings.showTokenCount}
+                                        showWordCount={store.settings.showWordCount || false}
+                                        showTokenCount={store.settings.showTokenCount || false}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {
@@ -332,7 +332,7 @@ function Main() {
                                             store.addToast('Copied to clipboard')
                                         }}
                                         quoteMsg={() => {
-                                            let input = msg.content.split('\n').map(line => `> ${line}`).join('\n')
+                                            let input = msg.content.split('\n').map((line: any) => `> ${line}`).join('\n')
                                             input += '\n\n-------------------\n\n'
                                             setMessageInput(input)
                                         }}
@@ -392,6 +392,7 @@ function Main() {
                 {
                     store.toasts.map((toast) => (
                         <Snackbar
+                            key={toast.id}
                             open
                             onClose={() => store.removeToast(toast.id)}
                             message={toast.content}

@@ -13,6 +13,4 @@
  */
 
 
-export * from "./api";
-export * from "./configuration";
 export { setHost } from './base'

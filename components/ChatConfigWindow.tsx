@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import {
     Button, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
 } from '@mui/material';

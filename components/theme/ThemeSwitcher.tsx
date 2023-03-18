@@ -9,7 +9,7 @@ export interface ThemeSwitcherAction {
     setMode: (mode: ThemeMode) => void;
 }
 
-const ThemeSwitchContext = createContext<[ThemeMode, ThemeSwitcherAction]>(null);
+const ThemeSwitchContext = createContext<[ThemeMode, ThemeSwitcherAction]|null>(null);
 
 interface ThemeSwitcherProviderProps {
     children: React.ReactNode;
@@ -82,7 +82,7 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
     }, [settings.theme]);
 
     useLayoutEffect(() => {
-        document.querySelector('html').setAttribute('data-theme', realMode === ThemeMode.Dark ? 'dark' : 'light');
+        document.querySelector('html')?.setAttribute('data-theme', realMode === ThemeMode.Dark ? 'dark' : 'light');
     }, [realMode]);
 
     return useMemo(
@@ -99,7 +99,7 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
 }
 
 export function useThemeSwicher() {
-    return useContext(ThemeSwitchContext);
+    return useContext(ThemeSwitchContext) as any;
 }
 
 export default ThemeSwitchContext;

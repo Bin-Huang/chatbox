@@ -1,4 +1,3 @@
-import './App.css';
 import {
     Button, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText,
 } from '@mui/material';

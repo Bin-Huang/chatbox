@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import {
     Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,

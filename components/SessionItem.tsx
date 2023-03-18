@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import './App.css';
 import {
     ListItemText, ListItemAvatar, MenuItem, Divider,
     Avatar, IconButton, Button, TextField, Popper, Fade, Typography, ListItemIcon,

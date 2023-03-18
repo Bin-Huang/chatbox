@@ -5,11 +5,12 @@
   "description": "cross-platform desktop client for OpenAI API",
   "main": ".webpack/main",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "dev": "next dev",
+    "build": "next build",
+    "export": "next export",
+    "start": "next start",
+    "tauri": "tauri",
+    "lint": "next lint"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@tauri-apps/cli": "^1.2.3",
     "@electron-forge/cli": "^6.0.5",
     "@electron-forge/maker-deb": "^6.0.5",
     "@electron-forge/maker-rpm": "^6.0.5",
@@ -52,6 +54,16 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
+    "@tauri-apps/api": "^1.2.0",
+    "@types/node": "18.15.3",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.0.2",
     "@electron-forge/maker-dmg": "^6.0.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -69,8 +81,6 @@
     "markdown-it": "^13.0.1",
     "markdown-it-link-attributes": "^4.0.1",
     "material-ui-popup-state": "^5.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "update-electron-app": "^2.0.1",
     "uuid": "^9.0.0"
   }
