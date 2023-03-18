@@ -39,7 +39,11 @@ export default function SettingWindow(props: Props) {
             setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
         } else {
             const numValue = Number(value);
-            if (!isNaN(numValue) && numValue >= 0 && numValue <= 8192) {
+            if (!isNaN(numValue) && numValue >= 0) {
+                if (numValue > 8192) {
+                    setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
+                    return;
+                }
                 setSettingsEdit({ ...settingsEdit, maxTokens: value });
             }
         }
@@ -50,7 +54,11 @@ export default function SettingWindow(props: Props) {
             setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
         } else {
             const numValue = Number(value);
-            if (!isNaN(numValue) && numValue >= 0 && numValue <= 8192) {
+            if (!isNaN(numValue) && numValue >= 0) {
+                if (numValue > 8192) {
+                    setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
+                    return;
+                }
                 setSettingsEdit({ ...settingsEdit, maxContextSize: value });
             }
         }
@@ -129,11 +137,13 @@ export default function SettingWindow(props: Props) {
                     </Select>
                 </FormControl>
 
-                <Typography id="discrete-slider" gutterBottom>
-                    Max Tokens in Context
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
-                    <Box sx={{ width: '80%' }}>
+                <Box sx={{ marginTop: 3, marginBottom: -1 }}>
+                    <Typography id="discrete-slider" gutterBottom>
+                        Max Tokens in Context
+                    </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto'}}>
+                    <Box sx={{ width: '92%' }}>
                         <Slider
                             value={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
                             onChange={handleMaxContextSliderChange}
@@ -141,7 +151,6 @@ export default function SettingWindow(props: Props) {
                             valueLabelDisplay="auto"
                             defaultValue={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
                             step={64}
-                            marks
                             min={64}
                             max={8192}
                         />
@@ -156,11 +165,13 @@ export default function SettingWindow(props: Props) {
                     />
                 </Box>
 
-                <Typography id="discrete-slider" gutterBottom>
-                    Max Tokens per Reply
-                </Typography>
+                <Box sx={{ marginTop: 3, marginBottom: -1 }}>
+                    <Typography id="discrete-slider" gutterBottom>
+                        Max Tokens per Reply
+                    </Typography>
+                </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
-                    <Box sx={{ width: '80%' }}>
+                    <Box sx={{ width: '92%' }}>
                         <Slider
                             value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
                             defaultValue={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
@@ -168,14 +179,13 @@ export default function SettingWindow(props: Props) {
                             aria-labelledby="discrete-slider"
                             valueLabelDisplay="auto"
                             step={64}
-                            marks
                             min={64}
                             max={8192}
                         />
                     </Box>
                     <TextField
                         sx={{ marginLeft: 2 }}
-                        value={settingsEdit.maxContextSize}
+                        value={settingsEdit.maxTokens}
                         onChange={handleRepliesTokensInputChange}
                         type="text"
                         size="small"
