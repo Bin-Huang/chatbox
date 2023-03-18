@@ -13,20 +13,20 @@ npx electron-forge make -p linux -a x64
 
 mkdir -p out/release
 
-# cp out/make/deb/arm64/chatbox_0.1.3_arm64.deb out/release/chatbox_0.1.3_arm64.deb
-cp out/make/deb/x64/chatbox_0.1.3_amd64.deb out/release/chatbox_0.1.3_amd64.deb
+# cp out/make/deb/arm64/chatbox_0.1.4_arm64.deb out/release/chatbox_0.1.4_arm64.deb
+cp out/make/deb/x64/chatbox_0.1.4_amd64.deb out/release/chatbox_0.1.4_amd64.deb
 
-# cp 'out/make/squirrel.windows/arm64/chatbox-0.1.3 Setup.exe' out/release/chatbox_0.1.3_arm64_setup.exe
-cp 'out/make/squirrel.windows/x64/chatbox-0.1.3 Setup.exe' out/release/chatbox_0.1.3_x64_setup.exe
+# cp 'out/make/squirrel.windows/arm64/chatbox-0.1.4 Setup.exe' out/release/chatbox_0.1.4_arm64_setup.exe
+cp 'out/make/squirrel.windows/x64/chatbox-0.1.4 Setup.exe' out/release/chatbox_0.1.4_x64_setup.exe
 
-# cp out/make/zip/linux/arm64/chatbox-linux-arm64-0.1.3.zip out/release/chatbox-linux-arm64-0.1.3.zip
-cp out/make/zip/linux/x64/chatbox-linux-x64-0.1.3.zip out/release/chatbox-linux-x64-0.1.3.zip
+# cp out/make/zip/linux/arm64/chatbox-linux-arm64-0.1.4.zip out/release/chatbox-linux-arm64-0.1.4.zip
+cp out/make/zip/linux/x64/chatbox-linux-x64-0.1.4.zip out/release/chatbox-linux-x64-0.1.4.zip
 
-# cp out/make/zip/win32/arm64/chatbox-win32-arm64-0.1.3.zip out/release/chatbox-win32-arm64-0.1.3.zip
-cp out/make/zip/win32/x64/chatbox-win32-x64-0.1.3.zip out/release/chatbox-win32-x64-0.1.3.zip
+# cp out/make/zip/win32/arm64/chatbox-win32-arm64-0.1.4.zip out/release/chatbox-win32-arm64-0.1.4.zip
+cp out/make/zip/win32/x64/chatbox-win32-x64-0.1.4.zip out/release/chatbox-win32-x64-0.1.4.zip
 
-# cp out/make/chatbox-0.1.3-arm64.dmg out/release/chatbox-0.1.3-arm64.dmg
-cp out/make/chatbox-0.1.3-x64.dmg out/release/chatbox-0.1.3.dmg
+# cp out/make/chatbox-0.1.4-arm64.dmg out/release/chatbox-0.1.4-arm64.dmg
+cp out/make/chatbox-0.1.4-x64.dmg out/release/chatbox-0.1.4.dmg
 
-# cp out/make/zip/darwin/arm64/chatbox-darwin-arm64-0.1.3.zip out/release/chatbox-darwin-arm64-0.1.3.zip
-cp out/make/zip/darwin/x64/chatbox-darwin-x64-0.1.3.zip out/release/chatbox-darwin-0.1.3.zip
+# cp out/make/zip/darwin/arm64/chatbox-darwin-arm64-0.1.4.zip out/release/chatbox-darwin-arm64-0.1.4.zip
+cp out/make/zip/darwin/x64/chatbox-darwin-x64-0.1.4.zip out/release/chatbox-darwin-0.1.4.zip
