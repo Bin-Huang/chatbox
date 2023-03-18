@@ -11,7 +11,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
 import 'katex/dist/katex.min.css'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckIcon from '@mui/icons-material/Check';
@@ -152,9 +151,8 @@ function _Block(props: Props) {
                                 ) : (
                                     <Box
                                         sx={{
-                                            bgcolor: "Background",
+                                            // bgcolor: "Background",
                                         }}
-                                        className="markdown-body"
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
                                     />
                                 )
