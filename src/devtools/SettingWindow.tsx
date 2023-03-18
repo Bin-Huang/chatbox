@@ -9,7 +9,7 @@ import { Settings } from './types'
 import { getDefaultSettings } from './store'
 
 const { useEffect } = React
-const models = ['gpt-3.5-turbo', 'gpt-4'];
+const models: string[] = ['gpt-3.5-turbo', 'gpt-4'];
 interface Props {
     open: boolean
     settings: Settings
