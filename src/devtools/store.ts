@@ -3,6 +3,7 @@ import { Settings, createSession, Session, Message } from './types'
 import * as defaults from './defaults'
 import * as openai from './openai-node'
 import { v4 as uuidv4 } from 'uuid';
+import { ThemeMode } from './theme';
 
 // ipc
 
@@ -19,6 +20,10 @@ export const openLink = (link: string) => {
     return (window as any).api.invoke('openLink', link)
 }
 
+export const shouldUseDarkColors = (): Promise<boolean> => {
+    return api.invoke('shouldUseDarkColors');
+};
+
 // setting store
 
 export function getDefaultSettings(): Settings {
@@ -27,6 +32,7 @@ export function getDefaultSettings(): Settings {
         apiHost: 'https://api.openai.com',
         showWordCount: false,
         showTokenCount: false,
+        theme: ThemeMode.System,
     }
 }
 
@@ -44,6 +50,9 @@ export async function readSettings(): Promise<Settings> {
     }
     if (setting.showTokenCount === undefined) {
         setting.showTokenCount = getDefaultSettings().showTokenCount
+    }
+    if (setting.theme === undefined) {
+        setting.theme = getDefaultSettings().theme;
     }
     return setting
 }

@@ -44,6 +44,8 @@
     "eslint-plugin-import": "^2.25.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "node-loader": "^2.0.0",
+    "sass": "^1.59.3",
+    "sass-loader": "^13.2.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",
