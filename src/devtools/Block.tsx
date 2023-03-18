@@ -27,6 +27,7 @@ import mila from 'markdown-it-link-attributes'
 
 const md = new MarkdownIt({
     linkify: true,
+    breaks: true,
     highlight: (str: string, lang: string, attrs: string): string => {
         let content = str
         if (lang && hljs.getLanguage(lang)) {
