@@ -32,7 +32,8 @@ export const writeStore = async (key: string, value: any) => {
     // return (window as any).api.invoke('setStoreValue', key, value)
 }
 
-export const readStore = (key: string) => {
+export const readStore = async (key: string) => {
+    console.log(await api().fs.readDir('', { dir: api().fs.Dir.AppData }))
     return undefined
     // return {} as any
     // return (window as any).api.invoke('getStoreValue', key)

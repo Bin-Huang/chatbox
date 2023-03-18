@@ -21,6 +21,10 @@
             },
             "window": {
                 "all": true
+            },
+            "fs": {
+                "all": true,
+                "scope": ["$APPDATA/*"]
             }
         },
         "bundle": {
