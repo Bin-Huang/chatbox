@@ -1,3 +1,4 @@
+import updateElectronApp from 'update-electron-app'
 import { app, BrowserWindow, ipcMain, session, shell, nativeTheme } from 'electron';
 import { debug } from './utils';
 // import updateElectronApp from 'update-electron-app'
@@ -96,6 +97,10 @@ ipcMain.handle('openLink', (event, link) => {
     return shell.openExternal(link);
 });
 
+updateElectronApp({
+    repo: 'Bin-Huang/chatbox',
+    updateInterval: '5 minutes',
+})
 // theme
 
 ipcMain.handle('shouldUseDarkColors', () => nativeTheme.shouldUseDarkColors);
