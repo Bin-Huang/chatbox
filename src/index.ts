@@ -92,4 +92,7 @@ ipcMain.handle('openLink', (event, link) => {
     return shell.openExternal(link)
 });
 
-updateElectronApp()
+updateElectronApp({
+    repo: 'Bin-Huang/chatbox',
+    updateInterval: '5 minutes',
+})
