@@ -1,5 +1,6 @@
 import {ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum} from './openai-node'
 import { v4 as uuidv4 } from 'uuid';
+import { ThemeMode } from './theme';
 
 export type Message = ChatCompletionRequestMessage & {
     id: string
@@ -38,4 +39,5 @@ export interface Settings {
     showWordCount?: boolean
     showTokenCount?: boolean
     showModelName?: boolean
+    theme: ThemeMode
 }

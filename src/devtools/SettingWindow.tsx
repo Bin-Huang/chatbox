@@ -7,6 +7,9 @@ import {
 } from '@mui/material';
 import { Settings } from './types'
 import { getDefaultSettings } from './store'
+import ThemeChangeButton from './theme/ThemeChangeIcon';
+import { ThemeMode } from './theme/index';
+import { useThemeSwicher } from './theme/ThemeSwitcher';
 
 const { useEffect } = React
 const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314'];
@@ -63,6 +66,8 @@ export default function SettingWindow(props: Props) {
             }
         }
     };
+
+    const [, { setMode }] = useThemeSwicher();
     useEffect(() => {
         setSettingsEdit(props.settings)
     }, [props.settings])
@@ -70,6 +75,15 @@ export default function SettingWindow(props: Props) {
     const onCancel = () => {
         props.close()
         setSettingsEdit(props.settings)
+
+        // need to restore the previous theme
+        setMode(props.settings.theme || ThemeMode.System);
+    }
+
+    // preview theme
+    const changeModeWithPreview = (newMode: ThemeMode) => {
+        setSettingsEdit({ ...settingsEdit, theme: newMode });
+        setMode(newMode);
     }
 
     return (
@@ -97,6 +111,7 @@ export default function SettingWindow(props: Props) {
                     value={settingsEdit.apiHost}
                     onChange={(e) => setSettingsEdit({ ...settingsEdit, apiHost: e.target.value.trim() })}
                 />
+
                 {
                     !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
                         <Alert severity="warning">
@@ -216,6 +231,12 @@ export default function SettingWindow(props: Props) {
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showTokenCount: checked })}
                     />
                 </FormGroup>
+
+                <FormControl sx={{ flexDirection: 'row', alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                    <ThemeChangeButton value={settingsEdit.theme} onChange={theme => changeModeWithPreview(theme)} />
+                    <span style={{ marginLeft: 10 }}>Theme</span>
+                </FormControl>
+
 
             </DialogContent>
             <DialogActions>
