@@ -3,7 +3,7 @@ import './App.css';
 import {
     Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
-    FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography
+    FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography, Box
 } from '@mui/material';
 import { Settings } from './types'
 import { getDefaultSettings } from './store'
@@ -24,6 +24,35 @@ export default function SettingWindow(props: Props) {
             setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
         } else {
             setSettingsEdit({ ...settingsEdit, maxTokens: newValue.toString() });
+        }
+    };
+    const handleMaxContextSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
+        if (newValue === 8192) {
+            setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
+        } else {
+            setSettingsEdit({ ...settingsEdit, maxContextSize: newValue.toString() });
+        }
+    };
+    const handleRepliesTokensInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (value === 'inf') {
+            setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
+        } else {
+            const numValue = Number(value);
+            if (!isNaN(numValue) && numValue >= 0 && numValue <= 8192) {
+                setSettingsEdit({ ...settingsEdit, maxTokens: value });
+            }
+        }
+    };
+    const handleMaxContextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (value === 'inf') {
+            setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
+        } else {
+            const numValue = Number(value);
+            if (!isNaN(numValue) && numValue >= 0 && numValue <= 8192) {
+                setSettingsEdit({ ...settingsEdit, maxContextSize: value });
+            }
         }
     };
     useEffect(() => {
@@ -103,32 +132,56 @@ export default function SettingWindow(props: Props) {
                 <Typography id="discrete-slider" gutterBottom>
                     Max Tokens in Context
                 </Typography>
-                <Slider
-                    value={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
-                    onChange={(event: Event, value: number | number[], activeThumb: number) => setSettingsEdit({ ...settingsEdit, maxContextSize: value.toString() })}
-                    aria-labelledby="discrete-slider"
-                    valueLabelDisplay="auto"
-                    defaultValue={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
-                    step={64}
-                    marks
-                    min={64}
-                    max={8192}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+                    <Box sx={{ width: '80%' }}>
+                        <Slider
+                            value={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
+                            onChange={handleMaxContextSliderChange}
+                            aria-labelledby="discrete-slider"
+                            valueLabelDisplay="auto"
+                            defaultValue={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
+                            step={64}
+                            marks
+                            min={64}
+                            max={8192}
+                        />
+                    </Box>
+                    <TextField
+                        sx={{ marginLeft: 2 }}
+                        value={settingsEdit.maxContextSize}
+                        onChange={handleMaxContextInputChange}
+                        type="text"
+                        size="small"
+                        variant="outlined"
+                    />
+                </Box>
 
                 <Typography id="discrete-slider" gutterBottom>
                     Max Tokens per Reply
                 </Typography>
-                <Slider
-                    value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
-                    defaultValue={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
-                    onChange={handleRepliesTokensSliderChange}
-                    aria-labelledby="discrete-slider"
-                    valueLabelDisplay="auto"
-                    step={64}
-                    marks
-                    min={64}
-                    max={8192}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+                    <Box sx={{ width: '80%' }}>
+                        <Slider
+                            value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
+                            defaultValue={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
+                            onChange={handleRepliesTokensSliderChange}
+                            aria-labelledby="discrete-slider"
+                            valueLabelDisplay="auto"
+                            step={64}
+                            marks
+                            min={64}
+                            max={8192}
+                        />
+                    </Box>
+                    <TextField
+                        sx={{ marginLeft: 2 }}
+                        value={settingsEdit.maxContextSize}
+                        onChange={handleRepliesTokensInputChange}
+                        type="text"
+                        size="small"
+                        variant="outlined"
+                    />
+                </Box>
 
                 <FormGroup>
                     <FormControlLabel control={<Switch />}
