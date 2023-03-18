@@ -89,3 +89,4 @@ typings/
 out/
 
 publish.sh
+build.sh

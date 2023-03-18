@@ -13,6 +13,13 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
     packagerConfig: {
         // icon: './src/resources/icon/chatbox',
+        osxSign: {},
+        osxNotarize: {
+            tool: 'notarytool',
+            appleId: process.env.APPLE_ID as any,
+            appleIdPassword: process.env.APPLE_PASSWORD as any,
+            teamId: process.env.APPLE_TEAM_ID as any,
+        }
     },
     rebuildConfig: {},
     makers: [
