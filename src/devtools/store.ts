@@ -49,11 +49,23 @@ export async function readSettings(): Promise<Settings> {
     if (!setting.apiHost) {
         setting.apiHost = getDefaultSettings().apiHost
     }
+    if (!setting.model) {
+        setting.model = getDefaultSettings().model
+    }
+    if (!setting.maxTokens) {
+        setting.maxTokens = getDefaultSettings().maxTokens
+    }
+    if (!setting.maxContextSize) {
+        setting.maxContextSize = getDefaultSettings().maxContextSize
+    }
     if (setting.showWordCount === undefined) {
         setting.showWordCount = getDefaultSettings().showWordCount
     }
     if (setting.showTokenCount === undefined) {
         setting.showTokenCount = getDefaultSettings().showTokenCount
+    }
+    if (setting.showModelName === undefined) {
+        setting.showModelName = getDefaultSettings().showModelName
     }
     if (setting.theme === undefined) {
         setting.theme = getDefaultSettings().theme;
