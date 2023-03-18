@@ -108,7 +108,7 @@ export default function SettingWindow(props: Props) {
                     onChange={(event: Event, value: number | number[], activeThumb: number) => setSettingsEdit({ ...settingsEdit, maxContextSize: value.toString() })}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
-                    step={1}
+                    step={64}
                     marks
                     min={1}
                     max={8192}
@@ -122,7 +122,7 @@ export default function SettingWindow(props: Props) {
                     onChange={handleRepliesTokensSliderChange}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
-                    step={1}
+                    step={64}
                     marks
                     min={1}
                     max={8192}

@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './openai-node'
 import { Message } from './types'
+import * as wordCount from './utils'
 
 export async function replay(apiKey: string, host: string, maxContextSize: string, maxTokens: string, modelName: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
     if (msgs.length === 0) {
@@ -8,18 +9,19 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
     const head = msgs[0]
     msgs = msgs.slice(1)
 
-    const maxTokensNumber = Number(maxTokens)
-    const maxLen = Number(maxContextSize)
-    let totalLen = head.content.length
+    const maxTokensNumber: number = Number(maxTokens)
+    const maxLen: number = Number(maxContextSize)
+    let totalLen: number = wordCount.estimateTokens(head.content)
 
     let prompts: Message[] = []
     for (let i = msgs.length - 1; i >= 0; i--) {
         const msg = msgs[i]
-        if (msg.content.length + totalLen > maxLen) {
+        const msgTokenSize: number = wordCount.estimateTokens(msg.content)
+        if (msgTokenSize + totalLen > maxLen) {
             break
         }
         prompts = [msg, ...prompts]
-        totalLen += msg.content.length
+        totalLen += msgTokenSize
     }
     prompts = [head, ...prompts]
 

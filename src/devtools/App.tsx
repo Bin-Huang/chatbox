@@ -95,7 +95,7 @@ function App() {
             store.settings.apiHost,
             store.settings.maxContextSize,
             store.settings.maxTokens,
-            store.settings.model,
+            session.model,
             prompts.nameConversation(session.messages.slice(0, 3)),
             (name) => {
                 name = name.replace(/['"“”]/g, '')
@@ -114,7 +114,7 @@ function App() {
             store.settings.apiHost,
             store.settings.maxContextSize,
             store.settings.maxTokens,
-            store.settings.model,
+            session.model,
             promptMsgs,
             (text) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -213,7 +213,7 @@ function App() {
                                         }}
                                         deleteMe={() => store.deleteChatSession(session)}
                                         copyMe={() => {
-                                            const newSession = createSession(session.name + ' Copyed')
+                                            const newSession = createSession(session.model, session.name + ' copied')
                                             newSession.messages = session.messages
                                             store.createChatSession(newSession, ix)
                                         }}
@@ -311,7 +311,7 @@ function App() {
                                         showWordCount={store.settings.showWordCount}
                                         showTokenCount={store.settings.showTokenCount}
                                         showModelName={store.settings.showModelName}
-                                        modelName={store.settings.model}
+                                        modelName={store.currentSession.model}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {
