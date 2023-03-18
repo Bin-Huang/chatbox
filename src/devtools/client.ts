@@ -1,15 +1,15 @@
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './openai-node'
 import { Message } from './types'
 
-export async function replay(apiKey: string, host: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
+export async function replay(apiKey: string, host: string, maxContextSize: string, maxTokens: string, modelName: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
     if (msgs.length === 0) {
         throw new Error('No messages to replay')
     }
     const head = msgs[0]
     msgs = msgs.slice(1)
 
-
-    const maxLen = 1800
+    const maxTokensNumber = Number(maxTokens)
+    const maxLen = Number(maxContextSize)
     let totalLen = head.content.length
 
     let prompts: Message[] = []
@@ -33,7 +33,8 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
             },
             body: JSON.stringify({
                 messages,
-                model: "gpt-3.5-turbo",
+                model: modelName,
+                max_tokens: maxTokensNumber,
                 stream: true
             })
         });

@@ -26,8 +26,11 @@ export function getDefaultSettings(): Settings {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
         model: "gpt-3.5-turbo",
+        maxContextSize: "2048",
+        maxTokens: "inf",
         showWordCount: false,
         showTokenCount: false,
+        showModelName: false,
     }
 }
 

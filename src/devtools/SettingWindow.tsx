@@ -3,13 +3,13 @@ import './App.css';
 import {
     Button, Alert,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
-    FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel
+    FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography
 } from '@mui/material';
 import { Settings } from './types'
 import { getDefaultSettings } from './store'
 
 const { useEffect } = React
-const models: string[] = ['gpt-3.5-turbo', 'gpt-4'];
+const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314'];
 interface Props {
     open: boolean
     settings: Settings
@@ -19,6 +19,13 @@ interface Props {
 
 export default function SettingWindow(props: Props) {
     const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings);
+    const handleRepliesTokensSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
+        if (newValue === 8192) {
+            setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
+        } else {
+            setSettingsEdit({ ...settingsEdit, maxTokens: newValue.toString() });
+        }
+    };
     useEffect(() => {
         setSettingsEdit(props.settings)
     }, [props.settings])
@@ -92,6 +99,41 @@ export default function SettingWindow(props: Props) {
                         ))}
                     </Select>
                 </FormControl>
+
+                <Typography id="discrete-slider" gutterBottom>
+                    Maximum Context Size in Tokens
+                </Typography>
+                <Slider
+                    value={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
+                    onChange={(event: Event, value: number | number[], activeThumb: number) => setSettingsEdit({ ...settingsEdit, maxContextSize: value.toString() })}
+                    aria-labelledby="discrete-slider"
+                    valueLabelDisplay="auto"
+                    step={1}
+                    marks
+                    min={1}
+                    max={8192}
+                />
+
+                <Typography id="discrete-slider" gutterBottom>
+                    Maximum Tokens in Replies
+                </Typography>
+                <Slider
+                    value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
+                    onChange={handleRepliesTokensSliderChange}
+                    aria-labelledby="discrete-slider"
+                    valueLabelDisplay="auto"
+                    step={1}
+                    marks
+                    min={1}
+                    max={8192}
+                />
+
+                <FormGroup>
+                    <FormControlLabel control={<Switch />} label="Show model name"
+                        checked={settingsEdit.showModelName}
+                        onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showModelName: checked })}
+                    />
+                </FormGroup>
 
                 <FormGroup>
                     <FormControlLabel control={<Switch />} label="Show word count"

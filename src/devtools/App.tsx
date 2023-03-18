@@ -93,6 +93,9 @@ function App() {
         client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
+            store.settings.maxContextSize,
+            store.settings.maxTokens,
+            store.settings.model,
             prompts.nameConversation(session.messages.slice(0, 3)),
             (name) => {
                 name = name.replace(/['"“”]/g, '')
@@ -109,6 +112,9 @@ function App() {
         await client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
+            store.settings.maxContextSize,
+            store.settings.maxTokens,
+            store.settings.model,
             promptMsgs,
             (text) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -304,6 +310,8 @@ function App() {
                                     <Block id={msg.id} key={msg.id} msg={msg}
                                         showWordCount={store.settings.showWordCount}
                                         showTokenCount={store.settings.showTokenCount}
+                                        showModelName={store.settings.showModelName}
+                                        modelName={store.settings.model}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {

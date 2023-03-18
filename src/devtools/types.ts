@@ -31,6 +31,9 @@ export interface Settings {
     openaiKey: string
     apiHost: string
     model: string
+    maxContextSize: string
+    maxTokens: string
     showWordCount?: boolean
     showTokenCount?: boolean
+    showModelName?: boolean
 }
