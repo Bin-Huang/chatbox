@@ -108,9 +108,10 @@ export default function SettingWindow(props: Props) {
                     onChange={(event: Event, value: number | number[], activeThumb: number) => setSettingsEdit({ ...settingsEdit, maxContextSize: value.toString() })}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
+                    defaultValue={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
                     step={64}
                     marks
-                    min={1}
+                    min={64}
                     max={8192}
                 />
 
@@ -119,12 +120,13 @@ export default function SettingWindow(props: Props) {
                 </Typography>
                 <Slider
                     value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
+                    defaultValue={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
                     onChange={handleRepliesTokensSliderChange}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
                     step={64}
                     marks
-                    min={1}
+                    min={64}
                     max={8192}
                 />
 
