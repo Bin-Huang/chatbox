@@ -101,7 +101,7 @@ export default function SettingWindow(props: Props) {
                 </FormControl>
 
                 <Typography id="discrete-slider" gutterBottom>
-                    Maximum Context Size in Tokens
+                    Max Tokens in Context
                 </Typography>
                 <Slider
                     value={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
@@ -116,7 +116,7 @@ export default function SettingWindow(props: Props) {
                 />
 
                 <Typography id="discrete-slider" gutterBottom>
-                    Maximum Tokens in Replies
+                    Max Tokens per Reply
                 </Typography>
                 <Slider
                     value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
