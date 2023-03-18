@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Session, createSession, Message, createMessage } from './types'
 import ChatIcon from '@mui/icons-material/Chat';
-import useStore, { openLink } from './store'
+import useStore from './store'
 import SettingWindow from './SettingWindow'
 import ChatConfigWindow from './ChatConfigWindow'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
@@ -21,6 +21,7 @@ import * as prompts from './prompts'
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import CleanWidnow from './CleanWindow';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
+import * as api from './api'
 
 const { useEffect, useState } = React
 
@@ -145,8 +146,8 @@ function Main() {
 
     return (
         <Box sx={{
-            height: '100%',
-            width: '100%',
+            height: '100vh',
+            width: '100vw',
         }}>
             <Grid container spacing={2} sx={{
                 height: '100%',
@@ -242,7 +243,7 @@ function Main() {
 
                         <MenuItem onClick={() => {
                             setNeedCheckUpdate(false)
-                            openLink('https://github.com/Bin-Huang/chatbox/releases')
+                            api.openLink('https://github.com/Bin-Huang/chatbox/releases')
                         }}>
                             <ListItemIcon>
                                 <IconButton>

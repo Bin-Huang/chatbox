@@ -4,25 +4,7 @@ import * as defaults from './defaults'
 import * as openai from '../utils/openai-node'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
-
-// ipc
-
-export const writeStore = (key: string, value: any) => {
-    return (window as any).api.invoke('setStoreValue', key, value)
-}
-export const readStore = (key: string) => {
-    return (window as any).api.invoke('getStoreValue', key)
-}
-export const getVersion = () => {
-    return (window as any).api.invoke('getVersion')
-}
-export const openLink = (link: string) => {
-    return (window as any).api.invoke('openLink', link)
-}
-
-export const shouldUseDarkColors = (): Promise<boolean> => {
-    return api.invoke('shouldUseDarkColors');
-};
+import * as api from './api'
 
 // setting store
 
@@ -37,7 +19,7 @@ export function getDefaultSettings(): Settings {
 }
 
 export async function readSettings(): Promise<Settings> {
-    const setting = await readStore('settings')
+    const setting: Settings|undefined = await api.readStore('settings')
     if (!setting) {
         return getDefaultSettings()
     }
@@ -63,13 +45,13 @@ export async function writeSettings(settings: Settings) {
     }
     console.log('writeSettings.apiHost', settings.apiHost)
     openai.setHost(settings.apiHost)
-    return writeStore('settings', settings)
+    return api.writeStore('settings', settings)
 }
 
 // session store
 
 export async function readSessions(): Promise<Session[]> {
-    let sessions = await readStore('chat-sessions')
+    let sessions: Session[] | undefined = await api.readStore('chat-sessions')
     if (!sessions) {
         return defaults.sessions
     }
@@ -80,7 +62,7 @@ export async function readSessions(): Promise<Session[]> {
 }
 
 export async function writeSessions(sessions: Session[]) {
-    return writeStore('chat-sessions', sessions)
+    return api.writeStore('chat-sessions', sessions)
 }
 
 // react hook
@@ -88,7 +70,7 @@ export async function writeSessions(sessions: Session[]) {
 export default function useStore() {
     const [version, _setVersion] = useState('unknown')
     useEffect(() => {
-        getVersion().then((version: any) => {
+        api.getVersion().then((version: any) => {
             _setVersion(version)
         })
     }, [])

@@ -1,9 +1,9 @@
-import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import useEvent from '../hooks/useEvent';
-import useStore, { shouldUseDarkColors } from '../store';
+import useStore from '../store';
 import { ThemeMode, fetchThemeDesign, RealThemeMode } from './index';
+import * as api from '../api'
 
 export interface ThemeSwitcherAction {
     setMode: (mode: ThemeMode) => void;
@@ -19,12 +19,14 @@ const REAL_THEME_MODE = 'REAL_THEME_MODE;';
 const THEME_MODE = 'THEME_MODE';
 
 function getThemeModeFromLocal<T>(key: string, defaultValue: T) {
-    const localMode = localStorage.getItem(key);
-    if (localMode) {
-        return Number(localMode);
-    } else {
-        return defaultValue;
-    }
+    // TODO:
+    return defaultValue
+    // const localMode = localStorage.getItem(key);
+    // if (localMode) {
+    //     return Number(localMode);
+    // } else {
+    //     return defaultValue;
+    // }
 }
 
 export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
@@ -66,7 +68,7 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
         if (mode !== ThemeMode.System) return;
         // watch system theme change
         const handleModeChange = async () => {
-            const isDark = await shouldUseDarkColors();
+            const isDark = await api.shouldUseDarkColors();
             changeRealMode(mode, isDark ? ThemeMode.Dark : ThemeMode.Light);
         };
 
@@ -89,7 +91,6 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
         () => (
             <ThemeSwitchContext.Provider value={themeSwitcherContext}>
                 <ThemeProvider theme={theme}>
-                    <CssBaseline />
                     {props.children}
                 </ThemeProvider>
             </ThemeSwitchContext.Provider>
