@@ -81,16 +81,15 @@ export default function SettingWindow(props: Props) {
                 <FormControl fullWidth variant="outlined" margin="dense">
                     <InputLabel htmlFor="model-select">Model</InputLabel>
                     <Select
-                    label="Model"
-                    id="model-select"
-                    value={settingsEdit.model}
-                    onChange={(e) => setSettingsEdit({ ...settingsEdit, model: e.target.value })}
-                    >
-                    {models.map((model) => (
-                        <MenuItem key={model} value={model}>
-                        {model}
-                        </MenuItem>
-                    ))}
+                        label="Model"
+                        id="model-select"
+                        value={settingsEdit.model}
+                        onChange={(e) => setSettingsEdit({ ...settingsEdit, model: e.target.value })}>
+                        {models.map((model) => (
+                            <MenuItem key={model} value={model}>
+                                {model}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
