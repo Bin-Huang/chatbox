@@ -129,21 +129,24 @@ export default function SettingWindow(props: Props) {
                 />
 
                 <FormGroup>
-                    <FormControlLabel control={<Switch />} label="Show model name"
+                    <FormControlLabel control={<Switch />}
+                        label="Show model name"
                         checked={settingsEdit.showModelName}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showModelName: checked })}
                     />
                 </FormGroup>
 
                 <FormGroup>
-                    <FormControlLabel control={<Switch />} label="Show word count"
+                    <FormControlLabel control={<Switch />}
+                        label="Show word count"
                         checked={settingsEdit.showWordCount}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showWordCount: checked })}
                     />
                 </FormGroup>
 
                 <FormGroup>
-                    <FormControlLabel control={<Switch />} label="Show estimated token count"
+                    <FormControlLabel control={<Switch />}
+                        label="Show estimated token count"
                         checked={settingsEdit.showTokenCount}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showTokenCount: checked })}
                     />
