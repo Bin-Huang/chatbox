@@ -2,7 +2,7 @@
   "name": "chatbox",
   "productName": "chatbox",
   "private": true,
-  "description": "a cross-platform desktop client for OpenAI API",
+  "description": "a cross-platform desktop client for ChatGPT API (OpenAI API)",
   "scripts": {
     "start:react": "react-scripts start",
     "build:react": "react-scripts build",

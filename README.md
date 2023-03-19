@@ -3,7 +3,7 @@
     English | <a href="./README-CN.md">中文</a>
 </p>
 <p align="center">
-    <em>Cross-platform desktop application for <b>OpenAI API</b>, also a prompt debugging and management tool</em>
+    <em>Cross-platform desktop application for <b>ChatGPT API (OpenAI API)</b>, also a prompt debugging and management tool</em>
 </p>
 
 
@@ -27,7 +27,7 @@
 
 ## Why Use Chatbox?
 
-- Directly testing OpenAI API might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
+- Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
 - Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
 - Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
 
@@ -40,13 +40,14 @@ The idea is feasible. OpenAI also provides a developer API service, which offers
 
 ## Download
 
-[Download here](https://github.com/Bin-Huang/chatbox/releases)
+[Click to view all download options](https://github.com/Bin-Huang/chatbox/releases)
 
-Supported platforms and architectures:
 
-- **Mac**: x64, arm64 (compatibility with x64 tested)
-- **Windows**: x64
-- **Linux**: x64
+Supported platforms:
+
+- **Mac**: `.dmg`, `.tar` x64, arm64(compatibility with x64, tested)
+- **Windows**: `.msi`
+- **Linux**: `.AppImage`, `.deb`
 
 ## Roadmap
 

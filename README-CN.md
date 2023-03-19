@@ -3,7 +3,7 @@
     <a href="./README.md">English</a> | 中文
 </p>
 <p align="center">
-    <em>开源的 OpenAI API 跨平台桌面客户端，Prompt 的调试与管理工具，也可以用作 ChatGPT Plus 平替</em>
+    <em>开源的 ChatGPT API (OpenAI API) 跨平台桌面客户端，Prompt 的调试与管理工具，也可以用作 ChatGPT Plus 平替</em>
 </p>
 
 
@@ -27,7 +27,7 @@
 
 ## 为什么需要 ChatBox？
 
-- 直接使用 OpenAI API 是比较困难的，需要了解编程与接口调用，而且用起来不够方便。ChatBox 可以帮助你处理所有的底层调用。
+- 直接使用 ChatGPT API (OpenAI API) 是比较困难的，需要了解编程与接口调用，而且用起来不够方便。ChatBox 可以帮助你处理所有的底层调用。
 - ChatBox 还帮你在本地保存了所有的聊天记录和 prompt，防止在线服务的数据丢失。
 - ChatBox 还可以帮助你设计、调试和管理 prompt，让你更好地操作 AI 模型。
 
@@ -40,13 +40,13 @@
 
 ## 下载
 
-[Download here](https://github.com/Bin-Huang/chatbox/releases)
+[Click to view all download options](https://github.com/Bin-Huang/chatbox/releases)
 
-支持的平台与架构：
+支持平台：
 
-- **Mac**: x64, arm64(compatibility with x64 tested)
-- **Windows**: x64
-- **Linux**: x64
+- **Mac**: `.dmg`, `.tar` x64, arm64(compatibility with x64, tested)
+- **Windows**: `.msi`
+- **Linux**: `.AppImage`, `.deb`
 
 ## Roadmap
 
