@@ -48,6 +48,12 @@ Supported platforms and architectures:
 - **Windows**: x64
 - **Linux**: x64
 
+[aur](https://aur.archlinux.org/packages/chatbox-bin)
+
+```
+paru -S chatbox-bin
+```
+
 ## Roadmap
 
 - [x] AI chat and session management
