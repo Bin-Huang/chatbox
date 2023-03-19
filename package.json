@@ -1,15 +1,17 @@
 {
   "name": "chatbox",
   "productName": "chatbox",
+  "private": true,
   "version": "0.1.5",
-  "description": "cross-platform desktop client for OpenAI API",
-  "main": ".webpack/main",
+  "description": "a cross-platform desktop client for OpenAI API",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "start:react": "react-scripts start",
+    "build:react": "react-scripts build",
+    "test:react": "react-scripts test",
+    "eject:react": "react-scripts eject",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
   },
   "repository": {
     "type": "git",
@@ -20,15 +22,9 @@
     "name": "bennhuang",
     "email": "tohuangbin@gmail.com"
   },
-  "license": "MIT",
+  "license": "GPL-3.0 license",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.5",
-    "@electron-forge/maker-deb": "^6.0.5",
-    "@electron-forge/maker-rpm": "^6.0.5",
-    "@electron-forge/maker-squirrel": "^6.0.5",
-    "@electron-forge/maker-zip": "^6.0.5",
-    "@electron-forge/plugin-webpack": "^6.0.5",
-    "@electron-forge/publisher-github": "^6.0.5",
+    "@tauri-apps/cli": "^1.2.3",
     "@types/highlight.js": "^10.1.0",
     "@types/markdown-it": "^12.2.3",
     "@types/markdown-it-link-attributes": "^3.0.1",
@@ -37,13 +33,12 @@
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.0.0",
-    "electron": "23.1.2",
-    "eslint": "^8.0.1",
+    "eslint": "8.36.0",
     "eslint-plugin-import": "^2.25.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "node-loader": "^2.0.0",
+    "react-scripts": "^5.0.1",
     "sass": "^1.59.3",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.0.0",
@@ -52,15 +47,16 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
-    "@electron-forge/maker-dmg": "^6.0.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.11",
+    "@tauri-apps/api": "^1.2.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "@traptitech/markdown-it-katex": "^3.6.0",
     "axios": "^0.26.0",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.1.0",
     "form-data": "^4.0.0",
     "github-markdown-css": "^5.2.0",
     "gpt-3-encoder": "^1.1.4",
@@ -71,7 +67,20 @@
     "material-ui-popup-state": "^5.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "update-electron-app": "^2.0.1",
-    "uuid": "^9.0.0"
+    "typescript": "^4.9.5",
+    "uuid": "^9.0.0",
+    "web-vitals": "^2.1.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
