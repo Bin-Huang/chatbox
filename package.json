@@ -3,8 +3,7 @@
   "productName": "chatbox",
   "private": true,
   "version": "0.1.5",
-  "description": "cross-platform desktop client for OpenAI API",
-  "main": ".webpack/main",
+  "description": "a cross-platform desktop client for OpenAI API",
   "scripts": {
     "start:react": "react-scripts start",
     "build:react": "react-scripts build",
@@ -33,7 +32,6 @@
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.0.0",
     "eslint": "8.36.0",
     "eslint-plugin-import": "^2.25.0",
