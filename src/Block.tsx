@@ -158,7 +158,7 @@ function _Block(props: Props) {
                                     />
                                 )
                             }
-                            <Typography variant="body2" color="GrayText" sx={{opacity: 0.5}} >
+                            <Typography variant="body2" sx={{opacity: 0.5}} >
                                 {
                                     tips.join(', ')
                                 }
