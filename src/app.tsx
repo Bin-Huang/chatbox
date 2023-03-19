@@ -145,10 +145,7 @@ function Main() {
     }, [messageInput])
 
     return (
-        <Box sx={{
-            height: '100vh',
-            width: '100vw',
-        }}>
+        <Box sx={{ height: '100vh' }}>
             <Grid container spacing={2} sx={{
                 height: '100%',
             }}>
