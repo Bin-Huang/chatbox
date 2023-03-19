@@ -2,7 +2,7 @@
   "name": "chatbox",
   "productName": "chatbox",
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.10",
   "description": "a cross-platform desktop client for OpenAI API",
   "scripts": {
     "start:react": "react-scripts start",
