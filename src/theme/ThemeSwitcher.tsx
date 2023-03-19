@@ -4,6 +4,7 @@ import useEvent from '../hooks/useEvent';
 import useStore from '../store';
 import { ThemeMode, fetchThemeDesign, RealThemeMode } from './index';
 import * as api from '../api'
+import CssBaseline from '@mui/material/CssBaseline';
 
 export interface ThemeSwitcherAction {
     setMode: (mode: ThemeMode) => void;
@@ -94,6 +95,7 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
         () => (
             <ThemeSwitchContext.Provider value={themeSwitcherContext}>
                 <ThemeProvider theme={theme}>
+                    <CssBaseline />
                     {props.children}
                 </ThemeProvider>
             </ThemeSwitchContext.Provider>

@@ -1,10 +1,10 @@
 {
     "$schema": "../node_modules/@tauri-apps/cli/schema.json",
     "build": {
-        "beforeBuildCommand": "npm run build:next && npm run export:next",
-        "beforeDevCommand": "npm run dev:next",
+        "beforeBuildCommand": "npm run build:react",
+        "beforeDevCommand": "BROWSER=none npm run start:react",
         "devPath": "http://localhost:3000",
-        "distDir": "../out",
+        "distDir": "../build",
         "withGlobalTauri": true
     },
     "package": {
@@ -69,10 +69,10 @@
         "windows": [
             {
                 "fullscreen": false,
-                "height": 600,
+                "height": 1000,
                 "resizable": true,
                 "title": "chatbox",
-                "width": 800
+                "width": 1400
             }
         ]
     }

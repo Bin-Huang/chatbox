@@ -1,4 +1,4 @@
-import { ChatCompletionRequestMessage } from '../utils/openai-node/api'
+import { ChatCompletionRequestMessage } from './utils/openai-node/api'
 import { Message } from './types'
 
 export async function replay(apiKey: string, host: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
