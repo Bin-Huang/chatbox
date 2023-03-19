@@ -25,7 +25,8 @@
             "fs": {
                 "all": true,
                 "scope": [
-                    "$APPCONFIG", "$APPCONFIG/*",
+                    "$APPCONFIG",
+                    "$APPCONFIG/*",
                     "$LOCALDATA/chatbox/*"
                 ]
             }
@@ -67,7 +68,14 @@
             "csp": null
         },
         "updater": {
-            "active": false
+            "active": true,
+            "endpoints": [
+                "https://releases.chatboxapp.xyz/chatbox/{{target}}/{{current_version}}",
+                "https://gist.githubusercontent.com/Bin-Huang/cf0b7684e28b30d760ba02417bbac916/raw/chatbox.releases.json",
+                "https://gist.githubusercontent.com/Bin-Huang/cf0b7684e28b30d760ba02417bbac916/raw"
+            ],
+            "dialog": true,
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDRCNkM4MDE2NDJBNTU3ODcKUldTSFY2VkNGb0JzUzZyT2Fzamx5dDB4QVQ5cHU1aU1tR3RYRVh4V204REkvMjFheWNzRG80dDEK"
         },
         "windows": [
             {
