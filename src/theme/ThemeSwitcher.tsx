@@ -20,9 +20,6 @@ const REAL_THEME_MODE = 'REAL_THEME_MODE;';
 const THEME_MODE = 'THEME_MODE';
 
 function getThemeModeFromLocal<T>(key: string, defaultValue: T) {
-    if (!api.hasWindow()) {
-        return defaultValue
-    }
     const localMode = localStorage.getItem(key);
     if (localMode) {
         return Number(localMode);
