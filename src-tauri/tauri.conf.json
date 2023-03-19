@@ -80,10 +80,10 @@
         "windows": [
             {
                 "fullscreen": false,
-                "height": 1000,
+                "height": 800,
                 "resizable": true,
                 "title": "chatbox",
-                "width": 1400
+                "width": 1000
             }
         ]
     }
