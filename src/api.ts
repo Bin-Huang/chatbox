@@ -13,7 +13,12 @@ export const writeStore = async (key: string, value: any) => {
     if (!dirExists) {
         await api.fs.createDir('', { dir: api.fs.Dir.AppConfig })
     }
-    const configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
+    let configJson = '{}'
+    try {
+        configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
+    } catch (e) {
+        console.log(e)
+    }
     const config = JSON.parse(configJson)
     config[key] = value
     await api.fs.writeTextFile('config.json', JSON.stringify(config), { dir: api.fs.Dir.AppConfig })
@@ -24,7 +29,12 @@ export const readStore = async (key: string) => {
     if (!dirExists) {
         await api.fs.createDir('', { dir: api.fs.Dir.AppConfig })
     }
-    const configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
+    let configJson = '{}'
+    try {
+        configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
+    } catch (e) {
+        console.log(e)
+    }
     const config = JSON.parse(configJson)
     return config[key]
 }
