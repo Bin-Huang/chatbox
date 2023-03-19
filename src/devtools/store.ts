@@ -31,7 +31,7 @@ export function getDefaultSettings(): Settings {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
         model: "gpt-3.5-turbo",
-        maxContextSize: "inf",
+        maxContextSize: "4000",
         maxTokens: "2048",
         showWordCount: false,
         showTokenCount: false,
@@ -92,7 +92,13 @@ export async function readSessions(settings: Settings): Promise<Session[]> {
     if (sessions.length === 0) {
         return [createSession(settings.model)]
     }
-    return sessions
+    return sessions.map((s: any) => {
+        // 兼容旧版本的数据
+        if (!s.model) {
+            s.model = getDefaultSettings().model
+        }
+        return s
+    })
 }
 
 export async function writeSessions(sessions: Session[]) {
