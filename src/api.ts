@@ -9,34 +9,40 @@ export const openLink = async (url: string) => {
 }
 
 export const writeStore = async (key: string, value: any) => {
-    const dirExists = await api.fs.exists('', { dir: api.fs.Dir.AppConfig })
-    if (!dirExists) {
-        await api.fs.createDir('', { dir: api.fs.Dir.AppConfig })
-    }
-    let configJson = '{}'
-    try {
-        configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
-    } catch (e) {
-        console.log(e)
-    }
-    const config = JSON.parse(configJson)
+    const config = await readConfig()
     config[key] = value
     await api.fs.writeTextFile('config.json', JSON.stringify(config), { dir: api.fs.Dir.AppConfig })
 }
 
 export const readStore = async (key: string) => {
+    const config = await readConfig()
+    return config[key]
+}
+
+async function readConfig() {
     const dirExists = await api.fs.exists('', { dir: api.fs.Dir.AppConfig })
     if (!dirExists) {
-        await api.fs.createDir('', { dir: api.fs.Dir.AppConfig })
+        try {
+            await api.fs.createDir('', { dir: api.fs.Dir.AppConfig })
+        } catch (e) {
+            console.log('ensure app config dir', e)
+        }
     }
-    let configJson = '{}'
-    try {
-        configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
-    } catch (e) {
-        console.log(e)
+
+    const configExists = await api.fs.exists('config.json', { dir: api.fs.Dir.AppConfig })
+    if (!configExists) {
+        try {
+            // 从旧版本迁移
+            const oldConfig = await api.fs.readTextFile('chatbox/config.json', { dir: api.fs.Dir.LocalData })
+            await api.fs.writeTextFile('config.json', oldConfig, { dir: api.fs.Dir.AppConfig })
+        } catch (e) {
+            console.log(e)
+            await api.fs.writeTextFile('config.json', '{}', { dir: api.fs.Dir.AppConfig })
+        }
     }
-    const config = JSON.parse(configJson)
-    return config[key]
+
+    const configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppConfig })
+    return JSON.parse(configJson)
 }
 
 export const shouldUseDarkColors = async (): Promise<boolean> => {
