@@ -9,7 +9,7 @@
     },
     "package": {
         "productName": "chatbox",
-        "version": "0.1.12"
+        "version": "0.1.13"
     },
     "tauri": {
         "allowlist": {
