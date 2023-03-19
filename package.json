@@ -5,9 +5,10 @@
   "description": "cross-platform desktop client for OpenAI API",
   "main": ".webpack/main",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "export": "next export",
+    "dev:next": "next dev",
+    "build:next": "next build",
+    "export:next": "next export",
+    "dev": "tauri dev",
     "start": "next start",
     "tauri": "tauri",
     "lint": "next lint"
