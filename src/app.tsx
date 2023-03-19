@@ -94,6 +94,9 @@ function Main() {
         client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
+            store.settings.maxContextSize,
+            store.settings.maxTokens,
+            session.model,
             prompts.nameConversation(session.messages.slice(0, 3)),
             (name) => {
                 name = name.replace(/['"“”]/g, '')
@@ -110,6 +113,9 @@ function Main() {
         await client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
+            store.settings.maxContextSize,
+            store.settings.maxTokens,
+            session.model,
             promptMsgs,
             (text) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -200,7 +206,7 @@ function Main() {
                                         }}
                                         deleteMe={() => store.deleteChatSession(session)}
                                         copyMe={() => {
-                                            const newSession = createSession(session.name + ' Copyed')
+                                            const newSession = createSession(session.model, session.name + ' copied')
                                             newSession.messages = session.messages
                                             store.createChatSession(newSession, ix)
                                         }}
@@ -297,6 +303,8 @@ function Main() {
                                     <Block id={msg.id} key={msg.id} msg={msg}
                                         showWordCount={store.settings.showWordCount || false}
                                         showTokenCount={store.settings.showTokenCount || false}
+                                        showModelName={store.settings.showModelName || false}
+                                        modelName={store.currentSession.model}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {

@@ -1,25 +1,27 @@
 import { ChatCompletionRequestMessage } from './utils/openai-node/api'
 import { Message } from './types'
+import * as wordCount from './utils'
 
-export async function replay(apiKey: string, host: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
+export async function replay(apiKey: string, host: string, maxContextSize: string, maxTokens: string, modelName: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
     if (msgs.length === 0) {
         throw new Error('No messages to replay')
     }
     const head = msgs[0]
     msgs = msgs.slice(1)
 
-
-    const maxLen = 1800
-    let totalLen = head.content.length
+    const maxTokensNumber: number = Number(maxTokens)
+    const maxLen: number = Number(maxContextSize)
+    let totalLen: number = wordCount.estimateTokens(head.content)
 
     let prompts: Message[] = []
     for (let i = msgs.length - 1; i >= 0; i--) {
         const msg = msgs[i]
-        if (msg.content.length + totalLen > maxLen) {
+        const msgTokenSize: number = wordCount.estimateTokens(msg.content) + 100 // 100 作为预估的误差补偿
+        if (msgTokenSize + totalLen > maxLen) {
             break
         }
         prompts = [msg, ...prompts]
-        totalLen += msg.content.length
+        totalLen += msgTokenSize
     }
     prompts = [head, ...prompts]
 
@@ -33,7 +35,8 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
             },
             body: JSON.stringify({
                 messages,
-                model: "gpt-3.5-turbo",
+                model: modelName,
+                max_tokens: maxTokensNumber,
                 stream: true
             })
         });
@@ -54,6 +57,9 @@ export async function replay(apiKey: string, host: string, msgs: Message[], onTe
                     partialData = raw
                 } else {
                     partialData += raw;
+                }
+                if (response.status !== 200) {
+                    throw new Error(`Error from OpenAI: ${response.status} ${response.statusText} ${partialData}`)
                 }
                 const delimiterIndex = partialData.indexOf('\n\n');
                 if (delimiterIndex === -1) {
