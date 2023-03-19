@@ -58,6 +58,9 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
                 } else {
                     partialData += raw;
                 }
+                if (response.status !== 200) {
+                    throw new Error(`Error from OpenAI: ${response.status} ${response.statusText} ${partialData}`)
+                }
                 const delimiterIndex = partialData.indexOf('\n\n');
                 if (delimiterIndex === -1) {
                     continue;
