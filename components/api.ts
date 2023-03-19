@@ -28,15 +28,27 @@ export const writeStore = async (key: string, value: any) => {
     if (!hasWindow()) {
         return {}
     }
-    return {} as any
-    // return (window as any).api.invoke('setStoreValue', key, value)
+    const dirExists = await api().fs.exists('', { dir: api().fs.Dir.AppConfig })
+    if (!dirExists) {
+        await api().fs.createDir('', { dir: api().fs.Dir.AppConfig })
+    }
+    const configJson = await api().fs.readTextFile('config.json', { dir: api().fs.Dir.AppConfig })
+    const config = JSON.parse(configJson)
+    config[key] = value
+    await api().fs.writeTextFile('config.json', JSON.stringify(config), { dir: api().fs.Dir.AppConfig })
 }
 
 export const readStore = async (key: string) => {
-    console.log(await api().fs.readDir('', { dir: api().fs.Dir.AppData }))
-    return undefined
-    // return {} as any
-    // return (window as any).api.invoke('getStoreValue', key)
+    if (!hasWindow()) {
+        return {}
+    }
+    const dirExists = await api().fs.exists('', { dir: api().fs.Dir.AppConfig })
+    if (!dirExists) {
+        await api().fs.createDir('', { dir: api().fs.Dir.AppConfig })
+    }
+    const configJson = await api().fs.readTextFile('config.json', { dir: api().fs.Dir.AppConfig })
+    const config = JSON.parse(configJson)
+    return config[key]
 }
 
 export const shouldUseDarkColors = async (): Promise<boolean> => {

@@ -24,7 +24,7 @@
             },
             "fs": {
                 "all": true,
-                "scope": ["$APPDATA/*"]
+                "scope": ["$APPCONFIG", "$APPCONFIG/*"]
             }
         },
         "bundle": {
@@ -42,7 +42,7 @@
                 "icons/icon.icns",
                 "icons/icon.ico"
             ],
-            "identifier": "xyz.chatboxapp.app",
+            "identifier": "chatbox",
             "longDescription": "",
             "macOS": {
                 "entitlements": null,
