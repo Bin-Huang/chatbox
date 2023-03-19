@@ -30,8 +30,12 @@ export function getDefaultSettings(): Settings {
     return {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
+        model: "gpt-3.5-turbo",
+        maxContextSize: "inf",
+        maxTokens: "2048",
         showWordCount: false,
         showTokenCount: false,
+        showModelName: false,
         theme: ThemeMode.System,
     }
 }
@@ -45,11 +49,23 @@ export async function readSettings(): Promise<Settings> {
     if (!setting.apiHost) {
         setting.apiHost = getDefaultSettings().apiHost
     }
+    if (!setting.model) {
+        setting.model = getDefaultSettings().model
+    }
+    if (!setting.maxTokens) {
+        setting.maxTokens = getDefaultSettings().maxTokens
+    }
+    if (!setting.maxContextSize) {
+        setting.maxContextSize = getDefaultSettings().maxContextSize
+    }
     if (setting.showWordCount === undefined) {
         setting.showWordCount = getDefaultSettings().showWordCount
     }
     if (setting.showTokenCount === undefined) {
         setting.showTokenCount = getDefaultSettings().showTokenCount
+    }
+    if (setting.showModelName === undefined) {
+        setting.showModelName = getDefaultSettings().showModelName
     }
     if (setting.theme === undefined) {
         setting.theme = getDefaultSettings().theme;
@@ -68,13 +84,13 @@ export async function writeSettings(settings: Settings) {
 
 // session store
 
-export async function readSessions(): Promise<Session[]> {
+export async function readSessions(settings: Settings): Promise<Session[]> {
     let sessions = await readStore('chat-sessions')
     if (!sessions) {
         return defaults.sessions
     }
     if (sessions.length === 0) {
-        return [createSession()]
+        return [createSession(settings.model)]
     }
     return sessions
 }
@@ -108,10 +124,10 @@ export default function useStore() {
         writeSettings(settings)
     }
 
-    const [chatSessions, _setChatSessions] = useState<Session[]>([createSession()])
+    const [chatSessions, _setChatSessions] = useState<Session[]>([createSession(settings.model)])
     const [currentSession, switchCurrentSession] = useState<Session>(chatSessions[0])
     useEffect(() => {
-        readSessions().then((sessions: Session[]) => {
+        readSessions(settings).then((sessions: Session[]) => {
             _setChatSessions(sessions)
             switchCurrentSession(sessions[0])
         })
@@ -124,7 +140,7 @@ export default function useStore() {
     const deleteChatSession = (target: Session) => {
         const sessions = chatSessions.filter((s) => s.id !== target.id)
         if (sessions.length === 0) {
-            sessions.push(createSession())
+            sessions.push(createSession(settings.model))
         }
         if (target.id === currentSession.id) {
             switchCurrentSession(sessions[0])
@@ -149,7 +165,7 @@ export default function useStore() {
         switchCurrentSession(session)
     }
     const createEmptyChatSession = () => {
-        createChatSession(createSession())
+        createChatSession(createSession(settings.model))
     }
 
     const setMessages = (session: Session, messages: Message[]) => {

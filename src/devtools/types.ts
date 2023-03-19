@@ -10,6 +10,7 @@ export interface Session{
     id: string
     name: string
     messages: Message[]
+    model: string
 }
 
 export function createMessage(role: ChatCompletionRequestMessageRoleEnum = ChatCompletionRequestMessageRoleEnum.User, content: string = ''): Message {
@@ -20,18 +21,23 @@ export function createMessage(role: ChatCompletionRequestMessageRoleEnum = ChatC
     }
 }
 
-export function createSession(name: string = "Untitled"): Session {
+export function createSession(modelName: string, name: string = "Untitled"): Session {
     return {
         id: uuidv4(),
         name: name,
         messages: [],
+        model: modelName,
     }
 }
 
 export interface Settings {
     openaiKey: string
     apiHost: string
+    model: string
+    maxContextSize: string
+    maxTokens: string
     showWordCount?: boolean
     showTokenCount?: boolean
+    showModelName?: boolean
     theme: ThemeMode
 }
