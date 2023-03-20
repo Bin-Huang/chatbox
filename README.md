@@ -22,8 +22,9 @@
 
 </p>
 
-![](./doc/demo.png)
+<!-- ![](./doc/demo.png) -->
 ![](./doc/demo2.png)
+![](./doc/demo3.gif)
 
 ## Why Use Chatbox?
 
