@@ -40,13 +40,13 @@
 
 ## 下载
 
-[Click to view all download options](https://github.com/Bin-Huang/chatbox/releases)
+[各个平台的安装包下载点这里](https://github.com/Bin-Huang/chatbox/releases)
 
 支持平台：
 
-- **Mac**: `.dmg`, `.tar` x64, arm64(compatibility with x64, tested)
-- **Windows**: `.msi`
-- **Linux**: `.AppImage`, `.deb`
+- **Mac**: 请下载 `.dmg`, `.tar` 文件，已经支持 x64, arm64(compatibility with x64, tested)
+- **Windows**: 请下载 `.msi` 文件
+- **Linux**: 请下载 `.AppImage`, `.deb` 文件
 
 ## Roadmap
 
@@ -57,9 +57,11 @@
 - [x] API Host 配置
 - [x] 自动生成标签页的标题
 - [x] 消息清理的按钮
+- [x] 夜间模式
+- [x] 消息的 token 估算
+- [x] GPT4 的支持
 - [ ] 中文菜单
 - [ ] 代码块的复制按钮
-- [ ] 夜间模式
 - [ ] 停止生成的按钮
 - [ ] 标签页的拖拽排序
 - [ ] Prompt 与参数配置
@@ -69,15 +71,19 @@
 
 欢迎任何形式的贡献，包括但不限于：
 
-- 提交 issue
 - 提交 pull request
 - 提交 feature request
 - 提交 bug report
 - 提交文档校订
 - 提交翻译
 - 提交其他任何形式的贡献
+- 提交 issue
 
-## 请我喝杯咖啡
+请注意：
+1. 在提交 issue 之前，请确保没有重复话题的 issue。
+2. 请确保标题足够的简洁明了，描述足够的详细。
+
+## 请熬夜的开发者喝瓶可乐？
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 

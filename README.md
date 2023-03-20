@@ -42,12 +42,11 @@ The idea is feasible. OpenAI also provides a developer API service, which offers
 
 [Click to view all download options](https://github.com/Bin-Huang/chatbox/releases)
 
-
 Supported platforms:
 
-- **Mac**: `.dmg`, `.tar` x64, arm64(compatibility with x64, tested)
-- **Windows**: `.msi`
-- **Linux**: `.AppImage`, `.deb`
+- **Mac**: please download `.dmg` and `.tar` files. It supports x64 and arm64 (compatibility with x64 is tested).
+- **Windows**: please download the `.msi` file.
+- **Linux**: please download the `.AppImage` and `.deb` files."
 
 ## Roadmap
 
@@ -58,9 +57,11 @@ Supported platforms:
 - [x] API Host configuration
 - [x] Automatically generate tab titles
 - [x] Button for clearing messages.
+- [x] Night/Dark mode
+- [x] message token estimating
+- [x] GPT4
 - [ ] Chinese language support
 - [ ] Copy button for code blocks
-- [ ] Night/Dark mode
 - [ ] Stop button for generation process
 - [ ] Drag-and-drop sorting of tabs
 - [ ] Prompt and parameter configuration
