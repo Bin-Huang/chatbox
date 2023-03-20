@@ -6,12 +6,14 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
     if (msgs.length === 0) {
         throw new Error('No messages to replay')
     }
-    const head = msgs[0]
-    msgs = msgs.slice(1)
+    const head = msgs[0].role === 'system' ? msgs[0] : undefined
+    if (head) {
+        msgs = msgs.slice(1)
+    }
 
-    const maxTokensNumber: number = Number(maxTokens)
-    const maxLen: number = Number(maxContextSize)
-    let totalLen: number = wordCount.estimateTokens(head.content)
+    const maxTokensNumber = Number(maxTokens)
+    const maxLen = Number(maxContextSize)
+    let totalLen = head ? wordCount.estimateTokens(head.content) : 0
 
     let prompts: Message[] = []
     for (let i = msgs.length - 1; i >= 0; i--) {
@@ -23,7 +25,9 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
         prompts = [msg, ...prompts]
         totalLen += msgTokenSize
     }
-    prompts = [head, ...prompts]
+    if (head) {
+        prompts = [head, ...prompts]
+    }
 
     try {
         const messages: ChatCompletionRequestMessage[] = prompts.map(msg => ({ role: msg.role, content: msg.content }))
