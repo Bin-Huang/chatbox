@@ -28,7 +28,7 @@ export async function readSettings(): Promise<Settings> {
         return getDefaultSettings()
     }
     // 兼容早期版本
-    const settingWithDefaults = Object.assign({}, defaults, setting);
+    const settingWithDefaults = Object.assign({}, getDefaultSettings(), setting);
 
     return settingWithDefaults;
 }
