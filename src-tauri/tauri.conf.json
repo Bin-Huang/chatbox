@@ -29,6 +29,9 @@
                     "$APPCONFIG/*",
                     "$LOCALDATA/chatbox/*"
                 ]
+            },
+            "http": {
+                "all": true
             }
         },
         "bundle": {
