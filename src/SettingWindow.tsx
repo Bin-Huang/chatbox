@@ -14,9 +14,16 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import { useTranslation } from 'react-i18next'
 
 const { useEffect } = React
 const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314'];
+const languages:string[] = ['en', 'zh-Hans', 'zh-Hant'];
+const languageMap: { [key: string]: string } = {
+    'en': 'English',
+    'zh-Hans': '简体中文',
+    'zh-Hant': '繁體中文',
+};
 interface Props {
     open: boolean
     settings: Settings
@@ -25,6 +32,7 @@ interface Props {
 }
 
 export default function SettingWindow(props: Props) {
+    const { t } = useTranslation()
     const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings);
     const handleRepliesTokensSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
         if (newValue === 8192) {
@@ -90,55 +98,64 @@ export default function SettingWindow(props: Props) {
         setMode(newMode);
     }
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <Dialog open={props.open} onClose={onCancel} fullWidth >
-            <DialogTitle>Settings</DialogTitle>
+            <DialogTitle>{t('settings')}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="OpenAI API Key"
+                    label={t('openai api key')}
                     type="password"
                     fullWidth
                     variant="outlined"
                     value={settingsEdit.openaiKey}
                     onChange={(e) => setSettingsEdit({ ...settingsEdit, openaiKey: e.target.value.trim() })}
                 />
-
                 <FormControl sx={{ flexDirection: 'row', alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                    <span style={{ marginRight: 10 }}>Theme</span>
+                    <span style={{ marginRight: 10 }}>{t('theme')}</span>
                     <ThemeChangeButton value={settingsEdit.theme} onChange={theme => changeModeWithPreview(theme)} />
                 </FormControl>
-
                 <FormGroup>
                     <FormControlLabel control={<Switch />}
-                        label="Show word count"
+                        label={t('show word count')}
                         checked={settingsEdit.showWordCount}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showWordCount: checked })}
                     />
                 </FormGroup>
-
                 <FormGroup>
                     <FormControlLabel control={<Switch />}
-                        label="Show estimated token count"
+                        label={t('show estimated token count')}
                         checked={settingsEdit.showTokenCount}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showTokenCount: checked })}
                     />
                 </FormGroup>
-
-
                 <Accordion>
-                    <AccordionSummary
-                        aria-controls="panel1a-content"
-                    >
-                        <Typography>Proxy</Typography>
+                    <AccordionSummary aria-controls="panel1a-content">
+                        <Typography>{t('system')}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
+                        <FormControl fullWidth variant="outlined" margin="dense">
+                            <InputLabel htmlFor="language-select">{t('language')}</InputLabel>
+                            <Select
+                              label="language"
+                              id="language-select"
+                              value={settingsEdit.language}
+                              onChange={(e) =>{
+                                  setSettingsEdit({ ...settingsEdit, language: e.target.value });
+                              }}>
+                                {languages.map((language) => (
+                                  <MenuItem key={language} value={language}>
+                                      {languageMap[language]}
+                                  </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <TextField
                             margin="dense"
-                            label="API Host"
+                            label={t('proxy')}
                             type="text"
                             fullWidth
                             variant="outlined"
@@ -149,40 +166,39 @@ export default function SettingWindow(props: Props) {
                         {
                             !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
                                 <Alert severity="warning">
-                                    Your API Key and all messages will be sent to <b>{settingsEdit.apiHost}</b>.
-                                    Please confirm that you trust this address. Otherwise, there is a risk of API Key and data leakage.
-                                    <Button onClick={() => setSettingsEdit({ ...settingsEdit, apiHost: getDefaultSettings().apiHost })}>Reset</Button>
+                                    {t('your api key and all messages will be sent to')} <b>{settingsEdit.apiHost}</b>.
+                                    {t('please confirm that you trust this address. otherwise, there is a risk of api key and data leakage.')}
+                                    <Button onClick={() => setSettingsEdit({ ...settingsEdit, apiHost: getDefaultSettings().apiHost })}>{t('reset')}</Button>
                                 </Alert>
                             )
                         }
                         {
                             settingsEdit.apiHost.startsWith('http://') && (
                                 <Alert severity="warning">
-                                    All data transfers are being conducted through the <b>HTTP</b> protocol, which may lead to the risk of API key and data leakage.
-                                    Unless you are completely certain and understand the potential risks involved, please consider using the HTTPS protocol instead.
+                                    {t('all data transfers are being conducted through the')} <b>{t('http')}</b> {t('protocol, which may lead to the risk of api key and data leakage.')}
+                                    {t('unless you are completely certain and understand the potential risks involved, please consider using the')} <b>{t('https')}</b> {t('protocol instead.')}
                                 </Alert>
                             )
                         }
                         {
                             !settingsEdit.apiHost.startsWith('http') && (
                                 <Alert severity="error">
-                                    Please starts with https:// or http://
+                                    {t('proxy must use')} <b> {t('http')} </b> {t('or')} <b> {t('https')} </b> {t('proxy api host alert end')}
                                 </Alert>
                             )
                         }
 
                     </AccordionDetails>
                 </Accordion>
-
                 <Accordion>
                     <AccordionSummary
                         aria-controls="panel1a-content"
                     >
-                        <Typography>Model & Tokens</Typography>
+                        <Typography>{t('model')} & {t('token')} </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <FormControl fullWidth variant="outlined" margin="dense">
-                            <InputLabel htmlFor="model-select">Model</InputLabel>
+                            <InputLabel htmlFor="model-select">{t('model')}</InputLabel>
                             <Select
                                 label="Model"
                                 id="model-select"
@@ -198,7 +214,7 @@ export default function SettingWindow(props: Props) {
 
                         <Box sx={{ marginTop: 3, marginBottom: -1 }}>
                             <Typography id="discrete-slider" gutterBottom>
-                                Max Tokens in Context
+                                {t('max tokens in context')}
                             </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
@@ -226,7 +242,7 @@ export default function SettingWindow(props: Props) {
 
                         <Box sx={{ marginTop: 3, marginBottom: -1 }}>
                             <Typography id="discrete-slider" gutterBottom>
-                                Max Tokens per Reply
+                                {t('max tokens per reply')}
                             </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
@@ -254,33 +270,32 @@ export default function SettingWindow(props: Props) {
 
                         <FormGroup>
                             <FormControlLabel control={<Switch />}
-                                label="Show model name"
+                                label={t('show model name')}
                                 checked={settingsEdit.showModelName}
                                 onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showModelName: checked })}
                             />
                         </FormGroup>
 
                         <Alert severity="warning">
-                            These settings may cause an OpenAI request error.
-                            Please make sure you know what you are doing.
-                            Click here to
+                            {t('these settings may cause an openai request error.')}
+                            {t('please make sure you know what you are doing.')}
+                            {t('click here to')}
                             <Button onClick={() => setSettingsEdit({
                                 ...settingsEdit,
                                 model: getDefaultSettings().model,
                                 maxContextSize: getDefaultSettings().maxContextSize,
                                 maxTokens: getDefaultSettings().maxTokens,
                                 showModelName: getDefaultSettings().showModelName,
-                            })}>reset</Button>
-                            to default values.
+                            })}>{t('reset')}</Button>
+                            {t('to default values.')}
                         </Alert>
 
                     </AccordionDetails>
                 </Accordion>
-
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button onClick={() => props.save(settingsEdit)}>Save</Button>
+                <Button onClick={onCancel}>{t('cancel')}</Button>
+                <Button onClick={() => props.save(settingsEdit)}>{t('save')}</Button>
             </DialogActions>
         </Dialog>
     );

@@ -3,6 +3,7 @@ import {
     Button, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
 } from '@mui/material';
 import { Session } from './types'
+import { useTranslation } from "react-i18next";
 
 const { useEffect } = React
 
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function ChatConfigWindow(props: Props) {
+    const { t } = useTranslation()
     const [dataEdit, setDataEdit] = React.useState<Session>(props.session);
 
     useEffect(() => {
@@ -35,14 +37,14 @@ export default function ChatConfigWindow(props: Props) {
 
     return (
         <Dialog open={props.open} onClose={onCancel}>
-            <DialogTitle>Renaming</DialogTitle>
+            <DialogTitle>{t('rename')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Title"
+                    label={t('name')}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -51,8 +53,8 @@ export default function ChatConfigWindow(props: Props) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button onClick={onSave}>Save</Button>
+                <Button onClick={onCancel}>{t('cancel')}</Button>
+                <Button onClick={onSave}>{t('save')}</Button>
             </DialogActions>
         </Dialog>
     );

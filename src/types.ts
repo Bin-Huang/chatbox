@@ -40,4 +40,5 @@ export interface Settings {
     showTokenCount?: boolean
     showModelName?: boolean
     theme: ThemeMode
+    language: string
 }
