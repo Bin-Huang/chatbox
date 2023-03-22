@@ -434,7 +434,10 @@ function MessageInput(props: {
         setMessageInput('')
     }
     return (
-        <form onSubmit={() => submit()}>
+        <form onSubmit={(e) => {
+            e.preventDefault()
+            submit()
+        }}>
             <Stack direction="column" spacing={1} >
                 <Grid container spacing={2}>
                     <Grid item xs>
