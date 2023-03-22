@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
