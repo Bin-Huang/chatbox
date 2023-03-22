@@ -25,6 +25,8 @@
             "fs": {
                 "all": true,
                 "scope": [
+                    "$APPDATA",
+                    "$APPDATA/*",
                     "$APPCONFIG",
                     "$APPCONFIG/*",
                     "$LOCALDATA/chatbox/*"
