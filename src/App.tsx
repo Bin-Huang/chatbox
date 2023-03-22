@@ -22,10 +22,12 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import CleanWidnow from './CleanWindow';
 import * as api from './api'
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
+import { useTranslation } from "react-i18next";
 
 const { useEffect, useState } = React
 
 function Main() {
+    const { t } = useTranslation()
     const store = useStore()
 
     // 是否展示设置窗口
@@ -135,7 +137,7 @@ function Main() {
                     if (session.messages[i].id === targetMsg.id) {
                         session.messages[i] = {
                             ...session.messages[i],
-                            content: 'API Request Failed: \n```\n' + err.message + '\n```',
+                            content: t('api request failed:') + ' \n```\n' + err.message + '\n```',
                         }
                         break
                     }
@@ -191,7 +193,7 @@ function Main() {
                             className="scroll"
                             subheader={
                                 <ListSubheader component="div">
-                                    CHAT
+                                    {t('chat')}
                                 </ListSubheader>
                             }
                         >
@@ -223,7 +225,7 @@ function Main() {
                                 <IconButton><AddIcon fontSize="small" /></IconButton>
                             </ListItemIcon>
                             <ListItemText>
-                                New Chat
+                                {t('new chat')}
                             </ListItemText>
                             <Typography variant="body2" color="text.secondary">
                                 {/* ⌘N */}
@@ -237,7 +239,7 @@ function Main() {
                                 <IconButton><SettingsIcon fontSize="small" /></IconButton>
                             </ListItemIcon>
                             <ListItemText>
-                                Settings
+                                {t('settings')}
                             </ListItemText>
                             <Typography variant="body2" color="text.secondary">
                                 {/* ⌘N */}
@@ -256,7 +258,7 @@ function Main() {
                             <ListItemText>
                                 <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
                                     <Typography sx={{opacity: 0.5}}>
-                                        Version: {store.version}
+                                        {t('version')}: {store.version}
                                     </Typography>
                                 </Badge>
                             </ListItemText>
@@ -335,7 +337,7 @@ function Main() {
                                         }}
                                         copyMsg={() => {
                                             navigator.clipboard.writeText(msg.content)
-                                            store.addToast('Copied to clipboard')
+                                            store.addToast(t('copied to clipboard'))
                                         }}
                                         quoteMsg={() => {
                                             let input = msg.content.split('\n').map((line: any) => `> ${line}`).join('\n')
@@ -416,6 +418,7 @@ function MessageInput(props: {
     messageInput: string
     setMessageInput: (value: string) => void
 }) {
+    const { t } = useTranslation()
     const {messageInput, setMessageInput} = props
     const submit = (event?: any) => {
         if (event) {
@@ -429,30 +432,35 @@ function MessageInput(props: {
     }
     return (
         <form onSubmit={submit}>
-            <Stack direction="column" spacing={1}>
-                <Stack direction="row" spacing={1} alignItems="center">
-                    <TextField
-                        multiline
-                        label="Prompt"
-                        value={messageInput}
-                        onChange={(event) => setMessageInput(event.target.value)}
-                        fullWidth
-                        maxRows={12}
-                        autoFocus
-                        id='message-input'
-                        onKeyDown={(event) => {
-                            if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
-                                event.preventDefault()
-                                submit()
-                                return
-                            }
-                        }}
-                    />
-                    <Button type='submit' variant="contained" size='large'>
-                        SEND
-                    </Button>
-                </Stack>
-                <Typography variant='caption' style={{ opacity: 0.3 }}>[Enter] send, [Shift+Enter] line break</Typography>
+            <Stack direction="column" spacing={1} >
+                <Grid container spacing={2}>
+                    <Grid item xs>
+                        <TextField
+                          multiline
+                          label="Prompt"
+                          value={messageInput}
+                          onChange={(event) => setMessageInput(event.target.value)}
+                          fullWidth
+                          maxRows={12}
+                          autoFocus
+                          id='message-input'
+                          onKeyDown={(event) => {
+                              if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
+                                  event.preventDefault()
+                                  submit()
+                                  return
+                              }
+                          }}
+                        />
+                    </Grid>
+                    <Grid item xs="auto">
+                        <Button type='submit' variant="contained" size='large'
+                                style={{fontSize: '16px', padding: '10px 20px'}}>
+                            {t('send')}
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Typography variant='caption' style={{ opacity: 0.3 }}>{t('[Enter] send, [Shift+Enter] line break')}</Typography>
             </Stack>
         </form>
     )

@@ -5,6 +5,7 @@ import * as openai from './utils/openai-node'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 import * as api from './api'
+import { useTranslation } from "react-i18next";
 
 // setting store
 
@@ -19,6 +20,7 @@ export function getDefaultSettings(): Settings {
         showTokenCount: false,
         showModelName: false,
         theme: ThemeMode.System,
+        language: 'en',
     }
 }
 
@@ -68,6 +70,8 @@ export async function writeSessions(sessions: Session[]) {
 // react hook
 
 export default function useStore() {
+    const { i18n } = useTranslation();
+
     const [version, _setVersion] = useState('unknown')
     useEffect(() => {
         api.getVersion().then((version: any) => {
@@ -83,11 +87,13 @@ export default function useStore() {
             if (settings.openaiKey === '') {
                 setNeedSetting(true)
             }
+            i18n.changeLanguage(settings.language).then();
         })
     }, [])
     const setSettings = (settings: Settings) => {
         _setSettings(settings)
         writeSettings(settings)
+        i18n.changeLanguage(settings.language).then();
     }
 
     const [chatSessions, _setChatSessions] = useState<Session[]>([createSession(settings.model)])

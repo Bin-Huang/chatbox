@@ -23,6 +23,7 @@ import * as wordCount from './utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes'
+import { useTranslation } from "react-i18next";
 
 const md = new MarkdownIt({
     linkify: true,
@@ -64,6 +65,7 @@ export interface Props {
 }
 
 function _Block(props: Props) {
+    const { t } = useTranslation()
     const { msg, setMsg } = props
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -140,7 +142,7 @@ function _Block(props: Props) {
                     <Grid item xs container direction="column" spacing={2}>
                         <Grid item xs>
                             <Typography variant="overline" component="div">
-                                {msg.role}
+                                {t(msg.role)}
                             </Typography>
                             {
                                 isEditing ? (
@@ -201,7 +203,7 @@ function _Block(props: Props) {
                                                 setAnchorEl(null)
                                             }} disableRipple>
                                                 <ContentCopyIcon />
-                                                Copy
+                                                {t('copy')}
                                             </MenuItem>
 
                                             <MenuItem key={msg.id + 'edit'} onClick={() => {
@@ -210,7 +212,7 @@ function _Block(props: Props) {
                                                 setIsEditing(true)
                                             }} disableRipple>
                                                 <EditIcon />
-                                                Edit
+                                                {t('edit')}
                                             </MenuItem>
                                             <MenuItem key={msg.id + 'quote'} onClick={() => {
                                                 setIsHovering(false)
@@ -218,7 +220,7 @@ function _Block(props: Props) {
                                                 props.quoteMsg()
                                             }} disableRipple>
                                                 <FormatQuoteIcon />
-                                                Quote
+                                                {t('quote')}
                                             </MenuItem>
                                             <Divider sx={{ my: 0.5 }} />
                                             <MenuItem key={msg.id + 'del'} onClick={() => {
@@ -229,7 +231,7 @@ function _Block(props: Props) {
                                             }} disableRipple
                                             >
                                                 <DeleteForeverIcon />
-                                                Delete
+                                                {t('delete')}
                                             </MenuItem>
                                         </StyledMenu>
                                     </>)

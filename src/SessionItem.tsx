@@ -13,6 +13,7 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import StyledMenu from './StyledMenu';
+import { useTranslation } from "react-i18next";
 
 const { useState } = React
 
@@ -26,6 +27,7 @@ export interface Props {
 }
 
 export default function SessionItem(props: Props) {
+    const { t } = useTranslation()
     const { session, selected, switchMe, deleteMe, copyMe, editMe } = props
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -67,7 +69,7 @@ export default function SessionItem(props: Props) {
                     handleClose()
                 }} disableRipple>
                     <EditIcon />
-                    Rename
+                    {t('rename')}
                 </MenuItem>
 
                 <MenuItem key={session.id + 'copy'} onClick={() => {
@@ -75,7 +77,7 @@ export default function SessionItem(props: Props) {
                     handleClose()
                 }} disableRipple>
                     <FileCopyIcon fontSize='small' />
-                    Copy
+                    {t('copy')}
                 </MenuItem>
 
                 <Divider sx={{ my: 0.5 }} />
@@ -87,7 +89,7 @@ export default function SessionItem(props: Props) {
                 }} disableRipple
                 >
                     <DeleteForeverIcon />
-                    Delete
+                    {t('delete')}
                 </MenuItem>
 
             </StyledMenu>
