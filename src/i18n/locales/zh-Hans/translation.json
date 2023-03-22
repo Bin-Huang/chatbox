@@ -32,7 +32,7 @@
   "chat": "对话",
   "new chat": "新对话",
   "send": "发送",
-  "[Enter] send, [Shift+Enter] line break": "[Enter] 发送，[Shift+Enter] 换行",
+  "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating": "[回车键] 发送，[Shift+回车键] 换行, [Ctrl+回车键] 发送但不生成",
   "version": "版本",
   "rename": "重命名",
   "name": "名称",

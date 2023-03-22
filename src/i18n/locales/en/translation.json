@@ -32,7 +32,7 @@
   "chat": "Chat",
   "new chat": "New Chat",
   "send": "Send",
-  "[Enter] send, [Shift+Enter] line break": "[Enter] send, [Shift+Enter] line break",
+  "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating": "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating",
   "version": "Version",
   "rename": "Rename",
   "name": "Name",

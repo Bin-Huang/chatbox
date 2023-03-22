@@ -41,7 +41,7 @@ function Main() {
     // 是否展示应用更新提示
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
-    const [scrollToMsg, setScrollToMsg] = useState<{ msgId: string, smooth?: boolean }|null>(null)
+    const [scrollToMsg, setScrollToMsg] = useState<{ msgId: string, smooth?: boolean } | null>(null)
     useEffect(() => {
         if (!scrollToMsg) {
             return
@@ -147,7 +147,7 @@ function Main() {
         )
     }
 
-    const [ messageInput, setMessageInput ] = useState('')
+    const [messageInput, setMessageInput] = useState('')
     useEffect(() => {
         document.getElementById('message-input')?.focus() // better way?
     }, [messageInput])
@@ -257,7 +257,7 @@ function Main() {
                             </ListItemIcon>
                             <ListItemText>
                                 <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
-                                    <Typography sx={{opacity: 0.5}}>
+                                    <Typography sx={{ opacity: 0.5 }}>
                                         {t('version')}: {store.version}
                                     </Typography>
                                 </Badge>
@@ -352,13 +352,19 @@ function Main() {
                             <MessageInput
                                 messageInput={messageInput}
                                 setMessageInput={setMessageInput}
-                                onSubmit={async (newUserMsg: Message) => {
-                                    const promptsMsgs = [...store.currentSession.messages, newUserMsg]
-                                    const newAssistantMsg = createMessage('assistant', '....')
-                                    store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
-                                    store.updateChatSession(store.currentSession)
-                                    generate(store.currentSession, promptsMsgs, newAssistantMsg)
-                                    setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
+                                onSubmit={async (newUserMsg: Message, needGenerating = true) => {
+                                    if (needGenerating) {
+                                        const promptsMsgs = [...store.currentSession.messages, newUserMsg]
+                                        const newAssistantMsg = createMessage('assistant', '....')
+                                        store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
+                                        store.updateChatSession(store.currentSession)
+                                        generate(store.currentSession, promptsMsgs, newAssistantMsg)
+                                        setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
+                                    } else {
+                                        store.currentSession.messages = [...store.currentSession.messages, newUserMsg]
+                                        store.updateChatSession(store.currentSession)
+                                        setScrollToMsg({ msgId: newUserMsg.id, smooth: true })
+                                    }
                                 }}
                             />
                         </Box>
@@ -414,53 +420,55 @@ function Main() {
 }
 
 function MessageInput(props: {
-    onSubmit: (newMsg: Message) => void
+    onSubmit: (newMsg: Message, needGenerating?: boolean) => void
     messageInput: string
     setMessageInput: (value: string) => void
 }) {
     const { t } = useTranslation()
-    const {messageInput, setMessageInput} = props
-    const submit = (event?: any) => {
-        if (event) {
-            event.preventDefault()
-        }
+    const { messageInput, setMessageInput } = props
+    const submit = (needGenerating = true) => {
         if (messageInput.length === 0) {
             return
         }
-        props.onSubmit(createMessage('user', messageInput))
+        props.onSubmit(createMessage('user', messageInput), needGenerating)
         setMessageInput('')
     }
     return (
-        <form onSubmit={submit}>
+        <form onSubmit={() => submit()}>
             <Stack direction="column" spacing={1} >
                 <Grid container spacing={2}>
                     <Grid item xs>
                         <TextField
-                          multiline
-                          label="Prompt"
-                          value={messageInput}
-                          onChange={(event) => setMessageInput(event.target.value)}
-                          fullWidth
-                          maxRows={12}
-                          autoFocus
-                          id='message-input'
-                          onKeyDown={(event) => {
-                              if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
-                                  event.preventDefault()
-                                  submit()
-                                  return
-                              }
-                          }}
+                            multiline
+                            label="Prompt"
+                            value={messageInput}
+                            onChange={(event) => setMessageInput(event.target.value)}
+                            fullWidth
+                            maxRows={12}
+                            autoFocus
+                            id='message-input'
+                            onKeyDown={(event) => {
+                                if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
+                                    event.preventDefault()
+                                    submit()
+                                    return
+                                }
+                                if (event.keyCode === 13 && event.ctrlKey) {
+                                    event.preventDefault()
+                                    submit(false)
+                                    return
+                                }
+                            }}
                         />
                     </Grid>
                     <Grid item xs="auto">
                         <Button type='submit' variant="contained" size='large'
-                                style={{fontSize: '16px', padding: '10px 20px'}}>
+                            style={{ fontSize: '16px', padding: '10px 20px' }}>
                             {t('send')}
                         </Button>
                     </Grid>
                 </Grid>
-                <Typography variant='caption' style={{ opacity: 0.3 }}>{t('[Enter] send, [Shift+Enter] line break')}</Typography>
+                <Typography variant='caption' style={{ opacity: 0.3 }}>{t('[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating')}</Typography>
             </Stack>
         </form>
     )
