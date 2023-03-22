@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
@@ -87,6 +87,32 @@ function Main() {
             generateName(store.currentSession)
         }
     }, [store.currentSession.messages])
+
+    const codeBlockCopyEvent = useRef((e: Event) => {
+        const target: HTMLElement = e.target as HTMLElement;
+
+        // check is copy action button
+        if (!((target.className === 'copy-action') && (target.parentNode?.nodeName === 'PRE'))) {
+            return;
+        }
+
+        // got codes
+        const content = target.parentNode.querySelector('code')?.innerText ?? '';
+
+        // do copy
+        // * thats lines copy from copy block content action
+        navigator.clipboard.writeText(content);
+        store.addToast('Copied to clipboard');
+    });
+
+    // bind code block copy event on mounted
+    useEffect(() => {
+        document.addEventListener('click', codeBlockCopyEvent.current);
+
+        return () => {
+            document.removeEventListener('click', codeBlockCopyEvent.current);
+        };
+    }, []);
 
     const [configureChatConfig, setConfigureChatConfig] = React.useState<Session | null>(null);
 
