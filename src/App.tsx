@@ -102,7 +102,7 @@ function Main() {
         // do copy
         // * thats lines copy from copy block content action
         navigator.clipboard.writeText(content);
-        store.addToast('Copied to clipboard');
+        store.addToast(t('copied to clipboard'));
     });
 
     // bind code block copy event on mounted

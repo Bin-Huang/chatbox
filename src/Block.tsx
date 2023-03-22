@@ -23,11 +23,13 @@ import * as wordCount from './utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, getI18n } from 'react-i18next';
 
 // copy button html content
 // join at markdown-it parsed
-const codeCopyButtonHTML = '<div class="copy-action">COPY</div>';
+const getCodeCopyButtonHTML = () => {
+    return `<div class="copy-action">${getI18n().t('copy')}</div>`;
+};
 
 const md = new MarkdownIt({
     linkify: true,
@@ -46,7 +48,7 @@ const md = new MarkdownIt({
         }
 
         // join actions html string
-        return `<pre class="hljs" style="position: relative; max-width: 50vw; overflow: auto">${codeCopyButtonHTML}<code>${content}</code></pre>`;
+        return `<pre class="hljs" style="position: relative; max-width: 50vw; overflow: auto">${getCodeCopyButtonHTML()}<code>${content}</code></pre>`;
     }
 });
 md.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
