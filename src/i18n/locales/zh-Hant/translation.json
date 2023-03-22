@@ -18,6 +18,7 @@
   "or": "或",
   "proxy api host alert end": "協議。",
   "model": "模型",
+  "api host": "API 域名",
   "token": "Token",
   "max tokens in context": "上下文中的最大 Token 數",
   "max tokens per reply": "每個回覆的最大 Token 數",

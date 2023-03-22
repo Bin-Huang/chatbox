@@ -17,6 +17,7 @@
   "proxy must use": "Proxy must use",
   "or": "or",
   "proxy api host alert end": ".",
+  "api host": "API Host",
   "model": "Model",
   "token": "Token",
   "max tokens in context": "Max Tokens in Context",

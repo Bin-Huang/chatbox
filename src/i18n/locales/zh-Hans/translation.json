@@ -17,6 +17,7 @@
   "proxy must use": "代理必须使用",
   "or": "或",
   "proxy api host alert end": "协议。",
+  "api host": "API 域名",
   "model": "模型",
   "token": "Token",
   "max tokens in context": "上下文中的最大 Token 数",
