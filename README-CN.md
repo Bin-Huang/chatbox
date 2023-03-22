@@ -97,3 +97,8 @@
 ## License
 
 [GNU General Public License v3.0](./LICENSE)
+
+## 社区讨论群
+
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/ChatBoxApp)
+
