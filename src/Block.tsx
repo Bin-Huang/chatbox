@@ -48,9 +48,15 @@ const md = new MarkdownIt({
         }
 
         // join actions html string
-        return `<pre class="hljs" style="position: relative; max-width: 50vw; overflow: auto">${getCodeCopyButtonHTML()}<code>${content}</code></pre>`;
-    }
+        return [
+            '<pre class="hljs" style="position: relative; max-width: 50vw; overflow: auto">',
+            getCodeCopyButtonHTML(),
+            `<code>${content}</code>`,
+            '</pre>',
+        ].join('');
+    },
 });
+
 md.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 md.use(mila, { attrs: { target: "_blank", rel: "noopener" } })
 
