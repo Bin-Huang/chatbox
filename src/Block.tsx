@@ -22,7 +22,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import * as wordCount from './utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
-import mila from 'markdown-it-link-attributes'
+import mila from 'markdown-it-link-attributes';
+
+// copy button html content
+// join at markdown-it parsed
+const codeCopyButtonHTML = '<div class="copy-action">COPY</div>';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -39,7 +43,9 @@ const md = new MarkdownIt({
         } else {
             content = md.utils.escapeHtml(str)
         }
-        return `<pre class="hljs" style="max-width: 50vw; overflow: auto"><code>${content}</code></pre>`;
+
+        // join actions html string
+        return `<pre class="hljs" style="position: relative; max-width: 50vw; overflow: auto">${codeCopyButtonHTML}<code>${content}</code></pre>`;
     }
 });
 md.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
@@ -67,6 +73,28 @@ function _Block(props: Props) {
     const { msg, setMsg } = props
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
+
+    // for debounce each render when 'props.msg' change
+    const renderTimer = useRef<NodeJS.Timeout>();
+    // rendering state
+    // * its not real render done
+    // * if need accurate state, should change `Message` interface
+    // * and after request stream done, added `done` state to `Message`
+    const [mayRendering, setMayRendering] = useState(true);
+
+    // run at `props.msg` change
+    // * why need this?
+    // * this comp be rendered when state or props change
+    // * copy action will fresh, because comp be rerender
+    // * so this effect to control `copy button` shown at render stop
+    useEffect(() => {
+        clearTimeout(renderTimer.current);
+        setMayRendering(true);
+
+        renderTimer.current = setTimeout(() => {
+            setMayRendering(false);
+        }, 360);
+    }, [msg]);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -104,6 +132,7 @@ function _Block(props: Props) {
             sx={{
                 padding: '22px 28px',
             }}
+            className={mayRendering ? 'rendering' : 'render-done'}
         >
             <Grid container spacing={2}>
                 <Grid item>
