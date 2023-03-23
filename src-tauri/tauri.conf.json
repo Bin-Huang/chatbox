@@ -2,7 +2,7 @@
     "$schema": "../node_modules/@tauri-apps/cli/schema.json",
     "build": {
         "beforeBuildCommand": "npm run build:react",
-        "beforeDevCommand": "BROWSER=none npm run start:react",
+        "beforeDevCommand": "cross-env BROWSER=none npm run start:react",
         "devPath": "http://localhost:3000",
         "distDir": "../build",
         "withGlobalTauri": true
