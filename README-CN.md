@@ -92,6 +92,12 @@
 | --- | --- | --- |
 | [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
 
+## Contact
+
+- [Twitter](https://twitter.com/benn_huang)
+- [Email](mailto:tohuangbin@gmail.com)
+- [Blog](https://bennhuang.com)
+
 ## License
 
 [GNU General Public License v3.0](./LICENSE)
