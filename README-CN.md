@@ -61,7 +61,7 @@
 - [x] 夜间模式
 - [x] 消息的 token 估算
 - [x] GPT4 的支持
-- [ ] 中文菜单
+- [x] 中文（简体、繁体）
 - [ ] 代码块的复制按钮
 - [ ] 停止生成的按钮
 - [ ] 标签页的拖拽排序
@@ -88,11 +88,9 @@
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
-[**`Paypal`**](https://www.paypal.me/tobennhuang)
-
-<img src="./doc/wechat_pay.JPG" width="200" />
-
-<img src="./doc/ali_pay.PNG" width="200" />
+| Paypal | Wechat Pay | Ali Pay |
+| --- | --- | --- |
+| [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
 
 ## License
 

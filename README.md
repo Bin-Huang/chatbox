@@ -3,7 +3,7 @@
     English | <a href="./README-CN.md">中文</a>
 </p>
 <p align="center">
-    <em>Cross-platform desktop application for <b>ChatGPT API (OpenAI API)</b>, also a prompt debugging and management tool</em>
+    <em>A desktop application for <b>ChatGPT API (OpenAI API)</b>, also a prompt debugging and management tool</em>
 </p>
 
 
@@ -61,9 +61,9 @@ Supported platforms:
 - [x] Night/Dark mode
 - [x] message token estimating
 - [x] GPT4
-- [ ] Chinese language support
+- [x] i18n
 - [ ] Copy button for code blocks
-- [ ] Stop button for generation process
+- [ ] Stop button for AI message generation
 - [ ] Drag-and-drop sorting of tabs
 - [ ] Prompt and parameter configuration
 - More...
@@ -84,11 +84,9 @@ Any form of contribution is welcome, including but not limited to:
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
-[**`Paypal`**](https://www.paypal.me/tobennhuang)
-
-<img src="./doc/wechat_pay.JPG" width="200" />
-
-<img src="./doc/ali_pay.PNG" width="200" />
+| Paypal | Wechat Pay | Ali Pay |
+| --- | --- | --- |
+| [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
 
 ## License
 
