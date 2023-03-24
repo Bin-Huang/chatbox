@@ -1,48 +1,45 @@
 import * as api from '@tauri-apps/api'
+import { Store } from "tauri-plugin-store-api";
 
-export const getVersion = async () => {
-    return api.app.getVersion()
-}
+const store = new Store('./config.json')
 
-export const openLink = async (url: string) => {
-    return api.shell.open(url)
-}
+setInterval(async () => {
+    try {
+        await store.save()
+    } catch (e) {
+        console.log(e)
+    }
+}, 5 * 60 * 1000)
 
 export const writeStore = async (key: string, value: any) => {
-    const config = await readConfig()
-    config[key] = value
-    await api.fs.writeTextFile('config.json', JSON.stringify(config), { dir: api.fs.Dir.AppData })
+    await store.set(key, value)
+    if (key === 'settings') {
+        await store.save()
+    }
 }
 
-export const readStore = async (key: string) => {
-    const config = await readConfig()
-    return config[key]
+export const readStore = async (key: string): Promise<any | undefined> => {
+    await handleCompatibilityV0_1()
+    const value = await store.get(key)
+    return value || undefined
 }
 
-async function readConfig() {
-    const dirExists = await api.fs.exists('', { dir: api.fs.Dir.AppData })
-    if (!dirExists) {
-        try {
-            await api.fs.createDir('', { dir: api.fs.Dir.AppData })
-        } catch (e) {
-            console.log('ensure app config dir', e)
+async function handleCompatibilityV0_1() {
+    // 第一次启动时，将旧版本的配置文件迁移到新的配置文件中
+    try {
+        const handled = await store.get('hasHandleCompatibilityV0_1')
+        if (!handled) {
+            const oldConfigJson = await api.fs.readTextFile('chatbox/config.json', { dir: api.fs.Dir.LocalData })
+            const oldConfig = JSON.parse(oldConfigJson)
+            for (const key in oldConfig) {
+                await store.set(key, oldConfig[key])
+            }
+            await store.set("hasHandleCompatibilityV0_1", true)
+            await store.save()
         }
+    } catch (e) {
+        console.log(e)
     }
-
-    const configExists = await api.fs.exists('config.json', { dir: api.fs.Dir.AppData })
-    if (!configExists) {
-        try {
-            // 从旧版本迁移
-            const oldConfig = await api.fs.readTextFile('chatbox/config.json', { dir: api.fs.Dir.LocalData })
-            await api.fs.writeTextFile('config.json', oldConfig, { dir: api.fs.Dir.AppData })
-        } catch (e) {
-            console.log(e)
-            await api.fs.writeTextFile('config.json', '{}', { dir: api.fs.Dir.AppData })
-        }
-    }
-
-    const configJson = await api.fs.readTextFile('config.json', { dir: api.fs.Dir.AppData })
-    return JSON.parse(configJson)
 }
 
 export const shouldUseDarkColors = async (): Promise<boolean> => {
@@ -52,4 +49,12 @@ export const shouldUseDarkColors = async (): Promise<boolean> => {
 
 export async function onSystemThemeChange(callback: () => void) {
     return api.window.appWindow.onThemeChanged(callback)
+}
+
+export const getVersion = async () => {
+    return api.app.getVersion()
+}
+
+export const openLink = async (url: string) => {
+    return api.shell.open(url)
 }
