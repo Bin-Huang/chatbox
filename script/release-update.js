@@ -1,5 +1,5 @@
 const axios = require('axios')
-const fs = require('fs')
+const fs = require('fs-extra')
 
 const data = {
     "version": "v0.1.15",
@@ -47,35 +47,40 @@ async function main() {
     data.version = release.tag_name.replace('Chatbox-', '')
     data.pub_date = new Date().toISOString()
 
-    console.log(data.version)
+    version = data.version
+    console.log(version)
+
+    const dir = './tmp/' + version
+    fs.ensureDirSync(dir)
 
     const promises = []
     for (const asset of release.assets) {
-        promises.push(handleAsset(asset, version))
+        promises.push(handleAsset(asset, version, dir))
     }
     await Promise.all(promises)
 
-    fs.writeFileSync('./tmp/update.json', JSON.stringify(data, null, 4))
+    fs.writeFileSync(`${dir}/update.json`, JSON.stringify(data, null, 4))
     console.log(data)
+    console.log(dir)
 }
 
-async function handleAsset(asset, version) {
+async function handleAsset(asset, version, dir) {
     const link = `https://chatbox-1252521402.cos.ap-hongkong.myqcloud.com/${version}/${asset.name}`
     if (asset.name.endsWith('.app.tar.gz')) {
-        await download(asset.browser_download_url, './tmp/' + asset.name)
+        await download(asset.browser_download_url, `${dir}/${asset.name}`)
         data.platforms['darwin'].url = link
         data.platforms['darwin-aarch64'].url = link
         data.platforms['darwin-x86_64'].url = link
         return
     }
     if (asset.name.endsWith('.AppImage.tar.gz')) {
-        await download(asset.browser_download_url, './tmp/' + asset.name)
+        await download(asset.browser_download_url, `${dir}/${asset.name}`)
         data.platforms['linux'].url = link
         data.platforms['linux-x86_64'].url = link
         return
     }
     if (asset.name.endsWith('.msi.zip')) {
-        await download(asset.browser_download_url, './tmp/' + asset.name)
+        await download(asset.browser_download_url, `${dir}/${asset.name}`)
         data.platforms['win64'].url = link
         data.platforms['windows-x86_64'].url = link
         return
