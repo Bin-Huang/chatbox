@@ -71,7 +71,7 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
                 }
                 let items = partialData.split('\n\n')
                 partialData = ''
-                items = items.map(item => item.replace(/^data: /, '')).filter(item => item.length > 0).filter(item => item !== '[DONE]')
+                items = items.map(item => item.replace(/^\s*data: /, '')).filter(item => item.length > 0).filter(item => item !== '[DONE]')
                 const datas = items.map(item => {
                     let json: any
                     try {
