@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for this project / 新功能新特性的想法（提交前请检查是否有重复 issues）
 title: "[Feature]"
 labels: ''
 assignees: ''

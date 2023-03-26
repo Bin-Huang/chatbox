@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help us improve / BUG 反馈（提交前请搜索是否存在重复issues）
 title: "[BUG]"
 labels: ''
 assignees: ''
