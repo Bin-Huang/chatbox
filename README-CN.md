@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src='./doc/icon.png'>
+<img src='./doc/icon.png' width='30'>
 <span>Chatbox</span>
 </h1>
 <p align="center">
