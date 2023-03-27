@@ -1,8 +1,7 @@
 name: 'publish'
 on:
   push:
-    branches:
-      - release
+    tags: [ v\d+\.\d+\.\d+ ]
 
 jobs:
   publish-tauri:
@@ -17,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Get version
+        id: get_version
+        uses: battila7/get-version-action@v2
+
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -25,19 +28,34 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libx11-dev libxdo-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
       - name: install dependencies (mac only)
         if: matrix.platform == 'macos-latest'
         run: |
           rustup target add aarch64-apple-darwin
 
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: install frontend dependencies
         run: yarn install # change this to npm or pnpm depending on which one you use
+
+      - name: Change Version
+        env:
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+        run: make change-version
 
       - uses: tauri-apps/tauri-action@v0
         env:
