@@ -1,4 +1,7 @@
-<h1 align="center">Chatbox</h1>
+<h1 align="center">
+<img src='./doc/icon.png'>
+<span>Chatbox</span>
+</h1>
 <p align="center">
     <a href="./README.md">English</a> | 中文
 </p>
