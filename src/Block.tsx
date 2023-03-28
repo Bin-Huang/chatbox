@@ -49,10 +49,12 @@ const md = new MarkdownIt({
 
         // join actions html string
         return [
-            '<pre class="hljs" style="position: relative; max-width: 50vw; overflow: auto">',
+            '<div class="code-block-wrapper">',
             getCodeCopyButtonHTML(),
+            '<pre class="hljs" style="max-width: 50vw; overflow: auto">',
             `<code>${content}</code>`,
             '</pre>',
+            '</div>',
         ].join('');
     },
 });

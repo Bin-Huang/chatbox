@@ -72,13 +72,19 @@ code {
 }
 
 /* START of code block actions */
-.rendering .hljs div.copy-action {
+.code-block-wrapper {
+    position: relative;
+    max-width: 50vw;
+}
+
+.rendering .code-block-wrapper div.copy-action {
     display: none;
 }
 
-.hljs div.copy-action {
+.code-block-wrapper div.copy-action {
     position: absolute;
     right: 4px;
+    top: 2px;
     display: flex;
     line-height: 1;
     transition: all .3s;
@@ -91,7 +97,24 @@ code {
     padding: 4px;
 }
 
-.hljs:hover div.copy-action {
+
+html[data-theme='dark'] .code-block-wrapper div.copy-action {
+    background-color: rgba(144, 202, 249, 0.16);
+}
+
+html[data-theme='dark'] .code-block-wrapper div.copy-action:hover {
+    background-color: rgba(144, 202, 249, 0.36);
+}
+
+html[data-theme='light'] .code-block-wrapper div.copy-action {
+    background-color: rgba(25, 118, 210, 0.08);
+}
+
+html[data-theme='light'] .code-block-wrapper div.copy-action:hover {
+    background-color: rgba(25, 118, 210, 0.12);
+}
+
+.code-block-wrapper:hover div.copy-action {
     opacity: 1;
 }
 

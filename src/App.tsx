@@ -91,13 +91,16 @@ function Main() {
     const codeBlockCopyEvent = useRef((e: Event) => {
         const target: HTMLElement = e.target as HTMLElement;
 
+        const isCopyActionClassName = target.className === 'copy-action';
+        const isCodeBlockParent = target.parentElement?.className === 'code-block-wrapper';
+
         // check is copy action button
-        if (!((target.className === 'copy-action') && (target.parentNode?.nodeName === 'PRE'))) {
+        if (!(isCopyActionClassName && isCodeBlockParent)) {
             return;
         }
 
         // got codes
-        const content = target.parentNode.querySelector('code')?.innerText ?? '';
+        const content = target?.parentNode?.querySelector('code')?.innerText ?? '';
 
         // do copy
         // * thats lines copy from copy block content action
