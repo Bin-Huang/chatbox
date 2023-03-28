@@ -44,10 +44,10 @@ jobs:
         run: |
           rustup target add aarch64-apple-darwin
 
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: '**/node_modules'
+      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: install frontend dependencies
         run: yarn install # change this to npm or pnpm depending on which one you use

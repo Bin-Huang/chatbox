@@ -44,8 +44,7 @@
     "sass-loader": "^13.2.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.2.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.2"
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -72,6 +71,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^12.2.0",
     "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store",
+    "typescript": "^4.9.5",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"
   },
