@@ -9,7 +9,6 @@ import {
     TextField,
 } from '@mui/material';
 import { Session, createSession, Message, createMessage } from './types'
-import ChatIcon from '@mui/icons-material/Chat';
 import useStore from './store'
 import SettingWindow from './SettingWindow'
 import ChatConfigWindow from './ChatConfigWindow'
@@ -23,6 +22,7 @@ import CleanWidnow from './CleanWindow';
 import * as api from './api'
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
+import icon from './icon.png'
 
 const { useEffect, useState } = React
 
@@ -169,12 +169,17 @@ function Main() {
                         }}
                         spacing={2}
                     >
-                        <Toolbar variant="dense">
-                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                                <ChatIcon />
-                            </IconButton>
+                        <Toolbar variant="dense" sx={{
+                            display: "flex",
+                            alignItems: "flex-end",
+                        }} >
+                            <img src={icon} style={{
+                                width: '35px',
+                                height: '35px',
+                                marginRight: '5px',
+                            }} />
                             <Typography variant="h5" color="inherit" component="div">
-                                ChatBox
+                                Chatbox
                             </Typography>
                         </Toolbar>
 
