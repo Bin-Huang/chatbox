@@ -15,6 +15,8 @@ import ChatConfigWindow from './ChatConfigWindow'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import * as prompts from './prompts'
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
@@ -29,6 +31,8 @@ const { useEffect, useState } = React
 function Main() {
     const { t } = useTranslation()
     const store = useStore()
+
+    const [sideBarVisible, setSideBarVisible] = useState(true)
 
     // 是否展示设置窗口
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
@@ -152,126 +156,139 @@ function Main() {
         document.getElementById('message-input')?.focus() // better way?
     }, [messageInput])
 
+    const renderSideBar = () => {
+        if (!sideBarVisible) {
+            return null
+        }
+        return (
+            <Grid item xs={3} 
+                sx={{
+                    height: '100%',
+                }}
+            >
+                <Stack
+                    sx={{
+                        height: '100%',
+                        padding: '20px 0',
+                    }}
+                    spacing={2}
+                >
+                    <Toolbar variant="dense" sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: 'space-between'
+                    }} >
+                        <img src={icon} style={{
+                            width: '35px',
+                            height: '35px',
+                            marginRight: '5px',
+                        }} />
+                        <Typography variant="h5" color="inherit" component="div">
+                            Chatbox
+                        </Typography>
+                        <IconButton onClick={() => setSideBarVisible(false)} edge="end" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                                <ArrowBackIosNewIcon onClick={() => setSideBarVisible(false)}/>
+                        </IconButton>
+                    </Toolbar>
+
+                    <Divider />
+
+                    <MenuList
+                        sx={{
+                            width: '100%',
+                            // bgcolor: 'background.paper',
+                            position: 'relative',
+                            overflow: 'auto',
+                            // height: '30vh',
+                            height: '60vh',
+                            '& ul': { padding: 0 },
+                        }}
+                        className="scroll"
+                        subheader={
+                            <ListSubheader component="div">
+                                {t('chat')}
+                            </ListSubheader>
+                        }
+                    >
+                        {
+                            store.chatSessions.map((session, ix) => (
+                                <SessionItem key={session.id}
+                                    selected={store.currentSession.id === session.id}
+                                    session={session}
+                                    switchMe={() => {
+                                        store.switchCurrentSession(session)
+                                        document.getElementById('message-input')?.focus() // better way?
+                                    }}
+                                    deleteMe={() => store.deleteChatSession(session)}
+                                    copyMe={() => {
+                                        const newSession = createSession(session.model, session.name + ' copied')
+                                        newSession.messages = session.messages
+                                        store.createChatSession(newSession, ix)
+                                    }}
+                                    editMe={() => setConfigureChatConfig(session)}
+                                />
+                            ))
+                        }
+                    </MenuList>
+
+                    <Divider />
+
+                    <MenuItem onClick={() => store.createEmptyChatSession()} >
+                        <ListItemIcon>
+                            <IconButton><AddIcon fontSize="small" /></IconButton>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t('new chat')}
+                        </ListItemText>
+                        <Typography variant="body2" color="text.secondary">
+                            {/* ⌘N */}
+                        </Typography>
+                    </MenuItem>
+                    <MenuItem onClick={() => {
+                        setOpenSettingWindow(true)
+                    }}
+                    >
+                        <ListItemIcon>
+                            <IconButton><SettingsIcon fontSize="small" /></IconButton>
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t('settings')}
+                        </ListItemText>
+                        <Typography variant="body2" color="text.secondary">
+                            {/* ⌘N */}
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => {
+                        setNeedCheckUpdate(false)
+                        api.openLink('https://github.com/Bin-Huang/chatbox/releases')
+                    }}>
+                        <ListItemIcon>
+                            <IconButton>
+                                <InfoOutlinedIcon fontSize="small" />
+                            </IconButton>
+                        </ListItemIcon>
+                        <ListItemText>
+                            <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                <Typography sx={{ opacity: 0.5 }}>
+                                    {t('version')}: {store.version}
+                                </Typography>
+                            </Badge>
+                        </ListItemText>
+                    </MenuItem>
+                </Stack>
+
+            </Grid>
+        )
+    }
+
     return (
         <Box sx={{ height: '100vh' }}>
             <Grid container spacing={2} sx={{
                 height: '100%',
             }}>
-                <Grid item xs={3}
-                    sx={{
-                        height: '100%',
-                    }}
-                >
-                    <Stack
-                        sx={{
-                            height: '100%',
-                            padding: '20px 0',
-                        }}
-                        spacing={2}
-                    >
-                        <Toolbar variant="dense" sx={{
-                            display: "flex",
-                            alignItems: "flex-end",
-                        }} >
-                            <img src={icon} style={{
-                                width: '35px',
-                                height: '35px',
-                                marginRight: '5px',
-                            }} />
-                            <Typography variant="h5" color="inherit" component="div">
-                                Chatbox
-                            </Typography>
-                        </Toolbar>
-
-                        <Divider />
-
-                        <MenuList
-                            sx={{
-                                width: '100%',
-                                // bgcolor: 'background.paper',
-                                position: 'relative',
-                                overflow: 'auto',
-                                // height: '30vh',
-                                height: '60vh',
-                                '& ul': { padding: 0 },
-                            }}
-                            className="scroll"
-                            subheader={
-                                <ListSubheader component="div">
-                                    {t('chat')}
-                                </ListSubheader>
-                            }
-                        >
-                            {
-                                store.chatSessions.map((session, ix) => (
-                                    <SessionItem key={session.id}
-                                        selected={store.currentSession.id === session.id}
-                                        session={session}
-                                        switchMe={() => {
-                                            store.switchCurrentSession(session)
-                                            document.getElementById('message-input')?.focus() // better way?
-                                        }}
-                                        deleteMe={() => store.deleteChatSession(session)}
-                                        copyMe={() => {
-                                            const newSession = createSession(session.model, session.name + ' copied')
-                                            newSession.messages = session.messages
-                                            store.createChatSession(newSession, ix)
-                                        }}
-                                        editMe={() => setConfigureChatConfig(session)}
-                                    />
-                                ))
-                            }
-                        </MenuList>
-
-                        <Divider />
-
-                        <MenuItem onClick={() => store.createEmptyChatSession()} >
-                            <ListItemIcon>
-                                <IconButton><AddIcon fontSize="small" /></IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t('new chat')}
-                            </ListItemText>
-                            <Typography variant="body2" color="text.secondary">
-                                {/* ⌘N */}
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            setOpenSettingWindow(true)
-                        }}
-                        >
-                            <ListItemIcon>
-                                <IconButton><SettingsIcon fontSize="small" /></IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t('settings')}
-                            </ListItemText>
-                            <Typography variant="body2" color="text.secondary">
-                                {/* ⌘N */}
-                            </Typography>
-                        </MenuItem>
-
-                        <MenuItem onClick={() => {
-                            setNeedCheckUpdate(false)
-                            api.openLink('https://github.com/Bin-Huang/chatbox/releases')
-                        }}>
-                            <ListItemIcon>
-                                <IconButton>
-                                    <InfoOutlinedIcon fontSize="small" />
-                                </IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
-                                    <Typography sx={{ opacity: 0.5 }}>
-                                        {t('version')}: {store.version}
-                                    </Typography>
-                                </Badge>
-                            </ListItemText>
-                        </MenuItem>
-                    </Stack>
-
-                </Grid>
-                <Grid item xs={9}
+                {renderSideBar()}
+                <Grid item xs={sideBarVisible ? 9 : 12}
                     sx={{
                         height: '100%',
                     }}
@@ -281,6 +298,11 @@ function Main() {
                         padding: '20px 0',
                     }} spacing={2}>
                         <Toolbar variant="dense">
+                            {!sideBarVisible && (
+                                <IconButton onClick={() => setSideBarVisible(true)} edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                                    <ArrowForwardIosIcon/>
+                                </IconButton>
+                            )}
                             <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                                 <ChatBubbleOutlineOutlinedIcon />
                             </IconButton>
