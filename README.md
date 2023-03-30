@@ -41,7 +41,7 @@
 - Comes with software installers, no need for deployment
 - Free and open-source
 
-## Download
+## Download installers
 
 Supported Platforms:
 
