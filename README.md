@@ -88,6 +88,7 @@ The idea is feasible. OpenAI also provides a developer API service, which offers
 - [ ] Mobile(Android, iOS)
 - [ ] Cross-device synchronization
 - [ ] Drag-and-drop sorting of tabs
+- [ ] threads(like Slack)
 - More...
 
 ## How to Contribute
