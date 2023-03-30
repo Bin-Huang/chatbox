@@ -23,7 +23,6 @@
   "max tokens in context": "上下文中的最大 Token 数",
   "max tokens per reply": "每个回复的最大 Token 数",
   "show model name": "显示模型名称",
-  "these settings may cause an openai request error.": "这些设置可能会导致 OpenAI 请求错误。",
   "please make sure you know what you are doing.": "请确保您知道自己在做什么。",
   "click here to": "点击这里",
   "to default values.": "恢复默认值。",
@@ -51,5 +50,8 @@
   "assistant": "助手",
   "Prompt": "Prompt",
   "copied to clipboard": "已复制到剪贴板",
-  "language": "语言"
+  "language": "语言",
+  "these settings are aimed at professional developers. if you do not understand the meaning of these settings, please do not modify them, as it may result in request errors.": "这些设置面向专业的开发者，如果您不知道这些设置的含义，请不要修改它们，否则可能会导致请求错误。",
+  "before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors).": "在修改前，请确认您的账户可以访问被选择的模型（不管您是什么账户类型，其中一些模型都需要额外申请，否则会导致请求出现 404 错误）；",
+  "please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.": "同时，请确认 token 数量没有超过被选择模型的限制，否则上下文超出限制后将会直接报错。"
 }
