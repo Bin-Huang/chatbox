@@ -41,7 +41,7 @@
 - Comes with software installers, no need for deployment
 - Free and open-source
 
-## Download installers
+## Download
 
 Supported Platforms:
 
@@ -49,7 +49,7 @@ Supported Platforms:
 - **Mac**: Please download `.dmg` (recommended) or `.tar` file, already supporting x64, arm64 (please download x64 version for now, it is compatible)
 - **Linux**: Please download `.AppImage` (recommended) or `.deb` file
 
-Download:
+Download installers:
 
 [>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
 
