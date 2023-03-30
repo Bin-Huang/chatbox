@@ -6,7 +6,7 @@
     <a href="./README.md">English</a> | 中文
 </p>
 <p align="center">
-    <em>开源的 ChatGPT API (OpenAI API) 跨平台桌面客户端，Prompt 的调试与管理工具，也可以用作 ChatGPT Plus 平替</em>
+    <em>开源的 ChatGPT API (OpenAI API) 桌面客户端，Prompt 的调试与管理工具，支持 Windows、Mac 和 Linux</em>
 </p>
 
 
@@ -29,6 +29,30 @@
 ![](./doc/demo2.png)
 ![](./doc/demo3.gif)
 
+## 特性
+
+- 和 ChatGPT Plus 一样快
+- 数据存储在本地，不会丢失
+- 更自由、更强大的 Prompt 能力
+- 支持 GPT-4 和其他模型
+- 支持自定义域名代理
+- 更多功能：Markdown、消息引用、字数与token估算、夜间模式……
+- 符合人体工程学的 UI 设计
+- 提供安装包，无需部署
+- 免费，开源
+
+## 下载
+
+支持系统：
+
+- **Windows**: 请下载 `.msi` 安装包文件
+- **Mac**: 请下载 `.dmg`（推荐）或 `.tar` 文件，已经支持 x64, arm64(暂时请下载 x64 版本，已兼容)
+- **Linux**: 请下载 `.AppImage`（推荐）或 `.deb` 文件
+
+下载方式：
+
+[>>点击这里查看可供下载的安装包<<](https://github.com/Bin-Huang/chatbox/releases)
+
 ## 为什么需要 ChatBox？
 
 - 直接使用 ChatGPT API (OpenAI API) 是比较困难的，需要了解编程与接口调用，而且用起来不够方便。ChatBox 可以帮助你处理所有的底层调用。
@@ -41,16 +65,6 @@
 
 - 比起 ChatGPT Plus 每月 20 美金的固定收费，开发者 API 是按量付费的，总体使用费用更低
 - 开发者 API 可以更加直接地使用 ChatGPT 背后的模型，比如使用更灵活的 prompt 角色调试、参数调试
-
-## 下载
-
-[各个平台的安装包下载点这里](https://github.com/Bin-Huang/chatbox/releases)
-
-支持平台：
-
-- **Mac**: 请下载 `.dmg`, `.tar` 文件，已经支持 x64, arm64(compatibility with x64, tested)
-- **Windows**: 请下载 `.msi` 文件
-- **Linux**: 请下载 `.AppImage`, `.deb` 文件
 
 ## Roadmap
 

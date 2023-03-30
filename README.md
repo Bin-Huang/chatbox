@@ -29,6 +29,30 @@
 ![](./doc/demo2.png)
 ![](./doc/demo3.gif)
 
+## Features
+
+- Same fast speed as ChatGPT Plus
+- Data stored locally, no risk of losing it
+- More freedom and powerful Prompt abilities
+- Supports GPT-4 and other models
+- Supports custom domain proxy
+- More features: Markdown, message quotes, word and token estimation, night mode...
+- UI design conforms to ergonomics
+- Comes with software installers, no need for deployment
+- Free and open-source
+
+## Download
+
+Supported Platforms:
+
+- **Windows**: Please download `.msi` installation package
+- **Mac**: Please download `.dmg` (recommended) or `.tar` file, already supporting x64, arm64 (please download x64 version for now, it is compatible)
+- **Linux**: Please download `.AppImage` (recommended) or `.deb` file
+
+Download:
+
+[>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
+
 ## Why Use Chatbox?
 
 - Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
@@ -41,16 +65,6 @@ The idea is feasible. OpenAI also provides a developer API service, which offers
 
 1. Unlike ChatGPT Plus, which charges a fixed monthly fee of $20, the developer API service charges based on usage, resulting in lower overall costs.
 2. The developer API service enables more direct use of the model behind ChatGPT, such as using more flexible prompt role debugging and parameter debugging.
-
-## Download
-
-[Click to view all download options](https://github.com/Bin-Huang/chatbox/releases)
-
-Supported platforms:
-
-- **Mac**: please download `.dmg` and `.tar` files. It supports x64 and arm64 (compatibility with x64 is tested).
-- **Windows**: please download the `.msi` file.
-- **Linux**: please download the `.AppImage` and `.deb` files."
 
 ## Roadmap
 
