@@ -3,7 +3,7 @@
 <span>Chatbox</span>
 </h1>
 <p align="center">
-    English | <a href="./README-CN.md">中文</a>
+    English | <a href="./README-CN.md">中文介绍</a>
 </p>
 <p align="center">
     <em>A desktop application for <b>ChatGPT API (OpenAI API)</b>, also a prompt debugging and management tool</em>
