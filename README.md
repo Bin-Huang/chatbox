@@ -81,8 +81,13 @@ The idea is feasible. OpenAI also provides a developer API service, which offers
 - [x] i18n
 - [ ] Copy button for code blocks
 - [ ] Stop button for AI message generation
+- [ ] Improved prompt settings
+- [ ] Prompt Library
+- [ ] Talk with files
+- [ ] Talk with URLs
+- [ ] Mobile(Android, iOS)
+- [ ] Cross-device synchronization
 - [ ] Drag-and-drop sorting of tabs
-- [ ] Prompt and parameter configuration
 - More...
 
 ## How to Contribute
