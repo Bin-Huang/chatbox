@@ -197,9 +197,6 @@ function _Block(props: Props) {
                                     />
                                 ) : (
                                     <Box
-                                        sx={{
-                                            // bgcolor: "Background",
-                                        }}
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
                                     />
                                 )

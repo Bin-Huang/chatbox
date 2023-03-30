@@ -181,6 +181,14 @@ function Main() {
         document.getElementById('message-input')?.focus() // better way?
     }, [messageInput])
 
+    const sessionListRef = useRef<HTMLDivElement>(null)
+    const handleCreateNewSession = () => {
+        store.createEmptyChatSession()
+        if (sessionListRef.current) {
+            sessionListRef.current.scrollTo(0, 0)
+        }
+    }
+
     return (
         <Box sx={{ height: '100vh' }}>
             <Grid container spacing={2} sx={{
@@ -230,9 +238,12 @@ function Main() {
                                     {t('chat')}
                                 </ListSubheader>
                             }
+                            component="div"
+                            ref={sessionListRef}
+                            // dense
                         >
                             {
-                                store.chatSessions.map((session, ix) => (
+                                [...store.chatSessions].reverse().map((session, ix) => (
                                     <SessionItem key={session.id}
                                         selected={store.currentSession.id === session.id}
                                         session={session}
@@ -254,7 +265,7 @@ function Main() {
 
                         <Divider />
 
-                        <MenuItem onClick={() => store.createEmptyChatSession()} >
+                        <MenuItem onClick={handleCreateNewSession} >
                             <ListItemIcon>
                                 <IconButton><AddIcon fontSize="small" /></IconButton>
                             </ListItemIcon>
