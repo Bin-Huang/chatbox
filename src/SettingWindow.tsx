@@ -89,7 +89,7 @@ export default function SettingWindow(props: Props) {
         setSettingsEdit(props.settings)
 
         // need to restore the previous theme
-        setMode(props.settings.theme || ThemeMode.System);
+        setMode(props.settings.theme ?? ThemeMode.System);
     }
 
     // preview theme
