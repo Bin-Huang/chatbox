@@ -120,6 +120,11 @@ function _Block(props: Props) {
         msg?.cancel?.();
     }, [msg]);
 
+    const onRefresh = useCallback(() => {
+        onStop();
+        props.refreshMsg();
+    }, [onStop, props.refreshMsg]);
+
     const tips: string[] = []
     if (props.showModelName) {
         tips.push(`model: ${props.modelName}`)
@@ -230,7 +235,7 @@ function _Block(props: Props) {
                                                 )
                                                 : null
                                         }
-                                        <Button onClick={() => props.refreshMsg()}>
+                                        <Button onClick={onRefresh}>
                                             <RefreshIcon fontSize='small' />
                                         </Button>
                                         <Button onClick={handleClick}>
