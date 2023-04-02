@@ -59,13 +59,6 @@ Download installers:
 - Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
 - Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
 
-## Alternative to ChatGPT Plus?
-
-The idea is feasible. OpenAI also provides a developer API service, which offers the same functionality as ChatGPT Plus and some additional benefits as follows: 
-
-1. Unlike ChatGPT Plus, which charges a fixed monthly fee of $20, the developer API service charges based on usage, resulting in lower overall costs.
-2. The developer API service enables more direct use of the model behind ChatGPT, such as using more flexible prompt role debugging and parameter debugging.
-
 ## Roadmap
 
 - [x] AI chat and session management
