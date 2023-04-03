@@ -41,13 +41,17 @@ function Main() {
     // 是否展示应用更新提示
     const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
 
-    const [scrollToMsg, setScrollToMsg] = useState<{ msgId: string, smooth?: boolean } | null>(null)
+    const messageListRef = useRef<HTMLDivElement>(null)
+    const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
     useEffect(() => {
-        if (!scrollToMsg) {
+        if (!messageScrollRef.current) {
             return
         }
-        const container = document.getElementById('message-list')
-        const element = document.getElementById(scrollToMsg.msgId)
+        if (!messageListRef.current) {
+            return
+        }
+        const container = messageListRef.current
+        const element = document.getElementById(messageScrollRef.current.msgId)
         if (!container || !element) {
             return
         }
@@ -62,12 +66,20 @@ function Main() {
         }
         // 平滑滚动
         element.scrollIntoView({
-            behavior: scrollToMsg.smooth ? 'smooth' : 'auto',
+            behavior: messageScrollRef.current.smooth ? 'smooth' : 'auto',
             block: 'end',
             inline: 'nearest',
         })
-        setScrollToMsg(null)
-    }, [scrollToMsg])
+    })
+    // stop auto-scroll when user scroll
+    useEffect(() => {
+        if (!messageListRef.current) {
+            return
+        }
+        messageListRef.current.addEventListener('wheel', function (e: any) {
+            messageScrollRef.current = null
+        });
+    }, [])
 
     // 切换到当前会话，自动滚动到最后一条消息
     useEffect(() => {
@@ -75,7 +87,7 @@ function Main() {
             return
         }
         const last = store.currentSession.messages[store.currentSession.messages.length - 1]
-        setScrollToMsg({ msgId: last.id, smooth: false })
+        messageScrollRef.current = { msgId: last.id, smooth: false }
     }, [store.currentSession])
 
     // 会话名称自动生成
@@ -141,6 +153,7 @@ function Main() {
     }
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
+        messageScrollRef.current = { msgId: targetMsg.id, smooth: false }
         await client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
@@ -159,7 +172,6 @@ function Main() {
                     }
                 }
                 store.updateChatSession(session)
-                setScrollToMsg({ msgId: targetMsg.id, smooth: false })
             },
             (err) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -174,6 +186,7 @@ function Main() {
                 store.updateChatSession(session)
             }
         )
+        messageScrollRef.current = null
     }
 
     const [messageInput, setMessageInput] = useState('')
@@ -335,7 +348,6 @@ function Main() {
                         </Toolbar>
                         <Divider />
                         <List
-                            id="message-list"
                             className='scroll'
                             sx={{
                                 width: '100%',
@@ -344,6 +356,8 @@ function Main() {
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },
                             }}
+                            component="div"
+                            ref={messageListRef}
                         >
                             {
                                 store.currentSession.messages.map((msg, ix) => (
@@ -377,7 +391,7 @@ function Main() {
                                                 store.currentSession.messages = newMessages
                                                 store.updateChatSession(store.currentSession)
                                                 generate(store.currentSession, promptsMsgs, newAssistantMsg)
-                                                setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
+                                                messageScrollRef.current = { msgId: newAssistantMsg.id, smooth: true }
                                             }
                                         }}
                                         copyMsg={() => {
@@ -404,11 +418,11 @@ function Main() {
                                         store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
                                         store.updateChatSession(store.currentSession)
                                         generate(store.currentSession, promptsMsgs, newAssistantMsg)
-                                        setScrollToMsg({ msgId: newAssistantMsg.id, smooth: true })
+                                        messageScrollRef.current = { msgId: newAssistantMsg.id, smooth: true }
                                     } else {
                                         store.currentSession.messages = [...store.currentSession.messages, newUserMsg]
                                         store.updateChatSession(store.currentSession)
-                                        setScrollToMsg({ msgId: newUserMsg.id, smooth: true })
+                                        messageScrollRef.current = { msgId: newUserMsg.id, smooth: true }
                                     }
                                 }}
                             />
