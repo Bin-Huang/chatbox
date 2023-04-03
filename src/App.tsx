@@ -255,7 +255,7 @@ function Main() {
                             }
                             component="div"
                             ref={sessionListRef}
-                            // dense
+                        // dense
                         >
                             {
                                 [...store.chatSessions].reverse().map((session, ix) => (
@@ -527,7 +527,7 @@ function MessageInput(props: {
                     </Grid>
                     <Grid item xs="auto">
                         <Button type='submit' variant="contained" size='large'
-                            style={{ fontSize: '16px', padding: '10px 20px' }}>
+                            style={{ fontSize: '16px', padding: '14px 30px' }}>
                             {t('send')}
                         </Button>
                     </Grid>

@@ -108,6 +108,9 @@ build.sh
 # production
 /build
 
+# IDE / Editor
+.idea
+
 # misc
 .DS_Store
 *.pem
