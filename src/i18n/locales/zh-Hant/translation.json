@@ -52,7 +52,7 @@
   "Prompt": "提示",
   "copied to clipboard": "已複製到剪貼簿",
   "language": "語言",
-  "these settings are aimed at professional developers. if you do not understand the meaning of these settings, please do not modify them, as it may result in request errors.": "", //這些是給專業開發者的設定。請勿在不了解這些設定的涵義下擅自更改，否則可能會產生請求錯誤。
+  "these settings are aimed at professional developers. if you do not understand the meaning of these settings, please do not modify them, as it may result in request errors.": "這些是給專業開發者的設定。請勿在不了解這些設定的涵義下擅自更改，否則可能會產生請求錯誤。",
   "before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors).": "在修改前，請確認您的帳號可以存取被選擇的模型（不管是甚麼類型的帳號，其中一些模型都需要額外申請，否則會導致請求出現 404 錯誤）；",
   "please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.": "同時，請確認 Token 沒有超過被選擇模型的上限，否則上下文超出上限後會直接報錯。"
 }
