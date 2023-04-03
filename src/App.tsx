@@ -341,6 +341,7 @@ function Main() {
                             </IconButton>
                             <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
                                 {store.currentSession.name}
+                                <TitleText numbers={store?.currentSession?.messages?.length ?? 0} />
                             </Typography>
                             <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
                                 onClick={() => setSessionClean(store.currentSession)}
@@ -536,6 +537,18 @@ function MessageInput(props: {
             </Stack>
         </form>
     )
+}
+
+interface GreetingProps {
+    numbers: number;
+}
+function TitleText(props:GreetingProps) {
+    const { t } = useTranslation()
+    return (
+        <div>
+            <div style={{fontSize:'14px'}}> {t('numberOfChats', { n: props.numbers })}</div>
+        </div>
+    );
 }
 
 export default function App() {
