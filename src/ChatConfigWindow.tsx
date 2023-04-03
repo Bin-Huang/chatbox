@@ -31,6 +31,7 @@ export default function ChatConfigWindow(props: Props) {
         if (dataEdit.name === '') {
             dataEdit.name = props.session.name
         }
+        dataEdit.name = dataEdit.name.trim()
         props.save(dataEdit)
         props.close()
     }
@@ -49,7 +50,7 @@ export default function ChatConfigWindow(props: Props) {
                     fullWidth
                     variant="outlined"
                     value={dataEdit.name}
-                    onChange={(e) => setDataEdit({ ...dataEdit, name: e.target.value.trim() })}
+                    onChange={(e) => setDataEdit({ ...dataEdit, name: e.target.value })}
                 />
             </DialogContent>
             <DialogActions>

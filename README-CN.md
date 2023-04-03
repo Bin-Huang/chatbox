@@ -59,13 +59,6 @@
 - ChatBox 还帮你在本地保存了所有的聊天记录和 prompt，防止在线服务的数据丢失。
 - ChatBox 还可以帮助你设计、调试和管理 prompt，让你更好地操作 AI 模型。
 
-## ChatGPT Plus 的平替（平民替代品）？
-
-可行。比起 ChatGPT Plus，同样来自 OpenAI 的开发者API服务可以得到完全一样的效果，而且还有以下好处：
-
-- 比起 ChatGPT Plus 每月 20 美金的固定收费，开发者 API 是按量付费的，总体使用费用更低
-- 开发者 API 可以更加直接地使用 ChatGPT 背后的模型，比如使用更灵活的 prompt 角色调试、参数调试
-
 ## Roadmap
 
 - [x] AI 聊天与会话管理
