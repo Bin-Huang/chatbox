@@ -16,10 +16,10 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import SettingsIcon from '@mui/icons-material/Settings';
 import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import * as prompts from './prompts'
+import * as prompts from './prompts';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import CleanWidnow from './CleanWindow';
-import * as api from './api'
+import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
@@ -129,7 +129,7 @@ function Main() {
             store.settings.maxTokens,
             session.model,
             prompts.nameConversation(session.messages.slice(0, 3)),
-            (name) => {
+            ({ text: name }) => {
                 name = name.replace(/['"“”]/g, '')
                 session.name = name
                 store.updateChatSession(session)
@@ -148,14 +148,16 @@ function Main() {
             store.settings.maxTokens,
             session.model,
             promptMsgs,
-            (text) => {
+            ({ text, cancel }) => {
                 for (let i = 0; i < session.messages.length; i++) {
                     if (session.messages[i].id === targetMsg.id) {
                         session.messages[i] = {
                             ...session.messages[i],
                             content: text,
+                            cancel,
                         }
-                        break
+
+                        break;
                     }
                 }
                 store.updateChatSession(session)

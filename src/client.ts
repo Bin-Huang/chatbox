@@ -1,8 +1,24 @@
-import { ChatCompletionRequestMessage } from './utils/openai-node/api'
-import { Message } from './types'
-import * as wordCount from './utils'
+import { ChatCompletionRequestMessage } from './utils/openai-node/api';
+import { Message } from './types';
+import * as wordCount from './utils';
 
-export async function replay(apiKey: string, host: string, maxContextSize: string, maxTokens: string, modelName: string, msgs: Message[], onText?: (text: string) => void, onError?: (error: Error) => void) {
+export interface OnTextCallbackResult {
+    // response content
+    text: string;
+    // cancel for fetch
+    cancel: () => void;
+}
+
+export async function replay(
+    apiKey: string,
+    host: string,
+    maxContextSize: string,
+    maxTokens: string,
+    modelName: string,
+    msgs: Message[],
+    onText?: (option: OnTextCallbackResult) => void,
+    onError?: (error: Error) => void,
+) {
     if (msgs.length === 0) {
         throw new Error('No messages to replay')
     }
@@ -29,7 +45,18 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
         prompts = [head, ...prompts]
     }
 
+    // fetch has been canceled
+    let hasCancel = false;
+
+    // abort signal for fetch
+    const controller = new AbortController();
+    const cancel = (): void => {
+        hasCancel = true;
+        controller.abort();
+    };
+
     try {
+
         const messages: ChatCompletionRequestMessage[] = prompts.map(msg => ({ role: msg.role, content: msg.content }))
         const response = await fetch(`${host}/v1/chat/completions`, {
             method: 'POST',
@@ -42,8 +69,10 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
                 model: modelName,
                 max_tokens: maxTokensNumber,
                 stream: true
-            })
+            }),
+            signal: controller.signal,
         });
+
         if (!response.body) {
             throw new Error('No response body')
         }
@@ -89,7 +118,10 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
                     if (text !== undefined) {
                         fullText += text
                         if (onText) {
-                            onText(fullText)
+                            onText({
+                                text: fullText,
+                                cancel,
+                            });
                         }
                     }
                 }
@@ -97,6 +129,13 @@ export async function replay(apiKey: string, host: string, maxContextSize: strin
         }
         return fullText
     } catch (error) {
+        // if a cancellation is performed
+        // do not throw an exception
+        // otherwise the content will be overwritten.
+        if (hasCancel) {
+            return;
+        }
+
         if (onError) {
             onError(error as any)
         }

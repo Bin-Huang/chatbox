@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 
 export type Message = ChatCompletionRequestMessage & {
-    id: string
+    id: string;
+    cancel?: () => void;
 }
 
 export interface Session{

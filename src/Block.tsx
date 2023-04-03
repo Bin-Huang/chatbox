@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef ,useMemo } from 'react';
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './utils/openai-node/api';
+import { useEffect, useState, useRef ,useMemo, useCallback } from 'react';
+import { ChatCompletionRequestMessageRoleEnum } from './utils/openai-node/api';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,6 +17,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import StopIcon from '@mui/icons-material/Stop';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import * as wordCount from './utils'
@@ -24,6 +25,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
 import { useTranslation, getI18n } from 'react-i18next';
+import { Message } from './types';
 
 // copy button html content
 // join at markdown-it parsed
@@ -62,10 +64,6 @@ const md = new MarkdownIt({
 md.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 md.use(mila, { attrs: { target: "_blank", rel: "noopener" } })
 
-export type Message = ChatCompletionRequestMessage & {
-    id: string
-}
-
 export interface Props {
     id?: string
     msg: Message
@@ -82,7 +80,7 @@ export interface Props {
 
 function _Block(props: Props) {
     const { t } = useTranslation()
-    const { msg, setMsg } = props
+    const { msg, setMsg } = props;
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
 
@@ -117,6 +115,15 @@ function _Block(props: Props) {
         setAnchorEl(null);
     };
 
+    // stop action
+    const onStop = useCallback(() => {
+        msg?.cancel?.();
+    }, [msg]);
+
+    const onRefresh = useCallback(() => {
+        onStop();
+        props.refreshMsg();
+    }, [onStop, props.refreshMsg]);
 
     const tips: string[] = []
     if (props.showModelName) {
@@ -219,7 +226,16 @@ function _Block(props: Props) {
                             ) : (
                                 isHovering && (
                                     <>
-                                        <Button onClick={() => props.refreshMsg()}>
+                                        {
+                                            mayRendering
+                                                ? (
+                                                    <Button onClick={onStop}>
+                                                        <StopIcon fontSize='small' />
+                                                    </Button>
+                                                )
+                                                : null
+                                        }
+                                        <Button onClick={onRefresh}>
                                             <RefreshIcon fontSize='small' />
                                         </Button>
                                         <Button onClick={handleClick}>
