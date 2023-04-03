@@ -18,42 +18,44 @@ html[data-theme='dark'] {
     // ------------ 滚动条 ---------------
 
     /* 设置滚动条的宽度, 背景色与边框 */
-    .scroll::-webkit-scrollbar {
-        width: 5px;
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
         background-color: #333333;
         border-radius: 6px;
     }
 
-    .scroll::scrollbar {
-        width: 5px;
+    ::scrollbar {
+        width: 6px;
+        height: 6px;
         background-color: #333333;
         border-radius: 6px;
     }
 
     /* 滚动条上的滑块 */
-    .scroll::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb {
         background-color: #b1b1b1;
         border-radius: 6px;
     }
 
     /* 鼠标悬停在滑块上时 */
-    .scroll::-webkit-scrollbar-thumb:hover {
+    ::-webkit-scrollbar-thumb:hover {
         background-color: #8c8c8c;
     }
 
     /* 滚动条的轨道 */
-    .scroll::-webkit-scrollbar-track {
+    ::-webkit-scrollbar-track {
         background-color: #333333;
         border-radius: 6px;
     }
 
     /* 鼠标悬停在滚动条轨道上时 */
-    .scroll::-webkit-scrollbar-track:hover {
+    ::-webkit-scrollbar-track:hover {
         background-color: #2c2c2c;
     }
 
     /* 滚动条上下按钮 */
-    .scroll::-webkit-scrollbar-button {
+    ::-webkit-scrollbar-button {
         display: none;
     }
 }
@@ -67,36 +69,44 @@ html[data-theme='light'] {
     // ------------ 滚动条 ---------------
 
     /* 设置滚动条的宽度, 背景色与边框 */
-    .scroll::-webkit-scrollbar {
-        width: 5px;
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: #f5f5f5;
+        border-radius: 6px;
+    }
+
+    ::scrollbar {
+        width: 6px;
+        height: 6px;
         background-color: #f5f5f5;
         border-radius: 6px;
     }
 
     /* 滚动条上的滑块 */
-    .scroll::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb {
         background-color: #c6c6c6;
         border-radius: 6px;
     }
 
     /* 鼠标悬停在滑块上时 */
-    .scroll::-webkit-scrollbar-thumb:hover {
+    ::-webkit-scrollbar-thumb:hover {
         background-color: #a0a0a0;
     }
 
     /* 滚动条的轨道 */
-    .scroll::-webkit-scrollbar-track {
+    ::-webkit-scrollbar-track {
         background-color: #f5f5f5;
         border-radius: 6px;
     }
 
     /* 鼠标悬停在滚动条轨道上时 */
-    .scroll::-webkit-scrollbar-track:hover {
+    ::-webkit-scrollbar-track:hover {
         background-color: #dcdcdc;
     }
 
     /* 滚动条上下按钮 */
-    .scroll::-webkit-scrollbar-button {
+    ::-webkit-scrollbar-button {
         display: none;
     }
 }
