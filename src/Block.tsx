@@ -233,11 +233,12 @@ function _Block(props: Props) {
                                                         <StopIcon fontSize='small' />
                                                     </Button>
                                                 )
-                                                : null
+                                                : (
+                                                    <Button onClick={onRefresh}>
+                                                        <RefreshIcon fontSize='small' />
+                                                    </Button>
+                                                )
                                         }
-                                        <Button onClick={onRefresh}>
-                                            <RefreshIcon fontSize='small' />
-                                        </Button>
                                         <Button onClick={handleClick}>
                                             <MoreVertIcon />
                                         </Button>
