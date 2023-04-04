@@ -40,6 +40,7 @@ const data = {
 main()
 async function main() {
     let version = process.argv[2]
+    let useGithubUrl = process.argv[3] === 'github'
 
     const res = await axios.get('https://api.github.com/repos/Bin-Huang/chatbox/releases')
     const release = version ? res.data.find(r => r.tag_name.endsWith(version)) : res.data[0]
@@ -55,7 +56,7 @@ async function main() {
 
     const promises = []
     for (const asset of release.assets) {
-        promises.push(handleAsset(asset, version, dir))
+        promises.push(handleAsset(asset, version, dir, useGithubUrl))
     }
     await Promise.all(promises)
 
@@ -64,23 +65,29 @@ async function main() {
     console.log(dir)
 }
 
-async function handleAsset(asset, version, dir) {
-    const link = `https://chatbox-1252521402.cos.ap-hongkong.myqcloud.com/${version}/${asset.name}`
+async function handleAsset(asset, version, dir, useGithubUrl = true) {
+    const link = useGithubUrl ? asset.browser_download_url : `https://chatbox-1252521402.cos.ap-hongkong.myqcloud.com/${version}/${asset.name}`
     if (asset.name.endsWith('.app.tar.gz')) {
-        await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        if (!useGithubUrl) {
+            await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        }
         data.platforms['darwin'].url = link
         data.platforms['darwin-aarch64'].url = link
         data.platforms['darwin-x86_64'].url = link
         return
     }
     if (asset.name.endsWith('.AppImage.tar.gz')) {
-        await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        if (!useGithubUrl) {
+            await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        }
         data.platforms['linux'].url = link
         data.platforms['linux-x86_64'].url = link
         return
     }
     if (asset.name.endsWith('.msi.zip')) {
-        await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        if (!useGithubUrl) {
+            await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        }
         data.platforms['win64'].url = link
         data.platforms['windows-x86_64'].url = link
         return
