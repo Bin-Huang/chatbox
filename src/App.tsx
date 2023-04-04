@@ -209,7 +209,7 @@ function Main() {
             <Grid container spacing={2} sx={{
                 height: '100%',
             }}>
-                <Grid item xs={3}
+                <Grid item xs={2.5}
                     sx={{
                         height: '100%',
                     }}
@@ -326,7 +326,7 @@ function Main() {
                     </Stack>
 
                 </Grid>
-                <Grid item xs={9}
+                <Grid item xs={9.5}
                     sx={{
                         height: '100%',
                     }}
