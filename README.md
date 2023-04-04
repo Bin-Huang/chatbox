@@ -72,8 +72,8 @@ Download installers:
 - [x] message token estimating
 - [x] GPT4
 - [x] i18n
-- [ ] Copy button for code blocks
-- [ ] Stop button for AI message generation
+- [x] Copy button for code blocks
+- [x] Stop button for AI message generation
 - [ ] Improved prompt settings
 - [ ] Prompt Library
 - [ ] Talk with files
