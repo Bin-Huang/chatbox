@@ -35,6 +35,7 @@
   "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating": "[Enter] 傳送、[Shift＋Enter] 換行、[Ctrl＋Enter] 傳送但不產生",
   "version": "版本",
   "rename": "改名",
+  "edit session": "編輯對話",
   "name": "名稱",
   "clean": "清除",
   "this action will permanently delete all non-system messages in": "此動作將永久刪除",

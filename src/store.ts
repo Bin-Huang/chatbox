@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Settings, createSession, Session, Message } from './types'
+import { Settings, createSession, Session, Message, Plugin } from './types'
 import * as defaults from './defaults'
 import * as openai from './utils/openai-node'
 import { v4 as uuidv4 } from 'uuid';
@@ -24,8 +24,31 @@ export function getDefaultSettings(): Settings {
     }
 }
 
+export const defaultPlugins: Plugin[] = [
+    {
+        "id": "chatgpt-retrieval-plugin",
+        "schema_version": "v1",
+        "name_for_model": "retrieval",
+        "name_for_human": "Retrieval Plugin",
+        "description_for_model": "Plugin for searching through the user's documents (such as files, emails, and more) to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be found in their personal information.",
+        "description_for_human": "Search through your documents.",
+        "auth": {
+            "type": "user_http",
+            "authorization_type": "bearer"
+        },
+        "api": {
+            "type": "openapi",
+            "url": "http://127.0.0.1:8080/.well-known/openapi.yaml",
+            "has_user_authentication": false
+        },
+        "logo_url": "https://your-app-url.com/.well-known/logo.png",
+        "contact_email": "hello@contact.com",
+        "legal_info_url": "http://example.com/legal-info"
+    }
+]
+
 export async function readSettings(): Promise<Settings> {
-    const setting: Settings|undefined = await api.readStore('settings')
+    const setting: Settings | undefined = await api.readStore('settings')
     if (!setting) {
         return getDefaultSettings()
     }
@@ -147,10 +170,23 @@ export default function useStore() {
         })
     }
 
-    const [toasts, _setToasts] = useState<{id: string, content: string}[]>([])
+
+    const [plugins, setPlugins] = useState<Plugin[]>(defaultPlugins)
+    const installPlugin = (plugin: Plugin) => {
+        setPlugins((plugins: Plugin[]) => {
+            return plugins.concat(plugin)
+        })
+    }
+    const uninstallPlugin = (pluginId: string) => {
+        setPlugins((plugins: Plugin[]) => {
+            return plugins.filter((plugin: Plugin) => { plugin.id !== pluginId })
+        })
+    }
+
+    const [toasts, _setToasts] = useState<{ id: string, content: string }[]>([])
     const addToast = (content: string) => {
         const id = uuidv4()
-        _setToasts([...toasts, {id, content}])
+        _setToasts([...toasts, { id, content }])
     }
     const removeToast = (id: string) => {
         _setToasts(toasts.filter((t) => t.id !== id))
@@ -168,6 +204,10 @@ export default function useStore() {
         updateChatSession,
         deleteChatSession,
         createEmptyChatSession,
+
+        plugins,
+        installPlugin,
+        uninstallPlugin,
 
         currentSession,
         switchCurrentSession,

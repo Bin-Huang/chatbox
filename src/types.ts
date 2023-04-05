@@ -8,6 +8,7 @@ export type Message = ChatCompletionRequestMessage & {
 }
 
 export interface Plugin {
+    id: string;
     schema_version: string;
     name_for_model: string;
     name_for_human: string;
@@ -32,7 +33,7 @@ export interface Session {
     name: string
     messages: Message[]
     model: string
-    plugins?: Plugin[]
+    pluginIDs?: string[]
 }
 
 export function createMessage(role: ChatCompletionRequestMessageRoleEnum = ChatCompletionRequestMessageRoleEnum.User, content: string = ''): Message {

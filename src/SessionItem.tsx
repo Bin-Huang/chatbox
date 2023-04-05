@@ -50,7 +50,7 @@ export default function SessionItem(props: Props) {
             </ListItemIcon>
             <ListItemText>
                 <Typography variant="inherit" noWrap>
-                    {session.name}
+                    {session.name}{(session.pluginIDs && session.pluginIDs.length > 0) ? "^": ""}
                 </Typography>
             </ListItemText>
             <IconButton onClick={handleClick}>
@@ -69,7 +69,7 @@ export default function SessionItem(props: Props) {
                     handleClose()
                 }} disableRipple>
                     <EditIcon />
-                    {t('rename')}
+                    {t('edit session')}
                 </MenuItem>
 
                 <MenuItem key={session.id + 'copy'} onClick={() => {
