@@ -457,6 +457,10 @@ function Main() {
                         <CleanWidnow open={sessionClean !== null}
                             session={sessionClean}
                             save={(session) => {
+                                sessionClean.messages.forEach((msg) => {
+                                    msg?.cancel?.();
+                                });
+
                                 store.updateChatSession(session)
                                 setSessionClean(null)
                             }}
