@@ -43,27 +43,29 @@
 
 ## Download
 
-Supported Platforms:
+**Download installers**:
+
+[>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
+
+**Supported Platforms**:
 
 - **Windows**: Please download `.msi` installation package
 - **Mac**: Please download `.dmg` (recommended) or `.tar` file, already supporting x64, arm64 (please download x64 version for now, it is compatible)
 - **Linux**: Please download `.AppImage` (recommended) or `.deb` file
 
-Download installers:
-
-[>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
-
-## Why Use Chatbox?
-
-- Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
-- Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
-- Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
+**Download from package manager**:
 
 [aur](https://aur.archlinux.org/packages/chatbox-bin)
 
 ```
 paru -S chatbox-bin
 ```
+
+## Why Use Chatbox?
+
+- Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
+- Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
+- Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
 
 ## Roadmap
 
