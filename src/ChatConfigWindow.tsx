@@ -52,6 +52,16 @@ export default function ChatConfigWindow(props: Props) {
                     value={dataEdit.name}
                     onChange={(e) => setDataEdit({ ...dataEdit, name: e.target.value })}
                 />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    label={t('plugins')}
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={dataEdit.name}
+                    onChange={(e) => setDataEdit({ ...dataEdit, plugins: [] })}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel}>{t('cancel')}</Button>

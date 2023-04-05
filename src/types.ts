@@ -1,4 +1,4 @@
-import {ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum} from './utils/openai-node/api'
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './utils/openai-node/api'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 
@@ -7,11 +7,32 @@ export type Message = ChatCompletionRequestMessage & {
     cancel?: () => void;
 }
 
-export interface Session{
+export interface Plugin {
+    schema_version: string;
+    name_for_model: string;
+    name_for_human: string;
+    description_for_model: string;
+    description_for_human: string;
+    auth: {
+        type: string;
+        authorization_type: string;
+    };
+    api: {
+        type: string;
+        url: string;
+        has_user_authentication: boolean;
+    };
+    logo_url: string;
+    contact_email: string;
+    legal_info_url: string;
+}
+
+export interface Session {
     id: string
     name: string
     messages: Message[]
     model: string
+    plugins?: Plugin[]
 }
 
 export function createMessage(role: ChatCompletionRequestMessageRoleEnum = ChatCompletionRequestMessageRoleEnum.User, content: string = ''): Message {
