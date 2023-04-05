@@ -5,6 +5,15 @@ import { ThemeMode } from './theme';
 export type Message = ChatCompletionRequestMessage & {
     id: string;
     cancel?: () => void;
+    tags?: string[];
+}
+
+export function messageHasTag(msg: Message, tag: string = "Untitled"): boolean {
+    if (!msg.tags) {
+        return false
+    }
+
+    return msg.tags.indexOf(tag) > -1
 }
 
 export interface Plugin {
@@ -17,6 +26,7 @@ export interface Plugin {
     auth: {
         type: string;
         authorization_type: string;
+        authorization_token?: string;
     };
     api: {
         type: string;
@@ -43,6 +53,7 @@ export function createMessage(role: ChatCompletionRequestMessageRoleEnum = ChatC
         role: role,
     }
 }
+
 
 export function createSession(modelName: string, name: string = "Untitled"): Session {
     return {

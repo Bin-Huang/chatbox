@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Settings, createSession, Session, Message, Plugin } from './types'
+import { Settings, createSession, Session, createMessage, Message, messageHasTag, Plugin } from './types'
 import * as defaults from './defaults'
 import * as openai from './utils/openai-node'
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +34,8 @@ export const defaultPlugins: Plugin[] = [
         "description_for_human": "Search through your documents.",
         "auth": {
             "type": "user_http",
-            "authorization_type": "bearer"
+            "authorization_type": "Bearer",
+            "authorization_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik93ZW4gV3UiLCJpYXQiOjE1MTYyMzkwMjJ9.6Wai0ClBOxd40SUG0kaK7gn41N6ZVt4VM54Buzc5hUE",
         },
         "api": {
             "type": "openapi",
@@ -119,6 +120,26 @@ export default function useStore() {
         i18n.changeLanguage(settings.language).then();
     }
 
+    const [plugins, setPlugins] = useState<Plugin[]>(defaultPlugins)
+    const installPlugin = (plugin: Plugin) => {
+        setPlugins((plugins: Plugin[]) => {
+            return plugins.concat(plugin)
+        })
+    }
+    const uninstallPlugin = (pluginId: string) => {
+        setPlugins((plugins: Plugin[]) => {
+            return plugins.filter((plugin: Plugin) => { plugin.id !== pluginId })
+        })
+    }
+    const getPluginByID = (plugins: Plugin[], pluginId: string): Plugin | undefined => {
+        let result = plugins.filter(plugin => plugin.id === pluginId)
+        if (result && result.length > 0) {
+            return result[0]
+        }
+
+        return undefined
+    }
+
     const [chatSessions, _setChatSessions] = useState<Session[]>([createSession(settings.model)])
     const [currentSession, switchCurrentSession] = useState<Session>(chatSessions[0])
     useEffect(() => {
@@ -142,6 +163,33 @@ export default function useStore() {
         }
         setSessions(sessions)
     }
+
+    const updateChatSessionPlugins = (session: Session) => {
+        console.log("updatePluginSystemPromot:", session)
+
+        if (session.pluginIDs && session.pluginIDs.length>0) {
+            const messages = session.messages.filter(msg => msg.role === 'system' && !messageHasTag(msg, "plugin"))
+
+            let pluginPromt = `为了完成你的任务，你可以使用插件提供的功能，这里有${session.pluginIDs.length}个插件: `
+
+            for (let pluginId of session.pluginIDs) {
+                let plugin = getPluginByID(plugins, pluginId)
+                if (plugin) {
+                    pluginPromt += `\n`
+                    pluginPromt += `插件名称：${plugin.name_for_model} \n`
+                    pluginPromt += `插件描述：${plugin.description_for_model} \n`
+                }
+            }
+
+            messages.push(createMessage("system", pluginPromt), ...session.messages.filter(msg => msg.role !== 'system'))
+
+            updateChatSession({ ...session, messages })
+            return
+        }
+
+        updateChatSession(session)
+    }
+
     const updateChatSession = (session: Session) => {
         const sessions = chatSessions.map((s) => {
             if (s.id === session.id) {
@@ -170,19 +218,6 @@ export default function useStore() {
         })
     }
 
-
-    const [plugins, setPlugins] = useState<Plugin[]>(defaultPlugins)
-    const installPlugin = (plugin: Plugin) => {
-        setPlugins((plugins: Plugin[]) => {
-            return plugins.concat(plugin)
-        })
-    }
-    const uninstallPlugin = (pluginId: string) => {
-        setPlugins((plugins: Plugin[]) => {
-            return plugins.filter((plugin: Plugin) => { plugin.id !== pluginId })
-        })
-    }
-
     const [toasts, _setToasts] = useState<{ id: string, content: string }[]>([])
     const addToast = (content: string) => {
         const id = uuidv4()
@@ -202,6 +237,7 @@ export default function useStore() {
         chatSessions,
         createChatSession,
         updateChatSession,
+        updateChatSessionPlugins,
         deleteChatSession,
         createEmptyChatSession,
 
