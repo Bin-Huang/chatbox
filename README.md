@@ -59,6 +59,12 @@ Download installers:
 - Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
 - Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
 
+[aur](https://aur.archlinux.org/packages/chatbox-bin)
+
+```
+paru -S chatbox-bin
+```
+
 ## Roadmap
 
 - [x] AI chat and session management
