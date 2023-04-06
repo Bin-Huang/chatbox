@@ -1,6 +1,6 @@
-import { ChatCompletionRequestMessage } from './utils/openai-node/api';
 import { Message } from './types';
 import * as wordCount from './utils';
+import { createParser } from 'eventsource-parser'
 
 export interface OnTextCallbackResult {
     // response content
@@ -47,17 +47,16 @@ export async function replay(
 
     // fetch has been canceled
     let hasCancel = false;
-
     // abort signal for fetch
     const controller = new AbortController();
-    const cancel = (): void => {
+    const cancel = () => {
         hasCancel = true;
         controller.abort();
     };
 
+    let fullText = '';
     try {
-
-        const messages: ChatCompletionRequestMessage[] = prompts.map(msg => ({ role: msg.role, content: msg.content }))
+        const messages = prompts.map(msg => ({ role: msg.role, content: msg.content }))
         const response = await fetch(`${host}/v1/chat/completions`, {
             method: 'POST',
             headers: {
@@ -72,62 +71,22 @@ export async function replay(
             }),
             signal: controller.signal,
         });
-
-        if (!response.body) {
-            throw new Error('No response body')
-        }
-        const reader = response.body.getReader();
-        const d = new TextDecoder('utf8');
-        let fullText = ''
-        let partialData = '';
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) {
-                break;
-            } else {
-                const raw = d.decode(value)
-                if (partialData == '') {
-                    partialData = raw
-                } else {
-                    partialData += raw;
-                }
-                if (response.status !== 200) {
-                    throw new Error(`Error from OpenAI: ${response.status} ${response.statusText} ${partialData}`)
-                }
-                const delimiterIndex = partialData.indexOf('\n\n');
-                if (delimiterIndex === -1) {
-                    continue;
-                }
-                let items = partialData.split('\n\n')
-                partialData = ''
-                items = items.map(item => item.replace(/^\s*data: /, '')).filter(item => item.length > 0).filter(item => item !== '[DONE]')
-                const datas = items.map(item => {
-                    let json: any
-                    try {
-                        json = JSON.parse(item)
-                    } catch (error) {
-                        throw new Error(`Error parsing item: ${item}.\nError Details: ${error}`)
-                    }
-                    if (json.error) {
-                        throw new Error(`Error from OpenAI: ${JSON.stringify(json)}`)
-                    }
-                    return json
-                })
-                for (const data of datas) {
-                    const text = data.choices[0]?.delta?.content
-                    if (text !== undefined) {
-                        fullText += text
-                        if (onText) {
-                            onText({
-                                text: fullText,
-                                cancel,
-                            });
-                        }
-                    }
+        await handleSSE(response, (message) => {
+            if (message === '[DONE]') {
+                return;
+            }
+            const data = JSON.parse(message)
+            if (data.error) {
+                throw new Error(`Error from OpenAI: ${JSON.stringify(data)}`)
+            }
+            const text = data.choices[0]?.delta?.content
+            if (text !== undefined) {
+                fullText += text
+                if (onText) {
+                    onText({ text: fullText, cancel })
                 }
             }
-        }
-        return fullText
+        })
     } catch (error) {
         // if a cancellation is performed
         // do not throw an exception
@@ -135,10 +94,48 @@ export async function replay(
         if (hasCancel) {
             return;
         }
-
         if (onError) {
             onError(error as any)
         }
         throw error
+    }
+    return fullText
+}
+
+export async function handleSSE(response: Response, onMessage: (message: string) => void) {
+    if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error ? JSON.stringify(error) : `${response.status} ${response.statusText}`)
+    }
+    if (response.status !== 200) {
+        throw new Error(`Error from OpenAI: ${response.status} ${response.statusText}`)
+    }
+    if (!response.body) {
+        throw new Error('No response body')
+    }
+    const parser = createParser((event) => {
+        if (event.type === 'event') {
+            onMessage(event.data)
+        }
+    })
+    for await (const chunk of iterableStreamAsync(response.body)) {
+        const str = new TextDecoder().decode(chunk)
+        parser.feed(str)
+    }
+}
+
+export async function* iterableStreamAsync(stream: ReadableStream): AsyncIterableIterator<Uint8Array> {
+    const reader = stream.getReader();
+    try {
+        while (true) {
+            const { value, done } = await reader.read()
+            if (done) {
+                return
+            } else {
+                yield value
+            }
+        }
+    } finally {
+        reader.releaseLock()
     }
 }
