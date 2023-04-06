@@ -29,7 +29,7 @@ export interface Props {
 export default function SessionItem(props: Props) {
     const { t } = useTranslation()
     const { session, selected, switchMe, deleteMe, copyMe, editMe } = props
-    const [ hovering, setHovering ] = useState(false)
+    const [hovering, setHovering] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -65,11 +65,13 @@ export default function SessionItem(props: Props) {
                 </Typography>
             </ListItemText>
             {
-                hovering && (
-                    <IconButton onClick={handleClick}>
-                        <MoreHorizOutlinedIcon fontSize="small" />
-                    </IconButton>
-                )
+                <IconButton onClick={handleClick}>
+                    {
+                        hovering && (
+                            <MoreHorizOutlinedIcon fontSize="small" />
+                        )
+                    }
+                </IconButton>
             }
             <StyledMenu
                 MenuListProps={{
