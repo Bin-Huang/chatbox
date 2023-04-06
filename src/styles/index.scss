@@ -63,7 +63,8 @@ html[data-theme='light'] {
     // ------------ highlight.js ---------------
 
     // https://stackoverflow.com/questions/59257368/how-to-dynamically-change-the-theme-using-highlight-js
-    @include meta.load-css('highlight.js/styles/github');
+    // @include meta.load-css('highlight.js/styles/github');
+    @include meta.load-css('highlight.js/styles/github-dark');
 
     // ------------ 滚动条 ---------------
 

@@ -13,49 +13,16 @@ code {
         monospace;
 }
 
-.app {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: stretch;
-    height: 100vh;
-}
-
-.session {
-    display: flex;
-    justify-content: space-between;
-    background-color: red;
-    align-items: center;
-    height: 50px;
-    margin: 4px 4px;
-    border-radius: 10px;
-
-}
-
-.session .title {
-    margin-left: 30px;
-    display: flex;
-    align-items: center;
-    width: 200px;
-}
-
-.session .title span {
-    font-size: 1.25rem;
-    margin-left: 4px;
-    word-break: break-all;
-}
-
-.session .operation {
-    margin-right: 30px;
-    display: flex;
-    justify-content: space-between;
-    width: 40px;
-}
-
 /* START of code block actions */
 .code-block-wrapper {
     position: relative;
     max-width: 50vw;
+}
+
+.code-block {
+    padding: 10px;
+    max-width: 100%;
+    overflow: auto;
 }
 
 .rendering .code-block-wrapper div.copy-action {
@@ -78,25 +45,28 @@ code {
     padding: 4px;
 }
 
-
-html[data-theme='dark'] .code-block-wrapper div.copy-action {
+.code-block-wrapper div.copy-action {
     background-color: rgba(144, 202, 249, 0.16);
+    color: white;
+    padding: 4px;
+    font-size: 15px;
 }
 
-html[data-theme='dark'] .code-block-wrapper div.copy-action:hover {
+.code-block-wrapper div.copy-action:hover {
     background-color: rgba(144, 202, 249, 0.36);
-}
-
-html[data-theme='light'] .code-block-wrapper div.copy-action {
-    background-color: rgba(25, 118, 210, 0.08);
-}
-
-html[data-theme='light'] .code-block-wrapper div.copy-action:hover {
-    background-color: rgba(25, 118, 210, 0.12);
 }
 
 .code-block-wrapper:hover div.copy-action {
     opacity: 1;
 }
 
+
 /* END of code block actions */
+
+html[data-theme='light'] .assistant-msg {
+    background-color: #fafafa;
+}
+
+html[data-theme='dark'] .assistant-msg {
+    background-color: #212121;
+}

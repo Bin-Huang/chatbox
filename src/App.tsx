@@ -206,7 +206,7 @@ function Main() {
 
     return (
         <Box sx={{ height: '100vh' }}>
-            <Grid container spacing={2} sx={{
+            <Grid container sx={{
                 flexWrap: 'nowrap',
                 height: '100%',
             }}>
@@ -336,9 +336,7 @@ function Main() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                    }}
-                        spacing={2}
-                    >
+                    }} >
                         <Box>
                             <Toolbar>
                                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
@@ -415,7 +413,7 @@ function Main() {
                                 ))
                             }
                         </List>
-                        <Box>
+                        <Box sx={{ padding: '20px 0' }}>
                             <MessageInput
                                 messageInput={messageInput}
                                 setMessageInput={setMessageInput}

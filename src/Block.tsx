@@ -52,7 +52,7 @@ const md = new MarkdownIt({
         return [
             '<div class="code-block-wrapper">',
             getCodeCopyButtonHTML(),
-            '<pre class="hljs" style="max-width: 50vw; overflow: auto">',
+            '<pre class="hljs code-block">',
             `<code>${content}</code>`,
             '</pre>',
             '</div>',
@@ -150,7 +150,10 @@ function _Block(props: Props) {
             sx={{
                 padding: '22px 28px',
             }}
-            className={mayRendering ? 'rendering' : 'render-done'}
+            className={[
+                mayRendering ? 'rendering' : 'render-done',
+                msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
+            ].join(' ')}
         >
             <Grid container spacing={2}>
                 <Grid item>

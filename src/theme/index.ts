@@ -18,6 +18,16 @@ export function fetchThemeDesign(mode: RealThemeMode): ThemeOptions {
     return {
         palette: {
             mode: ThemeModeMapPaletteMode[mode],
+            ...(mode === ThemeMode.Light
+                ? {
+                }
+                : {
+                    background: {
+                        default: 'rgb(40, 40, 40)',
+                        paper: 'rgb(40, 40, 40)',
+                    },
+                }),
+
         },
         typography: {
             // In Chinese and Japanese the characters are usually larger,
