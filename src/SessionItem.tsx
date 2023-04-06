@@ -33,6 +33,7 @@ export default function SessionItem(props: Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation()
         event.preventDefault()
         setAnchorEl(event.currentTarget);
     };
@@ -66,7 +67,7 @@ export default function SessionItem(props: Props) {
             {
                 hovering && (
                     <IconButton onClick={handleClick}>
-                        <MoreHorizOutlinedIcon />
+                        <MoreHorizOutlinedIcon fontSize="small" />
                     </IconButton>
                 )
             }
