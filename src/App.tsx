@@ -327,7 +327,7 @@ function Main() {
                         </MenuItem>
                     </Stack>
                 </Grid>
-                <Grid item
+                <Grid item xs
                     sx={{
                         height: '100%',
                     }}
