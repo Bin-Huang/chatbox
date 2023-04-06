@@ -16,6 +16,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import VoiceOverOffIcon from '@mui/icons-material/VoiceOverOff';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import StopIcon from '@mui/icons-material/Stop';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -70,6 +72,7 @@ export interface Props {
     showTokenCount: boolean
     showModelName: boolean
     modelName: string
+    speech:string
     setMsg: (msg: Message) => void
     delMsg: () => void
     refreshMsg: () => void
@@ -77,11 +80,16 @@ export interface Props {
     quoteMsg: () => void
 }
 
+let currentUtterance: SpeechSynthesisUtterance | null = null;
+let currentIndex: string = "-1";
 function _Block(props: Props) {
     const { t } = useTranslation()
     const { msg, setMsg } = props;
+    const { speech } = props;
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
+    const [isSpeaking, setIsSpeaking] = useState(false)
+    const synth = window.speechSynthesis;
 
     // for debounce each render when 'props.msg' change
     const renderTimer = useRef<NodeJS.Timeout>();
@@ -112,6 +120,43 @@ function _Block(props: Props) {
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleSay = () => {
+        if (currentUtterance && currentIndex !== "-1") {
+            synth.cancel();
+            setIsSpeaking(false);
+            if (msg.id === currentIndex) {
+                currentUtterance = null;
+                currentIndex = "-1";
+                return;
+            }
+        }
+        const txt = msg.content?.trim() || ''
+        if (!txt) return;
+        const utterance = new SpeechSynthesisUtterance(txt);
+        const voices = speechSynthesis.getVoices();
+        // "speech_lang": "Microsoft Yaoyao - Chinese (Simplified, PRC)",
+        // "Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)"
+        let voice = voices.find(voice => voice.name === speech);
+        if (!voice) {
+            voice = voices.find(voice => voice.lang === 'zh-CN');
+        }
+        utterance.voice=voice?voice:null;
+        currentIndex = msg.id;
+        // utterance.lang = voice.lang;
+        // utterance.volume = 1;
+        // utterance.rate = 0.8;
+        // utterance.pitch = 1;
+        synth.speak(utterance);
+        setIsSpeaking(true);
+        currentUtterance = utterance;
+        currentIndex = msg.id;
+        utterance.onend = () => {
+            setIsSpeaking(false);
+            currentUtterance = null;
+            currentIndex = "-1";
+        }
     };
 
     // stop action
@@ -244,6 +289,22 @@ function _Block(props: Props) {
                                                     </IconButton>
                                                 )
                                         }
+                                        {
+                                            isSpeaking
+                                                ?(
+                                                    <IconButton onClick={()=>{
+                                                        handleSay()
+                                                    }} size='large' color='primary'>
+                                                        <VoiceOverOffIcon fontSize='small' />
+                                                    </IconButton>)
+                                                : (
+                                                    <IconButton onClick={()=>{
+                                                        handleSay()
+                                                    }} size='large' color='primary'>
+                                                        <RecordVoiceOverIcon fontSize='small' />
+                                                    </IconButton>
+                                                )
+                                        }
                                         <IconButton onClick={handleClick} size='large' color='primary'>
                                             <MoreVertIcon />
                                         </IconButton>
@@ -347,5 +408,5 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Block(props: Props) {
     return useMemo(() => {
         return <_Block {...props} />
-    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName, props.modelName])
+    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName, props.modelName, props.speech])
 }
