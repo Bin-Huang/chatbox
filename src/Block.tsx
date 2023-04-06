@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef ,useMemo, useCallback } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-import { Button, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps } from '@mui/material';
+import { IconButton, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -213,20 +213,20 @@ function _Block(props: Props) {
                                     />
                                 )
                             }
-                            <Typography variant="body2" sx={{opacity: 0.5}} >
+                            <Typography variant="body2" sx={{ opacity: 0.5 }} >
                                 {
                                     tips.join(', ')
                                 }
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={1} sx={{ minHeight: '90px' }}>
                         {
                             isEditing ? (
                                 <>
-                                <Button onClick={() => setIsEditing(false)}>
-                                    <CheckIcon fontSize='small' />
-                                </Button>
+                                    <IconButton onClick={() => setIsEditing(false)} size='large' color='primary'>
+                                        <CheckIcon />
+                                    </IconButton>
                                 </>
                             ) : (
                                 isHovering && (
@@ -234,19 +234,19 @@ function _Block(props: Props) {
                                         {
                                             mayRendering
                                                 ? (
-                                                    <Button onClick={onStop}>
-                                                        <StopIcon fontSize='small' />
-                                                    </Button>
+                                                    <IconButton onClick={onStop} size='large' color='primary'>
+                                                        <StopIcon />
+                                                    </IconButton>
                                                 )
                                                 : (
-                                                    <Button onClick={onRefresh}>
-                                                        <RefreshIcon fontSize='small' />
-                                                    </Button>
+                                                    <IconButton onClick={onRefresh} size='large' color='primary'>
+                                                        <RefreshIcon />
+                                                    </IconButton>
                                                 )
                                         }
-                                        <Button onClick={handleClick}>
+                                        <IconButton onClick={handleClick} size='large' color='primary'>
                                             <MoreVertIcon />
-                                        </Button>
+                                        </IconButton>
                                         <StyledMenu
                                             MenuListProps={{
                                                 'aria-labelledby': 'demo-customized-button',

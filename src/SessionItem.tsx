@@ -65,7 +65,7 @@ export default function SessionItem(props: Props) {
                 </Typography>
             </ListItemText>
             {
-                <IconButton onClick={handleClick}>
+                <IconButton onClick={handleClick} sx={{color: 'primary.main'}} >
                     {
                         hovering && (
                             <MoreHorizOutlinedIcon fontSize="small" />
