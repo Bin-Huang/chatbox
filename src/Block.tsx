@@ -203,6 +203,9 @@ function _Block(props: Props) {
                                     />
                                 ) : (
                                     <Box
+                                        sx={{
+                                            wordBreak: 'break-word',
+                                        }}
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
                                     />
                                 )

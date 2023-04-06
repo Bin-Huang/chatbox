@@ -207,6 +207,7 @@ function Main() {
     return (
         <Box sx={{ height: '100vh' }}>
             <Grid container spacing={2} sx={{
+                flexWrap: 'nowrap',
                 height: '100%',
             }}>
                 <Grid item
@@ -325,9 +326,8 @@ function Main() {
                             </ListItemText>
                         </MenuItem>
                     </Stack>
-
                 </Grid>
-                <Grid item xs
+                <Grid item
                     sx={{
                         height: '100%',
                     }}
