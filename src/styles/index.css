@@ -21,26 +21,6 @@ code {
     height: 100vh;
 }
 
-.column1 {
-    flex-basis: 20%;
-    background-color: #f0f0f0;
-}
-
-.column2 {
-    flex-basis: 60%;
-    background-color: #d0d0d0;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    /* justify-content: space-between; */
-    align-items: stretch;
-}
-
-.column3 {
-    flex-basis: 20%;
-    background-color: #a0a0a0;
-}
-
 .session {
     display: flex;
     justify-content: space-between;

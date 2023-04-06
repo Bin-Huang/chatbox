@@ -237,8 +237,6 @@ function Main() {
                             </Typography>
                         </Toolbar>
 
-                        <Divider />
-
                         <MenuList
                             sx={{
                                 width: '100%',
@@ -335,29 +333,36 @@ function Main() {
                     <Stack sx={{
                         height: '100%',
                         padding: '20px 0',
-                    }} spacing={2}>
-                        <Toolbar variant="dense">
-                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                                <ChatBubbleOutlineOutlinedIcon />
-                            </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
-                                {store.currentSession.name}
-                            </Typography>
-                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
-                                onClick={() => setSessionClean(store.currentSession)}
-                            >
-                                <CleaningServicesIcon />
-                            </IconButton>
-                        </Toolbar>
-                        <Divider />
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                    }}
+                        spacing={2}
+                    >
+                        <Box>
+                            <Toolbar>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                                    <ChatBubbleOutlineOutlinedIcon />
+                                </IconButton>
+                                <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
+                                    {store.currentSession.name}
+                                </Typography>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                                    onClick={() => setSessionClean(store.currentSession)}
+                                >
+                                    <CleaningServicesIcon />
+                                </IconButton>
+                            </Toolbar>
+                            <Divider />
+                        </Box>
                         <List
                             className='scroll'
                             sx={{
                                 width: '100%',
-                                height: '80%',
                                 bgcolor: 'background.paper',
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },
+                                flexGrow: 2,
                             }}
                             component="div"
                             ref={messageListRef}
