@@ -34,7 +34,7 @@ export async function replay(
     let prompts: Message[] = []
     for (let i = msgs.length - 1; i >= 0; i--) {
         const msg = msgs[i]
-        const msgTokenSize: number = wordCount.estimateTokens(msg.content) + 100 // 100 作为预估的误差补偿
+        const msgTokenSize: number = wordCount.estimateTokens(msg.content) + 200 // 200 作为预估的误差补偿
         if (msgTokenSize + totalLen > maxLen) {
             break
         }
