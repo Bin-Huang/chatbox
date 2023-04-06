@@ -255,7 +255,7 @@ function Main() {
                             }
                             component="div"
                             ref={sessionListRef}
-                            // dense
+                        // dense
                         >
                             {
                                 [...store.chatSessions].reverse().map((session, ix) => (
@@ -280,49 +280,51 @@ function Main() {
 
                         <Divider />
 
-                        <MenuItem onClick={handleCreateNewSession} >
-                            <ListItemIcon>
-                                <IconButton><AddIcon fontSize="small" /></IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t('new chat')}
-                            </ListItemText>
-                            <Typography variant="body2" color="text.secondary">
-                                {/* ⌘N */}
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            setOpenSettingWindow(true)
-                        }}
-                        >
-                            <ListItemIcon>
-                                <IconButton><SettingsIcon fontSize="small" /></IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t('settings')}
-                            </ListItemText>
-                            <Typography variant="body2" color="text.secondary">
-                                {/* ⌘N */}
-                            </Typography>
-                        </MenuItem>
+                        <MenuList>
+                            <MenuItem onClick={handleCreateNewSession} >
+                                <ListItemIcon>
+                                    <IconButton><AddIcon fontSize="small" /></IconButton>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {t('new chat')}
+                                </ListItemText>
+                                <Typography variant="body2" color="text.secondary">
+                                    {/* ⌘N */}
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={() => {
+                                setOpenSettingWindow(true)
+                            }}
+                            >
+                                <ListItemIcon>
+                                    <IconButton><SettingsIcon fontSize="small" /></IconButton>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {t('settings')}
+                                </ListItemText>
+                                <Typography variant="body2" color="text.secondary">
+                                    {/* ⌘N */}
+                                </Typography>
+                            </MenuItem>
 
-                        <MenuItem onClick={() => {
-                            setNeedCheckUpdate(false)
-                            api.openLink('https://github.com/Bin-Huang/chatbox/releases')
-                        }}>
-                            <ListItemIcon>
-                                <IconButton>
-                                    <InfoOutlinedIcon fontSize="small" />
-                                </IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
-                                    <Typography sx={{ opacity: 0.5 }}>
-                                        {t('version')}: {store.version}
-                                    </Typography>
-                                </Badge>
-                            </ListItemText>
-                        </MenuItem>
+                            <MenuItem onClick={() => {
+                                setNeedCheckUpdate(false)
+                                api.openLink('https://github.com/Bin-Huang/chatbox/releases')
+                            }}>
+                                <ListItemIcon>
+                                    <IconButton>
+                                        <InfoOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                        <Typography sx={{ opacity: 0.5 }}>
+                                            {t('version')}: {store.version}
+                                        </Typography>
+                                    </Badge>
+                                </ListItemText>
+                            </MenuItem>
+                        </MenuList>
                     </Stack>
                 </Grid>
                 <Grid item xs
