@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Settings, createSession, Session, Message } from './types'
 import * as defaults from './defaults'
-import * as openai from './utils/openai-node'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 import * as api from './api'
@@ -40,7 +39,6 @@ export async function writeSettings(settings: Settings) {
         settings.apiHost = getDefaultSettings().apiHost
     }
     console.log('writeSettings.apiHost', settings.apiHost)
-    openai.setHost(settings.apiHost)
     return api.writeStore('settings', settings)
 }
 

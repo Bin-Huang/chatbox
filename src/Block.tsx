@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef ,useMemo, useCallback } from 'react';
-import { ChatCompletionRequestMessageRoleEnum } from './utils/openai-node/api';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,7 +24,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
 import { useTranslation, getI18n } from 'react-i18next';
-import { Message } from './types';
+import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
 
 // copy button html content
 // join at markdown-it parsed
@@ -160,18 +159,18 @@ function _Block(props: Props) {
                             <Select
                                 value={msg.role}
                                 onChange={(e: SelectChangeEvent) => {
-                                    setMsg && setMsg({ ...msg, role: e.target.value as ChatCompletionRequestMessageRoleEnum })
+                                    setMsg && setMsg({ ...msg, role: e.target.value as OpenAIRoleEnumType })
                                 }}
                                 size='small'
                                 id={msg.id + 'select'}
                             >
-                                <MenuItem value={ChatCompletionRequestMessageRoleEnum.System}>
+                                <MenuItem value={OpenAIRoleEnum.System}>
                                     <Avatar ><SettingsIcon /></Avatar>
                                 </MenuItem>
-                                <MenuItem value={ChatCompletionRequestMessageRoleEnum.User}>
+                                <MenuItem value={OpenAIRoleEnum.User}>
                                     <Avatar><PersonIcon /></Avatar>
                                 </MenuItem>
-                                <MenuItem value={ChatCompletionRequestMessageRoleEnum.Assistant}>
+                                <MenuItem value={OpenAIRoleEnum.Assistant}>
                                     <Avatar><SmartToyIcon /></Avatar>
                                 </MenuItem>
                             </Select>
