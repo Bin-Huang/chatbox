@@ -16,8 +16,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import VoiceOverOffIcon from '@mui/icons-material/VoiceOverOff';
-import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import StopIcon from '@mui/icons-material/Stop';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -83,7 +81,6 @@ export interface Props {
 function _Block(props: Props) {
     const { t } = useTranslation()
     const { msg, setMsg } = props;
-    const { speech } = props;
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
 
