@@ -27,6 +27,7 @@ import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
 import { useTranslation, getI18n } from 'react-i18next';
 import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
+import { Say } from "./Say";
 
 // copy button html content
 // join at markdown-it parsed
@@ -79,17 +80,12 @@ export interface Props {
     copyMsg: () => void
     quoteMsg: () => void
 }
-
-let currentUtterance: SpeechSynthesisUtterance | null = null;
-let currentIndex: string = "-1";
 function _Block(props: Props) {
     const { t } = useTranslation()
     const { msg, setMsg } = props;
     const { speech } = props;
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
-    const [isSpeaking, setIsSpeaking] = useState(false)
-    const synth = window.speechSynthesis;
 
     // for debounce each render when 'props.msg' change
     const renderTimer = useRef<NodeJS.Timeout>();
@@ -120,43 +116,6 @@ function _Block(props: Props) {
     };
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const handleSay = () => {
-        if (currentUtterance && currentIndex !== "-1") {
-            synth.cancel();
-            setIsSpeaking(false);
-            if (msg.id === currentIndex) {
-                currentUtterance = null;
-                currentIndex = "-1";
-                return;
-            }
-        }
-        const txt = msg.content?.trim() || ''
-        if (!txt) return;
-        const utterance = new SpeechSynthesisUtterance(txt);
-        const voices = speechSynthesis.getVoices();
-        // "speech_lang": "Microsoft Yaoyao - Chinese (Simplified, PRC)",
-        // "Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)"
-        let voice = voices.find(voice => voice.name === speech);
-        if (!voice) {
-            voice = voices.find(voice => voice.lang === 'zh-CN');
-        }
-        utterance.voice=voice?voice:null;
-        currentIndex = msg.id;
-        // utterance.lang = voice.lang;
-        // utterance.volume = 1;
-        // utterance.rate = 0.8;
-        // utterance.pitch = 1;
-        synth.speak(utterance);
-        setIsSpeaking(true);
-        currentUtterance = utterance;
-        currentIndex = msg.id;
-        utterance.onend = () => {
-            setIsSpeaking(false);
-            currentUtterance = null;
-            currentIndex = "-1";
-        }
     };
 
     // stop action
@@ -289,22 +248,7 @@ function _Block(props: Props) {
                                                     </IconButton>
                                                 )
                                         }
-                                        {
-                                            isSpeaking
-                                                ?(
-                                                    <IconButton onClick={()=>{
-                                                        handleSay()
-                                                    }} size='large' color='primary'>
-                                                        <VoiceOverOffIcon fontSize='small' />
-                                                    </IconButton>)
-                                                : (
-                                                    <IconButton onClick={()=>{
-                                                        handleSay()
-                                                    }} size='large' color='primary'>
-                                                        <RecordVoiceOverIcon fontSize='small' />
-                                                    </IconButton>
-                                                )
-                                        }
+                                        <Say {...props}/>
                                         <IconButton onClick={handleClick} size='large' color='primary'>
                                             <MoreVertIcon />
                                         </IconButton>

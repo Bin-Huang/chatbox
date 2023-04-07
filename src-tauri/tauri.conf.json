@@ -13,6 +13,9 @@
     },
     "tauri": {
         "allowlist": {
+            "dialog": {
+                "save": true
+            },
             "shell": {
                 "open": true
             },
