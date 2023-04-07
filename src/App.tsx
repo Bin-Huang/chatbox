@@ -28,7 +28,8 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import {
     DndContext,
     KeyboardSensor,
-    PointerSensor,
+    MouseSensor,
+    TouchSensor,
     closestCenter,
     useSensor,
     useSensors,
@@ -39,13 +40,24 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableItem } from './SortableItem';
 
 function Main() {
     const { t } = useTranslation()
     const store = useStore()
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
+            },
+        }),
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                distance: 10,
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
@@ -298,7 +310,12 @@ function Main() {
                             ref={sessionListRef}
                         // dense
                         >
-                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} >
+                            <DndContext
+                                modifiers={[restrictToVerticalAxis]}
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
                                 <SortableContext items={reversedSessions} strategy={verticalListSortingStrategy}>
                                 {
                                     reversedSessions.map((session, ix) => (
