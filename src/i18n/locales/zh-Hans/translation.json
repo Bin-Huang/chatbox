@@ -2,6 +2,8 @@
   "settings": "设置",
   "theme": "主题",
   "openai api key": "OpenAI API 密钥",
+  "speech language": "语音语言",
+  "save audio to file": "保存声音文件",
   "show word count": "显示字数统计",
   "show estimated token count": "显示预估 Token 字数统计",
   "proxy": "代理",

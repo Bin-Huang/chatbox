@@ -34,6 +34,7 @@ interface Props {
 export default function SettingWindow(props: Props) {
     const { t } = useTranslation()
     const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings);
+    const [vlist, setVoices] = React.useState<any[]>([]);
     const handleRepliesTokensSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
         if (newValue === 8192) {
             setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
@@ -98,6 +99,19 @@ export default function SettingWindow(props: Props) {
         setMode(newMode);
     }
 
+    React.useEffect(() => {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+
+            const voices = speechSynthesis.getVoices();
+            voices.forEach((voice) => {
+                console.log(voice.name); // 输出语音的名称
+            })
+            // console.log(voices);
+            setVoices(voices);
+        });
+        setVoices(speechSynthesis.getVoices());
+    },[]);
+
     // @ts-ignore
     // @ts-ignore
     return (
@@ -126,6 +140,22 @@ export default function SettingWindow(props: Props) {
                         {languages.map((language) => (
                             <MenuItem key={language} value={language}>
                                 {languageMap[language]}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth variant="outlined" margin="dense">
+                    <InputLabel htmlFor="speech-select">{t('speech language')}</InputLabel>
+                    <Select
+                        label="speech"
+                        id="speech-select"
+                        value={settingsEdit.speech}
+                        onChange={(e) => {
+                            setSettingsEdit({ ...settingsEdit, speech: e.target.value });
+                        }}>
+                        {vlist.map((voice) => (
+                            <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+                                {voice.name} {': '}
                             </MenuItem>
                         ))}
                     </Select>

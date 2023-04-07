@@ -2,6 +2,8 @@
   "settings": "設定",
   "theme": "主題",
   "openai api key": "OpenAI API 金鑰",
+  "speech language": "言語語言",
+  "save audio to file": "保存聲音檔案",
   "show word count": "顯示字數",
   "show estimated token count": "顯示預估 Token 數",
   "proxy": "代理",

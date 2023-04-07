@@ -25,6 +25,7 @@ import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
 import { useTranslation, getI18n } from 'react-i18next';
 import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
+import { Say } from "./Say";
 
 // copy button html content
 // join at markdown-it parsed
@@ -70,13 +71,13 @@ export interface Props {
     showTokenCount: boolean
     showModelName: boolean
     modelName: string
+    speech:string
     setMsg: (msg: Message) => void
     delMsg: () => void
     refreshMsg: () => void
     copyMsg: () => void
     quoteMsg: () => void
 }
-
 function _Block(props: Props) {
     const { t } = useTranslation()
     const { msg, setMsg } = props;
@@ -244,6 +245,7 @@ function _Block(props: Props) {
                                                     </IconButton>
                                                 )
                                         }
+                                        <Say {...props}/>
                                         <IconButton onClick={handleClick} size='large' color='primary'>
                                             <MoreVertIcon />
                                         </IconButton>
@@ -347,5 +349,5 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Block(props: Props) {
     return useMemo(() => {
         return <_Block {...props} />
-    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName, props.modelName])
+    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName, props.modelName, props.speech])
 }
