@@ -50,7 +50,7 @@ export async function applyPlugin(
   userMsg: Message
 ): Promise<string> {
   try {
-    const response = await fetch(`http://127.0.0.1:8080/sub/query`, {
+    const response = await fetch(`${plugin.api.url}/sub/query`, {
       method: 'POST',
       headers: {
         'Authorization': `${plugin.auth.authorization_type} ${plugin.auth.authorization_token}`,
@@ -60,7 +60,7 @@ export async function applyPlugin(
         "queries": [
           {
             "query": userMsg.content,
-            "top_k": 3
+            "top_k": 5
           }
         ]
       }),

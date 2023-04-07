@@ -39,7 +39,28 @@ export const defaultPlugins: Plugin[] = [
         },
         "api": {
             "type": "openapi",
-            "url": "http://127.0.0.1:8080/.well-known/openapi.yaml",
+            "url": "http://127.0.0.1:8080",
+            "has_user_authentication": false
+        },
+        "logo_url": "https://your-app-url.com/.well-known/logo.png",
+        "contact_email": "hello@contact.com",
+        "legal_info_url": "http://example.com/legal-info"
+    },
+    {
+        "id": "FBLG-retrieval-plugin",
+        "schema_version": "v1",
+        "name_for_model": "FBLG-retrieval",
+        "name_for_human": "FBLG Retrieval Plugin",
+        "description_for_model": "Plugin for searching through the user's documents (such as files, emails, and more) to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be found in their personal information.",
+        "description_for_human": "Search through your documents.",
+        "auth": {
+            "type": "user_http",
+            "authorization_type": "Bearer",
+            "authorization_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik93ZW4gV3UiLCJpYXQiOjE1MTYyMzkwMjJ9.6Wai0ClBOxd40SUG0kaK7gn41N6ZVt4VM54Buzc5hUE",
+        },
+        "api": {
+            "type": "openapi",
+            "url": "http://127.0.0.1:8081",
             "has_user_authentication": false
         },
         "logo_url": "https://your-app-url.com/.well-known/logo.png",
