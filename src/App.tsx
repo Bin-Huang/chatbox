@@ -134,6 +134,9 @@ function Main() {
 
     const [sessionClean, setSessionClean] = React.useState<Session | null>(null);
 
+    const editCurrentSession = () => {
+        setConfigureChatConfig(store?.currentSession)
+    };
     const generateName = async (session: Session) => {
         client.replay(
             store.settings.openaiKey,
@@ -256,12 +259,14 @@ function Main() {
 
     return (
         <Box sx={{ height: '100vh' }}>
-            <Grid container spacing={2} sx={{
+            <Grid container sx={{
+                flexWrap: 'nowrap',
                 height: '100%',
             }}>
-                <Grid item xs={3}
+                <Grid item
                     sx={{
                         height: '100%',
+                        maxWidth: '210px',
                     }}
                 >
                     <Stack
@@ -285,8 +290,6 @@ function Main() {
                             </Typography>
                         </Toolbar>
 
-                        <Divider />
-
                         <MenuList
                             sx={{
                                 width: '100%',
@@ -305,7 +308,7 @@ function Main() {
                             }
                             component="div"
                             ref={sessionListRef}
-                            // dense
+                        // dense
                         >
                             {
                                 [...store.chatSessions].reverse().map((session, ix) => (
@@ -330,53 +333,54 @@ function Main() {
 
                         <Divider />
 
-                        <MenuItem onClick={handleCreateNewSession} >
-                            <ListItemIcon>
-                                <IconButton><AddIcon fontSize="small" /></IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t('new chat')}
-                            </ListItemText>
-                            <Typography variant="body2" color="text.secondary">
-                                {/* ⌘N */}
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            setOpenSettingWindow(true)
-                        }}
-                        >
-                            <ListItemIcon>
-                                <IconButton><SettingsIcon fontSize="small" /></IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t('settings')}
-                            </ListItemText>
-                            <Typography variant="body2" color="text.secondary">
-                                {/* ⌘N */}
-                            </Typography>
-                        </MenuItem>
+                        <MenuList>
+                            <MenuItem onClick={handleCreateNewSession} >
+                                <ListItemIcon>
+                                    <IconButton><AddIcon fontSize="small" /></IconButton>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {t('new chat')}
+                                </ListItemText>
+                                <Typography variant="body2" color="text.secondary">
+                                    {/* ⌘N */}
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={() => {
+                                setOpenSettingWindow(true)
+                            }}
+                            >
+                                <ListItemIcon>
+                                    <IconButton><SettingsIcon fontSize="small" /></IconButton>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {t('settings')}
+                                </ListItemText>
+                                <Typography variant="body2" color="text.secondary">
+                                    {/* ⌘N */}
+                                </Typography>
+                            </MenuItem>
 
-                        <MenuItem onClick={() => {
-                            setNeedCheckUpdate(false)
-                            api.openLink('https://github.com/Bin-Huang/chatbox/releases')
-                        }}>
-                            <ListItemIcon>
-                                <IconButton>
-                                    <InfoOutlinedIcon fontSize="small" />
-                                </IconButton>
-                            </ListItemIcon>
-                            <ListItemText>
-                                <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
-                                    <Typography sx={{ opacity: 0.5 }}>
-                                        {t('version')}: {store.version}
-                                    </Typography>
-                                </Badge>
-                            </ListItemText>
-                        </MenuItem>
+                            <MenuItem onClick={() => {
+                                setNeedCheckUpdate(false)
+                                api.openLink('https://github.com/Bin-Huang/chatbox/releases')
+                            }}>
+                                <ListItemIcon>
+                                    <IconButton>
+                                        <InfoOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                        <Typography sx={{ opacity: 0.5 }}>
+                                            {t('version')}: {store.version}
+                                        </Typography>
+                                    </Badge>
+                                </ListItemText>
+                            </MenuItem>
+                        </MenuList>
                     </Stack>
-
                 </Grid>
-                <Grid item xs={9}
+                <Grid item xs
                     sx={{
                         height: '100%',
                     }}
@@ -384,29 +388,36 @@ function Main() {
                     <Stack sx={{
                         height: '100%',
                         padding: '20px 0',
-                    }} spacing={2}>
-                        <Toolbar variant="dense">
-                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                                <ChatBubbleOutlineOutlinedIcon />
-                            </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
-                                {store.currentSession.name}
-                            </Typography>
-                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
-                                onClick={() => setSessionClean(store.currentSession)}
-                            >
-                                <CleaningServicesIcon />
-                            </IconButton>
-                        </Toolbar>
-                        <Divider />
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                    }} >
+                        <Box>
+                            <Toolbar>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                                    <ChatBubbleOutlineOutlinedIcon />
+                                </IconButton>
+                                <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
+                                    <span onClick={()=>{editCurrentSession()}} style={{cursor: 'pointer'}}>
+                                        {store.currentSession.name}
+                                    </span>
+                                </Typography>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                                    onClick={() => setSessionClean(store.currentSession)}
+                                >
+                                    <CleaningServicesIcon />
+                                </IconButton>
+                            </Toolbar>
+                            <Divider />
+                        </Box>
                         <List
                             className='scroll'
                             sx={{
                                 width: '100%',
-                                height: '80%',
                                 bgcolor: 'background.paper',
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },
+                                flexGrow: 2,
                             }}
                             component="div"
                             ref={messageListRef}
@@ -459,7 +470,7 @@ function Main() {
                                 ))
                             }
                         </List>
-                        <Box>
+                        <Box sx={{ padding: '20px 0' }}>
                             <MessageInput
                                 messageInput={messageInput}
                                 setMessageInput={setMessageInput}
@@ -513,6 +524,10 @@ function Main() {
                         <CleanWidnow open={sessionClean !== null}
                             session={sessionClean}
                             save={(session) => {
+                                sessionClean.messages.forEach((msg) => {
+                                    msg?.cancel?.();
+                                });
+
                                 store.updateChatSession(session)
                                 setSessionClean(null)
                             }}

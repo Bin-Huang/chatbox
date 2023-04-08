@@ -29,9 +29,11 @@ export interface Props {
 export default function SessionItem(props: Props) {
     const { t } = useTranslation()
     const { session, selected, switchMe, deleteMe, copyMe, editMe } = props
+    const [hovering, setHovering] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation()
         event.preventDefault()
         setAnchorEl(event.currentTarget);
     };
@@ -44,6 +46,15 @@ export default function SessionItem(props: Props) {
             key={session.id}
             selected={selected}
             onClick={() => switchMe()}
+            onMouseEnter={() => {
+                setHovering(true)
+            }}
+            onMouseOver={() => {
+                setHovering(true)
+            }}
+            onMouseLeave={() => {
+                setHovering(false)
+            }}
         >
             <ListItemIcon>
                 <IconButton><ChatBubbleOutlineOutlinedIcon fontSize="small" /></IconButton>
@@ -53,9 +64,15 @@ export default function SessionItem(props: Props) {
                     {session.name}{(session.pluginIDs && session.pluginIDs.length > 0) ? "^": ""}
                 </Typography>
             </ListItemText>
-            <IconButton onClick={handleClick}>
-                <MoreHorizOutlinedIcon />
-            </IconButton>
+            {
+                <IconButton onClick={handleClick} sx={{color: 'primary.main'}} >
+                    {
+                        hovering && (
+                            <MoreHorizOutlinedIcon fontSize="small" />
+                        )
+                    }
+                </IconButton>
+            }
             <StyledMenu
                 MenuListProps={{
                     'aria-labelledby': 'long-button',

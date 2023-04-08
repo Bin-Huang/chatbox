@@ -6,7 +6,7 @@
     English | <a href="./README-CN.md">中文介绍</a>
 </p>
 <p align="center">
-    <em>A desktop application for <b>ChatGPT API (OpenAI API)</b>, also a prompt debugging and management tool</em>
+    <em>the Ultimate Copilot on Your Desktop. Chatbox is a desktop app for GPT-4 / GPT-3.5 (OpenAI API) that supports Windows, Mac & Linux.</em>
 </p>
 
 
@@ -43,15 +43,23 @@
 
 ## Download
 
-Supported Platforms:
+**Download installers**:
+
+[>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
+
+**Supported Platforms**:
 
 - **Windows**: Please download `.msi` installation package
 - **Mac**: Please download `.dmg` (recommended) or `.tar` file, already supporting x64, arm64 (please download x64 version for now, it is compatible)
 - **Linux**: Please download `.AppImage` (recommended) or `.deb` file
 
-Download installers:
+**Download from package manager**:
 
-[>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
+[aur](https://aur.archlinux.org/packages/chatbox-bin)
+
+```
+paru -S chatbox-bin
+```
 
 ## Why Use Chatbox?
 
@@ -72,8 +80,8 @@ Download installers:
 - [x] message token estimating
 - [x] GPT4
 - [x] i18n
-- [ ] Copy button for code blocks
-- [ ] Stop button for AI message generation
+- [x] Copy button for code blocks
+- [x] Stop button for AI message generation
 - [ ] Improved prompt settings
 - [ ] Prompt Library
 - [ ] Talk with files

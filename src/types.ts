@@ -2,7 +2,7 @@ import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } fr
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 
-export type Message = ChatCompletionRequestMessage & {
+export type Message = OpenAIMessage & {
     id: string;
     cancel?: () => void;
     tags?: string[];
@@ -46,7 +46,7 @@ export interface Session {
     pluginIDs?: string[]
 }
 
-export function createMessage(role: ChatCompletionRequestMessageRoleEnum = ChatCompletionRequestMessageRoleEnum.User, content: string = ''): Message {
+export function createMessage(role: OpenAIRoleEnumType = OpenAIRoleEnum.User, content: string = ''): Message {
     return {
         id: uuidv4(),
         content: content,
@@ -75,4 +75,18 @@ export interface Settings {
     showModelName?: boolean
     theme: ThemeMode
     language: string
+}
+
+export const OpenAIRoleEnum = {
+    System: 'system',
+    User: 'user',
+    Assistant: 'assistant'
+} as const;
+
+export type OpenAIRoleEnumType = typeof OpenAIRoleEnum[keyof typeof OpenAIRoleEnum]
+
+export interface OpenAIMessage {
+    'role': OpenAIRoleEnumType
+    'content': string;
+    'name'?: string;
 }

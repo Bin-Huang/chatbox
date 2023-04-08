@@ -43,15 +43,24 @@
 
 ## 下载
 
-支持系统：
+**下载安装包**：
+
+[>>点击这里查看可供下载的安装包<<](https://github.com/Bin-Huang/chatbox/releases)
+
+
+**支持系统**：
 
 - **Windows**: 请下载 `.msi` 安装包文件
 - **Mac**: 请下载 `.dmg`（推荐）或 `.tar` 文件，已经支持 x64, arm64(暂时请下载 x64 版本，已兼容)
 - **Linux**: 请下载 `.AppImage`（推荐）或 `.deb` 文件
 
-下载安装包：
+**从包管理器下载**:
 
-[>>点击这里查看可供下载的安装包<<](https://github.com/Bin-Huang/chatbox/releases)
+[aur](https://aur.archlinux.org/packages/chatbox-bin)
+
+```
+paru -S chatbox-bin
+```
 
 ## 为什么需要 ChatBox？
 
@@ -72,8 +81,8 @@
 - [x] 消息的 token 估算
 - [x] GPT4 的支持
 - [x] 中文（简体、繁体）
-- [ ] 代码块的复制按钮
-- [ ] 停止生成的按钮
+- [x] 代码块的复制按钮
+- [x] 停止生成的按钮
 - [ ] 更好的 prompt 设置
 - [ ] Prompt Library
 - [ ] 可以发送文件，谈论文件

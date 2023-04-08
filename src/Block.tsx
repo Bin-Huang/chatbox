@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef ,useMemo, useCallback } from 'react';
-import { ChatCompletionRequestMessageRoleEnum } from './utils/openai-node/api';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-import { Button, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps } from '@mui/material';
+import { IconButton, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -25,7 +24,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
 import { useTranslation, getI18n } from 'react-i18next';
-import { Message } from './types';
+import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
 
 // copy button html content
 // join at markdown-it parsed
@@ -53,7 +52,7 @@ const md = new MarkdownIt({
         return [
             '<div class="code-block-wrapper">',
             getCodeCopyButtonHTML(),
-            '<pre class="hljs" style="max-width: 50vw; overflow: auto">',
+            '<pre class="hljs code-block">',
             `<code>${content}</code>`,
             '</pre>',
             '</div>',
@@ -151,7 +150,10 @@ function _Block(props: Props) {
             sx={{
                 padding: '22px 28px',
             }}
-            className={mayRendering ? 'rendering' : 'render-done'}
+            className={[
+                mayRendering ? 'rendering' : 'render-done',
+                msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
+            ].join(' ')}
         >
             <Grid container spacing={2}>
                 <Grid item>
@@ -160,18 +162,18 @@ function _Block(props: Props) {
                             <Select
                                 value={msg.role}
                                 onChange={(e: SelectChangeEvent) => {
-                                    setMsg && setMsg({ ...msg, role: e.target.value as ChatCompletionRequestMessageRoleEnum })
+                                    setMsg && setMsg({ ...msg, role: e.target.value as OpenAIRoleEnumType })
                                 }}
                                 size='small'
                                 id={msg.id + 'select'}
                             >
-                                <MenuItem value={ChatCompletionRequestMessageRoleEnum.System}>
+                                <MenuItem value={OpenAIRoleEnum.System}>
                                     <Avatar ><SettingsIcon /></Avatar>
                                 </MenuItem>
-                                <MenuItem value={ChatCompletionRequestMessageRoleEnum.User}>
+                                <MenuItem value={OpenAIRoleEnum.User}>
                                     <Avatar><PersonIcon /></Avatar>
                                 </MenuItem>
-                                <MenuItem value={ChatCompletionRequestMessageRoleEnum.Assistant}>
+                                <MenuItem value={OpenAIRoleEnum.Assistant}>
                                     <Avatar><SmartToyIcon /></Avatar>
                                 </MenuItem>
                             </Select>
@@ -204,24 +206,27 @@ function _Block(props: Props) {
                                     />
                                 ) : (
                                     <Box
+                                        sx={{
+                                            wordBreak: 'break-word',
+                                        }}
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
                                     />
                                 )
                             }
-                            <Typography variant="body2" sx={{opacity: 0.5}} >
+                            <Typography variant="body2" sx={{ opacity: 0.5 }} >
                                 {
                                     tips.join(', ')
                                 }
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={1} sx={{ minHeight: '90px' }}>
                         {
                             isEditing ? (
                                 <>
-                                <Button onClick={() => setIsEditing(false)}>
-                                    <CheckIcon fontSize='small' />
-                                </Button>
+                                    <IconButton onClick={() => setIsEditing(false)} size='large' color='primary'>
+                                        <CheckIcon />
+                                    </IconButton>
                                 </>
                             ) : (
                                 isHovering && (
@@ -229,19 +234,19 @@ function _Block(props: Props) {
                                         {
                                             mayRendering
                                                 ? (
-                                                    <Button onClick={onStop}>
-                                                        <StopIcon fontSize='small' />
-                                                    </Button>
+                                                    <IconButton onClick={onStop} size='large' color='primary'>
+                                                        <StopIcon />
+                                                    </IconButton>
                                                 )
                                                 : (
-                                                    <Button onClick={onRefresh}>
-                                                        <RefreshIcon fontSize='small' />
-                                                    </Button>
+                                                    <IconButton onClick={onRefresh} size='large' color='primary'>
+                                                        <RefreshIcon />
+                                                    </IconButton>
                                                 )
                                         }
-                                        <Button onClick={handleClick}>
+                                        <IconButton onClick={handleClick} size='large' color='primary'>
                                             <MoreVertIcon />
-                                        </Button>
+                                        </IconButton>
                                         <StyledMenu
                                             MenuListProps={{
                                                 'aria-labelledby': 'demo-customized-button',
