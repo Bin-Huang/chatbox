@@ -35,6 +35,7 @@
   "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating": "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating",
   "version": "Version",
   "rename": "Rename",
+  "edit session": "Edit Session",
   "name": "Name",
   "clean": "Clean",
   "this action will permanently delete all non-system messages in": "This action will permanently delete all non-system messages in",

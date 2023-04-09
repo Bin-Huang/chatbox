@@ -23,6 +23,7 @@ import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
+import { applyPlugins } from './pluginTasks';
 
 const { useEffect, useState } = React
 
@@ -157,6 +158,55 @@ function Main() {
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
         messageScrollRef.current = { msgId: targetMsg.id, smooth: false }
+        await client.replay(
+            store.settings.openaiKey,
+            store.settings.apiHost,
+            store.settings.maxContextSize,
+            store.settings.maxTokens,
+            session.model,
+            promptMsgs,
+            ({ text, cancel }) => {
+                for (let i = 0; i < session.messages.length; i++) {
+                    if (session.messages[i].id === targetMsg.id) {
+                        session.messages[i] = {
+                            ...session.messages[i],
+                            content: text,
+                            cancel,
+                        }
+
+                        break;
+                    }
+                }
+                store.updateChatSession(session)
+            },
+            (err) => {
+                for (let i = 0; i < session.messages.length; i++) {
+                    if (session.messages[i].id === targetMsg.id) {
+                        session.messages[i] = {
+                            ...session.messages[i],
+                            content: t('api request failed:') + ' \n```\n' + err.message + '\n```',
+                        }
+                        break
+                    }
+                }
+                store.updateChatSession(session)
+            }
+        )
+        messageScrollRef.current = null
+    }
+
+    const generateWithPlugins = async (session: Session, pluginIDs: string[], promptMsgs: Message[], targetMsg: Message) => {
+        messageScrollRef.current = { msgId: targetMsg.id, smooth: false }
+
+        targetMsg.content = "正在收集信息..."
+
+        let pluginMsg = await applyPlugins(store.plugins, pluginIDs, promptMsgs[promptMsgs.length - 1])
+        if (pluginMsg) {
+            promptMsgs = promptMsgs.slice(0, promptMsgs.length - 2).concat(pluginMsg, promptMsgs[promptMsgs.length - 1])
+        }
+
+        targetMsg.content = "正在生成结果..."
+
         await client.replay(
             store.settings.openaiKey,
             store.settings.apiHost,
@@ -430,7 +480,13 @@ function Main() {
                                         const newAssistantMsg = createMessage('assistant', '....')
                                         store.currentSession.messages = [...store.currentSession.messages, newUserMsg, newAssistantMsg]
                                         store.updateChatSession(store.currentSession)
-                                        generate(store.currentSession, promptsMsgs, newAssistantMsg)
+
+                                        if (store.currentSession.pluginIDs && store.currentSession.pluginIDs.length>0) {
+                                            generateWithPlugins(store.currentSession, store.currentSession.pluginIDs, promptsMsgs, newAssistantMsg)
+                                        } else {
+                                            generate(store.currentSession, promptsMsgs, newAssistantMsg)
+                                        }
+                                        
                                         messageScrollRef.current = { msgId: newAssistantMsg.id, smooth: true }
                                     } else {
                                         store.currentSession.messages = [...store.currentSession.messages, newUserMsg]
@@ -456,7 +512,7 @@ function Main() {
                         <ChatConfigWindow open={configureChatConfig !== null}
                             session={configureChatConfig}
                             save={(session) => {
-                                store.updateChatSession(session)
+                                store.updateChatSessionPlugins(session)
                                 setConfigureChatConfig(null)
                             }}
                             close={() => setConfigureChatConfig(null)}

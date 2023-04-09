@@ -4,13 +4,45 @@ import { ThemeMode } from './theme';
 export type Message = OpenAIMessage & {
     id: string;
     cancel?: () => void;
+    tags?: string[];
 }
 
-export interface Session{
+export function messageHasTag(msg: Message, tag: string = "Untitled"): boolean {
+    if (!msg.tags) {
+        return false
+    }
+
+    return msg.tags.indexOf(tag) > -1
+}
+
+export interface Plugin {
+    id: string;
+    schema_version: string;
+    name_for_model: string;
+    name_for_human: string;
+    description_for_model: string;
+    description_for_human: string;
+    auth: {
+        type: string;
+        authorization_type: string;
+        authorization_token?: string;
+    };
+    api: {
+        type: string;
+        url: string;
+        has_user_authentication: boolean;
+    };
+    logo_url: string;
+    contact_email: string;
+    legal_info_url: string;
+}
+
+export interface Session {
     id: string
     name: string
     messages: Message[]
     model: string
+    pluginIDs?: string[]
 }
 
 export function createMessage(role: OpenAIRoleEnumType = OpenAIRoleEnum.User, content: string = ''): Message {
@@ -20,6 +52,7 @@ export function createMessage(role: OpenAIRoleEnumType = OpenAIRoleEnum.User, co
         role: role,
     }
 }
+
 
 export function createSession(modelName: string, name: string = "Untitled"): Session {
     return {
