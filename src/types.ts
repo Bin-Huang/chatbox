@@ -1,4 +1,3 @@
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from './utils/openai-node/api'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 
