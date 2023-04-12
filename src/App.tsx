@@ -163,6 +163,7 @@ function Main() {
             store.settings.maxContextSize,
             store.settings.maxTokens,
             session.model,
+            // store.settings.model,
             promptMsgs,
             ({ text, cancel }) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -171,8 +172,8 @@ function Main() {
                             ...session.messages[i],
                             content: text,
                             cancel,
+                            generating: true
                         }
-
                         break;
                     }
                 }
@@ -184,6 +185,7 @@ function Main() {
                         session.messages[i] = {
                             ...session.messages[i],
                             content: t('api request failed:') + ' \n```\n' + err.message + '\n```',
+                            generating: false
                         }
                         break
                     }
@@ -191,6 +193,17 @@ function Main() {
                 store.updateChatSession(session)
             }
         )
+        for (let i = 0; i < session.messages.length; i++) {
+            if (session.messages[i].id === targetMsg.id) {
+                session.messages[i] = {
+                    ...session.messages[i],
+                    generating: false
+                }
+                break
+            }
+        }
+        store.updateChatSession(session)
+
         messageScrollRef.current = null
     }
 
@@ -348,7 +361,7 @@ function Main() {
                                     <ChatBubbleOutlineOutlinedIcon />
                                 </IconButton>
                                 <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
-                                    <span onClick={()=>{editCurrentSession()}} style={{cursor: 'pointer'}}>
+                                    <span onClick={() => { editCurrentSession() }} style={{ cursor: 'pointer' }}>
                                         {store.currentSession.name}
                                     </span>
                                 </Typography>

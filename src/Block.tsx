@@ -86,28 +86,6 @@ function _Block(props: Props) {
     const [isHovering, setIsHovering] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
 
-    // for debounce each render when 'props.msg' change
-    const renderTimer = useRef<NodeJS.Timeout>();
-    // rendering state
-    // * its not real render done
-    // * if need accurate state, should change `Message` interface
-    // * and after request stream done, added `done` state to `Message`
-    const [mayRendering, setMayRendering] = useState(false);
-
-    // run at `props.msg` change
-    // * why need this?
-    // * this comp be rendered when state or props change
-    // * copy action will fresh, because comp be rerender
-    // * so this effect to control `copy button` shown at render stop
-    useEffect(() => {
-        clearTimeout(renderTimer.current);
-        setMayRendering(true);
-
-        renderTimer.current = setTimeout(() => {
-            setMayRendering(false);
-        }, 360);
-    }, [msg]);
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -154,7 +132,7 @@ function _Block(props: Props) {
                 padding: '1rem 28px 0.6rem 28px',
             }}
             className={[
-                mayRendering ? 'rendering' : 'render-done',
+                msg.generating ? 'rendering' : 'render-done',
                 msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
             ].join(' ')}
         >
@@ -232,10 +210,10 @@ function _Block(props: Props) {
                             </Typography>
 
                             {
-                                (isHovering && !isEditing) || mayRendering ? (
+                                (isHovering && !isEditing) || msg.generating ? (
                                     <ButtonGroup variant="contained" aria-label="outlined primary button group">
                                         {
-                                            mayRendering
+                                            msg.generating
                                                 ? (
                                                     <Tooltip title={t('stop generating')} placement='top' >
                                                         <IconButton aria-label="edit" color='warning' onClick={onStop} >
