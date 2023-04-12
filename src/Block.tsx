@@ -151,13 +151,20 @@ function _Block(props: Props) {
                 setIsHovering(false)
             }}
             sx={{
-                padding: '22px 28px',
+                padding: '1rem 28px 0.6rem 28px',
             }}
             className={[
                 mayRendering ? 'rendering' : 'render-done',
                 msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
             ].join(' ')}
         >
+            <style>
+                {`
+                    .msg-content p {
+                        margin: 0.6rem 0 0.4rem 0;
+                    }
+                `}
+            </style>
             <Grid container spacing={2}>
                 <Grid item >
                     {
@@ -181,7 +188,7 @@ function _Block(props: Props) {
                                 </MenuItem>
                             </Select>
                         ) : (
-                            <Box sx={{ marginTop: '10px' }}>
+                            <Box sx={{ marginTop: '4px' }}>
                                 {
                                     {
                                         assistant: <Avatar><SmartToyIcon /></Avatar>,
@@ -213,6 +220,7 @@ function _Block(props: Props) {
                                         sx={{
                                             wordBreak: 'break-word',
                                         }}
+                                        className='msg-content'
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
                                     />
                                 )
@@ -294,8 +302,7 @@ function _Block(props: Props) {
                                         </StyledMenu>
                                     </ButtonGroup>
                                 ) : (
-                                    null
-                                    // <Box sx={{ height: '33px' }}></Box>
+                                    <Box sx={{ height: '33px' }}></Box>
                                 )
                             }
                         </Grid>
