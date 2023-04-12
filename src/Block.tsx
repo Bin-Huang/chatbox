@@ -166,7 +166,7 @@ function _Block(props: Props) {
                                 </MenuItem>
                             </Select>
                         ) : (
-                            <Box sx={{ marginTop: '4px' }}>
+                            <Box sx={{ marginTop: '8px' }}>
                                 {
                                     {
                                         assistant: <Avatar><SmartToyIcon /></Avatar>,
