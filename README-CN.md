@@ -71,7 +71,7 @@ paru -S chatbox-bin
 ## ChatBox 和 (OpenAI API) 的关系
 
 - ChatBox 仅提供了UI界面帮助你更好的使用 ChatGPT API (OpenAI API). 
-- 任何和 ChatGPT API (OpenAI API) 相关的问题，请移步 [platform penai](https://platform.openai.com/)
+- 任何和 ChatGPT API (OpenAI API) 相关的问题，请移步 [platform openai](https://platform.openai.com/)
 
 ## Roadmap
 
