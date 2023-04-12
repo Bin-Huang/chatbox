@@ -2,7 +2,10 @@ import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-import { IconButton, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps } from '@mui/material';
+import {
+    IconButton, Divider, ListItem, Typography, Grid, TextField, Menu, MenuProps, Tooltip,
+    ButtonGroup,
+} from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -15,9 +18,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import { styled, alpha } from '@mui/material/styles';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import StopIcon from '@mui/icons-material/Stop';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import * as wordCount from './utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
@@ -25,6 +26,8 @@ import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes';
 import { useTranslation, getI18n } from 'react-i18next';
 import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
+import ReplayIcon from '@mui/icons-material/Replay';
+import CopyAllIcon from '@mui/icons-material/CopyAll';
 
 // copy button html content
 // join at markdown-it parsed
@@ -89,7 +92,7 @@ function _Block(props: Props) {
     // * its not real render done
     // * if need accurate state, should change `Message` interface
     // * and after request stream done, added `done` state to `Message`
-    const [mayRendering, setMayRendering] = useState(true);
+    const [mayRendering, setMayRendering] = useState(false);
 
     // run at `props.msg` change
     // * why need this?
@@ -156,7 +159,7 @@ function _Block(props: Props) {
             ].join(' ')}
         >
             <Grid container spacing={2}>
-                <Grid item>
+                <Grid item >
                     {
                         isEditing ? (
                             <Select
@@ -178,20 +181,21 @@ function _Block(props: Props) {
                                 </MenuItem>
                             </Select>
                         ) : (
-                            {
-                                assistant: <Avatar><SmartToyIcon /></Avatar>,
-                                user: <Avatar><PersonIcon /></Avatar>,
-                                system: <Avatar><SettingsIcon /></Avatar>
-                            }[msg.role]
+                            <Box sx={{ marginTop: '10px' }}>
+                                {
+                                    {
+                                        assistant: <Avatar><SmartToyIcon /></Avatar>,
+                                        user: <Avatar><PersonIcon /></Avatar>,
+                                        system: <Avatar><SettingsIcon /></Avatar>
+                                    }[msg.role]
+                                }
+                            </Box>
                         )
                     }
                 </Grid>
                 <Grid item xs={11} sm container>
                     <Grid item xs container direction="column" spacing={2}>
                         <Grid item xs>
-                            <Typography variant="overline" component="div">
-                                {t(msg.role)}
-                            </Typography>
                             {
                                 isEditing ? (
                                     <TextField
@@ -218,34 +222,46 @@ function _Block(props: Props) {
                                     tips.join(', ')
                                 }
                             </Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={1} sx={{ minHeight: '90px' }}>
-                        {
-                            isEditing ? (
-                                <>
-                                    <IconButton onClick={() => setIsEditing(false)} size='large' color='primary'>
-                                        <CheckIcon />
-                                    </IconButton>
-                                </>
-                            ) : (
-                                isHovering && (
-                                    <>
+
+                            {
+                                (isHovering && !isEditing) || mayRendering ? (
+                                    <ButtonGroup variant="contained" aria-label="outlined primary button group">
                                         {
                                             mayRendering
                                                 ? (
-                                                    <IconButton onClick={onStop} size='large' color='primary'>
-                                                        <StopIcon />
-                                                    </IconButton>
+                                                    <Tooltip title={t('stop generating')} placement='top' >
+                                                        <IconButton aria-label="edit" color='warning' onClick={onStop} >
+                                                            <StopIcon fontSize='small' />
+                                                        </IconButton>
+                                                    </Tooltip>
                                                 )
                                                 : (
-                                                    <IconButton onClick={onRefresh} size='large' color='primary'>
-                                                        <RefreshIcon />
-                                                    </IconButton>
+                                                    <Tooltip title={t("regenerate")} placement='top' >
+                                                        <IconButton aria-label="edit" color='primary' onClick={onRefresh} >
+                                                            <ReplayIcon fontSize='small' />
+                                                        </IconButton>
+                                                    </Tooltip>
                                                 )
                                         }
-                                        <IconButton onClick={handleClick} size='large' color='primary'>
-                                            <MoreVertIcon />
+                                        <Tooltip title={t('edit')} placement='top' >
+                                            <IconButton aria-label="edit" color='primary' onClick={() => {
+                                                setIsHovering(false)
+                                                setAnchorEl(null)
+                                                setIsEditing(true)
+                                            }} >
+                                                <EditIcon fontSize='small' />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={t('copy')} placement='top'>
+                                            <IconButton aria-label="copy" color='primary' onClick={() => {
+                                                props.copyMsg()
+                                                setAnchorEl(null)
+                                            }} >
+                                                <CopyAllIcon fontSize='small' />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <IconButton onClick={handleClick} color='primary'>
+                                            <MoreVertIcon fontSize='small' />
                                         </IconButton>
                                         <StyledMenu
                                             MenuListProps={{
@@ -256,28 +272,12 @@ function _Block(props: Props) {
                                             onClose={handleClose}
                                             key={msg.id + 'menu'}
                                         >
-                                            <MenuItem key={msg.id + 'copy'} onClick={() => {
-                                                props.copyMsg()
-                                                setAnchorEl(null)
-                                            }} disableRipple>
-                                                <ContentCopyIcon />
-                                                {t('copy')}
-                                            </MenuItem>
-
-                                            <MenuItem key={msg.id + 'edit'} onClick={() => {
-                                                setIsHovering(false)
-                                                setAnchorEl(null)
-                                                setIsEditing(true)
-                                            }} disableRipple>
-                                                <EditIcon />
-                                                {t('edit')}
-                                            </MenuItem>
                                             <MenuItem key={msg.id + 'quote'} onClick={() => {
                                                 setIsHovering(false)
                                                 setAnchorEl(null)
                                                 props.quoteMsg()
-                                            }} disableRipple>
-                                                <FormatQuoteIcon />
+                                            }} disableRipple >
+                                                <FormatQuoteIcon fontSize='small' />
                                                 {t('quote')}
                                             </MenuItem>
                                             <Divider sx={{ my: 0.5 }} />
@@ -288,11 +288,26 @@ function _Block(props: Props) {
                                                 props.delMsg()
                                             }} disableRipple
                                             >
-                                                <DeleteForeverIcon />
+                                                <DeleteForeverIcon fontSize='small' />
                                                 {t('delete')}
                                             </MenuItem>
                                         </StyledMenu>
-                                    </>)
+                                    </ButtonGroup>
+                                ) : (
+                                    null
+                                    // <Box sx={{ height: '33px' }}></Box>
+                                )
+                            }
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={1}>
+                        {
+                            isEditing && (
+                                <>
+                                    <IconButton onClick={() => setIsEditing(false)} size='large' color='primary' >
+                                        <CheckIcon />
+                                    </IconButton>
+                                </>
                             )
                         }
                     </Grid>
