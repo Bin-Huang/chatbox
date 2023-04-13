@@ -38,16 +38,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libx11-dev libxdo-dev libxcb-shape0-dev libxcb-xfixes0-dev
-
       - name: install dependencies (mac only)
         if: matrix.platform == 'macos-latest'
         run: |
           rustup target add aarch64-apple-darwin
-
-      # - uses: actions/cache@v2
-      #   with:
-      #     path: '**/node_modules'
-      #     key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: install frontend dependencies
         run: yarn install # change this to npm or pnpm depending on which one you use
