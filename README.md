@@ -6,7 +6,7 @@
     English | <a href="./README-CN.md">中文介绍</a>
 </p>
 <p align="center">
-    <em>A desktop application for <b>ChatGPT API (OpenAI API)</b>, also a prompt debugging and management tool</em>
+    <em>the Ultimate Copilot on Your Desktop. Chatbox is a desktop app for GPT-4 / GPT-3.5 (OpenAI API) that supports Windows, Mac & Linux.</em>
 </p>
 
 

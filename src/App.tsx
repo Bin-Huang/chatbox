@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
@@ -23,12 +23,63 @@ import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
+import "./ga"
 
-const { useEffect, useState } = React
+import type { DragEndEvent } from '@dnd-kit/core';
+import {
+    DndContext,
+    KeyboardSensor,
+    MouseSensor,
+    TouchSensor,
+    closestCenter,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    SortableContext,
+    arrayMove,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { SortableItem } from './SortableItem';
 
 function Main() {
     const { t } = useTranslation()
     const store = useStore()
+    const sensors = useSensors(
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
+            },
+        }),
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                distance: 10,
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    const reversedSessions = [...store.chatSessions].reverse()
+    function handleDragEnd(event: DragEndEvent) {
+        const {active, over} = event;
+        if (!over) {
+            return
+        }
+        
+        if (active.id !== over.id) {
+            const oldIndex = reversedSessions.findIndex(({id}) => id === active.id);
+            const newIndex = reversedSessions.findIndex(({id}) => id === over.id);
+
+            const newReversed = arrayMove(reversedSessions, oldIndex, newIndex);
+            store.setSessions(newReversed.reverse())
+        }
+    }
+    
 
     // 是否展示设置窗口
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
@@ -83,12 +134,11 @@ function Main() {
 
     // 切换到当前会话，自动滚动到最后一条消息
     useEffect(() => {
-        if (store.currentSession.messages.length === 0) {
+        if (!messageListRef.current) {
             return
         }
-        const last = store.currentSession.messages[store.currentSession.messages.length - 1]
-        messageScrollRef.current = { msgId: last.id, smooth: false }
-    }, [store.currentSession])
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight
+    }, [store.currentSession.id])
 
     // 会话名称自动生成
     useEffect(() => {
@@ -133,6 +183,9 @@ function Main() {
 
     const [sessionClean, setSessionClean] = React.useState<Session | null>(null);
 
+    const editCurrentSession = () => {
+        setConfigureChatConfig(store?.currentSession)
+    };
     const generateName = async (session: Session) => {
         client.replay(
             store.settings.openaiKey,
@@ -160,6 +213,7 @@ function Main() {
             store.settings.maxContextSize,
             store.settings.maxTokens,
             session.model,
+            // store.settings.model,
             promptMsgs,
             ({ text, cancel }) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -168,8 +222,8 @@ function Main() {
                             ...session.messages[i],
                             content: text,
                             cancel,
+                            generating: true
                         }
-
                         break;
                     }
                 }
@@ -181,6 +235,7 @@ function Main() {
                         session.messages[i] = {
                             ...session.messages[i],
                             content: t('api request failed:') + ' \n```\n' + err.message + '\n```',
+                            generating: false
                         }
                         break
                     }
@@ -188,6 +243,17 @@ function Main() {
                 store.updateChatSession(session)
             }
         )
+        for (let i = 0; i < session.messages.length; i++) {
+            if (session.messages[i].id === targetMsg.id) {
+                session.messages[i] = {
+                    ...session.messages[i],
+                    generating: false
+                }
+                break
+            }
+        }
+        store.updateChatSession(session)
+
         messageScrollRef.current = null
     }
 
@@ -257,25 +323,36 @@ function Main() {
                             ref={sessionListRef}
                         // dense
                         >
-                            {
-                                [...store.chatSessions].reverse().map((session, ix) => (
-                                    <SessionItem key={session.id}
-                                        selected={store.currentSession.id === session.id}
-                                        session={session}
-                                        switchMe={() => {
-                                            store.switchCurrentSession(session)
-                                            document.getElementById('message-input')?.focus() // better way?
-                                        }}
-                                        deleteMe={() => store.deleteChatSession(session)}
-                                        copyMe={() => {
-                                            const newSession = createSession(session.model, session.name + ' copied')
-                                            newSession.messages = session.messages
-                                            store.createChatSession(newSession, ix)
-                                        }}
-                                        editMe={() => setConfigureChatConfig(session)}
-                                    />
-                                ))
-                            }
+                            <DndContext
+                                modifiers={[restrictToVerticalAxis]}
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext items={reversedSessions} strategy={verticalListSortingStrategy}>
+                                {
+                                    reversedSessions.map((session, ix) => (
+                                        <SortableItem key={session.id} id={session.id}>
+                                            <SessionItem key={session.id}
+                                                selected={store.currentSession.id === session.id}
+                                                session={session}
+                                                switchMe={() => {
+                                                    store.switchCurrentSession(session)
+                                                    document.getElementById('message-input')?.focus() // better way?
+                                                }}
+                                                deleteMe={() => store.deleteChatSession(session)}
+                                                copyMe={() => {
+                                                    const newSession = createSession(session.model, session.name + ' copied')
+                                                    newSession.messages = session.messages
+                                                    store.createChatSession(newSession, ix)
+                                                }}
+                                                editMe={() => setConfigureChatConfig(session)}
+                                            />
+                                        </SortableItem>
+                                    ))
+                                }
+                                </SortableContext>
+                            </DndContext>
                         </MenuList>
 
                         <Divider />
@@ -345,7 +422,9 @@ function Main() {
                                     <ChatBubbleOutlineOutlinedIcon />
                                 </IconButton>
                                 <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
-                                    {store.currentSession.name}
+                                    <span onClick={() => { editCurrentSession() }} style={{ cursor: 'pointer' }}>
+                                        {store.currentSession.name}
+                                    </span>
                                 </Typography>
                                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
                                     onClick={() => setSessionClean(store.currentSession)}

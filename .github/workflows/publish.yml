@@ -57,6 +57,7 @@ jobs:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         run: make change-version
 
+      - name: Build Tauri App
       - uses: tauri-apps/tauri-action@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}

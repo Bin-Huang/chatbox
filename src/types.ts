@@ -4,6 +4,7 @@ import { ThemeMode } from './theme';
 export type Message = OpenAIMessage & {
     id: string;
     cancel?: () => void;
+    generating?: boolean
 }
 
 export interface Session{
