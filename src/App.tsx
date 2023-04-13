@@ -134,12 +134,11 @@ function Main() {
 
     // 切换到当前会话，自动滚动到最后一条消息
     useEffect(() => {
-        if (store.currentSession.messages.length === 0) {
+        if (!messageListRef.current) {
             return
         }
-        const last = store.currentSession.messages[store.currentSession.messages.length - 1]
-        messageScrollRef.current = { msgId: last.id, smooth: false }
-    }, [store.currentSession])
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight
+    }, [store.currentSession.id])
 
     // 会话名称自动生成
     useEffect(() => {
