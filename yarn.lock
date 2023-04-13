@@ -8995,7 +8995,7 @@ tapable@^2.0.0, tapable@^2.1.1, tapable@^2.2.0, tapable@^2.2.1:
 
 "tauri-plugin-store-api@https://github.com/tauri-apps/tauri-plugin-store":
   version "0.0.0"
-  resolved "git+ssh://git@github.com/tauri-apps/tauri-plugin-store.git#f0da2d1ac8370bd4cc7c1c0617175f0d5b5833a0"
+  resolved "https://github.com/tauri-apps/tauri-plugin-store#f0da2d1ac8370bd4cc7c1c0617175f0d5b5833a0"
   dependencies:
     "@tauri-apps/api" "^1.2.0"
 
