@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
@@ -25,11 +25,61 @@ import { useTranslation } from "react-i18next";
 import icon from './icon.png'
 import "./ga"
 
-const { useEffect, useState } = React
+import type { DragEndEvent } from '@dnd-kit/core';
+import {
+    DndContext,
+    KeyboardSensor,
+    MouseSensor,
+    TouchSensor,
+    closestCenter,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    SortableContext,
+    arrayMove,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { SortableItem } from './SortableItem';
 
 function Main() {
     const { t } = useTranslation()
     const store = useStore()
+    const sensors = useSensors(
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
+            },
+        }),
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                distance: 10,
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    const reversedSessions = [...store.chatSessions].reverse()
+    function handleDragEnd(event: DragEndEvent) {
+        const {active, over} = event;
+        if (!over) {
+            return
+        }
+        
+        if (active.id !== over.id) {
+            const oldIndex = reversedSessions.findIndex(({id}) => id === active.id);
+            const newIndex = reversedSessions.findIndex(({id}) => id === over.id);
+
+            const newReversed = arrayMove(reversedSessions, oldIndex, newIndex);
+            store.setSessions(newReversed.reverse())
+        }
+    }
+    
 
     // 是否展示设置窗口
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
@@ -274,25 +324,36 @@ function Main() {
                             ref={sessionListRef}
                         // dense
                         >
-                            {
-                                [...store.chatSessions].reverse().map((session, ix) => (
-                                    <SessionItem key={session.id}
-                                        selected={store.currentSession.id === session.id}
-                                        session={session}
-                                        switchMe={() => {
-                                            store.switchCurrentSession(session)
-                                            document.getElementById('message-input')?.focus() // better way?
-                                        }}
-                                        deleteMe={() => store.deleteChatSession(session)}
-                                        copyMe={() => {
-                                            const newSession = createSession(session.model, session.name + ' copied')
-                                            newSession.messages = session.messages
-                                            store.createChatSession(newSession, ix)
-                                        }}
-                                        editMe={() => setConfigureChatConfig(session)}
-                                    />
-                                ))
-                            }
+                            <DndContext
+                                modifiers={[restrictToVerticalAxis]}
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext items={reversedSessions} strategy={verticalListSortingStrategy}>
+                                {
+                                    reversedSessions.map((session, ix) => (
+                                        <SortableItem key={session.id} id={session.id}>
+                                            <SessionItem key={session.id}
+                                                selected={store.currentSession.id === session.id}
+                                                session={session}
+                                                switchMe={() => {
+                                                    store.switchCurrentSession(session)
+                                                    document.getElementById('message-input')?.focus() // better way?
+                                                }}
+                                                deleteMe={() => store.deleteChatSession(session)}
+                                                copyMe={() => {
+                                                    const newSession = createSession(session.model, session.name + ' copied')
+                                                    newSession.messages = session.messages
+                                                    store.createChatSession(newSession, ix)
+                                                }}
+                                                editMe={() => setConfigureChatConfig(session)}
+                                            />
+                                        </SortableItem>
+                                    ))
+                                }
+                                </SortableContext>
+                            </DndContext>
                         </MenuList>
 
                         <Divider />

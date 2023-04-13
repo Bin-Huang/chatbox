@@ -167,6 +167,7 @@ export default function useStore() {
         deleteChatSession,
         createEmptyChatSession,
 
+        setSessions,
         currentSession,
         switchCurrentSession,
 
