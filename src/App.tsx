@@ -23,6 +23,7 @@ import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
+import "./ga"
 
 const { useEffect, useState } = React
 

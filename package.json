@@ -70,6 +70,7 @@
     "material-ui-popup-state": "^5.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-ga4": "^2.1.0",
     "react-i18next": "^12.2.0",
     "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store",
     "typescript": "^4.9.5",
