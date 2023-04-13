@@ -58,7 +58,7 @@ jobs:
         run: make change-version
 
       - name: Build Tauri App
-      - uses: tauri-apps/tauri-action@dev
+        uses: tauri-apps/tauri-action@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
           ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
