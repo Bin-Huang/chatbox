@@ -4,6 +4,7 @@ import * as defaults from './defaults'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
 import * as api from './api'
+import * as remote from './remote'
 import { useTranslation } from "react-i18next";
 
 // setting store
@@ -71,10 +72,19 @@ export default function useStore() {
     const { i18n } = useTranslation();
 
     const [version, _setVersion] = useState('unknown')
+    const [needCheckUpdate, setNeedCheckUpdate] = useState(false)
     useEffect(() => {
-        api.getVersion().then((version: any) => {
+        (async () => {
+            const version = await api.getVersion()
             _setVersion(version)
-        })
+            try {
+                const needUpdate = await remote.checkNeedUpdate(version)
+                setNeedCheckUpdate(needUpdate)
+            } catch (e) {
+                console.log(e)
+                setNeedCheckUpdate(true)
+            }
+        })()
     }, [])
 
     const [settings, _setSettings] = useState<Settings>(getDefaultSettings())
@@ -156,6 +166,7 @@ export default function useStore() {
 
     return {
         version,
+        needCheckUpdate,
 
         settings,
         setSettings,

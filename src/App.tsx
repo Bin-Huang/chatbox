@@ -89,9 +89,6 @@ function Main() {
         }
     }, [store.needSetting])
 
-    // 是否展示应用更新提示
-    const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
-
     const messageListRef = useRef<HTMLDivElement>(null)
     const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
     useEffect(() => {
@@ -385,7 +382,6 @@ function Main() {
                             </MenuItem>
 
                             <MenuItem onClick={() => {
-                                setNeedCheckUpdate(false)
                                 api.openLink('https://github.com/Bin-Huang/chatbox/releases')
                             }}>
                                 <ListItemIcon>
@@ -394,7 +390,8 @@ function Main() {
                                     </IconButton>
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                    <Badge color="primary" variant="dot" invisible={!store.needCheckUpdate}
+                                    sx={{ paddingRight: '8px' }} >
                                         <Typography sx={{ opacity: 0.5 }}>
                                             {t('version')}: {store.version}
                                         </Typography>
