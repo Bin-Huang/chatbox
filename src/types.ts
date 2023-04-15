@@ -42,6 +42,7 @@ export interface Settings {
     showModelName?: boolean
     theme: ThemeMode
     language: string
+    fontSize: number
 }
 
 export const OpenAIRoleEnum = {

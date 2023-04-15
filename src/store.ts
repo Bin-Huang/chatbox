@@ -20,6 +20,7 @@ export function getDefaultSettings(): Settings {
         showModelName: false,
         theme: ThemeMode.System,
         language: 'en',
+        fontSize: 13,
     }
 }
 
