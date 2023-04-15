@@ -28,6 +28,7 @@ import { useTranslation, getI18n } from 'react-i18next';
 import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
 import ReplayIcon from '@mui/icons-material/Replay';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
+import './styles/Block.scss'
 
 // copy button html content
 // join at markdown-it parsed
@@ -132,17 +133,11 @@ function _Block(props: Props) {
                 padding: '1rem 28px 0.6rem 28px',
             }}
             className={[
+                'msg-block',
                 msg.generating ? 'rendering' : 'render-done',
                 msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
             ].join(' ')}
         >
-            <style>
-                {`
-                    .msg-content p {
-                        margin: 0.6rem 0 0.4rem 0;
-                    }
-                `}
-            </style>
             <Grid container spacing={2}>
                 <Grid item >
                     {
