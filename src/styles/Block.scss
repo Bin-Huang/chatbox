@@ -2,6 +2,12 @@
     .msg-content p {
         margin: 0.6rem 0 0.4rem 0;
     }
+    .msg-content ol {
+        padding-inline-start: 25px;
+    }
+    .msg-content ul {
+        padding-inline-start: 25px;
+    }
 }
 
 // markdown table
