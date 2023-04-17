@@ -51,7 +51,7 @@ export async function readSessions(settings: Settings): Promise<Session[]> {
         return defaults.sessions
     }
     if (sessions.length === 0) {
-        return [createSession(settings.model)]
+        return [createSession()]
     }
     return sessions.map((s: any) => {
         // 兼容旧版本的数据
@@ -104,7 +104,7 @@ export default function useStore() {
         i18n.changeLanguage(settings.language).then();
     }
 
-    const [chatSessions, _setChatSessions] = useState<Session[]>([createSession(settings.model)])
+    const [chatSessions, _setChatSessions] = useState<Session[]>([createSession()])
     const [currentSession, switchCurrentSession] = useState<Session>(chatSessions[0])
     useEffect(() => {
         readSessions(settings).then((sessions: Session[]) => {
@@ -120,7 +120,7 @@ export default function useStore() {
     const deleteChatSession = (target: Session) => {
         const sessions = chatSessions.filter((s) => s.id !== target.id)
         if (sessions.length === 0) {
-            sessions.push(createSession(settings.model))
+            sessions.push(createSession())
         }
         if (target.id === currentSession.id) {
             switchCurrentSession(sessions[0])
@@ -145,7 +145,7 @@ export default function useStore() {
         switchCurrentSession(session)
     }
     const createEmptyChatSession = () => {
-        createChatSession(createSession(settings.model))
+        createChatSession(createSession())
     }
 
     const setMessages = (session: Session, messages: Message[]) => {

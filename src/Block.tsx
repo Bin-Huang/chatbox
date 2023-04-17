@@ -68,7 +68,6 @@ export interface Props {
     showWordCount: boolean
     showTokenCount: boolean
     showModelName: boolean
-    modelName: string
     setMsg: (msg: Message) => void
     delMsg: () => void
     refreshMsg: () => void
@@ -103,7 +102,7 @@ function _Block(props: Props) {
 
     const tips: string[] = []
     if (props.showModelName) {
-        tips.push(`model: ${props.modelName}`)
+        tips.push(`model: ${props.msg.model || 'unknown'}`)
     }
     if (props.showWordCount) {
         tips.push(`word count: ${wordCount.countWord(msg.content)}`)
@@ -341,5 +340,5 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Block(props: Props) {
     return useMemo(() => {
         return <_Block {...props} />
-    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName, props.modelName])
+    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName])
 }

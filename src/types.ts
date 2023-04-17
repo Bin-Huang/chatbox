@@ -5,13 +5,13 @@ export type Message = OpenAIMessage & {
     id: string;
     cancel?: () => void;
     generating?: boolean
+    model?: string
 }
 
 export interface Session{
     id: string
     name: string
     messages: Message[]
-    model: string
 }
 
 export function createMessage(role: OpenAIRoleEnumType = OpenAIRoleEnum.User, content: string = ''): Message {
@@ -22,7 +22,7 @@ export function createMessage(role: OpenAIRoleEnumType = OpenAIRoleEnum.User, co
     }
 }
 
-export function createSession(modelName: string, name: string = "Untitled"): Session {
+export function createSession(name: string = "Untitled"): Session {
     return {
         id: uuidv4(),
         name: name,
@@ -33,7 +33,6 @@ export function createSession(modelName: string, name: string = "Untitled"): Ses
                 content: 'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.'
             }
         ],
-        model: modelName,
     }
 }
 

@@ -193,7 +193,7 @@ function Main() {
             store.settings.apiHost,
             store.settings.maxContextSize,
             store.settings.maxTokens,
-            session.model,
+            store.settings.model,
             prompts.nameConversation(session.messages.slice(0, 3)),
             ({ text: name }) => {
                 name = name.replace(/['"“”]/g, '')
@@ -227,8 +227,7 @@ function Main() {
             store.settings.apiHost,
             store.settings.maxContextSize,
             store.settings.maxTokens,
-            session.model,
-            // store.settings.model,
+            store.settings.model,
             promptMsgs,
             ({ text, cancel }) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -237,6 +236,7 @@ function Main() {
                             ...session.messages[i],
                             content: text,
                             cancel,
+                            model: store.settings.model,
                             generating: true
                         }
                         break;
@@ -250,6 +250,7 @@ function Main() {
                         session.messages[i] = {
                             ...session.messages[i],
                             content: t('api request failed:') + ' \n```\n' + err.message + '\n```',
+                            model: store.settings.model,
                             generating: false
                         }
                         break
@@ -357,7 +358,7 @@ function Main() {
                                                 }}
                                                 deleteMe={() => store.deleteChatSession(session)}
                                                 copyMe={() => {
-                                                    const newSession = createSession(session.model, session.name + ' copied')
+                                                    const newSession = createSession(session.name + ' copied')
                                                     newSession.messages = session.messages
                                                     store.createChatSession(newSession, ix)
                                                 }}
@@ -473,7 +474,6 @@ function Main() {
                                         showWordCount={store.settings.showWordCount || false}
                                         showTokenCount={store.settings.showTokenCount || false}
                                         showModelName={store.settings.showModelName || false}
-                                        modelName={store.currentSession.model}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {
