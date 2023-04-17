@@ -122,7 +122,11 @@ paru -S chatbox-bin
 | --- | --- | --- |
 | [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
 
-## Contact
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Bin-Huang/chatbox&type=Date)](https://star-history.com/#Bin-Huang/chatbox&Date)
+
+## 联系开发者
 
 - [Twitter](https://twitter.com/benn_huang)
 - [Email](mailto:tohuangbin@gmail.com)
