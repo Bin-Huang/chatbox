@@ -68,6 +68,11 @@ paru -S chatbox-bin
 - ChatBox 还帮你在本地保存了所有的聊天记录和 prompt，防止在线服务的数据丢失。
 - ChatBox 还可以帮助你设计、调试和管理 prompt，让你更好地操作 AI 模型。
 
+## ChatBox 和 (OpenAI API) 的关系
+
+- ChatBox 仅提供了UI界面帮助你更好的使用 ChatGPT API (OpenAI API). 
+- 任何和 ChatGPT API (OpenAI API) 相关的问题，请移步 [platform openai](https://platform.openai.com/)
+
 ## Roadmap
 
 - [x] AI 聊天与会话管理
