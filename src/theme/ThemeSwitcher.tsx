@@ -61,7 +61,10 @@ export function ThemeSwitcherProvider(props: ThemeSwitcherProviderProps) {
         [mode]
     );
 
-    const theme = useMemo(() => createTheme(fetchThemeDesign(realMode)), [realMode]);
+    const theme = useMemo(() => createTheme(
+        fetchThemeDesign(realMode, settings.fontSize)),
+        [realMode, settings],
+    );
 
     useLayoutEffect(() => {
         if (mode !== ThemeMode.System) return;

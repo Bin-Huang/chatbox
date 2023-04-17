@@ -134,6 +134,24 @@ export default function SettingWindow(props: Props) {
                     <span style={{ marginRight: 10 }}>{t('theme')}</span>
                     <ThemeChangeButton value={settingsEdit.theme} onChange={theme => changeModeWithPreview(theme)} />
                 </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                    <InputLabel>Font Size</InputLabel>
+                    <Select
+                        labelId="select-font-size"
+                        value={settingsEdit.fontSize}
+                        label="FontSize"
+                        onChange={(event) => {
+                            setSettingsEdit({ ...settingsEdit, fontSize: event.target.value as number })
+                        }}
+                    >
+                        {
+                            [12, 13, 14, 15, 16, 17, 18].map((size) => (
+                                <MenuItem key={size} value={size}>{size}px</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+
                 <FormGroup>
                     <FormControlLabel control={<Switch />}
                         label={t('show word count')}

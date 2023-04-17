@@ -56,5 +56,6 @@
   "before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors).": "在修改前，請確認您的帳號可以存取被選擇的模型（不管是甚麼類型的帳號，其中一些模型都需要額外申請，否則會導致請求出現 404 錯誤）；",
   "please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.": "同時，請確認 Token 沒有超過被選擇模型的上限，否則上下文超出上限後會直接報錯。",
   "stop generating": "停止產生",
-  "regenerate": "重新產生"
+  "regenerate": "重新產生",
+  "font size changed, effective after next launch": "字體大小已改變，將在下次啟動時生效"
 }
