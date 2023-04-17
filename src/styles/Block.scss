@@ -4,6 +4,7 @@
     }
 }
 
+// markdown table
 html[data-theme='light'] .msg-block {
     table {
         background-color: #f8f8f8;
@@ -33,7 +34,6 @@ html[data-theme='light'] .msg-block {
         color: #333;
     }
 }
-
 html[data-theme='dark'] .msg-block {
     table {
         background-color: #333;
@@ -62,4 +62,55 @@ html[data-theme='dark'] .msg-block {
     a {
         color: #fff;
     }
+}
+
+// code block
+.code-block-wrapper {
+    // position: relative;
+    max-width: 50vw;
+    // max-width: 100%;
+}
+.code-header {
+    margin: 0;
+    background-color: #333;
+    color: white;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+.code-block {
+    padding: 10px;
+    max-width: 100%;
+    overflow: auto;
+    margin: 0;
+}
+.rendering .code-block-wrapper div.copy-action {
+    display: none;
+}
+.code-block-wrapper .code-lang {
+    margin-left: 6px;
+    padding: 2px;
+}
+.code-block-wrapper div.copy-action {
+    margin-right: 6px;
+    cursor: pointer;
+    display: inline-block;
+}
+.code-block-wrapper div.copy-action {
+    background-color: rgba(144, 202, 249, 0.16);
+    padding: 2px;
+}
+.code-block-wrapper div.copy-action:hover {
+    background-color: rgba(144, 202, 249, 0.36);
+}
+.code-block-wrapper:hover div.copy-action {
+    opacity: 1;
+}
+
+// message
+html[data-theme='light'] .assistant-msg {
+    background-color: #fafafa;
+}
+html[data-theme='dark'] .assistant-msg {
+    background-color: #212121;
 }

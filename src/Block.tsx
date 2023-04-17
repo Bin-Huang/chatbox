@@ -53,9 +53,10 @@ const md = new MarkdownIt({
         }
 
         // join actions html string
+        lang = (lang || 'txt').toUpperCase()
         return [
             '<div class="code-block-wrapper">',
-            getCodeCopyButtonHTML(),
+            `<div class="code-header"><span class="code-lang">${lang}</span><div class="copy-action">${getI18n().t('copy')}</div></div>`,
             '<pre class="hljs code-block">',
             `<code>${content}</code>`,
             '</pre>',

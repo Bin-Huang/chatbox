@@ -27,6 +27,7 @@ import icon from './icon.png'
 import { save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
 import "./ga"
+import "./styles/App.scss"
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
@@ -154,7 +155,7 @@ function Main() {
         const target: HTMLElement = e.target as HTMLElement;
 
         const isCopyActionClassName = target.className === 'copy-action';
-        const isCodeBlockParent = target.parentElement?.className === 'code-block-wrapper';
+        const isCodeBlockParent = target.parentElement?.parentElement?.className === 'code-block-wrapper';
 
         // check is copy action button
         if (!(isCopyActionClassName && isCodeBlockParent)) {
@@ -162,7 +163,7 @@ function Main() {
         }
 
         // got codes
-        const content = target?.parentNode?.querySelector('code')?.innerText ?? '';
+        const content = target?.parentNode?.parentNode?.querySelector('code')?.innerText ?? '';
 
         // do copy
         // * thats lines copy from copy block content action
@@ -285,7 +286,7 @@ function Main() {
     }
 
     return (
-        <Box sx={{ height: '100vh' }}>
+        <Box className='App'>
             <Grid container sx={{
                 flexWrap: 'nowrap',
                 height: '100%',
