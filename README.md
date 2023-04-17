@@ -82,13 +82,13 @@ paru -S chatbox-bin
 - [x] i18n
 - [x] Copy button for code blocks
 - [x] Stop button for AI message generation
+- [x] Drag-and-drop sorting of tabs
 - [ ] Improved prompt settings
 - [ ] Prompt Library
 - [ ] Talk with files
 - [ ] Talk with URLs
 - [ ] Mobile(Android, iOS)
 - [ ] Cross-device synchronization
-- [ ] Drag-and-drop sorting of tabs
 - [ ] threads(like Slack)
 - More...
 
