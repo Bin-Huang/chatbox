@@ -73,13 +73,19 @@ async function handleAsset(asset, version, dir, storageFlag) {
     if (storageFlag === 'cloudflare') {
         link = `https://pub-0f2a372de68244aabdee60c9d82c4c6c.r2.dev/${version}/${asset.name}`
     }
-    if (asset.name.endsWith('.app.tar.gz')) {
+    if (asset.name.endsWith('.app.tar.gz') && asset.name.includes('x64')) {
         if (storageFlag !== 'github') {
             await download(asset.browser_download_url, `${dir}/${asset.name}`)
         }
         data.platforms['darwin'].url = link
-        data.platforms['darwin-aarch64'].url = link
         data.platforms['darwin-x86_64'].url = link
+        return
+    }
+    if (asset.name.endsWith('.app.tar.gz') && asset.name.includes('aarch64')) {
+        if (storageFlag !== 'github') {
+            await download(asset.browser_download_url, `${dir}/${asset.name}`)
+        }
+        data.platforms['darwin-aarch64'].url = link
         return
     }
     if (asset.name.endsWith('.AppImage.tar.gz')) {
@@ -99,11 +105,15 @@ async function handleAsset(asset, version, dir, storageFlag) {
         return
     }
 
-    if (asset.name.endsWith('.app.tar.gz.sig')) {
+    if (asset.name.endsWith('.app.tar.gz.sig') && asset.name.includes('x64')) {
         const res = await axios.get(asset.browser_download_url)
         data.platforms['darwin'].signature = res.data
-        data.platforms['darwin-aarch64'].signature = res.data
         data.platforms['darwin-x86_64'].signature = res.data
+        return
+    }
+    if (asset.name.endsWith('.app.tar.gz.sig') && asset.name.includes('aarch64')) {
+        const res = await axios.get(asset.browser_download_url)
+        data.platforms['darwin-aarch64'].signature = res.data
         return
     }
     if (asset.name.endsWith('.AppImage.tar.gz.sig')) {
