@@ -26,7 +26,13 @@ export function createSession(modelName: string, name: string = "Untitled"): Ses
     return {
         id: uuidv4(),
         name: name,
-        messages: [],
+        messages: [
+            {
+                id: uuidv4(),
+                role: 'system',
+                content: 'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.'
+            }
+        ],
         model: modelName,
     }
 }

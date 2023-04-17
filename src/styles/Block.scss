@@ -108,9 +108,19 @@ html[data-theme='dark'] .msg-block {
 }
 
 // message
-html[data-theme='light'] .assistant-msg {
-    background-color: #fafafa;
+html[data-theme='light'] {
+    .assistant-msg {
+        background-color: #fafafa;
+    }
+    // .system-msg {
+    //     background-color: #fafafa;
+    // }
 }
-html[data-theme='dark'] .assistant-msg {
-    background-color: #212121;
+html[data-theme='dark'] {
+    .assistant-msg {
+        background-color: #212121;
+    }
+    // .system-msg {
+    //     background-color: #212121;
+    // }
 }

@@ -30,12 +30,6 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import './styles/Block.scss'
 
-// copy button html content
-// join at markdown-it parsed
-const getCodeCopyButtonHTML = () => {
-    return `<div class="copy-action">${getI18n().t('copy')}</div>`;
-};
-
 const md = new MarkdownIt({
     linkify: true,
     breaks: true,
@@ -136,7 +130,11 @@ function _Block(props: Props) {
             className={[
                 'msg-block',
                 msg.generating ? 'rendering' : 'render-done',
-                msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
+                {
+                    user: 'user-msg',
+                    system: 'system-msg',
+                    assistant: 'assistant-msg',
+                }[msg?.role || 'user']
             ].join(' ')}
         >
             <Grid container spacing={2}>
