@@ -6,7 +6,6 @@ import './i18n.js'
 
 import './styles/index.css'
 import './styles/index.scss'
-import './styles/App.css'
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

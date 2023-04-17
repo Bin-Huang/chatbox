@@ -82,13 +82,13 @@ paru -S chatbox-bin
 - [x] i18n
 - [x] Copy button for code blocks
 - [x] Stop button for AI message generation
+- [x] Drag-and-drop sorting of tabs
 - [ ] Improved prompt settings
 - [ ] Prompt Library
 - [ ] Talk with files
 - [ ] Talk with URLs
 - [ ] Mobile(Android, iOS)
 - [ ] Cross-device synchronization
-- [ ] Drag-and-drop sorting of tabs
 - [ ] threads(like Slack)
 - More...
 
@@ -111,6 +111,10 @@ Any form of contribution is welcome, including but not limited to:
 | Paypal | Wechat Pay | Ali Pay |
 | --- | --- | --- |
 | [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Bin-Huang/chatbox&type=Date)](https://star-history.com/#Bin-Huang/chatbox&Date)
 
 ## Contact
 

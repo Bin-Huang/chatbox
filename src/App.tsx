@@ -18,12 +18,16 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import * as prompts from './prompts';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import Save from '@mui/icons-material/Save'
 import CleanWidnow from './CleanWindow';
 import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
+import { save } from '@tauri-apps/api/dialog';
+import { writeTextFile } from '@tauri-apps/api/fs';
 import "./ga"
+import "./styles/App.scss"
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
@@ -89,9 +93,6 @@ function Main() {
         }
     }, [store.needSetting])
 
-    // 是否展示应用更新提示
-    const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
-
     const messageListRef = useRef<HTMLDivElement>(null)
     const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
     useEffect(() => {
@@ -154,7 +155,7 @@ function Main() {
         const target: HTMLElement = e.target as HTMLElement;
 
         const isCopyActionClassName = target.className === 'copy-action';
-        const isCodeBlockParent = target.parentElement?.className === 'code-block-wrapper';
+        const isCodeBlockParent = target.parentElement?.parentElement?.className === 'code-block-wrapper';
 
         // check is copy action button
         if (!(isCopyActionClassName && isCodeBlockParent)) {
@@ -162,7 +163,7 @@ function Main() {
         }
 
         // got codes
-        const content = target?.parentNode?.querySelector('code')?.innerText ?? '';
+        const content = target?.parentNode?.parentNode?.querySelector('code')?.innerText ?? '';
 
         // do copy
         // * thats lines copy from copy block content action
@@ -203,6 +204,20 @@ function Main() {
                 console.log(err)
             }
         )
+    }
+    const saveSession = async (session:Session) => {
+        const filePath = await save({
+            filters: [{
+              name: 'Export',
+              extensions: ['md']
+            }]
+          });
+        if(filePath){
+            const content = session.messages
+                .map(msg => `**${msg.role}**:\n${msg.content}`)
+                .join('\n\n--------------------\n\n')
+            await writeTextFile(filePath!!, content)
+        }
     }
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
@@ -271,7 +286,7 @@ function Main() {
     }
 
     return (
-        <Box sx={{ height: '100vh' }}>
+        <Box className='App'>
             <Grid container sx={{
                 flexWrap: 'nowrap',
                 height: '100%',
@@ -385,7 +400,6 @@ function Main() {
                             </MenuItem>
 
                             <MenuItem onClick={() => {
-                                setNeedCheckUpdate(false)
                                 api.openLink('https://github.com/Bin-Huang/chatbox/releases')
                             }}>
                                 <ListItemIcon>
@@ -394,7 +408,8 @@ function Main() {
                                     </IconButton>
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                    <Badge color="primary" variant="dot" invisible={!store.needCheckUpdate}
+                                    sx={{ paddingRight: '8px' }} >
                                         <Typography sx={{ opacity: 0.5 }}>
                                             {t('version')}: {store.version}
                                         </Typography>
@@ -431,6 +446,12 @@ function Main() {
                                 >
                                     <CleaningServicesIcon />
                                 </IconButton>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                                    onClick={() => saveSession(store.currentSession)}
+                                >
+                                    <Save />
+                                </IconButton>
+                                
                             </Toolbar>
                             <Divider />
                         </Box>
