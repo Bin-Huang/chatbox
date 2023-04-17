@@ -543,6 +543,9 @@ function Main() {
                     save={(settings) => {
                         store.setSettings(settings)
                         setOpenSettingWindow(false)
+                        if (settings.fontSize !== store.settings.fontSize) {
+                            store.addToast(t('font size changed, effective after next launch'))
+                        }
                     }}
                     close={() => setOpenSettingWindow(false)}
                 />
