@@ -212,15 +212,9 @@ function Main() {
             }]
           });
         if(filePath){
-            let content = ""
-            for (let i = 0; i < session.messages.length; i++) {
-                const msg = session.messages[i];
-                content += `**${msg.role}**:${msg.content}\n`
-                if(msg.role == "assistant"){
-                    content +="\n------\n"
-                }
-                
-            }
+            const content = session.messages
+                .map(msg => `**${msg.role}**:\n${msg.content}`)
+                .join('\n\n--------------------\n\n')
             await writeTextFile(filePath!!, content)
         }
     }
