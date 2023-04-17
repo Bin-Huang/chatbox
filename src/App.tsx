@@ -18,11 +18,14 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import * as prompts from './prompts';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import Save from '@mui/icons-material/Save'
 import CleanWidnow from './CleanWindow';
 import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
+import { save } from '@tauri-apps/api/dialog';
+import { writeTextFile } from '@tauri-apps/api/fs';
 import "./ga"
 
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -200,6 +203,26 @@ function Main() {
                 console.log(err)
             }
         )
+    }
+    const saveSession = async (session:Session) => {
+        const filePath = await save({
+            filters: [{
+              name: 'Export',
+              extensions: ['md']
+            }]
+          });
+        if(filePath){
+            let content = ""
+            for (let i = 0; i < session.messages.length; i++) {
+                const msg = session.messages[i];
+                content += `**${msg.role}**:${msg.content}\n`
+                if(msg.role == "assistant"){
+                    content +="\n------\n"
+                }
+                
+            }
+            await writeTextFile(filePath!!, content)
+        }
     }
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
@@ -428,6 +451,12 @@ function Main() {
                                 >
                                     <CleaningServicesIcon />
                                 </IconButton>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                                    onClick={() => saveSession(store.currentSession)}
+                                >
+                                    <Save />
+                                </IconButton>
+                                
                             </Toolbar>
                             <Divider />
                         </Box>
