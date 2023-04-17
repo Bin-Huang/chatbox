@@ -62,3 +62,7 @@ export interface OpenAIMessage {
     'content': string;
     'name'?: string;
 }
+
+export interface Config{
+    uuid: string
+}

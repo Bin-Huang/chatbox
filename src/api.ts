@@ -58,3 +58,7 @@ export const getVersion = async () => {
 export const openLink = async (url: string) => {
     return api.shell.open(url)
 }
+
+export const getPlatform = async () => {
+    return api.os.platform()
+}

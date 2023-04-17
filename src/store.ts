@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Settings, createSession, Session, Message } from './types'
+import { useState, useEffect, useRef } from 'react'
+import { Settings, createSession, Session, Message, Config } from './types'
 import * as defaults from './defaults'
 import { v4 as uuidv4 } from 'uuid';
 import { ThemeMode } from './theme';
@@ -25,7 +25,7 @@ export function getDefaultSettings(): Settings {
 }
 
 export async function readSettings(): Promise<Settings> {
-    const setting: Settings|undefined = await api.readStore('settings')
+    const setting: Settings | undefined = await api.readStore('settings')
     if (!setting) {
         return getDefaultSettings()
     }
@@ -41,6 +41,19 @@ export async function writeSettings(settings: Settings) {
     }
     console.log('writeSettings.apiHost', settings.apiHost)
     return api.writeStore('settings', settings)
+}
+
+export async function readConfig(): Promise<Config> {
+    let config: Config | undefined = await api.readStore('configs')
+    if (!config) {
+        config = { uuid: uuidv4() }
+        await api.writeStore('configs', config)
+    }
+    return config;
+}
+
+export async function writeConfig(config: Config) {
+    return api.writeStore('configs', config)
 }
 
 // session store
@@ -73,18 +86,29 @@ export default function useStore() {
 
     const [version, _setVersion] = useState('unknown')
     const [needCheckUpdate, setNeedCheckUpdate] = useState(false)
+    const updateCheckTimer = useRef<NodeJS.Timeout>()
     useEffect(() => {
-        (async () => {
+        const handler = async () => {
             const version = await api.getVersion()
             _setVersion(version)
             try {
-                const needUpdate = await remote.checkNeedUpdate(version)
+                const config = await readConfig()
+                const os = await api.getPlatform()
+                const needUpdate = await remote.checkNeedUpdate(version, os, config)
                 setNeedCheckUpdate(needUpdate)
             } catch (e) {
                 console.log(e)
                 setNeedCheckUpdate(true)
             }
-        })()
+        }
+        handler()
+        updateCheckTimer.current = setInterval(handler, 10 * 60 * 1000)
+        return () => {
+            if (updateCheckTimer.current) {
+                clearInterval(updateCheckTimer.current)
+                updateCheckTimer.current = undefined
+            }
+        }
     }, [])
 
     const [settings, _setSettings] = useState<Settings>(getDefaultSettings())
@@ -155,10 +179,10 @@ export default function useStore() {
         })
     }
 
-    const [toasts, _setToasts] = useState<{id: string, content: string}[]>([])
+    const [toasts, _setToasts] = useState<{ id: string, content: string }[]>([])
     const addToast = (content: string) => {
         const id = uuidv4()
-        _setToasts([...toasts, {id, content}])
+        _setToasts([...toasts, { id, content }])
     }
     const removeToast = (id: string) => {
         _setToasts(toasts.filter((t) => t.id !== id))

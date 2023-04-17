@@ -39,7 +39,10 @@
                 "all": true, 
                 "open": true, 
                 "save": true 
-              }
+            },
+            "os": {
+                "all": true
+            }
         },
         "bundle": {
             "active": true,
