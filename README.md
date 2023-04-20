@@ -31,9 +31,8 @@
 
 ## Features
 
-- Same fast speed as ChatGPT Plus
-- Data stored locally, no risk of losing it
 - More freedom and powerful Prompt abilities
+- Data stored locally, no risk of losing it
 - Supports GPT-4 and other models
 - Supports custom domain proxy
 - More features: Markdown, message quotes, word and token estimation, night mode...
@@ -63,9 +62,15 @@ paru -S chatbox-bin
 
 ## Why Use Chatbox?
 
-- Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
+- ChatBox helps you design, debug, and manage prompts more freely, enabling you to operate AI models more efficiently.
 - Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
-- Chatbox helps you design, debug, and manage prompts, thus providing greater control over the AI interface.
+- Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
+
+## Why I made Chatbox?
+
+I developed Chatbox initially because I was debugging some prompts and found myself in need of a simple and easy-to-use prompt and API debugging tool. I thought there might be more people who needed such a tool, so I open-sourced it.
+
+At first, I didn't know that it would be so popular. I listened to the feedback from the open-source community and continued to develop and improve it. Now, it has become a very useful AI desktop application. There are many users who love Chatbox, and they not only use it for developing and debugging prompts, but also for daily chatting, and even to do some more interesting things like using well-designed prompts to make AI play various professional roles to assist them in everyday work...
 
 ## Roadmap
 
@@ -103,6 +108,12 @@ Any form of contribution is welcome, including but not limited to:
 - Submitting documentation revisions
 - Submitting translations
 - Submitting any other forms of contribution
+
+## Become a ChatBox sponsor?
+
+As an open-source project, ChatBox is sustained by the contributions and support of our community. If you or your organization find our work valuable, we welcome your sponsorship to help us continue improving and enhancing the application for everyone. To show our appreciation, we will prominently display sponsor information in our README and other appropriate places. Thank you for considering supporting our efforts!
+
+If you have any interest or ideas, please feel free to contact us at tohuangbin@gmail.com .
 
 ## Buy Me a Coffee
 
