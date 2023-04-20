@@ -68,19 +68,17 @@ function Main() {
         })
     );
 
-    const reversedSessions = [...store.chatSessions].reverse()
+    const sortedSessions = sortSessions(store.chatSessions)
     function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event;
         if (!over) {
             return
         }
-        
         if (active.id !== over.id) {
-            const oldIndex = reversedSessions.findIndex(({id}) => id === active.id);
-            const newIndex = reversedSessions.findIndex(({id}) => id === over.id);
-
-            const newReversed = arrayMove(reversedSessions, oldIndex, newIndex);
-            store.setSessions(newReversed.reverse())
+            const oldIndex = sortedSessions.findIndex(({id}) => id === active.id);
+            const newIndex = sortedSessions.findIndex(({id}) => id === over.id);
+            const newReversed = arrayMove(sortedSessions, oldIndex, newIndex);
+            store.setSessions(sortSessions(newReversed))
         }
     }
     
@@ -345,9 +343,9 @@ function Main() {
                                 collisionDetection={closestCenter}
                                 onDragEnd={handleDragEnd}
                             >
-                                <SortableContext items={reversedSessions} strategy={verticalListSortingStrategy}>
+                                <SortableContext items={sortedSessions} strategy={verticalListSortingStrategy}>
                                 {
-                                    reversedSessions.map((session, ix) => (
+                                    sortedSessions.map((session, ix) => (
                                         <SortableItem key={session.id} id={session.id}>
                                             <SessionItem key={session.id}
                                                 selected={store.currentSession.id === session.id}
@@ -361,6 +359,12 @@ function Main() {
                                                     const newSession = createSession(session.name + ' copied')
                                                     newSession.messages = session.messages
                                                     store.createChatSession(newSession, ix)
+                                                }}
+                                                switchStarred={() => {
+                                                    store.updateChatSession({
+                                                        ...session,
+                                                        starred: !session.starred
+                                                    })
                                                 }}
                                                 editMe={() => setConfigureChatConfig(session)}
                                             />
@@ -454,7 +458,6 @@ function Main() {
                                 </IconButton>
                                 
                             </Toolbar>
-                            <Divider />
                         </Box>
                         <List
                             className='scroll'
@@ -649,6 +652,19 @@ function MessageInput(props: {
             </Stack>
         </form>
     )
+}
+
+function sortSessions(sessions: Session[]): Session[] {
+    let reversed: Session[] = []
+    let pinned: Session[] = []
+    for (const sess of sessions) {
+        if (sess.starred) {
+            pinned.push(sess)
+            continue
+        }
+        reversed.unshift(sess)
+    }
+    return pinned.concat(reversed)
 }
 
 export default function App() {

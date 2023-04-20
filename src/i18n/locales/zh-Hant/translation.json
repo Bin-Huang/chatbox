@@ -57,5 +57,7 @@
   "please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.": "同時，請確認 Token 沒有超過被選擇模型的上限，否則上下文超出上限後會直接報錯。",
   "stop generating": "停止產生",
   "regenerate": "重新產生",
-  "font size changed, effective after next launch": "字體大小已改變，將在下次啟動時生效"
+  "font size changed, effective after next launch": "字體大小已改變，將在下次啟動時生效",
+  "star": "星標",
+  "unstar": "取消星標"
 }
