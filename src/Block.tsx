@@ -201,9 +201,8 @@ function _Block(props: Props) {
                                     tips.join(', ')
                                 }
                             </Typography>
-
-                            {
-                                (isHovering && !isEditing) || msg.generating ? (
+                            <Box sx={{ height: '33px' }}>
+                                {((isHovering && !isEditing) || msg.generating) && (
                                     <ButtonGroup variant="contained" aria-label="outlined primary button group">
                                         {
                                             msg.generating
@@ -272,10 +271,8 @@ function _Block(props: Props) {
                                             </MenuItem>
                                         </StyledMenu>
                                     </ButtonGroup>
-                                ) : (
-                                    <Box sx={{ height: '33px' }}></Box>
-                                )
-                            }
+                                )}
+                            </Box>
                         </Grid>
                     </Grid>
                     <Grid item xs={1}>
