@@ -58,5 +58,17 @@
   "regenerate": "重新生成",
   "font size changed, effective after next launch": "字体大小已改变，将在下次启动时生效",
   "star": "星标",
-  "unstar": "取消星标"
+  "unstar": "取消星标",
+  "About": "关于",
+  "About Chatbox": "版本信息",
+  "close": "关闭",
+  "Your Ultimate Copilot on the Desktop. Chatbox is a free and open-source desktop application and devtools for GPT. Made by": "Chatbox 是一个免费开源的 GPT 桌面客户端与调试工具，是你桌面上的最佳 AI 拍档。由",
+  "and the community.": "与开源社区共同打造。",
+  "I made Chatbox for my own use and it's great to see so many people enjoying it! If you'd like to support development, a donation would be greatly appreciated, though it is entirely optional. Many thanks, Benn": "“刚开始我只是想开发一个方便自己使用的小工具，没想到会有那么多人喜欢它！如果你愿意支持我的开发工作，可以适当进行捐赠，非常感谢。”",
+  "Donate": "捐赠",
+  "Or become a sponsor": "或成为赞助商",
+  "Check Update": "检查更新",
+  "Homepage": "首页",
+  "Feedback": "建议反馈",
+  "Roadmap": "未来规划"
 }

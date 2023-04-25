@@ -20,6 +20,7 @@ import * as prompts from './prompts';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import Save from '@mui/icons-material/Save'
 import CleanWidnow from './CleanWindow';
+import AboutWindow from './AboutWindow';
 import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
@@ -90,6 +91,9 @@ function Main() {
             setOpenSettingWindow(true)
         }
     }, [store.needSetting])
+
+    // 是否展示相关信息的窗口
+    const [openAboutWindow, setOpenAboutWindow] = React.useState(false);
 
     const messageListRef = useRef<HTMLDivElement>(null)
     const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
@@ -404,9 +408,7 @@ function Main() {
                                 </Typography>
                             </MenuItem>
 
-                            <MenuItem onClick={() => {
-                                api.openLink('https://github.com/Bin-Huang/chatbox/releases')
-                            }}>
+                            <MenuItem onClick={() => setOpenAboutWindow(true)}>
                                 <ListItemIcon>
                                     <IconButton>
                                         <InfoOutlinedIcon fontSize="small" />
@@ -416,7 +418,7 @@ function Main() {
                                     <Badge color="primary" variant="dot" invisible={!store.needCheckUpdate}
                                     sx={{ paddingRight: '8px' }} >
                                         <Typography sx={{ opacity: 0.5 }}>
-                                            {t('version')}: {store.version}
+                                            {t('About')} ({store.version})
                                         </Typography>
                                     </Badge>
                                 </ListItemText>
@@ -551,6 +553,9 @@ function Main() {
                         }
                     }}
                     close={() => setOpenSettingWindow(false)}
+                />
+                <AboutWindow open={openAboutWindow} version={store.version} lang={store.settings.language}
+                    close={() => setOpenAboutWindow(false)}
                 />
                 {
                     configureChatConfig !== null && (

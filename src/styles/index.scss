@@ -57,6 +57,10 @@ html[data-theme='dark'] {
     ::-webkit-scrollbar-button {
         display: none;
     }
+
+    a {
+        color: #fff;
+    }
 }
 
 html[data-theme='light'] {
@@ -108,5 +112,9 @@ html[data-theme='light'] {
     /* 滚动条上下按钮 */
     ::-webkit-scrollbar-button {
         display: none;
+    }
+
+    a {
+        color: #333;
     }
 }

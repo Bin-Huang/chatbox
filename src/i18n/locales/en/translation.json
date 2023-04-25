@@ -59,5 +59,17 @@
   "regenerate": "Regenerate",
   "font size changed, effective after next launch": "Font size changed, effective after next launch",
   "star": "Star",
-  "unstar": "Unstar"
+  "unstar": "Unstar",
+  "About": "About",
+  "About Chatbox": "About Chatbox",
+  "close": "Close",
+  "Your Ultimate Copilot on the Desktop. Chatbox is a free and open-source desktop application and devtools for GPT. Made by": "Your Ultimate Copilot on the Desktop. Chatbox is a free and open-source desktop application and devtools for GPT. Made by",
+  "and the community.": "and the community.",
+  "I made Chatbox for my own use and it's great to see so many people enjoying it! If you'd like to support development, a donation would be greatly appreciated, though it is entirely optional. Many thanks, Benn": "I made Chatbox for my own use and it's great to see so many people enjoying it! If you'd like to support development, a donation would be greatly appreciated, though it is entirely optional. Many thanks, Benn",
+  "Donate": "Donate",
+  "Or become a sponsor": "Or become a sponsor",
+  "Check Update": "Check Update",
+  "Homepage": "Homepage",
+  "Feedback": "Feedback",
+  "Roadmap": "Roadmap"
 }
