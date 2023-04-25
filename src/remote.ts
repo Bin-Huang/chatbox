@@ -1,4 +1,4 @@
-import { Config } from './types'
+import { Config, SponsorAd } from './types'
 
 const releaseHost = "https://releases.chatboxapp.xyz"
 
@@ -15,4 +15,10 @@ export async function checkNeedUpdate(version: string, os: string, config: Confi
     })
     const json = await res.json()
     return !!json['need_update']
+}
+
+export async function getSponsorAd(): Promise<null|SponsorAd> {
+    const res = await fetch(`${releaseHost}/sponsor_ad`)
+    const json = await res.json()
+    return json['data'] || null
 }

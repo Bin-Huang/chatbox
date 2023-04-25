@@ -68,3 +68,8 @@ export interface OpenAIMessage {
 export interface Config{
     uuid: string
 }
+
+export interface SponsorAd {
+    text: string
+    url: string
+}
