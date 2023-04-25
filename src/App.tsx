@@ -336,10 +336,8 @@ function Main() {
                         <MenuList
                             sx={{
                                 width: '100%',
-                                // bgcolor: 'background.paper',
                                 position: 'relative',
                                 overflow: 'auto',
-                                // height: '30vh',
                                 height: '60vh',
                                 '& ul': { padding: 0 },
                             }}
@@ -351,7 +349,6 @@ function Main() {
                             }
                             component="div"
                             ref={sessionListRef}
-                        // dense
                         >
                             <DndContext
                                 modifiers={[restrictToVerticalAxis]}
