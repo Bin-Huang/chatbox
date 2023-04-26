@@ -460,7 +460,6 @@ function Main() {
                                 {
                                     showSponsorAD && sponsorAD && (
                                         <Chip size='small'
-                                            icon={<CampaignOutlinedIcon />}
                                             sx={{
                                                 maxWidth: '400px',
                                                 height: 'auto',
@@ -470,11 +469,13 @@ function Main() {
                                                 },
                                                 borderRadius: '8px',
                                                 marginRight: '25px',
+                                                opacity: 0.6,
                                             }}
+                                            icon={<CampaignOutlinedIcon />}
                                             deleteIcon={<CancelOutlinedIcon />}
-                                                    onDelete={() => setShowSponsorAD(false)}
-                                                    onClick={() => api.openLink(sponsorAD.url)}
-                                                    label={sponsorAD.text}
+                                            onDelete={() => setShowSponsorAD(false)}
+                                            onClick={() => api.openLink(sponsorAD.url)}
+                                            label={sponsorAD.text}
                                         />
                                     )
                                 }
