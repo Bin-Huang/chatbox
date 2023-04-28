@@ -30,7 +30,6 @@ import { writeTextFile } from '@tauri-apps/api/fs';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import * as remote from './remote'
-import "./ga"
 import "./styles/App.scss"
 
 import type { DragEndEvent } from '@dnd-kit/core';
