@@ -42,19 +42,21 @@
 
 ## Download
 
-**Download installers**:
+*Chatbox supports all major operating systems, including: Windows, Mac (Intel, M1), and Linux.*
 
-[>>Click here to view all available installers for download<<](https://github.com/Bin-Huang/chatbox/releases)
+### Download from the official website
 
-**Supported Platforms**:
+Visit **[chatboxapp.xyz](https://chatboxapp.xyz/)** to download the latest version.
 
-- **Windows**: Please download `.msi` installation package
-- **Mac**: Please download `.dmg` (recommended) or `.tar` file, already supporting x64, arm64 (please download x64 version for now, it is compatible)
-- **Linux**: Please download `.AppImage` (recommended) or `.deb` file
+### Download from Github Releases
 
-**Download from package manager**:
+You can visit **[Github Releases](https://github.com/Bin-Huang/chatbox/releases)** to browse and download all previous versions.
 
-[aur](https://aur.archlinux.org/packages/chatbox-bin)
+### Download via package manager
+
+#### [aur](https://aur.archlinux.org/packages/chatbox-bin)
+
+If you are using Arch Linux, you can download and install Chatbox via AUR:
 
 ```
 paru -S chatbox-bin

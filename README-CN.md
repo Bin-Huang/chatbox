@@ -42,20 +42,21 @@
 
 ## 下载
 
-**下载安装包**：
+*Chatbox 支持所有的主流操作系统，包括： Windows、 Mac (Intel, M1) 和 Linux。*
 
-[>>点击这里查看可供下载的安装包<<](https://github.com/Bin-Huang/chatbox/releases)
+### 从官方网站下载
 
+请访问 **[chatboxapp.xyz](https://chatboxapp.xyz/)** 下载最新版本。
 
-**支持系统**：
+### 从 Github Releases 下载
 
-- **Windows**: 请下载 `.msi` 安装包文件
-- **Mac**: 请下载 `.dmg`（推荐）或 `.tar` 文件，已经支持 x64, arm64(暂时请下载 x64 版本，已兼容)
-- **Linux**: 请下载 `.AppImage`（推荐）或 `.deb` 文件
+您可以访问 **[Github Releases](https://github.com/Bin-Huang/chatbox/releases)** 浏览并下载所有历史版本。
 
-**从包管理器下载**:
+### 通过包管理器下载
 
-[aur](https://aur.archlinux.org/packages/chatbox-bin)
+#### [aur](https://aur.archlinux.org/packages/chatbox-bin)
+
+如果您使用的是 Arch Linux，可以通过 AUR 下载并安装 Chatbox：
 
 ```
 paru -S chatbox-bin
