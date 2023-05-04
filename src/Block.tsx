@@ -28,12 +28,7 @@ import { useTranslation, getI18n } from 'react-i18next';
 import { Message, OpenAIRoleEnum, OpenAIRoleEnumType } from './types';
 import ReplayIcon from '@mui/icons-material/Replay';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
-
-// copy button html content
-// join at markdown-it parsed
-const getCodeCopyButtonHTML = () => {
-    return `<div class="copy-action">${getI18n().t('copy')}</div>`;
-};
+import './styles/Block.scss'
 
 const md = new MarkdownIt({
     linkify: true,
@@ -52,9 +47,10 @@ const md = new MarkdownIt({
         }
 
         // join actions html string
+        lang = (lang || 'txt').toUpperCase()
         return [
             '<div class="code-block-wrapper">',
-            getCodeCopyButtonHTML(),
+            `<div class="code-header"><span class="code-lang">${lang}</span><div class="copy-action">${getI18n().t('copy')}</div></div>`,
             '<pre class="hljs code-block">',
             `<code>${content}</code>`,
             '</pre>',
@@ -72,7 +68,6 @@ export interface Props {
     showWordCount: boolean
     showTokenCount: boolean
     showModelName: boolean
-    modelName: string
     setMsg: (msg: Message) => void
     delMsg: () => void
     refreshMsg: () => void
@@ -107,7 +102,7 @@ function _Block(props: Props) {
 
     const tips: string[] = []
     if (props.showModelName) {
-        tips.push(`model: ${props.modelName}`)
+        tips.push(`model: ${props.msg.model || 'unknown'}`)
     }
     if (props.showWordCount) {
         tips.push(`word count: ${wordCount.countWord(msg.content)}`)
@@ -132,17 +127,15 @@ function _Block(props: Props) {
                 padding: '1rem 28px 0.6rem 28px',
             }}
             className={[
+                'msg-block',
                 msg.generating ? 'rendering' : 'render-done',
-                msg?.role === OpenAIRoleEnum.Assistant ? 'assistant-msg' : 'user-msg',
+                {
+                    user: 'user-msg',
+                    system: 'system-msg',
+                    assistant: 'assistant-msg',
+                }[msg?.role || 'user']
             ].join(' ')}
         >
-            <style>
-                {`
-                    .msg-content p {
-                        margin: 0.6rem 0 0.4rem 0;
-                    }
-                `}
-            </style>
             <Grid container spacing={2}>
                 <Grid item >
                     {
@@ -347,5 +340,5 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Block(props: Props) {
     return useMemo(() => {
         return <_Block {...props} />
-    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName, props.modelName])
+    }, [props.msg, props.showWordCount, props.showTokenCount, props.showModelName])
 }

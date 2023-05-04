@@ -1,7 +1,7 @@
 import * as api from '@tauri-apps/api'
 import { Store } from "tauri-plugin-store-api";
 
-const store = new Store('./config.json')
+const store = new Store('config.json')
 
 setInterval(async () => {
     try {
@@ -57,4 +57,8 @@ export const getVersion = async () => {
 
 export const openLink = async (url: string) => {
     return api.shell.open(url)
+}
+
+export const getPlatform = async () => {
+    return api.os.platform()
 }

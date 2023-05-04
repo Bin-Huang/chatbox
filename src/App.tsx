@@ -3,12 +3,12 @@ import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
 import {
-    Toolbar, Box, Badge, Snackbar,
+    Toolbar, Box, Badge, Snackbar, Chip,
     List, ListSubheader, ListItemText, MenuList,
     IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     TextField,
 } from '@mui/material';
-import { Session, createSession, Message, createMessage } from './types'
+import { Session, createSession, Message, createMessage, SponsorAd } from './types'
 import useStore from './store'
 import SettingWindow from './SettingWindow'
 import ChatConfigWindow from './ChatConfigWindow'
@@ -18,12 +18,19 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import * as prompts from './prompts';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import Save from '@mui/icons-material/Save'
 import CleanWidnow from './CleanWindow';
+import AboutWindow from './AboutWindow';
 import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
-import "./ga"
+import { save } from '@tauri-apps/api/dialog';
+import { writeTextFile } from '@tauri-apps/api/fs';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import * as remote from './remote'
+import "./styles/App.scss"
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
@@ -64,19 +71,17 @@ function Main() {
         })
     );
 
-    const reversedSessions = [...store.chatSessions].reverse()
+    const sortedSessions = sortSessions(store.chatSessions)
     function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event;
         if (!over) {
             return
         }
-        
         if (active.id !== over.id) {
-            const oldIndex = reversedSessions.findIndex(({id}) => id === active.id);
-            const newIndex = reversedSessions.findIndex(({id}) => id === over.id);
-
-            const newReversed = arrayMove(reversedSessions, oldIndex, newIndex);
-            store.setSessions(newReversed.reverse())
+            const oldIndex = sortedSessions.findIndex(({id}) => id === active.id);
+            const newIndex = sortedSessions.findIndex(({id}) => id === over.id);
+            const newReversed = arrayMove(sortedSessions, oldIndex, newIndex);
+            store.setSessions(sortSessions(newReversed))
         }
     }
     
@@ -89,8 +94,8 @@ function Main() {
         }
     }, [store.needSetting])
 
-    // 是否展示应用更新提示
-    const [needCheckUpdate, setNeedCheckUpdate] = useState(true)
+    // 是否展示相关信息的窗口
+    const [openAboutWindow, setOpenAboutWindow] = React.useState(false);
 
     const messageListRef = useRef<HTMLDivElement>(null)
     const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
@@ -154,7 +159,7 @@ function Main() {
         const target: HTMLElement = e.target as HTMLElement;
 
         const isCopyActionClassName = target.className === 'copy-action';
-        const isCodeBlockParent = target.parentElement?.className === 'code-block-wrapper';
+        const isCodeBlockParent = target.parentElement?.parentElement?.className === 'code-block-wrapper';
 
         // check is copy action button
         if (!(isCopyActionClassName && isCodeBlockParent)) {
@@ -162,7 +167,7 @@ function Main() {
         }
 
         // got codes
-        const content = target?.parentNode?.querySelector('code')?.innerText ?? '';
+        const content = target?.parentNode?.parentNode?.querySelector('code')?.innerText ?? '';
 
         // do copy
         // * thats lines copy from copy block content action
@@ -192,7 +197,7 @@ function Main() {
             store.settings.apiHost,
             store.settings.maxContextSize,
             store.settings.maxTokens,
-            session.model,
+            store.settings.model,
             prompts.nameConversation(session.messages.slice(0, 3)),
             ({ text: name }) => {
                 name = name.replace(/['"“”]/g, '')
@@ -204,6 +209,20 @@ function Main() {
             }
         )
     }
+    const saveSession = async (session:Session) => {
+        const filePath = await save({
+            filters: [{
+              name: 'Export',
+              extensions: ['md']
+            }]
+          });
+        if(filePath){
+            const content = session.messages
+                .map(msg => `**${msg.role}**:\n${msg.content}`)
+                .join('\n\n--------------------\n\n')
+            await writeTextFile(filePath!!, content)
+        }
+    }
 
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
         messageScrollRef.current = { msgId: targetMsg.id, smooth: false }
@@ -212,8 +231,7 @@ function Main() {
             store.settings.apiHost,
             store.settings.maxContextSize,
             store.settings.maxTokens,
-            session.model,
-            // store.settings.model,
+            store.settings.model,
             promptMsgs,
             ({ text, cancel }) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -222,6 +240,7 @@ function Main() {
                             ...session.messages[i],
                             content: text,
                             cancel,
+                            model: store.settings.model,
                             generating: true
                         }
                         break;
@@ -235,6 +254,7 @@ function Main() {
                         session.messages[i] = {
                             ...session.messages[i],
                             content: t('api request failed:') + ' \n```\n' + err.message + '\n```',
+                            model: store.settings.model,
                             generating: false
                         }
                         break
@@ -270,8 +290,17 @@ function Main() {
         }
     }
 
+    const [showSponsorAD, setShowSponsorAD] = useState(true)
+    const [sponsorAD, setSponsorAD] = useState<SponsorAd | null>(null)
+    useEffect(() => {
+        (async () => {
+            const ad = await remote.getSponsorAd()
+            setSponsorAD(ad)
+        })()
+    }, [store.currentSession.id])
+
     return (
-        <Box sx={{ height: '100vh' }}>
+        <Box className='App'>
             <Grid container sx={{
                 flexWrap: 'nowrap',
                 height: '100%',
@@ -306,10 +335,8 @@ function Main() {
                         <MenuList
                             sx={{
                                 width: '100%',
-                                // bgcolor: 'background.paper',
                                 position: 'relative',
                                 overflow: 'auto',
-                                // height: '30vh',
                                 height: '60vh',
                                 '& ul': { padding: 0 },
                             }}
@@ -321,7 +348,6 @@ function Main() {
                             }
                             component="div"
                             ref={sessionListRef}
-                        // dense
                         >
                             <DndContext
                                 modifiers={[restrictToVerticalAxis]}
@@ -329,9 +355,9 @@ function Main() {
                                 collisionDetection={closestCenter}
                                 onDragEnd={handleDragEnd}
                             >
-                                <SortableContext items={reversedSessions} strategy={verticalListSortingStrategy}>
+                                <SortableContext items={sortedSessions} strategy={verticalListSortingStrategy}>
                                 {
-                                    reversedSessions.map((session, ix) => (
+                                    sortedSessions.map((session, ix) => (
                                         <SortableItem key={session.id} id={session.id}>
                                             <SessionItem key={session.id}
                                                 selected={store.currentSession.id === session.id}
@@ -342,9 +368,15 @@ function Main() {
                                                 }}
                                                 deleteMe={() => store.deleteChatSession(session)}
                                                 copyMe={() => {
-                                                    const newSession = createSession(session.model, session.name + ' copied')
+                                                    const newSession = createSession(session.name + ' copied')
                                                     newSession.messages = session.messages
                                                     store.createChatSession(newSession, ix)
+                                                }}
+                                                switchStarred={() => {
+                                                    store.updateChatSession({
+                                                        ...session,
+                                                        starred: !session.starred
+                                                    })
                                                 }}
                                                 editMe={() => setConfigureChatConfig(session)}
                                             />
@@ -384,19 +416,17 @@ function Main() {
                                 </Typography>
                             </MenuItem>
 
-                            <MenuItem onClick={() => {
-                                setNeedCheckUpdate(false)
-                                api.openLink('https://github.com/Bin-Huang/chatbox/releases')
-                            }}>
+                            <MenuItem onClick={() => setOpenAboutWindow(true)}>
                                 <ListItemIcon>
                                     <IconButton>
                                         <InfoOutlinedIcon fontSize="small" />
                                     </IconButton>
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Badge color="primary" variant="dot" invisible={!needCheckUpdate} sx={{ paddingRight: '8px' }} >
+                                    <Badge color="primary" variant="dot" invisible={!store.needCheckUpdate}
+                                    sx={{ paddingRight: '8px' }} >
                                         <Typography sx={{ opacity: 0.5 }}>
-                                            {t('version')}: {store.version}
+                                            {t('About')} ({store.version})
                                         </Typography>
                                     </Badge>
                                 </ListItemText>
@@ -426,13 +456,39 @@ function Main() {
                                         {store.currentSession.name}
                                     </span>
                                 </Typography>
+                                {
+                                    showSponsorAD && sponsorAD && (
+                                        <Chip size='small'
+                                            sx={{
+                                                maxWidth: '400px',
+                                                height: 'auto',
+                                                '& .MuiChip-label': {
+                                                    display: 'block',
+                                                    whiteSpace: 'normal',
+                                                },
+                                                borderRadius: '8px',
+                                                marginRight: '25px',
+                                                opacity: 0.6,
+                                            }}
+                                            icon={<CampaignOutlinedIcon />}
+                                            deleteIcon={<CancelOutlinedIcon />}
+                                            onDelete={() => setShowSponsorAD(false)}
+                                            onClick={() => api.openLink(sponsorAD.url)}
+                                            label={sponsorAD.text}
+                                        />
+                                    )
+                                }
                                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
                                     onClick={() => setSessionClean(store.currentSession)}
                                 >
                                     <CleaningServicesIcon />
                                 </IconButton>
+                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{}}
+                                    onClick={() => saveSession(store.currentSession)}
+                                >
+                                    <Save />
+                                </IconButton>
                             </Toolbar>
-                            <Divider />
                         </Box>
                         <List
                             className='scroll'
@@ -452,7 +508,6 @@ function Main() {
                                         showWordCount={store.settings.showWordCount || false}
                                         showTokenCount={store.settings.showTokenCount || false}
                                         showModelName={store.settings.showModelName || false}
-                                        modelName={store.currentSession.model}
                                         setMsg={(updated) => {
                                             store.currentSession.messages = store.currentSession.messages.map((m) => {
                                                 if (m.id === updated.id) {
@@ -522,8 +577,14 @@ function Main() {
                     save={(settings) => {
                         store.setSettings(settings)
                         setOpenSettingWindow(false)
+                        if (settings.fontSize !== store.settings.fontSize) {
+                            store.addToast(t('font size changed, effective after next launch'))
+                        }
                     }}
                     close={() => setOpenSettingWindow(false)}
+                />
+                <AboutWindow open={openAboutWindow} version={store.version} lang={store.settings.language}
+                    close={() => setOpenAboutWindow(false)}
                 />
                 {
                     configureChatConfig !== null && (
@@ -625,6 +686,19 @@ function MessageInput(props: {
             </Stack>
         </form>
     )
+}
+
+function sortSessions(sessions: Session[]): Session[] {
+    let reversed: Session[] = []
+    let pinned: Session[] = []
+    for (const sess of sessions) {
+        if (sess.starred) {
+            pinned.push(sess)
+            continue
+        }
+        reversed.unshift(sess)
+    }
+    return pinned.concat(reversed)
 }
 
 export default function App() {
