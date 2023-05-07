@@ -25,9 +25,17 @@
 
 </p>
 
-<!-- ![](./doc/demo.png) -->
-![](./doc/demo2.png)
-![](./doc/demo3.gif)
+<table>
+<tr>
+<td>
+<img src='./doc/snapshot2.png' />
+</td>
+<td>
+<img src='./doc/snapshot4.png' />
+</td>
+</tr>
+</table>
+
 
 ## 特性
 
