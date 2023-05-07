@@ -58,9 +58,9 @@
 
 Visit **[chatboxapp.xyz](https://chatboxapp.xyz/)** to download the latest version.
 
-### Download from Github Releases
+### Download from GitHub Releases
 
-You can visit **[Github Releases](https://github.com/Bin-Huang/chatbox/releases)** to browse and download all previous versions.
+You can visit **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to browse and download all previous versions.
 
 ### Download via package manager
 
