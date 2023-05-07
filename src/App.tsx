@@ -198,6 +198,7 @@ function Main() {
             store.settings.maxContextSize,
             store.settings.maxTokens,
             store.settings.model,
+            store.settings.temperature,
             prompts.nameConversation(session.messages.slice(0, 3)),
             ({ text: name }) => {
                 name = name.replace(/['"“”]/g, '')
@@ -232,6 +233,7 @@ function Main() {
             store.settings.maxContextSize,
             store.settings.maxTokens,
             store.settings.model,
+            store.settings.temperature,
             promptMsgs,
             ({ text, cancel }) => {
                 for (let i = 0; i < session.messages.length; i++) {

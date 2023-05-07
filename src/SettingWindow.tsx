@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Button, Alert,
+    Button, Alert, Chip,
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
     FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography, Box,
 } from '@mui/material';
@@ -15,6 +15,8 @@ import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { useTranslation } from 'react-i18next'
+import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
+import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle';
 
 const { useEffect } = React
 const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314'];
@@ -46,6 +48,13 @@ export default function SettingWindow(props: Props) {
             setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
         } else {
             setSettingsEdit({ ...settingsEdit, maxContextSize: newValue.toString() });
+        }
+    };
+    const handleTemperatureChange = (event: Event, newValue: number | number[], activeThumb: number) => {
+        if (typeof newValue === 'number') {
+            setSettingsEdit({ ...settingsEdit, temperature: newValue });
+        } else {
+            setSettingsEdit({ ...settingsEdit, temperature: newValue[activeThumb] });
         }
     };
     const handleRepliesTokensInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,6 +236,7 @@ export default function SettingWindow(props: Props) {
                                 maxContextSize: getDefaultSettings().maxContextSize,
                                 maxTokens: getDefaultSettings().maxTokens,
                                 showModelName: getDefaultSettings().showModelName,
+                                temperature: getDefaultSettings().temperature,
                             })}>{t('reset')}</Button>
                             {t('to default values.')}
                         </Alert>
@@ -245,6 +255,36 @@ export default function SettingWindow(props: Props) {
                                 ))}
                             </Select>
                         </FormControl>
+
+                        <Box sx={{ marginTop: 3, marginBottom: 1 }}>
+                            <Typography id="discrete-slider" gutterBottom>
+                                {t('temperature')}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+                            <Box sx={{ width: '100%' }}>
+                                <Slider
+                                    value={settingsEdit.temperature}
+                                    onChange={handleTemperatureChange}
+                                    aria-labelledby="discrete-slider"
+                                    valueLabelDisplay="auto"
+                                    defaultValue={settingsEdit.temperature}
+                                    step={0.1}
+                                    min={0}
+                                    max={1}
+                                    marks={[
+                                        {
+                                            value: 0.2,
+                                            label: <Chip size='small' icon={<PlaylistAddCheckCircleIcon />} label={t('meticulous')} />
+                                        },
+                                        {
+                                            value: 0.8,
+                                            label: <Chip size='small' icon={<LightbulbCircleIcon />} label={t('creative')} />
+                                        },
+                                    ]}
+                                />
+                            </Box>
+                        </Box>
 
                         <Box sx={{ marginTop: 3, marginBottom: -1 }}>
                             <Typography id="discrete-slider" gutterBottom>

@@ -42,6 +42,7 @@ export interface Settings {
     apiHost: string
     model: string
     maxContextSize: string
+    temperature: number
     maxTokens: string
     showWordCount?: boolean
     showTokenCount?: boolean
