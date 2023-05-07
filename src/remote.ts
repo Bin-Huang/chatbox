@@ -1,4 +1,4 @@
-import { Config, SponsorAd } from './types'
+import { Config, SponsorAboutBanner, SponsorAd } from './types'
 
 const releaseHost = "https://releases.chatboxapp.xyz"
 
@@ -21,4 +21,10 @@ export async function getSponsorAd(): Promise<null|SponsorAd> {
     const res = await fetch(`${releaseHost}/sponsor_ad`)
     const json = await res.json()
     return json['data'] || null
+}
+
+export async function listSponsorAboutBanner(): Promise<SponsorAboutBanner[]> {
+    const res = await fetch(`${releaseHost}/sponsor_about_banner`)
+    const json = await res.json()
+    return json['data']
 }
