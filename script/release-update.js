@@ -1,6 +1,8 @@
 const axios = require('axios')
 const fs = require('fs-extra')
 
+// node script/release-update.js v0.4.2 cloudflare
+
 const data = {
     "version": "v0.1.15",
     "notes": "New version",

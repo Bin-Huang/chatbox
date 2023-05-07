@@ -100,6 +100,8 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 - [x] Copy button for code blocks
 - [x] Stop button for AI message generation
 - [x] Drag-and-drop sorting of tabs
+- [x] [Web version](https://web.chatboxapp.xyz)
+- [ ] Azure OpenAI API compatibility
 - [ ] Improved prompt settings
 - [ ] Prompt Library
 - [ ] Talk with files

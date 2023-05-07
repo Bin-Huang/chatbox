@@ -103,6 +103,8 @@ paru -S chatbox-bin
 - [x] 代码块的复制按钮
 - [x] 停止生成的按钮
 - [x] 标签页的拖拽排序
+- [x] [网页版本](https://web.chatboxapp.xyz)
+- [ ] 兼容 Azure OpenAI API
 - [ ] 更好的 prompt 设置
 - [ ] Prompt Library
 - [ ] 可以发送文件，谈论文件
