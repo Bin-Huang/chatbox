@@ -74,3 +74,12 @@ export interface SponsorAd {
     text: string
     url: string
 }
+
+export interface SponsorAboutBanner {
+    type: 'picture' | 'picture-text'
+    name: string
+    pictureUrl: string
+    link: string
+    title: string
+    description: string
+}
