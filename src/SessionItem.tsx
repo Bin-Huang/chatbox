@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     ListItemText, ListItemAvatar, MenuItem, Divider,
     Avatar, IconButton, Button, TextField, Popper, Fade, Typography, ListItemIcon,
@@ -13,8 +13,6 @@ import StyledMenu from './StyledMenu';
 import { useTranslation } from "react-i18next";
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
-
-const { useState } = React
 
 export interface Props {
     session: Session
@@ -42,6 +40,7 @@ export default function SessionItem(props: Props) {
     };
 
     return (
+        <>
         <MenuItem
             key={session.id}
             selected={selected}
@@ -77,7 +76,8 @@ export default function SessionItem(props: Props) {
                     }
                 </IconButton>
             }
-            <StyledMenu
+        </MenuItem>
+        <StyledMenu
                 MenuListProps={{
                     'aria-labelledby': 'long-button',
                 }}
@@ -132,6 +132,6 @@ export default function SessionItem(props: Props) {
                 </MenuItem>
 
             </StyledMenu>
-        </MenuItem>
+        </>
     )
 }
