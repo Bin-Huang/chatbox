@@ -644,7 +644,7 @@ function MessageInput(props: {
     const { t } = useTranslation()
     const { messageInput, setMessageInput } = props
     const submit = (needGenerating = true) => {
-        if (messageInput.length === 0) {
+        if (messageInput.trim() === '') {
             return
         }
         props.onSubmit(createMessage('user', messageInput), needGenerating)
