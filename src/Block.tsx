@@ -124,7 +124,7 @@ function _Block(props: Props) {
                 setIsHovering(false)
             }}
             sx={{
-                padding: '1rem 28px 0.6rem 28px',
+                padding: '10px',
             }}
             className={[
                 'msg-block',
@@ -136,8 +136,8 @@ function _Block(props: Props) {
                 }[msg?.role || 'user']
             ].join(' ')}
         >
-            <Grid container spacing={2}>
-                <Grid item >
+            <Grid container wrap="nowrap" spacing={2}>
+                <Grid item>
                     {
                         isEditing ? (
                             <Select
@@ -171,9 +171,9 @@ function _Block(props: Props) {
                         )
                     }
                 </Grid>
-                <Grid item xs={11} sm container>
+                <Grid item xs sm container>
                     <Grid item xs container direction="column" spacing={2}>
-                        <Grid item xs>
+                        <Grid item>
                             {
                                 isEditing ? (
                                     <TextField
@@ -190,6 +190,7 @@ function _Block(props: Props) {
                                     <Box
                                         sx={{
                                             wordBreak: 'break-word',
+                                            wordWrap: 'break-word',
                                         }}
                                         className='msg-content'
                                         dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
@@ -201,9 +202,10 @@ function _Block(props: Props) {
                                     tips.join(', ')
                                 }
                             </Typography>
-                            <Box sx={{ height: '33px' }}>
-                                {((isHovering && !isEditing) || msg.generating) && (
-                                    <ButtonGroup variant="contained" aria-label="outlined primary button group">
+
+                            {
+                                (isHovering && !isEditing) || msg.generating ? (
+                                    <ButtonGroup sx={{ height: '35px' }} variant="contained" aria-label="outlined primary button group">
                                         {
                                             msg.generating
                                                 ? (
@@ -271,8 +273,10 @@ function _Block(props: Props) {
                                             </MenuItem>
                                         </StyledMenu>
                                     </ButtonGroup>
-                                )}
-                            </Box>
+                                ) : (
+                                    <Box sx={{ height: '35px' }}></Box>
+                                )
+                            }
                         </Grid>
                     </Grid>
                     <Grid item xs={1}>

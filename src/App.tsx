@@ -6,7 +6,7 @@ import {
     Toolbar, Box, Badge, Snackbar, Chip,
     List, ListSubheader, ListItemText, MenuList,
     IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
-    TextField,
+    TextField, useTheme,
 } from '@mui/material';
 import { Session, createSession, Message, createMessage, SponsorAd } from './types'
 import useStore from './store'
@@ -29,6 +29,7 @@ import { save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import MenuSharpIcon from '@mui/icons-material/MenuSharp';
 import * as remote from './remote'
 import "./styles/App.scss"
 
@@ -85,7 +86,6 @@ function Main() {
         }
     }
 
-
     // 是否展示设置窗口
     const [openSettingWindow, setOpenSettingWindow] = React.useState(false);
     useEffect(() => {
@@ -96,6 +96,9 @@ function Main() {
 
     // 是否展示相关信息的窗口
     const [openAboutWindow, setOpenAboutWindow] = React.useState(false);
+
+    // 是否展示菜单栏
+    const [showMenu, setShowMenu] = React.useState(true);
 
     const messageListRef = useRef<HTMLDivElement>(null)
     const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
@@ -301,42 +304,51 @@ function Main() {
         })()
     }, [store.currentSession.id])
 
+    const theme = useTheme();
     return (
         <Box className='App'>
             <Grid container sx={{
-                flexWrap: 'nowrap',
                 height: '100%',
             }}>
+                {showMenu && (
                 <Grid item
                     sx={{
                         height: '100%',
-                        maxWidth: '210px',
+                        [theme.breakpoints.down("sm")]: {
+                            position: 'absolute',
+                            zIndex: 100,
+                            left: '20px',
+                            right: 0,
+                            bottom: 0,
+                            top: 0,
+                        },
                     }}
                 >
                     <Stack
+                        className='ToolBar'
                         sx={{
+                            width: '210px',
                             height: '100%',
-                            padding: '20px 0',
+                            [theme.breakpoints.down("sm")]: {
+                                position: 'absolute',
+                                zIndex: 1,
+                            },
                         }}
                         spacing={2}
                     >
-                        <a href='https://chatboxapp.xyz/redirect_app/homepage'
-                            target='_blank' style={{ textDecoration: 'none' }}
-                        >
-                            <Toolbar variant="dense" sx={{
-                                display: "flex",
-                                alignItems: "flex-end",
-                            }} >
-                                <img src={icon} style={{
-                                    width: '35px',
-                                    height: '35px',
-                                    marginRight: '5px',
-                                }} />
-                                <Typography variant="h5" color="inherit" component="div">
-                                    Chatbox
-                                </Typography>
-                            </Toolbar>
-                        </a>
+                        <Toolbar variant="dense" sx={{
+                            display: "flex",
+                            alignItems: "flex-end",
+                        }} >
+                            <img src={icon} style={{
+                                width: '35px',
+                                height: '35px',
+                                marginRight: '5px',
+                            }} />
+                            <Typography variant="h5" color="inherit" component="div">
+                                Chatbox
+                            </Typography>
+                        </Toolbar>
 
                         <MenuList
                             sx={{
@@ -362,33 +374,33 @@ function Main() {
                                 onDragEnd={handleDragEnd}
                             >
                                 <SortableContext items={sortedSessions} strategy={verticalListSortingStrategy}>
-                                    {
-                                        sortedSessions.map((session, ix) => (
-                                            <SortableItem key={session.id} id={session.id}>
-                                                <SessionItem key={session.id}
-                                                    selected={store.currentSession.id === session.id}
-                                                    session={session}
-                                                    switchMe={() => {
-                                                        store.switchCurrentSession(session)
-                                                        document.getElementById('message-input')?.focus() // better way?
-                                                    }}
-                                                    deleteMe={() => store.deleteChatSession(session)}
-                                                    copyMe={() => {
-                                                        const newSession = createSession(session.name + ' copied')
-                                                        newSession.messages = session.messages
-                                                        store.createChatSession(newSession, ix)
-                                                    }}
-                                                    switchStarred={() => {
-                                                        store.updateChatSession({
-                                                            ...session,
-                                                            starred: !session.starred
-                                                        })
-                                                    }}
-                                                    editMe={() => setConfigureChatConfig(session)}
-                                                />
-                                            </SortableItem>
-                                        ))
-                                    }
+                                {
+                                    sortedSessions.map((session, ix) => (
+                                        <SortableItem key={session.id} id={session.id}>
+                                            <SessionItem key={session.id}
+                                                selected={store.currentSession.id === session.id}
+                                                session={session}
+                                                switchMe={() => {
+                                                    store.switchCurrentSession(session)
+                                                    document.getElementById('message-input')?.focus() // better way?
+                                                }}
+                                                deleteMe={() => store.deleteChatSession(session)}
+                                                copyMe={() => {
+                                                    const newSession = createSession(session.name + ' copied')
+                                                    newSession.messages = session.messages
+                                                    store.createChatSession(newSession, ix)
+                                                }}
+                                                switchStarred={() => {
+                                                    store.updateChatSession({
+                                                        ...session,
+                                                        starred: !session.starred
+                                                    })
+                                                }}
+                                                editMe={() => setConfigureChatConfig(session)}
+                                            />
+                                        </SortableItem>
+                                    ))
+                                }
                                 </SortableContext>
                             </DndContext>
                         </MenuList>
@@ -430,7 +442,7 @@ function Main() {
                                 </ListItemIcon>
                                 <ListItemText>
                                     <Badge color="primary" variant="dot" invisible={!store.needCheckUpdate}
-                                        sx={{ paddingRight: '8px' }} >
+                                    sx={{ paddingRight: '8px' }} >
                                         <Typography sx={{ opacity: 0.5 }}>
                                             {t('About')} ({store.version})
                                         </Typography>
@@ -439,71 +451,87 @@ function Main() {
                             </MenuItem>
                         </MenuList>
                     </Stack>
-                </Grid>
+                    <Box
+                        onClick={() => setShowMenu(false)}
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                            [theme.breakpoints.up("sm")]: {
+                                display: 'none',
+                            },
+                        }}
+                    ></Box>
+                </Grid>)}
                 <Grid item xs
                     sx={{
+                        width: '0px',
                         height: '100%',
                     }}
                 >
                     <Stack sx={{
                         height: '100%',
-                        padding: '20px 0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
                     }} >
-                        <Box>
-                            <Toolbar>
-                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                                    <ChatBubbleOutlineOutlinedIcon />
-                                </IconButton>
-                                <Typography variant="h6" color="inherit" component="div" noWrap sx={{ flexGrow: 1 }}>
-                                    <span onClick={() => { editCurrentSession() }} style={{ cursor: 'pointer' }}>
-                                        {store.currentSession.name}
-                                    </span>
-                                </Typography>
-                                {
-                                    showSponsorAD && sponsorAD && (
-                                        <Chip size='small'
-                                            sx={{
-                                                maxWidth: '400px',
-                                                height: 'auto',
-                                                '& .MuiChip-label': {
-                                                    display: 'block',
-                                                    whiteSpace: 'normal',
-                                                },
-                                                borderRadius: '8px',
-                                                marginRight: '25px',
-                                                opacity: 0.6,
-                                            }}
-                                            icon={<CampaignOutlinedIcon />}
-                                            deleteIcon={<CancelOutlinedIcon />}
-                                            onDelete={() => setShowSponsorAD(false)}
-                                            onClick={() => api.openLink(sponsorAD.url)}
-                                            label={sponsorAD.text}
-                                        />
-                                    )
-                                }
-                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
-                                    onClick={() => setSessionClean(store.currentSession)}
-                                >
-                                    <CleaningServicesIcon />
-                                </IconButton>
-                                <IconButton edge="start" color="inherit" aria-label="menu" sx={{}}
-                                    onClick={() => saveSession(store.currentSession)}
-                                >
-                                    <Save />
-                                </IconButton>
-                            </Toolbar>
-                        </Box>
+                        <Toolbar>
+                            <IconButton onClick={() => setShowMenu(!showMenu)}>
+                                <MenuSharpIcon />
+                            </IconButton>
+                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ ml: 1 }}>
+                                <ChatBubbleOutlineOutlinedIcon />
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" component="div" noWrap
+                                sx={{
+                                    flex: 1,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                }}
+                            >
+                                <span onClick={() => { editCurrentSession() }} style={{ cursor: 'pointer' }}>
+                                    {store.currentSession.name}
+                                </span>
+                            </Typography>
+                            {
+                                showSponsorAD && sponsorAD && (
+                                    <Chip size='small'
+                                        sx={{
+                                            maxWidth: '400px',
+                                            height: 'auto',
+                                            '& .MuiChip-label': {
+                                                display: 'block',
+                                                whiteSpace: 'normal',
+                                            },
+                                            borderRadius: '8px',
+                                            marginRight: '25px',
+                                            opacity: 0.6,
+                                        }}
+                                        icon={<CampaignOutlinedIcon />}
+                                        deleteIcon={<CancelOutlinedIcon />}
+                                        onDelete={() => setShowSponsorAD(false)}
+                                        onClick={() => api.openLink(sponsorAD.url)}
+                                        label={sponsorAD.text}
+                                    />
+                                )
+                            }
+                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                                onClick={() => setSessionClean(store.currentSession)}
+                            >
+                                <CleaningServicesIcon />
+                            </IconButton>
+                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{}}
+                                onClick={() => saveSession(store.currentSession)}
+                            >
+                                <Save />
+                            </IconButton>
+                        </Toolbar>
                         <List
                             className='scroll'
                             sx={{
-                                width: '100%',
                                 bgcolor: 'background.paper',
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },
-                                flexGrow: 2,
                             }}
                             component="div"
                             ref={messageListRef}
@@ -681,7 +709,7 @@ function MessageInput(props: {
                             }}
                         />
                     </Grid>
-                    <Grid item xs="auto">
+                    <Grid item xs='auto'>
                         <Button type='submit' variant="contained" size='large'
                             style={{ fontSize: '16px', padding: '10px 20px' }}>
                             {t('send')}

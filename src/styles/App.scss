@@ -1,3 +1,18 @@
 .App {
+    box-sizing: border-box;
+    width: 100vw;
     height: 100vh;
+    padding: 0 20px;
+}
+
+html[data-theme='light'] {
+    .ToolBar {
+        background-color:#fff;
+    }
+}
+
+html[data-theme='dark'] {
+    .ToolBar {
+        background-color: rgb(40, 40, 40);
+    }
 }
