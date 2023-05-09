@@ -279,10 +279,7 @@ function Main() {
         messageScrollRef.current = null
     }
 
-    const [messageInput, setMessageInput] = useState('')
-    useEffect(() => {
-        document.getElementById('message-input')?.focus() // better way?
-    }, [messageInput])
+    const [quoteCache, setQuoteCache] = useState('')
 
     const sessionListRef = useRef<HTMLDivElement>(null)
     const handleCreateNewSession = () => {
@@ -549,7 +546,7 @@ function Main() {
                                         quoteMsg={() => {
                                             let input = msg.content.split('\n').map((line: any) => `> ${line}`).join('\n')
                                             input += '\n\n-------------------\n\n'
-                                            setMessageInput(input)
+                                            setQuoteCache(input)
                                         }}
                                     />
                                 ))
@@ -557,8 +554,8 @@ function Main() {
                         </List>
                         <Box sx={{ padding: '20px 0' }}>
                             <MessageInput
-                                messageInput={messageInput}
-                                setMessageInput={setMessageInput}
+                                quoteCache={quoteCache}
+                                setQuotaCache={setQuoteCache}
                                 onSubmit={async (newUserMsg: Message, needGenerating = true) => {
                                     if (needGenerating) {
                                         const promptsMsgs = [...store.currentSession.messages, newUserMsg]
@@ -638,11 +635,18 @@ function Main() {
 
 function MessageInput(props: {
     onSubmit: (newMsg: Message, needGenerating?: boolean) => void
-    messageInput: string
-    setMessageInput: (value: string) => void
+    quoteCache: string
+    setQuotaCache(cache: string): void
 }) {
     const { t } = useTranslation()
-    const { messageInput, setMessageInput } = props
+    const [messageInput, setMessageInput] = useState('')
+    useEffect(() => {
+        if (props.quoteCache !== '') {
+            setMessageInput(props.quoteCache)
+            props.setQuotaCache('')
+            document.getElementById('message-input')?.focus()
+        }
+    }, [props.quoteCache])
     const submit = (needGenerating = true) => {
         if (messageInput.trim() === '') {
             return
