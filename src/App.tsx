@@ -6,7 +6,7 @@ import {
     Toolbar, Box, Badge, Snackbar, Chip,
     List, ListSubheader, ListItemText, MenuList,
     IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
-    TextField, useTheme,
+    TextField, useTheme, useMediaQuery,
 } from '@mui/material';
 import { Session, createSession, Message, createMessage, SponsorAd } from './types'
 import useStore from './store'
@@ -98,7 +98,10 @@ function Main() {
     const [openAboutWindow, setOpenAboutWindow] = React.useState(false);
 
     // 是否展示菜单栏
-    const [showMenu, setShowMenu] = React.useState(true);
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+    console.log(isSmallScreen);
+    const [showMenu, setShowMenu] = React.useState(!isSmallScreen);
 
     const messageListRef = useRef<HTMLDivElement>(null)
     const messageScrollRef = useRef<{ msgId: string, smooth?: boolean } | null>(null)
@@ -304,7 +307,6 @@ function Main() {
         })()
     }, [store.currentSession.id])
 
-    const theme = useTheme();
     return (
         <Box className='App'>
             <Grid container sx={{
