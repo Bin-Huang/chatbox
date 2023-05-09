@@ -123,6 +123,12 @@ Any form of contribution is welcome, including but not limited to:
 - Submitting translations
 - Submitting any other forms of contribution
 
+## Sponsorship
+
+<a href="https://chatboxapp.xyz/sponsor_redirect/eolink_gh">
+<img style="width: 500px" src="https://chatboxapp.xyz/sponsor_redirect/eolink_resource_web">
+</a>
+
 ## Become a ChatBox Sponsor?
 
 As an open-source project, ChatBox is sustained by the contributions and support of our community. If you or your organization find our work valuable, we welcome your sponsorship to help us continue improving and enhancing the application for everyone. To show our appreciation, we will prominently display sponsor information in our README and other appropriate places. Thank you for considering supporting our efforts!

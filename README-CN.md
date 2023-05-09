@@ -130,6 +130,13 @@ paru -S chatbox-bin
 1. 在提交 issue 之前，请确保没有重复话题的 issue。
 2. 请确保标题足够的简洁明了，描述足够的详细。
 
+## 感谢赞助商
+
+<a href="https://chatboxapp.xyz/sponsor_redirect/eolink_gh">
+<img style="width: 500px" src="https://chatboxapp.xyz/sponsor_redirect/eolink_resource_web">
+</a>
+
+
 ## Chatbox 期待赞助商！
 
 作为一个开源项目，ChatBox 在社区的贡献和支持下才得以持续发展。如果您或您的组织认为 Chatbox 的工作有价值，欢迎您的赞助，支持 Chatbox 可持续的开发与迭代，并造福所有人。为表达感激，我会在 README 文件和其他适当的位置显著地展示赞助商的相关信息。感谢您考虑支持 Chatbox 的工作！
