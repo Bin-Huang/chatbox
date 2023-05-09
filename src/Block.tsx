@@ -171,113 +171,111 @@ function _Block(props: Props) {
                         )
                     }
                 </Grid>
-                <Grid item xs sm container>
-                    <Grid item xs container direction="column" spacing={2}>
-                        <Grid item>
+                <Grid item xs sm container sx={{ width: '0px', paddingRight: '15px' }}>
+                    <Grid item xs>
+                        {
+                            isEditing ? (
+                                <TextField
+                                    style={{
+                                        width: "100%",
+                                    }}
+                                    multiline
+                                    placeholder="prompt"
+                                    value={msg.content}
+                                    onChange={(e) => { setMsg && setMsg({ ...msg, content: e.target.value }) }}
+                                    id={msg.id + 'input'}
+                                />
+                            ) : (
+                                <Box
+                                    sx={{
+                                        wordBreak: 'break-word',
+                                        wordWrap: 'break-word',
+                                    }}
+                                    className='msg-content'
+                                    dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
+                                />
+                            )
+                        }
+                        <Typography variant="body2" sx={{ opacity: 0.5 }} >
                             {
-                                isEditing ? (
-                                    <TextField
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                        multiline
-                                        placeholder="prompt"
-                                        value={msg.content}
-                                        onChange={(e) => { setMsg && setMsg({ ...msg, content: e.target.value }) }}
-                                        id={msg.id + 'input'}
-                                    />
-                                ) : (
-                                    <Box
-                                        sx={{
-                                            wordBreak: 'break-word',
-                                            wordWrap: 'break-word',
-                                        }}
-                                        className='msg-content'
-                                        dangerouslySetInnerHTML={{ __html: md.render(msg.content) }}
-                                    />
-                                )
+                                tips.join(', ')
                             }
-                            <Typography variant="body2" sx={{ opacity: 0.5 }} >
-                                {
-                                    tips.join(', ')
-                                }
-                            </Typography>
+                        </Typography>
 
-                            {
-                                (isHovering && !isEditing) || msg.generating ? (
-                                    <ButtonGroup sx={{ height: '35px' }} variant="contained" aria-label="outlined primary button group">
-                                        {
-                                            msg.generating
-                                                ? (
-                                                    <Tooltip title={t('stop generating')} placement='top' >
-                                                        <IconButton aria-label="edit" color='warning' onClick={onStop} >
-                                                            <StopIcon fontSize='small' />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                )
-                                                : (
-                                                    <Tooltip title={t("regenerate")} placement='top' >
-                                                        <IconButton aria-label="edit" color='primary' onClick={onRefresh} >
-                                                            <ReplayIcon fontSize='small' />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                )
-                                        }
-                                        <Tooltip title={t('edit')} placement='top' >
-                                            <IconButton aria-label="edit" color='primary' onClick={() => {
-                                                setIsHovering(false)
-                                                setAnchorEl(null)
-                                                setIsEditing(true)
-                                            }} >
-                                                <EditIcon fontSize='small' />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={t('copy')} placement='top'>
-                                            <IconButton aria-label="copy" color='primary' onClick={() => {
-                                                props.copyMsg()
-                                                setAnchorEl(null)
-                                            }} >
-                                                <CopyAllIcon fontSize='small' />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <IconButton onClick={handleClick} color='primary'>
-                                            <MoreVertIcon fontSize='small' />
+                        {
+                            (isHovering && !isEditing) || msg.generating ? (
+                                <ButtonGroup sx={{ height: '35px' }} variant="contained" aria-label="outlined primary button group">
+                                    {
+                                        msg.generating
+                                            ? (
+                                                <Tooltip title={t('stop generating')} placement='top' >
+                                                    <IconButton aria-label="edit" color='warning' onClick={onStop} >
+                                                        <StopIcon fontSize='small' />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            )
+                                            : (
+                                                <Tooltip title={t("regenerate")} placement='top' >
+                                                    <IconButton aria-label="edit" color='primary' onClick={onRefresh} >
+                                                        <ReplayIcon fontSize='small' />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            )
+                                    }
+                                    <Tooltip title={t('edit')} placement='top' >
+                                        <IconButton aria-label="edit" color='primary' onClick={() => {
+                                            setIsHovering(false)
+                                            setAnchorEl(null)
+                                            setIsEditing(true)
+                                        }} >
+                                            <EditIcon fontSize='small' />
                                         </IconButton>
-                                        <StyledMenu
-                                            MenuListProps={{
-                                                'aria-labelledby': 'demo-customized-button',
-                                            }}
-                                            anchorEl={anchorEl}
-                                            open={open}
-                                            onClose={handleClose}
-                                            key={msg.id + 'menu'}
+                                    </Tooltip>
+                                    <Tooltip title={t('copy')} placement='top'>
+                                        <IconButton aria-label="copy" color='primary' onClick={() => {
+                                            props.copyMsg()
+                                            setAnchorEl(null)
+                                        }} >
+                                            <CopyAllIcon fontSize='small' />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <IconButton onClick={handleClick} color='primary'>
+                                        <MoreVertIcon fontSize='small' />
+                                    </IconButton>
+                                    <StyledMenu
+                                        MenuListProps={{
+                                            'aria-labelledby': 'demo-customized-button',
+                                        }}
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleClose}
+                                        key={msg.id + 'menu'}
+                                    >
+                                        <MenuItem key={msg.id + 'quote'} onClick={() => {
+                                            setIsHovering(false)
+                                            setAnchorEl(null)
+                                            props.quoteMsg()
+                                        }} disableRipple >
+                                            <FormatQuoteIcon fontSize='small' />
+                                            {t('quote')}
+                                        </MenuItem>
+                                        <Divider sx={{ my: 0.5 }} />
+                                        <MenuItem key={msg.id + 'del'} onClick={() => {
+                                            setIsEditing(false)
+                                            setIsHovering(false)
+                                            setAnchorEl(null)
+                                            props.delMsg()
+                                        }} disableRipple
                                         >
-                                            <MenuItem key={msg.id + 'quote'} onClick={() => {
-                                                setIsHovering(false)
-                                                setAnchorEl(null)
-                                                props.quoteMsg()
-                                            }} disableRipple >
-                                                <FormatQuoteIcon fontSize='small' />
-                                                {t('quote')}
-                                            </MenuItem>
-                                            <Divider sx={{ my: 0.5 }} />
-                                            <MenuItem key={msg.id + 'del'} onClick={() => {
-                                                setIsEditing(false)
-                                                setIsHovering(false)
-                                                setAnchorEl(null)
-                                                props.delMsg()
-                                            }} disableRipple
-                                            >
-                                                <DeleteForeverIcon fontSize='small' />
-                                                {t('delete')}
-                                            </MenuItem>
-                                        </StyledMenu>
-                                    </ButtonGroup>
-                                ) : (
-                                    <Box sx={{ height: '35px' }}></Box>
-                                )
-                            }
-                        </Grid>
+                                            <DeleteForeverIcon fontSize='small' />
+                                            {t('delete')}
+                                        </MenuItem>
+                                    </StyledMenu>
+                                </ButtonGroup>
+                            ) : (
+                                <Box sx={{ height: '35px' }}></Box>
+                            )
+                        }
                     </Grid>
                     <Grid item xs={1}>
                         {

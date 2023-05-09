@@ -163,14 +163,14 @@ function Main() {
             }
             const { scrollTop, scrollHeight, clientHeight } = messageListRef.current;
             if (scrollTop === 0) {
-                setAtScrollTop(false);
-                setAtScrollBottom(true);
-            } else if (scrollTop + clientHeight === scrollHeight) {
                 setAtScrollTop(true);
                 setAtScrollBottom(false);
-            } else {
-                setAtScrollTop(true);
+            } else if (scrollTop + clientHeight === scrollHeight) {
+                setAtScrollTop(false);
                 setAtScrollBottom(true);
+            } else {
+                setAtScrollTop(false);
+                setAtScrollBottom(false);
             }
             setNeedScroll(scrollHeight > clientHeight);
           };
@@ -627,25 +627,27 @@ function Main() {
                                 ))
                             }
                         </List>
-
                         <Box sx={{ padding: '20px 0', position: 'relative', }}>
-                        {(needScroll && <ButtonGroup
-                            sx={{
-                                position: 'absolute',
-                                right: '0.5rem',
-                                top: '-5rem',
-                                opacity: 0.6,
-                            }}
-                            orientation="vertical"
-                            variant="text"
-                        >
-                            {(atScrollTop && <IconButton onClick={() => messageListToTop()}>
-                                <ArrowCircleUpIcon />
-                            </IconButton>)}
-                            {(atScrollBottom && <IconButton onClick={() => messageListToBottom()}>
-                                <ArrowCircleDownIcon />
-                            </IconButton>)}
-                        </ButtonGroup>)}
+                            {(needScroll && <ButtonGroup
+                                sx={{
+                                    position: 'absolute',
+                                    right: '0.2rem',
+                                    top: '-5.5rem',
+                                    opacity: 0.6,
+                                }}
+                                orientation="vertical"
+                            >
+                                <IconButton 
+                                    onClick={() => messageListToTop()} 
+                                    sx={{visibility: atScrollTop ? "hidden" : "visible",}}>
+                                    <ArrowCircleUpIcon />
+                                </IconButton>
+                                <IconButton 
+                                    onClick={() => messageListToBottom()}
+                                    sx={{visibility: atScrollBottom ? "hidden" : "visible",}}>
+                                    <ArrowCircleDownIcon />
+                                </IconButton>
+                            </ButtonGroup>)}
                             <MessageInput
                                 messageInput={messageInput}
                                 setMessageInput={setMessageInput}
