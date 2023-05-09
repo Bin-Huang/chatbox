@@ -125,6 +125,8 @@ Any form of contribution is welcome, including but not limited to:
 
 ## Sponsorship
 
+As an open-source project, I am extremely grateful for the support of the sponsors behind Chatbox. Their assistance has been essential in allowing me to continue developing and improving the open-source software.
+
 <a href="https://chatboxapp.xyz/sponsor_redirect/eolink_gh">
 <img style="width: 500px" src="https://chatboxapp.xyz/sponsor_redirect/eolink_resource_web">
 </a>
