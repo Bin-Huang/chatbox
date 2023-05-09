@@ -627,11 +627,13 @@ function Main() {
                                 ))
                             }
                         </List>
+
+                        <Box sx={{ padding: '20px 0', position: 'relative', }}>
                         {(needScroll && <ButtonGroup
                             sx={{
                                 position: 'absolute',
                                 right: '0.5rem',
-                                bottom: '8rem',
+                                top: '-5rem',
                                 opacity: 0.6,
                             }}
                             orientation="vertical"
@@ -644,7 +646,6 @@ function Main() {
                                 <ArrowCircleDownIcon />
                             </IconButton>)}
                         </ButtonGroup>)}
-                        <Box sx={{ padding: '20px 0' }}>
                             <MessageInput
                                 messageInput={messageInput}
                                 setMessageInput={setMessageInput}
