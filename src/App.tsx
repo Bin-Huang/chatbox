@@ -5,8 +5,8 @@ import SessionItem from './SessionItem'
 import {
     Toolbar, Box, Badge, Snackbar, Chip,
     List, ListSubheader, ListItemText, MenuList,
-    IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
-    TextField, useTheme, useMediaQuery,
+    IconButton, Button, ButtonGroup, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
+    TextField, useTheme, useMediaQuery, debounce,
 } from '@mui/material';
 import { Session, createSession, Message, createMessage, SponsorAd } from './types'
 import useStore from './store'
@@ -29,6 +29,8 @@ import { save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import MenuSharpIcon from '@mui/icons-material/MenuSharp';
 import * as remote from './remote'
 import "./styles/App.scss"
@@ -99,8 +101,7 @@ function Main() {
 
     // 是否展示菜单栏
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-    console.log(isSmallScreen);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [showMenu, setShowMenu] = React.useState(!isSmallScreen);
 
     const messageListRef = useRef<HTMLDivElement>(null)
@@ -145,11 +146,50 @@ function Main() {
 
     // 切换到当前会话，自动滚动到最后一条消息
     useEffect(() => {
+        messageListToBottom();
+    }, [store.currentSession.id])
+
+    // show scroll to top or bottom button when user scroll
+    const [atScrollTop, setAtScrollTop] = React.useState(false);
+    const [atScrollBottom, setAtScrollBottom] = React.useState(false);
+    const [needScroll, setNeedScroll] = React.useState(false);
+    useEffect(() => {
         if (!messageListRef.current) {
             return
         }
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight
-    }, [store.currentSession.id])
+        const handleScroll = () => {
+            if (!messageListRef.current) {
+                return
+            }
+            const { scrollTop, scrollHeight, clientHeight } = messageListRef.current;
+            if (scrollTop === 0) {
+                setAtScrollTop(false);
+                setAtScrollBottom(true);
+            } else if (scrollTop + clientHeight === scrollHeight) {
+                setAtScrollTop(true);
+                setAtScrollBottom(false);
+            } else {
+                setAtScrollTop(true);
+                setAtScrollBottom(true);
+            }
+            setNeedScroll(scrollHeight > clientHeight);
+          };
+
+          handleScroll();
+          messageListRef.current.addEventListener("scroll", debounce(handleScroll, 100));
+    }, []);
+    const messageListToTop = () => {
+        if (!messageListRef.current) {
+            return
+        }
+        messageListRef.current.scrollTop = 0;
+    };
+    const messageListToBottom = () => {
+        if (!messageListRef.current) {
+            return
+        }
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    };
 
     // 会话名称自动生成
     useEffect(() => {
@@ -476,6 +516,7 @@ function Main() {
                 >
                     <Stack sx={{
                         height: '100%',
+                        position: 'relative',
                     }} >
                         <Toolbar>
                             <IconButton onClick={() => setShowMenu(!showMenu)}>
@@ -534,6 +575,7 @@ function Main() {
                                 bgcolor: 'background.paper',
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },
+                                height: '100%',
                             }}
                             component="div"
                             ref={messageListRef}
@@ -585,6 +627,23 @@ function Main() {
                                 ))
                             }
                         </List>
+                        {(needScroll && <ButtonGroup
+                            sx={{
+                                position: 'absolute',
+                                right: '0.5rem',
+                                bottom: '8rem',
+                                opacity: 0.6,
+                            }}
+                            orientation="vertical"
+                            variant="text"
+                        >
+                            {(atScrollTop && <IconButton onClick={() => messageListToTop()}>
+                                <ArrowCircleUpIcon />
+                            </IconButton>)}
+                            {(atScrollBottom && <IconButton onClick={() => messageListToBottom()}>
+                                <ArrowCircleDownIcon />
+                            </IconButton>)}
+                        </ButtonGroup>)}
                         <Box sx={{ padding: '20px 0' }}>
                             <MessageInput
                                 messageInput={messageInput}
