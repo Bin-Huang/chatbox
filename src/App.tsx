@@ -3,12 +3,12 @@ import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
 import {
-    Toolbar, Box, Badge, Snackbar, Chip,
+    Toolbar, Box, Badge, Snackbar,
     List, ListSubheader, ListItemText, MenuList,
     IconButton, Button, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     TextField,
 } from '@mui/material';
-import { Session, createSession, Message, createMessage, SponsorAd } from './types'
+import { Session, createSession, Message, createMessage } from './types'
 import useStore from './store'
 import SettingWindow from './SettingWindow'
 import ChatConfigWindow from './ChatConfigWindow'
@@ -21,15 +21,13 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import Save from '@mui/icons-material/Save'
 import CleanWidnow from './CleanWindow';
 import AboutWindow from './AboutWindow';
-import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
 import { save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
-import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import * as remote from './remote'
+import SponsorChip from './SponsorChip'
+
 import "./styles/App.scss"
 
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -289,15 +287,6 @@ function Main() {
         }
     }
 
-    const [showSponsorAD, setShowSponsorAD] = useState(true)
-    const [sponsorAD, setSponsorAD] = useState<SponsorAd | null>(null)
-    useEffect(() => {
-        (async () => {
-            const ad = await remote.getSponsorAd()
-            setSponsorAD(ad)
-        })()
-    }, [store.currentSession.id])
-
     return (
         <Box className='App'>
             <Grid container sx={{
@@ -459,28 +448,7 @@ function Main() {
                                         {store.currentSession.name}
                                     </span>
                                 </Typography>
-                                {
-                                    showSponsorAD && sponsorAD && (
-                                        <Chip size='small'
-                                            sx={{
-                                                maxWidth: '400px',
-                                                height: 'auto',
-                                                '& .MuiChip-label': {
-                                                    display: 'block',
-                                                    whiteSpace: 'normal',
-                                                },
-                                                borderRadius: '8px',
-                                                marginRight: '25px',
-                                                opacity: 0.6,
-                                            }}
-                                            icon={<CampaignOutlinedIcon />}
-                                            deleteIcon={<CancelOutlinedIcon />}
-                                            onDelete={() => setShowSponsorAD(false)}
-                                            onClick={() => api.openLink(sponsorAD.url)}
-                                            label={sponsorAD.text}
-                                        />
-                                    )
-                                }
+                                <SponsorChip sessionId={store.currentSession.id} />
                                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
                                     onClick={() => setSessionClean(store.currentSession)}
                                 >
