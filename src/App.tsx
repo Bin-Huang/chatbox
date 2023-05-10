@@ -3,12 +3,12 @@ import Block from './Block'
 import * as client from './client'
 import SessionItem from './SessionItem'
 import {
-    Toolbar, Box, Badge, Snackbar, Chip,
+    Toolbar, Box, Badge, Snackbar,
     List, ListSubheader, ListItemText, MenuList,
     IconButton, Button, ButtonGroup, Stack, Grid, MenuItem, ListItemIcon, Typography, Divider,
     TextField, useTheme, useMediaQuery, debounce,
 } from '@mui/material';
-import { Session, createSession, Message, createMessage, SponsorAd } from './types'
+import { Session, createSession, Message, createMessage } from './types'
 import useStore from './store'
 import SettingWindow from './SettingWindow'
 import ChatConfigWindow from './ChatConfigWindow'
@@ -21,7 +21,6 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import Save from '@mui/icons-material/Save'
 import CleanWidnow from './CleanWindow';
 import AboutWindow from './AboutWindow';
-import * as api from './api';
 import { ThemeSwitcherProvider } from './theme/ThemeSwitcher';
 import { useTranslation } from "react-i18next";
 import icon from './icon.png'
@@ -33,6 +32,7 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import MenuSharpIcon from '@mui/icons-material/MenuSharp';
 import * as remote from './remote'
+import SponsorChip from './SponsorChip'
 import "./styles/App.scss"
 
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -325,10 +325,7 @@ function Main() {
         messageScrollRef.current = null
     }
 
-    const [messageInput, setMessageInput] = useState('')
-    useEffect(() => {
-        document.getElementById('message-input')?.focus() // better way?
-    }, [messageInput])
+    const [quoteCache, setQuoteCache] = useState('')
 
     const sessionListRef = useRef<HTMLDivElement>(null)
     const handleCreateNewSession = () => {
@@ -337,15 +334,6 @@ function Main() {
             sessionListRef.current.scrollTo(0, 0)
         }
     }
-
-    const [showSponsorAD, setShowSponsorAD] = useState(true)
-    const [sponsorAD, setSponsorAD] = useState<SponsorAd | null>(null)
-    useEffect(() => {
-        (async () => {
-            const ad = await remote.getSponsorAd()
-            setSponsorAD(ad)
-        })()
-    }, [store.currentSession.id])
 
     return (
         <Box className='App'>
@@ -536,28 +524,7 @@ function Main() {
                                     {store.currentSession.name}
                                 </span>
                             </Typography>
-                            {
-                                showSponsorAD && sponsorAD && (
-                                    <Chip size='small'
-                                        sx={{
-                                            maxWidth: '400px',
-                                            height: 'auto',
-                                            '& .MuiChip-label': {
-                                                display: 'block',
-                                                whiteSpace: 'normal',
-                                            },
-                                            borderRadius: '8px',
-                                            marginRight: '25px',
-                                            opacity: 0.6,
-                                        }}
-                                        icon={<CampaignOutlinedIcon />}
-                                        deleteIcon={<CancelOutlinedIcon />}
-                                        onDelete={() => setShowSponsorAD(false)}
-                                        onClick={() => api.openLink(sponsorAD.url)}
-                                        label={sponsorAD.text}
-                                    />
-                                )
-                            }
+                            <SponsorChip sessionId={store.currentSession.id} />
                             <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
                                 onClick={() => setSessionClean(store.currentSession)}
                             >
@@ -621,7 +588,7 @@ function Main() {
                                         quoteMsg={() => {
                                             let input = msg.content.split('\n').map((line: any) => `> ${line}`).join('\n')
                                             input += '\n\n-------------------\n\n'
-                                            setMessageInput(input)
+                                            setQuoteCache(input)
                                         }}
                                     />
                                 ))
@@ -649,8 +616,8 @@ function Main() {
                                 </IconButton>
                             </ButtonGroup>)}
                             <MessageInput
-                                messageInput={messageInput}
-                                setMessageInput={setMessageInput}
+                                quoteCache={quoteCache}
+                                setQuotaCache={setQuoteCache}
                                 onSubmit={async (newUserMsg: Message, needGenerating = true) => {
                                     if (needGenerating) {
                                         const promptsMsgs = [...store.currentSession.messages, newUserMsg]
@@ -730,11 +697,18 @@ function Main() {
 
 function MessageInput(props: {
     onSubmit: (newMsg: Message, needGenerating?: boolean) => void
-    messageInput: string
-    setMessageInput: (value: string) => void
+    quoteCache: string
+    setQuotaCache(cache: string): void
 }) {
     const { t } = useTranslation()
-    const { messageInput, setMessageInput } = props
+    const [messageInput, setMessageInput] = useState('')
+    useEffect(() => {
+        if (props.quoteCache !== '') {
+            setMessageInput(props.quoteCache)
+            props.setQuotaCache('')
+            document.getElementById('message-input')?.focus()
+        }
+    }, [props.quoteCache])
     const submit = (needGenerating = true) => {
         if (messageInput.trim() === '') {
             return
