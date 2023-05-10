@@ -14,7 +14,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
 import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle';
 
@@ -193,8 +193,7 @@ export default function SettingWindow(props: Props) {
                         {
                             !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
                                 <Alert severity="warning">
-                                    {t('your api key and all messages will be sent to')} <b>{settingsEdit.apiHost}</b>.
-                                    {t('please confirm that you trust this address. otherwise, there is a risk of api key and data leakage.')}
+                                    {t('proxy warning', {apiHost:settingsEdit.apiHost })}
                                     <Button onClick={() => setSettingsEdit({ ...settingsEdit, apiHost: getDefaultSettings().apiHost })}>{t('reset')}</Button>
                                 </Alert>
                             )
@@ -202,15 +201,20 @@ export default function SettingWindow(props: Props) {
                         {
                             settingsEdit.apiHost.startsWith('http://') && (
                                 <Alert severity="warning">
-                                    {t('all data transfers are being conducted through the')} <b>{t('http')}</b> {t('protocol, which may lead to the risk of api key and data leakage.')}
-                                    {t('unless you are completely certain and understand the potential risks involved, please consider using the')} <b>{t('https')}</b> {t('protocol instead.')}
+                                    {<Trans
+                                    i18nKey="protocol warning"
+                                    components={{ bold: <strong /> }}
+                                    />}
                                 </Alert>
                             )
                         }
                         {
                             !settingsEdit.apiHost.startsWith('http') && (
                                 <Alert severity="error">
-                                    {t('proxy must use')} <b> {t('http')} </b> {t('or')} <b> {t('https')} </b> {t('proxy api host alert end')}
+                                    {<Trans
+                                    i18nKey="protocol error"
+                                    components={{ bold: <strong /> }}
+                                    />}
                                 </Alert>
                             )
                         }
@@ -225,9 +229,7 @@ export default function SettingWindow(props: Props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Alert severity="warning">
-                            {t('these settings are aimed at professional developers. if you do not understand the meaning of these settings, please do not modify them, as it may result in request errors.')}
-                            {t('before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors).')}
-                            {t('please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.')}
+                            {t('settings modify warning')}
                             {t('please make sure you know what you are doing.')}
                             {t('click here to')}
                             <Button onClick={() => setSettingsEdit({
