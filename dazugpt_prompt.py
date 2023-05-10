@@ -39,9 +39,9 @@ Prompts for Multi-Task Management:
    - Prompt: "Deploy an application to a server or hosting platform based on the provided specifications and requirements."
    - Example usage: "Please deploy the application to the specified server or hosting platform with the given specifications and requirements."
 
-10. Folders and Files Attachment:
-    - Prompt: "Manage folders and files, perform operations such as creating, deleting, moving, and attaching files to emails or documents."
-    - Example usage: "Please create a new folder, move the files into it, and attach the required files to the email."
+10. Folders and files attachment icon:
+    - Prompt: "Design and create custom icons for folders and files attachments to enhance visual representation and user experience."
+    - Example usage: "Please design unique icons for folders and files attachments that reflect the purpose or content of the attached files."
 
 """
 
