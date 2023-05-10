@@ -34,6 +34,7 @@ import MenuSharpIcon from '@mui/icons-material/MenuSharp';
 import * as remote from './remote'
 import SponsorChip from './SponsorChip'
 import "./styles/App.scss"
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
@@ -375,7 +376,7 @@ function Main() {
                                 height: '35px',
                                 marginRight: '5px',
                             }} />
-                            <Typography variant="h5" color="inherit" component="div">
+                            <Typography variant="h5" color="inherit" component="div" style={{fontSize: '26px'}}>
                                 Chatbox
                             </Typography>
                         </Toolbar>
@@ -506,12 +507,18 @@ function Main() {
                         height: '100%',
                         position: 'relative',
                     }} >
-                        <Toolbar>
-                            <IconButton onClick={() => setShowMenu(!showMenu)}>
-                                <MenuSharpIcon />
-                            </IconButton>
-                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ ml: 1 }}>
-                                <ChatBubbleOutlineOutlinedIcon />
+                        <Toolbar style={{padding: '0 10px'}}>
+                            <IconButton onClick={() => setShowMenu(!showMenu)} >
+                                {
+                                    !showMenu ? (
+                                        <img src={icon} style={{
+                                            width: '30px',
+                                            height: '30px',
+                                        }} />
+                                    ) : (
+                                        <MenuOpenIcon style={{fontSize: '26px'}} />
+                                    )
+                                }
                             </IconButton>
                             <Typography variant="h6" color="inherit" component="div" noWrap
                                 sx={{
