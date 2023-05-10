@@ -8,6 +8,9 @@
     .msg-content ul {
         padding-inline-start: 25px;
     }
+    .msg-content img {
+        width: 100%;
+    }
 }
 
 // markdown table
@@ -64,9 +67,7 @@ html[data-theme='dark'] .msg-block {
 
 // code block
 .code-block-wrapper {
-    // position: relative;
-    max-width: 50vw;
-    // max-width: 100%;
+    width: 100%;
 }
 .code-header {
     margin: 0;
@@ -77,6 +78,7 @@ html[data-theme='dark'] .msg-block {
     justify-content: space-between;
 }
 .code-block {
+    box-sizing: border-box;
     padding: 10px;
     max-width: 100%;
     overflow: auto;
