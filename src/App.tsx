@@ -622,6 +622,17 @@ function MessageInput(props: {
         props.onSubmit(createMessage('user', messageInput), needGenerating)
         setMessageInput('')
     }
+    useEffect(() => {
+        function keyboardShortcut(e: KeyboardEvent) {
+            if (e.key === 'l' && (e.metaKey || e.ctrlKey)) {
+                document.getElementById('message-input')?.focus();
+            }
+        }
+        window.addEventListener('keydown', keyboardShortcut);
+        return () => {
+            window.removeEventListener('keydown', keyboardShortcut)
+        }
+    }, [])
     return (
         <form onSubmit={(e) => {
             e.preventDefault()
