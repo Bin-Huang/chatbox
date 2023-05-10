@@ -624,7 +624,7 @@ function MessageInput(props: {
     }
     useEffect(() => {
         function keyboardShortcut(e: KeyboardEvent) {
-            if (e.key === 'l' && (e.metaKey || e.ctrlKey)) {
+            if (e.key === 'i' && (e.metaKey || e.ctrlKey)) {
                 document.getElementById('message-input')?.focus();
             }
         }
