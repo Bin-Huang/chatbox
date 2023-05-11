@@ -41,14 +41,15 @@
 
 ## Features
 
-- More freedom and powerful Prompt abilities
-- Data stored locally, no risk of losing it
-- Supports GPT-4 and other models
-- Supports custom domain proxy
-- More features: Markdown, message quotes, word and token estimation, night mode...
-- UI design conforms to ergonomics
-- Comes with software installers, no need for deployment
-- Free and open-source
+- More free and powerful Prompt capability
+- Data is stored locally and will not be lost
+- Support for GPT-4 and other models
+- Support for custom domain proxies
+- Suitable for team collaboration, supporting the sharing of OpenAI API resources within the team. View [tutorial](./team-sharing/README.md)
+- More features: Markdown, message quoting, word and token estimation, night mode...
+- Ergonomic UI design
+- Providing installation packages, no deployment required
+- Free and open source
 
 ## Download
 
