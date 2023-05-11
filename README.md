@@ -23,8 +23,8 @@
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Downloads" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
 </a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="Twitter" src="https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter)](https://twitter.com/benn_huang" />
+<a href="https://twitter.com/benn_huang" target="_blank">
+<img alt="Twitter" src="https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter" />
 </a>
 </p>
 
