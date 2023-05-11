@@ -25,8 +25,8 @@
 
 </p>
 
-<!-- ![](./doc/snapshot2.png) -->
-<!-- ![](./doc/snapshot4.png) -->
+[![Downloads](https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat)](https://github.com/Bin-Huang/chatbox/releases)
+[![benn_huang](https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter)](https://twitter.com/benn_huang)
 
 <table>
 <tr>
@@ -130,6 +130,7 @@ As an open-source project, I am extremely grateful for the support of the sponso
 <a href="https://chatboxapp.xyz/sponsor_redirect/eolink_gh">
 <img style="width: 600px" src="https://chatboxapp.xyz/sponsor_redirect/eolink_resource_web">
 </a>
+
 
 ## Become a ChatBox Sponsor?
 
