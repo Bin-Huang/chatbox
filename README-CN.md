@@ -74,11 +74,11 @@
 paru -S chatbox-bin
 ```
 
-## 为什么需要 ChatBox？
+## Chatbox 团队共享功能
 
-- ChatBox 帮助你更自由地设计、调试和管理 prompt，让你更好地操作 AI 模型。
-- ChatBox 还帮你在本地保存了所有的聊天记录和 prompt，防止在线服务的数据丢失。
-- 直接使用 ChatGPT API (OpenAI API) 是比较困难的，需要了解编程与接口调用，而且用起来不够方便。ChatBox 可以帮助你处理所有的底层调用。
+用 AI 来提高团队生产力，是 Chatbox 的一个重要特性。Chatbox 可以让你的团队成员共享同一个 OpenAI API 账号的资源，同时不会暴露你的 API KEY。
+
+点击这里[查看教程](./team-sharing/README-CN.md)。
 
 ## 为什么我开发了 Chatbox？
 

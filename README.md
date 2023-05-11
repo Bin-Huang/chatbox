@@ -73,11 +73,11 @@ If you are using Arch Linux, you can download and install Chatbox via AUR:
 paru -S chatbox-bin
 ```
 
-## Why Use Chatbox?
+## Chatbox Team Sharing Feature
 
-- ChatBox helps you design, debug, and manage prompts more freely, enabling you to operate AI models more efficiently.
-- Chatbox stores all chat messages and prompts locally, thus reducing the risk of data loss.
-- Directly testing ChatGPT API (OpenAI API) might be challenging for those with no programming background. By using Chatbox, you can perform such experiments in a convenient way.
+Using AI to enhance your team productivity, is an important feature of Chatbox.
+
+Chatbox allows your team members to share the resources of the same OpenAI API account without exposing your API KEY. View [tutorial](./team-sharing/README.md).
 
 ## Why I made Chatbox?
 
