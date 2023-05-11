@@ -14,19 +14,19 @@
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
 </a>
-
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
 </a>
-
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
 </a>
-
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Downloads" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Twitter" src="https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter)](https://twitter.com/benn_huang" />
+</a>
 </p>
-
-[![Downloads](https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat)](https://github.com/Bin-Huang/chatbox/releases)
-[![benn_huang](https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter)](https://twitter.com/benn_huang)
 
 <table>
 <tr>
