@@ -14,15 +14,18 @@
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
 </a>
-
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
 </a>
-
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
 </a>
-
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Downloads" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
+</a>
+<a href="https://twitter.com/benn_huang" target="_blank">
+<img alt="Twitter" src="https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter" />
+</a>
 </p>
 
 <table>
@@ -43,6 +46,7 @@
 - 数据存储在本地，不会丢失
 - 支持 GPT-4 和其他模型
 - 支持自定义域名代理
+- 适合团队办公，支持在团队中共享 OpenAI API 资源，[查看教程](./team-sharing/README-CN.md)
 - 更多功能：Markdown、消息引用、字数与token估算、夜间模式……
 - 符合人体工程学的 UI 设计
 - 提供安装包，无需部署
@@ -70,11 +74,11 @@
 paru -S chatbox-bin
 ```
 
-## 为什么需要 ChatBox？
+## Chatbox 团队共享功能
 
-- ChatBox 帮助你更自由地设计、调试和管理 prompt，让你更好地操作 AI 模型。
-- ChatBox 还帮你在本地保存了所有的聊天记录和 prompt，防止在线服务的数据丢失。
-- 直接使用 ChatGPT API (OpenAI API) 是比较困难的，需要了解编程与接口调用，而且用起来不够方便。ChatBox 可以帮助你处理所有的底层调用。
+用 AI 来提高团队生产力，是 Chatbox 的一个重要特性。Chatbox 可以让你的团队成员共享同一个 OpenAI API 账号的资源，同时不会暴露你的 API KEY。
+
+点击这里[查看教程](./team-sharing/README-CN.md)。
 
 ## 为什么我开发了 Chatbox？
 
