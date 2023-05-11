@@ -26,15 +26,12 @@ import { useTranslation } from "react-i18next";
 import icon from './icon.png'
 import { save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
-import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-import MenuSharpIcon from '@mui/icons-material/MenuSharp';
-import * as remote from './remote'
 import SponsorChip from './SponsorChip'
 import "./styles/App.scss"
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import SendIcon from '@mui/icons-material/Send';
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
@@ -740,7 +737,7 @@ function MessageInput(props: {
             submit()
         }}>
             <Stack direction="column" spacing={1} >
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                     <Grid item xs>
                         <TextField
                             multiline
@@ -767,8 +764,8 @@ function MessageInput(props: {
                     </Grid>
                     <Grid item xs='auto'>
                         <Button type='submit' variant="contained" size='large'
-                            style={{ fontSize: '16px', padding: '10px 20px' }}>
-                            {t('send')}
+                            style={{ padding: '15px 16px' }}>
+                                <SendIcon />
                         </Button>
                     </Grid>
                 </Grid>
