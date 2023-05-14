@@ -1,0 +1,263 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "private_outputs": true,
+      "provenance": [],
+      "gpuType": "T4",
+      "mount_file_id": "1Bj9XDSfpn-je_MNoo6HsPNJm7U5NNxzG",
+      "authorship_tag": "ABX9TyNVHpmifxBkpudlfAURda9S",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    },
+    "accelerator": "GPU",
+    "gpuClass": "standard"
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/AiDriveOne/AiDrive/blob/main/dazu_image_classifier_py.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "KWyelCAND-xB"
+      },
+      "outputs": [],
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%cd /content"
+      ],
+      "metadata": {
+        "id": "P0TX3gdmrrJu"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!unzip aiDrive-main.zip"
+      ],
+      "metadata": {
+        "id": "7sZxxB6KrvBL"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 1: Import the required libraries\n",
+        "import tensorflow as tf\n",
+        "from tensorflow.keras.preprocessing.image import ImageDataGenerator\n",
+        "from tensorflow.keras.applications import MobileNetV2\n",
+        "from tensorflow.keras.layers import Dense, GlobalAveragePooling2D\n",
+        "from tensorflow.keras.models import Model"
+      ],
+      "metadata": {
+        "id": "klukkb5Jsjh2"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 2: Set up the input image dimensions and the number of classes\n",
+        "input_shape = (224, 224, 3)  # Image input dimensions\n",
+        "num_classes = 10  # Number of classes in the dataset"
+      ],
+      "metadata": {
+        "id": "RyssXY9dstfm"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 3: Create an instance of the MobileNetV2 model\n",
+        "base_model = MobileNetV2(input_shape=input_shape, include_top=False, weights='imagenet')"
+      ],
+      "metadata": {
+        "id": "3BARb9Nts3jp"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 4: Freeze the base model layers\n",
+        "for layer in base_model.layers:\n",
+        "    layer.trainable = False"
+      ],
+      "metadata": {
+        "id": "LPoyuVWjtCx_"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 5: Add custom layers on top of the base model\n",
+        "x = base_model.output\n",
+        "x = GlobalAveragePooling2D()(x)\n",
+        "x = Dense(256, activation='relu')(x)\n",
+        "predictions = Dense(num_classes, activation='softmax')(x)"
+      ],
+      "metadata": {
+        "id": "3F3QZNkatK02"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 6: Create the final model\n",
+        "model = Model(inputs=base_model.input, outputs=predictions)"
+      ],
+      "metadata": {
+        "id": "-CU4VP5ytT8j"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 7: Compile the model\n",
+        "model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])"
+      ],
+      "metadata": {
+        "id": "NgHp-vN9tcNw"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 8: Create data generators for training and validation\n",
+        "train_data_dir = 'path/to/training/data'  # Path to the training data directory\n",
+        "val_data_dir = 'path/to/validation/data'  # Path to the validation data directory"
+      ],
+      "metadata": {
+        "id": "MTZTlCPXtlyQ"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "train_datagen = ImageDataGenerator(rescale=1./255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)\n",
+        "val_datagen = ImageDataGenerator(rescale=1./255)"
+      ],
+      "metadata": {
+        "id": "f-dzMz8Itrga"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "marketing_ads_file = 'https://raw.githubusercontent.com/aiDriveCompanyEcosystem/aiDrive/main/data/marketing_ads_creation.csv'\n",
+        "qa_data_file = 'https://raw.githubusercontent.com/aiDriveCompanyEcosystem/aiDrive/main/data/qa_data.csv'\n",
+        "accuracy_file = 'https://raw.githubusercontent.com/aiDriveCompanyEcosystem/aiDrive/main/data/training_accuracy_99.96%.csv'\n",
+        "training_data_file = 'https://raw.githubusercontent.com/aiDriveCompanyEcosystem/aiDrive/main/data/training_data.csv'"
+      ],
+      "metadata": {
+        "id": "JKPylvzDx6_1"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "train_data_dir = '/path/to/training/data'\n",
+        "val_data_dir = '/path/to/validation/data'"
+      ],
+      "metadata": {
+        "id": "QsFyx_mqrV4e"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "train_datagen = ImageDataGenerator(\n",
+        "    rescale=1./255,\n",
+        "    rotation_range=20,\n",
+        "    width_shift_range=0.2,\n",
+        "    height_shift_range=0.2,\n",
+        "    shear_range=0.2,\n",
+        "    zoom_range=0.2,\n",
+        "    horizontal_flip=True,\n",
+        "    fill_mode='nearest'\n",
+        ")\n",
+        "\n",
+        "val_datagen = ImageDataGenerator(rescale=1./255)"
+      ],
+      "metadata": {
+        "id": "L9NleFImzjeF"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "for root, dirs, files in os.walk('/content/aiDrive-main'):\n",
+        "    print(root)\n",
+        "    print(dirs)\n",
+        "    print(files)\n",
+        "    print('---')\n"
+      ],
+      "metadata": {
+        "id": "VqNJboUT0lrn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 10: Save the trained model\n",
+        "model.save('dazu_image_classifier.h5')"
+      ],
+      "metadata": {
+        "id": "A5hbhAmQ8t5u"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
