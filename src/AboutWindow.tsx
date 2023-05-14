@@ -4,7 +4,7 @@ import {
     Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField, Stack,
 } from '@mui/material';
 import iconPNG from './icon.png'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import * as api from './api'
 import * as remote from './remote'
 import { SponsorAboutBanner } from './types';
@@ -34,9 +34,11 @@ export default function AboutWindow(props: Props) {
                     <img src={iconPNG} style={{ width: '100px', margin: 0 }} />
                     <h3 style={{ margin: '4px 0 5px 0' }}>Chatbox(v{props.version})</h3>
                     <span>
-                        {t('Your Ultimate Copilot on the Desktop. Chatbox is a free and open-source desktop application and devtools for GPT. Made by')}
-                        <a href={`https://chatboxapp.xyz/redirect_app/author/${props.lang}`} target='_blank'> Benn Huang </a>
-                        {t('and the community.')}
+                        <Trans 
+                            i18nKey="About Message"
+                            values={{ Author: "Benn Huang" }}
+                            components={[<a href={`https://chatboxapp.xyz/redirect_app/author/${props.lang}`} target='_blank'></a>]}
+                        />
                     </span>
                 </Box>
                 <Stack spacing={2} direction="row" sx={{ justifyContent: 'center', marginTop: '10px' }}>
@@ -64,7 +66,7 @@ export default function AboutWindow(props: Props) {
                     </Button>
                 </Stack>
                 <Paper elevation={3} sx={{ padding: '10px 10px 5px 10px', backgroundColor: 'paper', marginTop: '30px' }}>
-                    <span>{t("I made Chatbox for my own use and it's great to see so many people enjoying it! If you'd like to support development, a donation would be greatly appreciated, though it is entirely optional. Many thanks, Benn")}</span>
+                    <span>{t("Auther Message")}</span>
                     <Stack spacing={2} direction="row" >
                         <Button variant="text" onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/donate/${props.lang}`)} >
                             {t('Donate')}

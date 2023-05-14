@@ -1,0 +1,6 @@
+<HOST> {
+    reverse_proxy https://api.openai.com {
+        header_up Host {http.reverse_proxy.upstream.hostport}
+        header_up Authorization "Bearer <KEY>"
+    }
+}
