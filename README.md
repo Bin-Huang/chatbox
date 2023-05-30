@@ -103,8 +103,8 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 - [x] Drag-and-drop sorting of tabs
 - [x] [Web version](https://web.chatboxapp.xyz)
 - [x] Azure OpenAI API compatibility
-- [ ] Improved prompt settings
-- [ ] Prompt Library
+- [x] Improved prompt settings
+- [x] Prompt Library
 - [ ] Talk with files
 - [ ] Talk with URLs
 - [ ] Mobile(Android, iOS)
