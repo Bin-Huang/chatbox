@@ -87,7 +87,7 @@
         "updater": {
             "active": true,
             "endpoints": [
-                "https://releases.chatboxapp.xyz/chatbox/{{target}}/{{current_version}}",
+                "https://releases.chatboxai.app/chatbox/{{target}}/{{current_version}}",
                 "https://gist.githubusercontent.com/Bin-Huang/cf0b7684e28b30d760ba02417bbac916/raw/chatbox.releases.json",
                 "https://gist.githubusercontent.com/Bin-Huang/cf0b7684e28b30d760ba02417bbac916/raw"
             ],

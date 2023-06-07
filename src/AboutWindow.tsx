@@ -37,30 +37,30 @@ export default function AboutWindow(props: Props) {
                         <Trans 
                             i18nKey="About Message"
                             values={{ Author: "Benn Huang" }}
-                            components={[<a href={`https://chatboxapp.xyz/redirect_app/author/${props.lang}`} target='_blank'></a>]}
+                            components={[<a href={`https://chatboxai.app/redirect_app/author/${props.lang}`} target='_blank'></a>]}
                         />
                     </span>
                 </Box>
                 <Stack spacing={2} direction="row" sx={{ justifyContent: 'center', marginTop: '10px' }}>
                     <Badge color="primary" variant="dot" invisible={false}>
                         <Button variant="outlined"
-                            onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/check_update/${props.lang}`)}
+                            onClick={() => api.openLink(`https://chatboxai.app/redirect_app/check_update/${props.lang}`)}
                         >
                             {t('Check Update')}
                         </Button>
                     </Badge>
                     <Button variant="outlined"
-                        onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/homepage/${props.lang}`)}
+                        onClick={() => api.openLink(`https://chatboxai.app/redirect_app/homepage/${props.lang}`)}
                     >
                         {t('Homepage')}
                     </Button>
                     <Button variant="outlined"
-                        onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/feedback/${props.lang}`)}
+                        onClick={() => api.openLink(`https://chatboxai.app/redirect_app/feedback/${props.lang}`)}
                     >
                         {t('Feedback')}
                     </Button>
                     <Button variant="outlined"
-                        onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/roadmap/${props.lang}`)}
+                        onClick={() => api.openLink(`https://chatboxai.app/redirect_app/roadmap/${props.lang}`)}
                     >
                         {t('Roadmap')}
                     </Button>
@@ -68,10 +68,10 @@ export default function AboutWindow(props: Props) {
                 <Paper elevation={3} sx={{ padding: '10px 10px 5px 10px', backgroundColor: 'paper', marginTop: '30px' }}>
                     <span>{t("Auther Message")}</span>
                     <Stack spacing={2} direction="row" >
-                        <Button variant="text" onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/donate/${props.lang}`)} >
+                        <Button variant="text" onClick={() => api.openLink(`https://chatboxai.app/redirect_app/donate/${props.lang}`)} >
                             {t('Donate')}
                         </Button>
-                        <Button variant="text" onClick={() => api.openLink(`https://chatboxapp.xyz/redirect_app/become_sponsor/${props.lang}`)} >
+                        <Button variant="text" onClick={() => api.openLink(`https://chatboxai.app/redirect_app/become_sponsor/${props.lang}`)} >
                             {t('Or become a sponsor')}
                         </Button>
                     </Stack>

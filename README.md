@@ -57,7 +57,7 @@
 
 ### Download from the official website
 
-Visit **[chatboxapp.xyz](https://chatboxapp.xyz/)** to download the latest version.
+Visit **[chatboxai.app](https://chatboxai.app/)** to download the latest version.
 
 ### Download from GitHub Releases
 
@@ -101,7 +101,7 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 - [x] Copy button for code blocks
 - [x] Stop button for AI message generation
 - [x] Drag-and-drop sorting of tabs
-- [x] [Web version](https://web.chatboxapp.xyz)
+- [x] [Web version](https://web.chatboxai.app)
 - [x] Azure OpenAI API compatibility
 - [x] Improved prompt settings
 - [x] Prompt Library
@@ -128,8 +128,8 @@ Any form of contribution is welcome, including but not limited to:
 
 As an open-source project, I am extremely grateful for the support of the sponsors behind Chatbox. Their assistance has been essential in allowing me to continue developing and improving the open-source software.
 
-<a href="https://chatboxapp.xyz/sponsor_redirect/eolink_gh">
-<img style="width: 600px" src="https://chatboxapp.xyz/sponsor_redirect/eolink_resource_web?query=1">
+<a href="https://chatboxai.app/sponsor_redirect/eolink_gh">
+<img style="width: 600px" src="https://chatboxai.app/sponsor_redirect/eolink_resource_web?query=1">
 </a>
 
 

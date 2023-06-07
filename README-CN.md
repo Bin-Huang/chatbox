@@ -58,7 +58,7 @@
 
 ### 从官方网站下载
 
-请访问 **[chatboxapp.xyz](https://chatboxapp.xyz/)** 下载最新版本。
+请访问 **[chatboxai.app](https://chatboxai.app/)** 下载最新版本。
 
 ### 从 Github Releases 下载
 
@@ -107,7 +107,7 @@ paru -S chatbox-bin
 - [x] 代码块的复制按钮
 - [x] 停止生成的按钮
 - [x] 标签页的拖拽排序
-- [x] [网页版本](https://web.chatboxapp.xyz)
+- [x] [网页版本](https://web.chatboxai.app)
 - [x] 兼容 Azure OpenAI API
 - [ ] 更好的 prompt 设置
 - [ ] Prompt Library
@@ -138,8 +138,8 @@ paru -S chatbox-bin
 
 作为一个开源项目，我非常感激Chatbox背后的赞助商的支持。他们的协助对我继续开发和改进这个开源软件至关重要。
 
-<a href="https://chatboxapp.xyz/sponsor_redirect/eolink_gh">
-<img style="width: 600px" src="https://chatboxapp.xyz/sponsor_redirect/eolink_resource_web?query=1">
+<a href="https://chatboxai.app/sponsor_redirect/eolink_gh">
+<img style="width: 600px" src="https://chatboxai.app/sponsor_redirect/eolink_resource_web?query=1">
 </a>
 
 

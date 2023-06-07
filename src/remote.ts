@@ -1,6 +1,6 @@
 import { Config, SponsorAboutBanner, SponsorAd } from './types'
 
-const releaseHost = "https://releases.chatboxapp.xyz"
+const releaseHost = "https://releases.chatboxai.app"
 
 export async function checkNeedUpdate(version: string, os: string, config: Config): Promise<boolean> {
     const res = await fetch(`${releaseHost}/chatbox_need_update/${version}`, {
