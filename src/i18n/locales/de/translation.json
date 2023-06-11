@@ -18,7 +18,7 @@
   "settings modify warning": "Diese Einstellungen sind für professionelle Entwickler gedacht. Wenn Du die Bedeutung dieser Einstellungen nicht verstehst, ändere sie bitte nicht, da dies zu Abfragefehlern führen kann. Bevor Du Änderungen vornimmst, vergewissere Dich bitte, dass Dein Konto Zugang zu den ausgewählten Modellen hat (einige Modelle erfordern unabhängig von Deinem Kontotyp eine zusätzliche Aufnahme in die Warteliste, andernfalls kommt es zu 404 Fehlern). Vergewissere Dich, dass die Anzahl der Token das Limit für das ausgewählte Modell nicht übersteigt, andernfalls wird eine Fehlermeldung angezeigt, sobald der Kontext das Limit überschreitet.",
   "please make sure you know what you are doing.": "Bitte stelle sicher, dass Du weißt, was Du tust.",
   "click here to": "Klicke auf",
-  "to default values.": ", um zu den Standardwerten zu kommen.",
+  "to default values.": ", um Standardwerte zu setzen.",
   "cancel": "Abbrechen",
   "save": "Speichern",
   "chat": "Chat",
