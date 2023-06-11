@@ -24,7 +24,7 @@
   "chat": "Chat",
   "new chat": "Neuer Chat",
   "send": "Senden",
-  "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating": "[Enter] Senden, [Shift+Enter] Zeilenumbrucg, [Ctrl+Enter] Senden ohne Generierung",
+  "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating": "[Enter] Senden, [Shift+Enter] Zeilenumbruch, [Ctrl+Enter] Senden ohne Generierung",
   "version": "Version",
   "rename": "Umbenennen",
   "name": "Name",
