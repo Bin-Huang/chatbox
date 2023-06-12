@@ -6,7 +6,7 @@
     English | <a href="./README-CN.md">中文介绍</a>
 </p>
 <p align="center">
-    <em>Your Ultimate Copilot on the Desktop. <br />Chatbox is a desktop app for GPT-4 / GPT-3.5 (OpenAI API) that supports Windows, Mac & Linux.</em>
+    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop app for GPT/LLM that supports Windows, Mac & Linux.</em>
 </p>
 
 
@@ -43,11 +43,14 @@
 
 - More free and powerful Prompt capability
 - Data is stored locally and will not be lost
-- Support for GPT-4 and other models
+- Built-in AI services out of the box, API KEY is not required
+- Support for OpenAI(GPT3.5, GPT4), Azure OpenAI and ChatGLM-6B
 - Support for custom domain proxies
+- Markdown & Code Highlighting
+- Prompt Library, Message Quoting
+- Streaming reply
+- Ergonomic UI design & Night Mode
 - Suitable for team collaboration, supporting the sharing of OpenAI API resources within the team. View [tutorial](./team-sharing/README.md)
-- More features: Markdown, message quoting, word and token estimation, night mode...
-- Ergonomic UI design
 - Providing installation packages, no deployment required
 - Free and open source
 
@@ -105,6 +108,7 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 - [x] Azure OpenAI API compatibility
 - [x] Improved prompt settings
 - [x] Prompt Library
+- [x] Built-in AI services out of the box
 - [ ] Talk with files
 - [ ] Talk with URLs
 - [ ] Mobile(Android, iOS)

@@ -6,7 +6,7 @@
     <a href="./README.md">English</a> | 中文介绍
 </p>
 <p align="center">
-    <em>开源的 ChatGPT API (OpenAI API) 桌面客户端，Prompt 的调试与管理工具，支持 Windows、Mac 和 Linux</em>
+    <em>效率爆棚！Chatbox 是你桌面上的最强 AI 搭档。一个 GPT/LLM 的桌面客户端，Prompt 的调试与管理工具，支持 Windows、Mac 和 Linux</em>
 </p>
 
 
@@ -44,11 +44,14 @@
 
 - 更自由、更强大的 Prompt 能力
 - 数据存储在本地，不会丢失
-- 支持 GPT-4 和其他模型
+- 内置开箱即用的 AI 服务，API KEY 不是必须的
+- 支持 OpenAI(GPT3.5, GPT4), Azure OpenAI 和 ChatGLM-6B
 - 支持自定义域名代理
+- Markdown 和代码高亮
+- 提示词图书馆，消息引用
+- 流式回复，打字机特效
+- 符合人体工程学的 UI 设计，夜间模式
 - 适合团队办公，支持在团队中共享 OpenAI API 资源，[查看教程](./team-sharing/README-CN.md)
-- 更多功能：Markdown、消息引用、字数与token估算、夜间模式……
-- 符合人体工程学的 UI 设计
 - 提供安装包，无需部署
 - 免费，开源
 
@@ -109,8 +112,9 @@ paru -S chatbox-bin
 - [x] 标签页的拖拽排序
 - [x] [网页版本](https://web.chatboxai.app)
 - [x] 兼容 Azure OpenAI API
-- [ ] 更好的 prompt 设置
-- [ ] Prompt Library
+- [x] 更好的 prompt 设置
+- [x] Prompt Library
+- [x] 内置 AI 服务，开箱即用
 - [ ] 可以发送文件，谈论文件
 - [ ] 可以发送链接，谈论网页
 - [ ] 移动端（iOS、Android）
