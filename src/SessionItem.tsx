@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
-    ListItemText, ListItemAvatar, MenuItem, Divider,
-    Avatar, IconButton, Button, TextField, Popper, Fade, Typography, ListItemIcon,
+    ListItemText, MenuItem, Divider,
+    IconButton, Typography, ListItemIcon,
 } from '@mui/material';
 import { Session } from './types'
 import FileCopyIcon from '@mui/icons-material/FileCopy';

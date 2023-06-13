@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Button, Alert, Chip,
-    Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
+    Dialog, DialogContent, DialogActions, DialogTitle, TextField,
     FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography, Box,
 } from '@mui/material';
 import { Settings } from './types'
