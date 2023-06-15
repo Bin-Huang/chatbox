@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Button, Alert, Chip,
-    Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField,
+    Dialog, DialogContent, DialogActions, DialogTitle, TextField,
     FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography, Box,
 } from '@mui/material';
 import { Settings } from './types'
@@ -20,11 +20,12 @@ import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle';
 
 const { useEffect } = React
 const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314'];
-const languages: string[] = ['en', 'zh-Hans', 'zh-Hant'];
+const languages: string[] = ['en', 'zh-Hans', 'zh-Hant','jp'];
 const languageMap: { [key: string]: string } = {
     'en': 'English',
     'zh-Hans': '简体中文',
     'zh-Hant': '繁體中文',
+    'jp':'日本語'
 };
 interface Props {
     open: boolean
