@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     Button, Paper, Badge, Box, Divider,
-    Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField, Stack,
+    Dialog, DialogContent, DialogActions, DialogTitle, Stack,
 } from '@mui/material';
 import iconPNG from './icon.png'
 import { Trans, useTranslation } from 'react-i18next'
