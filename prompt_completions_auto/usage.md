@@ -1,11 +1,27 @@
-[See it first](prompt_completions_auto.mp4)
+![prompt_completions_auto](C:\Users\25120\OneDrive\图片\Saved Pictures\prompt_completions_auto-1688093004479.gif)
 
 # English.md
+
+## Requirement
+
+- download python
+- selenium
+  - [pip install selenium](https://selenium-python.readthedocs.io/installation.html#installing-python-bindings-for-selenium)
+  - [your browser driver](https://sites.google.com/chromium.org/driver/)
+- pip install openpyxl
+- pip install time
+
+## Usage
 
 This is for English
 
 The file is for [ChatBox](https://web.chatboxai.app/) prompt automation by selenium.
 You can put the prompt you want to test in column A of an Excel sheet, and then run the script directly. After about ten minutes, your results will be automatically saved in column B of your Excel sheet.
+
+You don't need to input,than wait,than get.
+If you have 100prompt to test,you need to use at least 1hour.
+
+But if You just run it,and than have a rest,than the prompt will auto in ChatBox.  And answer will put in your excel!
 
 - Please watch the  mp4 first
 - Automate the process of inputting prompts from column A of an Excel sheet into ChatBox, and save the returned results from ChatBox in column B. ChatBox is a convenient platform for using ChatGPT
@@ -20,10 +36,25 @@ You can put the prompt you want to test in column A of an Excel sheet, and then 
 
 # 中文说明.md
 
+## Requirement
+
+- download python
+- selenium
+  - [pip install selenium](https://selenium-python.readthedocs.io/installation.html#installing-python-bindings-for-selenium)
+  - [your browser driver](https://sites.google.com/chromium.org/driver/)
+- pip install openpyxl
+- pip install time
+
+## Usage
+
 This is for Chinese
 
 这个项目是用于[ChatBox](https://web.chatboxai.app/) 实现自动化的 By selenium
 将想测试的prompt放入excel表的A列，然后直接运行脚本，十分钟左右结果会自动保存在excel表里的B列
+
+如果你要测试prompt，不再需要一条一条测试，输入prompt，等待，看到回答，下一条prompt.
+
+使用prompt_completions_auto,你只需要run这个python文件，然后喝杯咖啡，结果就显示在ChatBox和你的Excel表里面了
 
 - 先看下演示视频
 - 自动化从Excel表的A列把Prompt输入到ChatBox，然后把ChatBox返回的结果保存在B列（ChatBox是一个比较方便的使用ChatGPT的地方）
