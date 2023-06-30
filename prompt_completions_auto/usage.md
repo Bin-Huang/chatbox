@@ -1,4 +1,4 @@
-![prompt_completions_auto](C:\Users\25120\OneDrive\图片\Saved Pictures\prompt_completions_auto-1688093004479.gif)
+![prompt_completions_auto](prompt_completions_auto.gif)
 
 # English.md
 
