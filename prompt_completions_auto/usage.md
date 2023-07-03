@@ -53,7 +53,7 @@ But if You just run it,and than have a rest,than the prompt will auto in ChatBox
 
 ## Requirement(If use Python)
 
-如果不用Python，可以运行prompt_auto.exe，都是自动化驱动仍然是需要的。
+如果不用Python，可以运行prompt_auto.exe，但是自动化驱动仍然是需要的。
 
 - download python
 - selenium
