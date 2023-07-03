@@ -2,7 +2,16 @@
 
 # English.md
 
-## Requirement
+## Install google automation driver
+
+https://stackoverflow.com/questions/42478591/python-selenium-chrome-webdriver
+
+https://chromedriver.chromium.org/downloads
+Or, u can ask GPT how to download selenium chrome driver
+
+## Requirement(If use Python)
+
+If u don't want to use python,just click prompt_auto.exe，but automation driver is still need!
 
 - download python
 - selenium
@@ -24,6 +33,7 @@ If you have 100prompt to test,you need to use at least 1hour.
 But if You just run it,and than have a rest,than the prompt will auto in ChatBox.  And answer will put in your excel!
 
 - Please watch the  mp4 first
+- If you don't want to use python and these Requirement,just run prompt_auto.exe. In origin.xlsx,put your prompt in A column,the answer will show in B column.
 - Automate the process of inputting prompts from column A of an Excel sheet into ChatBox, and save the returned results from ChatBox in column B. ChatBox is a convenient platform for using ChatGPT
 - This is the py file that can help you get completions automation,and save it to your excel file.
 - Of course, this is just an example using ChatBox. If you need GPT automation for other purposes, you can contact me.
@@ -36,7 +46,14 @@ But if You just run it,and than have a rest,than the prompt will auto in ChatBox
 
 # 中文说明.md
 
-## Requirement
+## 装自动化驱动(必须)
+
+说明书：https://www.cnblogs.com/lfri/p/10542797.html
+下载地址：https://chromedriver.chromium.org/downloads
+
+## Requirement(If use Python)
+
+如果不用Python，可以运行prompt_auto.exe，都是自动化驱动仍然是需要的。
 
 - download python
 - selenium
@@ -57,6 +74,7 @@ This is for Chinese
 使用prompt_completions_auto,你只需要run这个python文件，然后喝杯咖啡，结果就显示在ChatBox和你的Excel表里面了
 
 - 先看下演示视频
+- 如何你不想下载依赖requirement和使用python，直接使用prompt_auto.exe，在origin.xlsx中，把你的答案放在A列，答案会放在B列
 - 自动化从Excel表的A列把Prompt输入到ChatBox，然后把ChatBox返回的结果保存在B列（ChatBox是一个比较方便的使用ChatGPT的地方）
 - 这个项目可以让你自动化的获得prompt的结果，并把它保存在你的excel表上面
 - 当然，只是以ChatBox为例，如果需要其他地方的GPT自动化，可以联系我
