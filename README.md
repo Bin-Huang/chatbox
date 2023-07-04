@@ -76,6 +76,11 @@ If you are using Arch Linux, you can download and install Chatbox via AUR:
 paru -S chatbox-bin
 ```
 
+## FAQ
+
+- [Frequently Asked Questions](./FAQ.md)
+- [常见问题与解答](./FAQ-CN.md)
+
 ## Chatbox Team Sharing Feature
 
 Using AI to enhance your team productivity, is an important feature of Chatbox.
