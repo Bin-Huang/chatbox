@@ -143,7 +143,7 @@ paru -S chatbox-bin
 作为一个开源项目，我非常感激Chatbox背后的赞助商的支持。他们的协助对我继续开发和改进这个开源软件至关重要。
 
 <a href="https://chatboxai.app/sponsor_redirect/eolink_gh">
-<img style="width: 600px" src="https://chatboxai.app/sponsor_redirect/eolink_resource_web?query=1">
+<img style="width: 600px" src="https://chatboxai.app/sponsor_redirect/eolink_resource_web">
 </a>
 
 
