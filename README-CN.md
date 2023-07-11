@@ -57,25 +57,50 @@
 
 ## 下载
 
-*Chatbox 支持所有的主流操作系统，包括： Windows、 Mac (Intel, M1) 和 Linux。*
+### [官网](https://chatboxai.app)下载
 
-### 从官方网站下载
+<table>
+  <tr>
+    <td><b>Windows</b></td>
+    <td colspan="2"><b>MacOS</b></td>
+    <td><b>Linux</b></td>
+  </tr>
+  <tr>
+    <td>
+      <a href='https://chatboxai.app/cn/?c=download-windows'>下载 Setup.exe</a>
+    </td>
+    <td>
+      <a href='https://chatboxai.app/cn/?c=download-mac-intel'>Mac Intel 安装包
+</a>
+    </td>
+    <td>
+      <a href='https://chatboxai.app/cn/?c=download-mac-aarch'>Mac M1/M2 安装包</a>
+    </td>
+    <td>
+      <a href='https://chatboxai.app/cn/?c=download-linux'>AppImage 安装包</a>
+    </td>
+  </tr>
+</table>
 
-请访问 **[chatboxai.app](https://chatboxai.app/)** 下载最新版本。
+<table>
+  <tr>
+    <td>在线使用</td>
+  </tr>
+  <tr>
+    <td>
+      <a href='https://chatboxai.app/cn/#download'>使用网页版本(测试阶段)</a>
+    </td>
+  </tr>
+</table>
 
-### 从 Github Releases 下载
+### 从[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)下载
 
-您可以访问 **[Github Releases](https://github.com/Bin-Huang/chatbox/releases)** 浏览并下载所有历史版本。
+访问 **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** 下载最新版本与历史版本的安装包。
 
-### 通过包管理器下载
+## 常见问题与解答
 
-#### [aur](https://aur.archlinux.org/packages/chatbox-bin)
-
-如果您使用的是 Arch Linux，可以通过 AUR 下载并安装 Chatbox：
-
-```
-paru -S chatbox-bin
-```
+- [Frequently Asked Questions](./FAQ.md)
+- [常见问题与解答](./FAQ-CN.md)
 
 ## Chatbox 团队共享功能
 
@@ -137,21 +162,6 @@ paru -S chatbox-bin
 请注意：
 1. 在提交 issue 之前，请确保没有重复话题的 issue。
 2. 请确保标题足够的简洁明了，描述足够的详细。
-
-## 感谢赞助商
-
-作为一个开源项目，我非常感激Chatbox背后的赞助商的支持。他们的协助对我继续开发和改进这个开源软件至关重要。
-
-<a href="https://chatboxai.app/sponsor_redirect/eolink_gh">
-<img style="width: 600px" src="https://chatboxai.app/sponsor_redirect/eolink_resource_web">
-</a>
-
-
-## Chatbox 期待赞助商！
-
-作为一个开源项目，ChatBox 在社区的贡献和支持下才得以持续发展。如果您或您的组织认为 Chatbox 的工作有价值，欢迎您的赞助，支持 Chatbox 可持续的开发与迭代，并造福所有人。为表达感激，我会在 README 文件和其他适当的位置显著地展示赞助商的相关信息。感谢您考虑支持 Chatbox 的工作！
-
-如果您有任何的兴趣或想法，欢迎联系 tohuangbin@gmail.com 。
 
 ## 请熬夜的开发者喝瓶可乐？
 

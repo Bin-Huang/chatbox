@@ -56,25 +56,45 @@
 
 ## Download
 
-*Chatbox supports all major operating systems, including: Windows, Mac (Intel, M1), and Linux.*
+### Download from the [Official Website](https://chatboxai.app)
 
-### Download from the official website
+<table>
+  <tr>
+    <td><b>Windows</b></td>
+    <td colspan="2"><b>MacOS</b></td>
+    <td><b>Linux</b></td>
+  </tr>
+  <tr>
+    <td>
+      <a href='https://chatboxai.app/?c=download-windows'>Get Setup.exe</a>
+    </td>
+    <td>
+      <a href='https://chatboxai.app/?c=download-mac-intel'>Mac Intel Setup
+</a>
+    </td>
+    <td>
+      <a href='https://chatboxai.app/?c=download-mac-aarch'>Mac M1/M2 Setup</a>
+    </td>
+    <td>
+      <a href='https://chatboxai.app/?c=download-linux'>AppImage</a>
+    </td>
+  </tr>
+</table>
 
-Visit **[chatboxai.app](https://chatboxai.app/)** to download the latest version.
+<table>
+  <tr>
+    <td>Use Online</td>
+  </tr>
+  <tr>
+    <td>
+      <a href='https://chatboxai.app/#download'>Try the web version(beta)</a>
+    </td>
+  </tr>
+</table>
 
-### Download from GitHub Releases
+### Download from [GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)
 
-You can visit **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to browse and download all previous versions.
-
-### Download via package manager
-
-#### [aur](https://aur.archlinux.org/packages/chatbox-bin)
-
-If you are using Arch Linux, you can download and install Chatbox via AUR:
-
-```
-paru -S chatbox-bin
-```
+Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
 
 ## FAQ
 
@@ -132,21 +152,6 @@ Any form of contribution is welcome, including but not limited to:
 - Submitting documentation revisions
 - Submitting translations
 - Submitting any other forms of contribution
-
-## Sponsorship
-
-As an open-source project, I am extremely grateful for the support of the sponsors behind Chatbox. Their assistance has been essential in allowing me to continue developing and improving the open-source software.
-
-<a href="https://chatboxai.app/sponsor_redirect/eolink_gh">
-<img style="width: 600px" src="https://chatboxai.app/sponsor_redirect/eolink_resource_web">
-</a>
-
-
-## Become a ChatBox Sponsor?
-
-As an open-source project, ChatBox is sustained by the contributions and support of our community. If you or your organization find our work valuable, we welcome your sponsorship to help us continue improving and enhancing the application for everyone. To show our appreciation, we will prominently display sponsor information in our README and other appropriate places. Thank you for considering supporting our efforts!
-
-If you have any interest or ideas, please feel free to contact us at tohuangbin@gmail.com .
 
 ## Buy Me a Coffee
 
