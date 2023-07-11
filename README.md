@@ -54,9 +54,9 @@
 - Providing installation packages, no deployment required
 - Free and open source
 
-## Download
+## Download installer
 
-### Download from the [Official Website](https://chatboxai.app)
+### Download from the official website
 
 <table>
   <tr>
@@ -66,17 +66,16 @@
   </tr>
   <tr>
     <td>
-      <a href='https://chatboxai.app/?c=download-windows'>Get Setup.exe</a>
+      <b><a href='https://chatboxai.app/?c=download-windows'>Get Setup.exe</a></b>
     </td>
     <td>
-      <a href='https://chatboxai.app/?c=download-mac-intel'>Mac Intel Setup
-</a>
+      <b><a href='https://chatboxai.app/?c=download-mac-intel'>Mac Intel Setup</a></b>
     </td>
     <td>
-      <a href='https://chatboxai.app/?c=download-mac-aarch'>Mac M1/M2 Setup</a>
+      <b><a href='https://chatboxai.app/?c=download-mac-aarch'>Mac M1/M2 Setup</a></b>
     </td>
     <td>
-      <a href='https://chatboxai.app/?c=download-linux'>AppImage</a>
+      <b><a href='https://chatboxai.app/?c=download-linux'>AppImage</a></b>
     </td>
   </tr>
 </table>
@@ -92,7 +91,7 @@
   </tr>
 </table>
 
-### Download from [GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)
+### Download from GitHub Releases
 
 Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
 

@@ -55,9 +55,9 @@
 - 提供安装包，无需部署
 - 免费，开源
 
-## 下载
+## 下载安装包
 
-### [官网](https://chatboxai.app)下载
+### 官网下载
 
 <table>
   <tr>
@@ -67,17 +67,16 @@
   </tr>
   <tr>
     <td>
-      <a href='https://chatboxai.app/cn/?c=download-windows'>下载 Setup.exe</a>
+      <b><a href='https://chatboxai.app/cn/?c=download-windows'>下载 Setup.exe</a></b>
     </td>
     <td>
-      <a href='https://chatboxai.app/cn/?c=download-mac-intel'>Mac Intel 安装包
-</a>
+      <b><a href='https://chatboxai.app/cn/?c=download-mac-intel'>Mac Intel 安装包</a></b>
     </td>
     <td>
-      <a href='https://chatboxai.app/cn/?c=download-mac-aarch'>Mac M1/M2 安装包</a>
+      <b><a href='https://chatboxai.app/cn/?c=download-mac-aarch'>Mac M1/M2 安装包</a></b>
     </td>
     <td>
-      <a href='https://chatboxai.app/cn/?c=download-linux'>AppImage 安装包</a>
+      <b><a href='https://chatboxai.app/cn/?c=download-linux'>AppImage 安装包</a></b>
     </td>
   </tr>
 </table>
@@ -93,7 +92,7 @@
   </tr>
 </table>
 
-### 从[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)下载
+### 从 GitHub Releases 下载
 
 访问 **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** 下载最新版本与历史版本的安装包。
 
