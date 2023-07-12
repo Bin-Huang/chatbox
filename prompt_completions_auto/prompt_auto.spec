@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['prompt_auto.py'],
+    ['D:\\chatbox\\prompt_completions_auto\\prompt_auto.py'],
     pathex=[],
     binaries=[],
     datas=[],

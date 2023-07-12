@@ -41,8 +41,8 @@ for i in range(1, 5):
     print("The answer {} is".format(i),recent_answer)
     #A is 1,B is 2
     sheet.cell(row=i + 1, column=2).value = recent_answer
-#You can change the output file location
-workbook.save('prompt_comletions.xlsx')
+    #You can change the output file location
+    workbook.save('prompt_comletions.xlsx')
 #You can use the answers if you have other require,it's the list of answers,
 #anwers[1].text is the first answer
 print("The answers are",answers)

@@ -18,7 +18,7 @@ missing module named 'org.python' - imported by copy (optional), xml.sax (delaye
 missing module named pwd - imported by posixpath (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), subprocess (delayed, conditional, optional), netrc (delayed, conditional), getpass (delayed), http.server (delayed, optional), webbrowser (delayed), psutil (optional), distutils.util (delayed, conditional, optional), distutils.archive_util (optional), setuptools._distutils.archive_util (optional), setuptools._distutils.util (delayed, conditional, optional)
 missing module named grp - imported by shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), subprocess (delayed, conditional, optional), distutils.archive_util (optional), setuptools._distutils.archive_util (optional)
 missing module named org - imported by pickle (optional)
-missing module named posix - imported by os (conditional, optional), posixpath (optional), shutil (conditional), importlib._bootstrap_external (conditional)
+missing module named posix - imported by posixpath (optional), shutil (conditional), importlib._bootstrap_external (conditional), os (conditional, optional)
 missing module named resource - imported by posix (top-level), psutil._pslinux (optional)
 missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional), zipimport (top-level)
 excluded module named _frozen_importlib - imported by importlib (optional), importlib.abc (optional), zipimport (top-level)
