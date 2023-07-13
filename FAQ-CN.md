@@ -1,7 +1,7 @@
 # 常见问题
 
 <p align="center">
-    <a href="./FAQ.md">English</a> | 中文
+    <a href="./FAQ.md">English</a> | 中文 | <a href="./FAQ-TC.md">繁體中文</a>
 </p>
 
 这里列举了一些最常见的问题和解决方案。如果你依然没有找到答案，也可以提交一个 [Issue](https://github.com/Bin-Huang/chatbox/issues/new/choose)。

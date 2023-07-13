@@ -3,7 +3,7 @@
 <span>Chatbox</span>
 </h1>
 <p align="center">
-    <a href="./README.md">English</a> | 中文介绍
+    <a href="./README.md">English</a> | 中文介绍 | <a href="./README-TC.md">繁體中文介紹</a>
 </p>
 <p align="center">
     <em>效率爆棚！Chatbox 是你桌面上的最强 AI 搭档。一个 GPT/LLM 的桌面客户端，Prompt 的调试与管理工具，支持 Windows、Mac 和 Linux</em>
@@ -100,7 +100,7 @@
 
 - [Frequently Asked Questions](./FAQ.md)
 - [常见问题与解答](./FAQ-CN.md)
-
+- [常見問題與解答](./FAQ-TC.md)
 ## Chatbox 团队共享功能
 
 用 AI 来提高团队生产力，是 Chatbox 的一个重要特性。Chatbox 可以让你的团队成员共享同一个 OpenAI API 账号的资源，同时不会暴露你的 API KEY。

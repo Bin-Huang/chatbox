@@ -1,6 +1,6 @@
 # Chatbox 团队共享功能
 
-[English](./README.md) | 中文介绍
+[English](./README.md) | 中文介绍 | [繁體中文介紹](./README-TC.md)
 
 Chatbox 可以让你的团队成员共享同一个 OpenAI API 账号的资源，同时不会暴露你的 API KEY。
 
