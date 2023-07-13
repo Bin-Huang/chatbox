@@ -3,7 +3,7 @@
 <span>Chatbox</span>
 </h1>
 <p align="center">
-    English | <a href="./README-CN.md">中文介绍</a>
+    English | <a href="./README-CN.md">中文介绍</a> | <a href="./README-JA.md">日本語</a>
 </p>
 <p align="center">
     <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop app for GPT/LLM that supports Windows, Mac & Linux.</em>
@@ -99,6 +99,7 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 
 - [Frequently Asked Questions](./FAQ.md)
 - [常见问题与解答](./FAQ-CN.md)
+- [よくある質問](./FAQ-JA.md)
 
 ## Chatbox Team Sharing Feature
 
