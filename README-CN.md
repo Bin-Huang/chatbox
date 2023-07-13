@@ -3,7 +3,7 @@
 <span>Chatbox</span>
 </h1>
 <p align="center">
-    <a href="./README.md">English</a> | 中文介绍
+    <a href="./README.md">English</a> | 中文介绍 | <a href="./README-JA.md">日本語</a>
 </p>
 <p align="center">
     <em>效率爆棚！Chatbox 是你桌面上的最强 AI 搭档。一个 GPT/LLM 的桌面客户端，Prompt 的调试与管理工具，支持 Windows、Mac 和 Linux</em>
@@ -100,6 +100,7 @@
 
 - [Frequently Asked Questions](./FAQ.md)
 - [常见问题与解答](./FAQ-CN.md)
+- [よくある質問](./FAQ-JA.md)
 
 ## Chatbox 团队共享功能
 
