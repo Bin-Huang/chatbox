@@ -37,7 +37,9 @@
 </td>
 </tr>
 </table>
-## [One-Click to Deploy on Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FFormyselfonly%2Fchatbox-vercel-deploy-oneclick&repository-name=chatbox-practice&project-name=chatbox-practice&framework=create-react-app&build-command=npm%20run%20build:react&output-directory=build&install-command=npm%20install)
+## One-Click to Deploy on Vercel
+
+[Click Here to easy deploy!Your local ChatGPT!](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FFormyselfonly%2Fchatbox-vercel-deploy-oneclick&repository-name=chatbox-practice&project-name=chatbox-practice&framework=create-react-app&build-command=npm%20run%20build:react&output-directory=build&install-command=npm%20install)
 
 Just click it,and follow the next step,It's really easy.
 All requirement and setting i have already write for u!
