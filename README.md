@@ -38,6 +38,15 @@
 </td>
 </tr>
 </table>
+## [One-Click to Deploy on Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FFormyselfonly%2Fchatbox-vercel-deploy-oneclick&repository-name=chatbox-practice&project-name=chatbox-practice&framework=create-react-app&build-command=npm%20run%20build:react&output-directory=build&install-command=npm%20install)
+
+Just click it,and follow the next step,It's really easy.
+All requirement and setting i have already write for u!
+Help enjoy!
+
+## Why i write it?
+
+It's a one click deploy chatbox to practice for ChatGPT developer!I am just familiar with Vercel,so i write it.
 
 ## Features
 
@@ -67,54 +76,6 @@ Visit **[chatboxai.app](https://chatboxai.app/)** to download the latest version
 You can visit **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to browse and download all previous versions.
 
 ### Download via package manager
-
-#### [aur](https://aur.archlinux.org/packages/chatbox-bin)
-
-If you are using Arch Linux, you can download and install Chatbox via AUR:
-
-```
-paru -S chatbox-bin
-```
-
-## Chatbox Team Sharing Feature
-
-Using AI to enhance your team productivity, is an important feature of Chatbox.
-
-Chatbox allows your team members to share the resources of the same OpenAI API account without exposing your API KEY. View [tutorial](./team-sharing/README.md).
-
-## Why I made Chatbox?
-
-I developed Chatbox initially because I was debugging some prompts and found myself in need of a simple and easy-to-use prompt and API debugging tool. I thought there might be more people who needed such a tool, so I open-sourced it.
-
-At first, I didn't know that it would be so popular. I listened to the feedback from the open-source community and continued to develop and improve it. Now, it has become a very useful AI desktop application. There are many users who love Chatbox, and they not only use it for developing and debugging prompts, but also for daily chatting, and even to do some more interesting things like using well-designed prompts to make AI play various professional roles to assist them in everyday work...
-
-## Roadmap
-
-- [x] AI chat and session management
-- [x] Store all your important message data locally.
-- [x] Markdown
-- [x] Streaming reply
-- [x] API Host configuration
-- [x] Automatically generate tab titles
-- [x] Button for clearing messages.
-- [x] Night/Dark mode
-- [x] message token estimating
-- [x] GPT4
-- [x] i18n
-- [x] Copy button for code blocks
-- [x] Stop button for AI message generation
-- [x] Drag-and-drop sorting of tabs
-- [x] [Web version](https://web.chatboxai.app)
-- [x] Azure OpenAI API compatibility
-- [x] Improved prompt settings
-- [x] Prompt Library
-- [x] Built-in AI services out of the box
-- [ ] Talk with files
-- [ ] Talk with URLs
-- [ ] Mobile(Android, iOS)
-- [ ] Cross-device synchronization
-- [ ] threads(like Slack)
-- More...
 
 ## How to Contribute
 
