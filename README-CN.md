@@ -44,7 +44,7 @@
 
 - 更自由、更强大的 Prompt 能力
 - 数据存储在本地，不会丢失
-- 内置开箱即用的 AI 服务，API KEY 不是必须的
+- 内置开箱即用的 AI 服务，API KEY 是可选的
 - 支持 OpenAI(GPT3.5, GPT4), Azure OpenAI 和 ChatGLM-6B
 - 支持自定义域名代理
 - Markdown 和代码高亮

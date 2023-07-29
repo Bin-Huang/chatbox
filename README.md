@@ -43,7 +43,6 @@
 
 - More free and powerful Prompt capability
 - Data is stored locally and will not be lost
-- Built-in AI services out of the box, API KEY is not required
 - Support for OpenAI(GPT3.5, GPT4), Azure OpenAI and ChatGLM-6B
 - Support for custom domain proxies
 - Markdown & Code Highlighting
@@ -66,13 +65,13 @@
   </tr>
   <tr>
     <td>
-      <b><a href='https://chatboxai.app/?c=download-windows'>Get Setup.exe</a></b>
+      <b><a href='https://chatboxai.app/?c=download-windows'>Setup.exe</a></b>
     </td>
     <td>
-      <b><a href='https://chatboxai.app/?c=download-mac-intel'>Mac Intel Setup</a></b>
+      <b><a href='https://chatboxai.app/?c=download-mac-intel'>Intel</a></b>
     </td>
     <td>
-      <b><a href='https://chatboxai.app/?c=download-mac-aarch'>Mac M1/M2 Setup</a></b>
+      <b><a href='https://chatboxai.app/?c=download-mac-aarch'>M1/M2</a></b>
     </td>
     <td>
       <b><a href='https://chatboxai.app/?c=download-linux'>AppImage</a></b>
