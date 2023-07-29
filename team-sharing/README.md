@@ -1,6 +1,6 @@
 # Chatbox Team Sharing
 
-English | [中文介绍](./README-CN.md)
+English | [中文介绍](./README-CN.md) | [繁體中文介紹](./README-TC.md)
 
 Chatbox allows your team members to share the resources of the same OpenAI API account without exposing your API KEY.
 
