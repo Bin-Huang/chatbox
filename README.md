@@ -36,22 +36,7 @@
 </tr>
 </table>
 
-## Features
-
-- More free and powerful Prompt capability
-- Data is stored locally and will not be lost
-- Supports multiple cutting-edge LLM models and providers, such as OpenAI, Azure OpenAI and ChatGLM-6B
-- Markdown & Code Highlighting
-- Prompt Library, Message Quoting
-- Streaming reply
-- Ergonomic UI design & Night Mode
-- Suitable for team collaboration, supporting the sharing of OpenAI API resources within the team. View [tutorial](./team-sharing/README.md)
-- Providing installation packages, no deployment required
-- Free and open source
-
-## Download installer
-
-### Download from the official website
+## Download
 
 <table>
   <tr>
@@ -87,9 +72,21 @@
   </tr>
 </table>
 
-### Download from GitHub Releases
-
 Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
+
+## Features
+
+- Enhanced prompting capability
+- Data is stored locally and will not be lost
+- Supports multiple cutting-edge LLM models and providers, such as OpenAI, Azure OpenAI and ChatGLM-6B
+- Keyboard shortcuts for improved productivity
+- Markdown & Code Highlighting
+- Prompt Library, Message Quoting
+- Streaming reply
+- Ergonomic UI design & Night Mode
+- Suitable for team collaboration, supporting the sharing of OpenAI API resources within the team. View [tutorial](./team-sharing/README.md)
+- Providing installation packages, no deployment required
+- Free and open source
 
 ## FAQ
 
@@ -128,6 +125,7 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 - [x] Improved prompt settings
 - [x] Prompt Library
 - [x] Built-in AI services out of the box
+- [x] Shortcut keys
 - [ ] Talk with files
 - [ ] Talk with URLs
 - [ ] Mobile(Android, iOS)
