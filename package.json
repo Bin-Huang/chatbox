@@ -3,7 +3,7 @@
   "productName": "chatbox",
   "version": "0.0.1",
   "private": true,
-  "description": "a cross-platform desktop client for ChatGPT API (OpenAI API)",
+  "description": "Chatbox is a desktop app for multiple cutting-edge LLM models that available on Windows, Mac, Linux",
   "scripts": {
     "start:react": "react-scripts start",
     "build:react": "react-scripts build",

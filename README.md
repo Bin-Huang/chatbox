@@ -6,7 +6,7 @@
     English | <a href="./README-CN.md">中文介绍</a> | <a href="./README-TC.md">繁體中文介紹</a>
 </p>
 <p align="center">
-    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop app for GPT/LLM that supports Windows, Mac & Linux.</em>
+    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for multiple cutting-edge LLM models, available on Windows, Mac, Linux</em>
 </p>
 
 
@@ -43,8 +43,7 @@
 
 - More free and powerful Prompt capability
 - Data is stored locally and will not be lost
-- Support for OpenAI(GPT3.5, GPT4), Azure OpenAI and ChatGLM-6B
-- Support for custom domain proxies
+- Supports multiple cutting-edge LLM models and providers, such as OpenAI, Azure OpenAI and ChatGLM-6B
 - Markdown & Code Highlighting
 - Prompt Library, Message Quoting
 - Streaming reply
@@ -88,6 +87,7 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 - [Frequently Asked Questions](./FAQ.md)
 - [常见问题与解答](./FAQ-CN.md)
 - [常見問題與解答](./FAQ-TC.md)
+
 ## Chatbox Team Sharing Feature
 
 Using AI to enhance your team productivity, is an important feature of Chatbox.

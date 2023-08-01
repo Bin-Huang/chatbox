@@ -6,7 +6,7 @@
     <a href="./README.md">English</a> | 中文介绍 | <a href="./README-TC.md">繁體中文介紹</a>
 </p>
 <p align="center">
-    <em>效率爆棚！Chatbox 是你桌面上的最强 AI 搭档。一个 GPT/LLM 的桌面客户端，Prompt 的调试与管理工具，支持 Windows、Mac 和 Linux</em>
+    <em>AI好助手！Chatbox 是一个支持多款最先进的大语言模型（LLM）的桌面客户端，适用于 Windows、Mac 和 Linux</em>
 </p>
 
 
@@ -45,7 +45,7 @@
 - 更自由、更强大的 Prompt 能力
 - 数据存储在本地，不会丢失
 - 内置开箱即用的 AI 服务，API KEY 是可选的
-- 支持 OpenAI(GPT3.5, GPT4), Azure OpenAI 和 ChatGLM-6B
+- 支持 OpenAI, Azure OpenAI 和 ChatGLM-6B
 - 支持自定义域名代理
 - Markdown 和代码高亮
 - 提示词图书馆，消息引用
@@ -101,11 +101,6 @@
 刚开始我只是在调试一些 prompt，我发现自己非常需要一个简单好用的 prompt 和接口调试工具，所以我开发了最初版本的 Chatbox。我觉得可能有更多的人需要这样的工具，所以我把它开源出来。
 
 那时我还不知道会有这么多人喜欢它。于是我尽量听取开源社区的反馈，不断开发和完善它，现在它已经变成了一个非常好用的 AI 桌面应用。现在有很多喜欢 Chatbox 的用户，他们不仅仅在开发和调试 prompt，而且还使用它来日常聊天，甚至用它来做一些更加有趣的事情，比如利用精心设计的 prompt 让 AI 扮演各种专业的角色，来辅助他们进行一些日常的工作……
-
-## ChatBox 和 (OpenAI API) 的关系
-
-- ChatBox 仅提供了UI界面帮助你更好的使用 ChatGPT API (OpenAI API). 
-- 任何和 ChatGPT API (OpenAI API) 相关的问题，请移步 [platform openai](https://platform.openai.com/)
 
 ## Roadmap
 

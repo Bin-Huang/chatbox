@@ -38,4 +38,4 @@
 {"error":{"message":"The model: gpt-4-32k does not exist","type":"invalid_request_error","param":null,"code":"model_not_found"}}
 ```
 
-這個情況往往是因為你正在使用自己的 OpenAI 帳戶，你在模型中選擇了 GPT-4，但 OpenAI API 帳戶不支持 GPT-4。截止到2023年07月04日，所有 OpenAI API 帳戶都需要向 OpenAI 填寫申請後才能使用 GPT-4 模型。這裡是申請鏈結： https://openai.com/waitlist/gpt-4-api 。請注意，即使你是 ChatGPT Plus 用戶，你也需要申請後才能使用 GPT-4 的 API 模型。
+這個情況往往是因為你正在使用自己的 OpenAI 帳戶，你在模型中選擇了 GPT-4，但 OpenAI API 帳戶不支持 GPT-4。截止到2023年07月04日，所有 OpenAI API 帳戶都需要向 OpenAI 填寫申請後才能使用 GPT-4 模型。這裡是申請鏈結： https://openai.com/waitlist/gpt-4-api 。
