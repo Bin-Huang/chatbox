@@ -59,18 +59,30 @@
     <td colspan="2" style="text-align:center"><b>MacOS</b></td>
     <td style="text-align:center"><b>Linux</b></td>
   </tr>
-  <tr>
+  <tr style="text-align: center">
     <td>
-      <b><a href='https://chatboxai.app/?c=download-windows'>Setup.exe</a></b>
+      <a href='https://chatboxai.app/?c=download-windows'>
+        <img src='./doc/windows.png' style="height:14px; width: 14px" />
+        <b>Setup.exe</b>
+      </a>
     </td>
     <td>
-      <b><a href='https://chatboxai.app/?c=download-mac-intel'>Intel</a></b>
+      <a href='https://chatboxai.app/?c=download-mac-intel'>
+        <img src='./doc/mac.png' style="height:15px; width: 15px" />
+        <b>Intel</b>
+      </a>
     </td>
     <td>
-      <b><a href='https://chatboxai.app/?c=download-mac-aarch'>M1/M2</a></b>
+      <a href='https://chatboxai.app/?c=download-mac-aarch'>
+        <img src='./doc/mac.png' style="height:15px; width: 15px" />
+        <b>M1/M2</b>
+      </a>
     </td>
     <td>
-      <b><a href='https://chatboxai.app/?c=download-linux'>AppImage</a></b>
+      <a href='https://chatboxai.app/?c=download-linux'>
+        <img src='./doc/linux.png' style="height:14px; width: 14px" />
+        <b>AppImage</b>
+      </a>
     </td>
   </tr>
 </table>
