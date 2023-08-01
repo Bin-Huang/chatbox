@@ -81,17 +81,6 @@
   </tr>
 </table>
 
-<table>
-  <tr>
-    <td>在線使用</td>
-  </tr>
-  <tr>
-    <td>
-      <a href='https://chatboxai.app/cn/#download'>使用網頁版本(測試階段)</a>
-    </td>
-  </tr>
-</table>
-
 ### 從 GitHub Releases 下載
 
 訪問 **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** 下載最新版本與歷史版本的安裝包。

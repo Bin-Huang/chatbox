@@ -79,17 +79,6 @@
   </tr>
 </table>
 
-<table>
-  <tr>
-    <td>Use Online</td>
-  </tr>
-  <tr>
-    <td>
-      <a href='https://chatboxai.app/#download'>Try the web version(beta)</a>
-    </td>
-  </tr>
-</table>
-
 ### Download from GitHub Releases
 
 Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
