@@ -3,9 +3,6 @@
 <span>Chatbox</span>
 </h1>
 <p align="center">
-    English | <a href="./README-CN.md">中文介绍</a> | <a href="./README-TC.md">繁體中文介紹</a>
-</p>
-<p align="center">
     <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for multiple cutting-edge LLM models, available on Windows, Mac, Linux</em>
 </p>
 
@@ -85,8 +82,6 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 ## FAQ
 
 - [Frequently Asked Questions](./FAQ.md)
-- [常见问题与解答](./FAQ-CN.md)
-- [常見問題與解答](./FAQ-TC.md)
 
 ## Chatbox Team Sharing Feature
 

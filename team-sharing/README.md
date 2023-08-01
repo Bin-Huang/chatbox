@@ -1,7 +1,5 @@
 # Chatbox Team Sharing
 
-English | [中文介绍](./README-CN.md) | [繁體中文介紹](./README-TC.md)
-
 Chatbox allows your team members to share the resources of the same OpenAI API account without exposing your API KEY.
 
 The following tutorial will help you quickly set up a shared server. It may involve server login, command-line input, etc. If you are not familiar with these operations, you can ask your technical colleague for help or inquire with AI Assistanct. Trust me, it's not difficult.

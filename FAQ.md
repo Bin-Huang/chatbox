@@ -1,9 +1,5 @@
 # Frequently Asked Questions
 
-<p align="center">
-    English | <a href="./FAQ-CN.md">中文</a> | <a href="./FAQ-TC.md">繁體中文</a>
-</p>
-
 If you still haven't found the answer you're looking for, feel free to submit an [Issue](https://github.com/Bin-Huang/chatbox/issues/new/choose) as well.
 
 ### 1001
