@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { Settings, createSession, Session, Message, Config } from './types'
-import * as defaults from './defaults'
-import { v4 as uuidv4 } from 'uuid';
-import { ThemeMode } from './theme';
-import * as api from './api'
-import * as remote from './remote'
-import { useTranslation } from "react-i18next";
+import * as defaults from '../packages/defaults'
+import { v4 as uuidv4 } from 'uuid'
+import { ThemeMode } from '../theme'
+import * as runtime from '../packages/runtime'
+import * as remote from '../packages/remote'
+import { useTranslation } from 'react-i18next'
 
 // setting store
 
@@ -13,10 +13,10 @@ export function getDefaultSettings(): Settings {
     return {
         openaiKey: '',
         apiHost: 'https://api.openai.com',
-        model: "gpt-3.5-turbo",
+        model: 'gpt-3.5-turbo',
         temperature: 0.7,
-        maxContextSize: "4000",
-        maxTokens: "2048",
+        maxContextSize: '4000',
+        maxTokens: '2048',
         showWordCount: false,
         showTokenCount: false,
         showModelName: false,
@@ -27,14 +27,14 @@ export function getDefaultSettings(): Settings {
 }
 
 export async function readSettings(): Promise<Settings> {
-    const setting: Settings | undefined = await api.readStore('settings')
+    const setting: Settings | undefined = await runtime.readStore('settings')
     if (!setting) {
         return getDefaultSettings()
     }
     // 兼容早期版本
-    const settingWithDefaults = Object.assign({}, getDefaultSettings(), setting);
+    const settingWithDefaults = Object.assign({}, getDefaultSettings(), setting)
 
-    return settingWithDefaults;
+    return settingWithDefaults
 }
 
 export async function writeSettings(settings: Settings) {
@@ -42,26 +42,26 @@ export async function writeSettings(settings: Settings) {
         settings.apiHost = getDefaultSettings().apiHost
     }
     console.log('writeSettings.apiHost', settings.apiHost)
-    return api.writeStore('settings', settings)
+    return runtime.writeStore('settings', settings)
 }
 
 export async function readConfig(): Promise<Config> {
-    let config: Config | undefined = await api.readStore('configs')
+    let config: Config | undefined = await runtime.readStore('configs')
     if (!config) {
         config = { uuid: uuidv4() }
-        await api.writeStore('configs', config)
+        await runtime.writeStore('configs', config)
     }
-    return config;
+    return config
 }
 
 export async function writeConfig(config: Config) {
-    return api.writeStore('configs', config)
+    return runtime.writeStore('configs', config)
 }
 
 // session store
 
 export async function readSessions(settings: Settings): Promise<Session[]> {
-    let sessions: Session[] | undefined = await api.readStore('chat-sessions')
+    const sessions: Session[] | undefined = await runtime.readStore('chat-sessions')
     if (!sessions) {
         return defaults.sessions
     }
@@ -78,24 +78,24 @@ export async function readSessions(settings: Settings): Promise<Session[]> {
 }
 
 export async function writeSessions(sessions: Session[]) {
-    return api.writeStore('chat-sessions', sessions)
+    return runtime.writeStore('chat-sessions', sessions)
 }
 
 // react hook
 
 export default function useStore() {
-    const { i18n } = useTranslation();
+    const { i18n } = useTranslation()
 
     const [version, _setVersion] = useState('unknown')
     const [needCheckUpdate, setNeedCheckUpdate] = useState(false)
     const updateCheckTimer = useRef<NodeJS.Timeout>()
     useEffect(() => {
         const handler = async () => {
-            const version = await api.getVersion()
+            const version = await runtime.getVersion()
             _setVersion(version)
             try {
                 const config = await readConfig()
-                const os = await api.getPlatform()
+                const os = await runtime.getPlatform()
                 const needUpdate = await remote.checkNeedUpdate(version, os, config)
                 setNeedCheckUpdate(needUpdate)
             } catch (e) {
@@ -121,13 +121,13 @@ export default function useStore() {
             if (settings.openaiKey === '') {
                 setNeedSetting(true)
             }
-            i18n.changeLanguage(settings.language).then();
+            i18n.changeLanguage(settings.language).then()
         })
     }, [])
     const setSettings = (settings: Settings) => {
         _setSettings(settings)
         writeSettings(settings)
-        i18n.changeLanguage(settings.language).then();
+        i18n.changeLanguage(settings.language).then()
     }
 
     const [chatSessions, _setChatSessions] = useState<Session[]>([createSession()])
@@ -181,7 +181,7 @@ export default function useStore() {
         })
     }
 
-    const [toasts, _setToasts] = useState<{ id: string, content: string }[]>([])
+    const [toasts, _setToasts] = useState<{ id: string; content: string }[]>([])
     const addToast = (content: string) => {
         const id = uuidv4()
         _setToasts([...toasts, { id, content }])

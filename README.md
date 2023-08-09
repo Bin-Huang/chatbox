@@ -6,7 +6,6 @@
     <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for multiple cutting-edge LLM models, available on Windows, Mac, Linux</em>
 </p>
 
-
 <p align="center">
 <a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
 <img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
@@ -76,21 +75,21 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 
 ## Features
 
-- Enhanced prompting capability
-- Data is stored locally and will not be lost
-- Supports multiple cutting-edge LLM models and providers, such as OpenAI, Azure OpenAI and ChatGLM-6B
-- Keyboard shortcuts for improved productivity
-- Markdown & Code Highlighting
-- Prompt Library, Message Quoting
-- Streaming reply
-- Ergonomic UI design & Night Mode
-- Suitable for team collaboration, supporting the sharing of OpenAI API resources within the team. View [tutorial](./team-sharing/README.md)
-- Providing installation packages, no deployment required
-- Free and open source
+-   Enhanced prompting capability
+-   Data is stored locally and will not be lost
+-   Supports multiple cutting-edge LLM models and providers, such as OpenAI, Azure OpenAI and ChatGLM-6B
+-   Keyboard shortcuts for improved productivity
+-   Markdown & Code Highlighting
+-   Prompt Library, Message Quoting
+-   Streaming reply
+-   Ergonomic UI design & Night Mode
+-   Suitable for team collaboration, supporting the sharing of OpenAI API resources within the team. View [tutorial](./team-sharing/README.md)
+-   Providing installation packages, no deployment required
+-   Free and open source
 
 ## FAQ
 
-- [Frequently Asked Questions](./FAQ.md)
+-   [Frequently Asked Questions](./FAQ.md)
 
 ## Chatbox Team Sharing Feature
 
@@ -106,51 +105,51 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 
 ## Roadmap
 
-- [x] AI chat and session management
-- [x] Store all your important message data locally.
-- [x] Markdown
-- [x] Streaming reply
-- [x] API Host configuration
-- [x] Automatically generate tab titles
-- [x] Button for clearing messages.
-- [x] Night/Dark mode
-- [x] message token estimating
-- [x] GPT4
-- [x] i18n
-- [x] Copy button for code blocks
-- [x] Stop button for AI message generation
-- [x] Drag-and-drop sorting of tabs
-- [x] [Web version](https://web.chatboxai.app)
-- [x] Azure OpenAI API compatibility
-- [x] Improved prompt settings
-- [x] Prompt Library
-- [x] Built-in AI services out of the box
-- [x] Shortcut keys
-- [ ] Talk with files
-- [ ] Talk with URLs
-- [ ] Mobile(Android, iOS)
-- [ ] Cross-device synchronization
-- [ ] threads(like Slack)
-- More...
+-   [x] AI chat and session management
+-   [x] Store all your important message data locally.
+-   [x] Markdown
+-   [x] Streaming reply
+-   [x] API Host configuration
+-   [x] Automatically generate tab titles
+-   [x] Button for clearing messages.
+-   [x] Night/Dark mode
+-   [x] message token estimating
+-   [x] GPT4
+-   [x] i18n
+-   [x] Copy button for code blocks
+-   [x] Stop button for AI message generation
+-   [x] Drag-and-drop sorting of tabs
+-   [x] [Web version](https://web.chatboxai.app)
+-   [x] Azure OpenAI API compatibility
+-   [x] Improved prompt settings
+-   [x] Prompt Library
+-   [x] Built-in AI services out of the box
+-   [x] Shortcut keys
+-   [ ] Talk with files
+-   [ ] Talk with URLs
+-   [ ] Mobile(Android, iOS)
+-   [ ] Cross-device synchronization
+-   [ ] threads(like Slack)
+-   More...
 
 ## How to Contribute
 
 Any form of contribution is welcome, including but not limited to:
 
-- Submitting issues
-- Submitting pull requests
-- Submitting feature requests
-- Submitting bug reports
-- Submitting documentation revisions
-- Submitting translations
-- Submitting any other forms of contribution
+-   Submitting issues
+-   Submitting pull requests
+-   Submitting feature requests
+-   Submitting bug reports
+-   Submitting documentation revisions
+-   Submitting translations
+-   Submitting any other forms of contribution
 
 ## Buy Me a Coffee
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
-| Paypal | Wechat Pay | Ali Pay |
-| --- | --- | --- |
+| Paypal                                            | Wechat Pay                                      | Ali Pay                                      |
+| ------------------------------------------------- | ----------------------------------------------- | -------------------------------------------- |
 | [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
 
 ## Star History
@@ -159,9 +158,9 @@ Any form of contribution is welcome, including but not limited to:
 
 ## Contact
 
-- [Twitter](https://twitter.com/benn_huang)
-- [Email](mailto:tohuangbin@gmail.com)
-- [Blog](https://bennhuang.com)
+-   [Twitter](https://twitter.com/benn_huang)
+-   [Email](mailto:tohuangbin@gmail.com)
+-   [Blog](https://bennhuang.com)
 
 ## License
 

@@ -1,84 +1,84 @@
 name: 'publish'
 on:
-  push:
-    tags: [ v\d+\.\d+\.\d+ ]
+    push:
+        tags: [v\d+\.\d+\.\d+]
 
 jobs:
-  publish-tauri:
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: aarch64-apple-darwin
-            platform: macos-latest
-          - target: x86_64-apple-darwin
-            platform: macos-latest
-          - target: x86_64-unknown-linux-gnu
-            platform: ubuntu-20.04
-          - target: x86_64-pc-windows-msvc
-            platform: windows-latest
+    publish-tauri:
+        permissions:
+            contents: write
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - target: aarch64-apple-darwin
+                      platform: macos-latest
+                    - target: x86_64-apple-darwin
+                      platform: macos-latest
+                    - target: x86_64-unknown-linux-gnu
+                      platform: ubuntu-20.04
+                    - target: x86_64-pc-windows-msvc
+                      platform: windows-latest
 
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v3
+        runs-on: ${{ matrix.platform }}
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Get version
-        id: get_version
-        uses: battila7/get-version-action@v2
+            - name: Get version
+              id: get_version
+              uses: battila7/get-version-action@v2
 
-      - name: setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+            - name: setup node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
 
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+            - name: install Rust stable
+              uses: dtolnay/rust-toolchain@stable
 
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: './src-tauri -> target'
+            - name: Rust cache
+              uses: swatinem/rust-cache@v2
+              with:
+                  workspaces: './src-tauri -> target'
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libx11-dev libxdo-dev libxcb-shape0-dev libxcb-xfixes0-dev
-      - name: install dependencies (mac only)
-        if: matrix.platform == 'macos-latest'
-        run: |
-          rustup target add aarch64-apple-darwin
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+            - name: install dependencies (ubuntu only)
+              if: matrix.platform == 'ubuntu-20.04'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libx11-dev libxdo-dev libxcb-shape0-dev libxcb-xfixes0-dev
+            - name: install dependencies (mac only)
+              if: matrix.platform == 'macos-latest'
+              run: |
+                  rustup target add aarch64-apple-darwin
+            - uses: actions/cache@v2
+              with:
+                  path: '**/node_modules'
+                  key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: install frontend dependencies
-        run: yarn install # change this to npm or pnpm depending on which one you use
+            - name: install frontend dependencies
+              run: yarn install # change this to npm or pnpm depending on which one you use
 
-      - name: Change Version
-        env:
-          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-        run: make change-version
+            - name: Change Version
+              env:
+                  VERSION: '${{ steps.get_version.outputs.version-without-v }}'
+              run: make change-version
 
-      - name: Build Tauri App
-        uses: tauri-apps/tauri-action@dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-          ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-        with:
-          tagName: Chatbox-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
-          releaseName: 'Chatbox v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
-          args: --target ${{matrix.target}}
+            - name: Build Tauri App
+              uses: tauri-apps/tauri-action@dev
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+                  ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
+                  APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+                  APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+                  APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+                  APPLE_ID: ${{ secrets.APPLE_ID }}
+                  APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+                  TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+              with:
+                  tagName: Chatbox-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+                  releaseName: 'Chatbox v__VERSION__'
+                  releaseBody: 'See the assets to download this version and install.'
+                  releaseDraft: true
+                  prerelease: false
+                  args: --target ${{matrix.target}}

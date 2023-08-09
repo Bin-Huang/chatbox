@@ -1,10 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea for this project / 新功能新特性的想法（提交前请检查是否有重复 issues）
-title: "[Feature]"
+title: '[Feature]'
 labels: ''
 assignees: ''
-
 ---
 
 **Problem Description**
@@ -16,7 +15,7 @@ Please provide a clear and concise description of what you would like to see in 
 **Additional Context**
 Please provide any additional context or information that would help better understanding your feature request, such as screenshots, examples, or use cases.
 
------------------------
+---
 
 **问题描述**
 请描述您遇到的问题或难题，以及为什么这使得使用软件变得困难或令人沮丧。

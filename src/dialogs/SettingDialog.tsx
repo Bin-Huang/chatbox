@@ -1,32 +1,47 @@
-import React from 'react';
+import React from 'react'
 import {
-    Button, Alert, Chip,
-    Dialog, DialogContent, DialogActions, DialogTitle, TextField,
-    FormGroup, FormControlLabel, Switch, Select, MenuItem, FormControl, InputLabel, Slider, Typography, Box,
-} from '@mui/material';
-import { Settings } from './types'
-import { getDefaultSettings } from './store'
-import ThemeChangeButton from './theme/ThemeChangeIcon';
-import { ThemeMode } from './theme/index';
-import { useThemeSwicher } from './theme/ThemeSwitcher';
-import { styled } from '@mui/material/styles';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
-import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+    Button,
+    Alert,
+    Chip,
+    Dialog,
+    DialogContent,
+    DialogActions,
+    DialogTitle,
+    TextField,
+    FormGroup,
+    FormControlLabel,
+    Switch,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Slider,
+    Typography,
+    Box,
+} from '@mui/material'
+import { Settings } from '../stores/types'
+import { getDefaultSettings } from '../stores/store'
+import ThemeChangeButton from '../theme/ThemeChangeIcon'
+import { ThemeMode } from '../theme/index'
+import { useThemeSwicher } from '../theme/ThemeSwitcher'
+import { styled } from '@mui/material/styles'
+import MuiAccordionDetails from '@mui/material/AccordionDetails'
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion'
+import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary'
+import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp'
 import { Trans, useTranslation } from 'react-i18next'
-import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
-import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle';
+import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle'
+import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle'
 
 const { useEffect } = React
-const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314'];
-const languages: string[] = ['en', 'zh-Hans', 'zh-Hant','jp'];
+const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314']
+const languages: string[] = ['en', 'zh-Hans', 'zh-Hant', 'jp']
 const languageMap: { [key: string]: string } = {
-    'en': 'English',
+    en: 'English',
     'zh-Hans': '简体中文',
     'zh-Hant': '繁體中文',
-    'jp':'日本語'
-};
+    jp: '日本語',
+}
 interface Props {
     open: boolean
     settings: Settings
@@ -34,62 +49,62 @@ interface Props {
     save(settings: Settings): void
 }
 
-export default function SettingWindow(props: Props) {
+export default function SettingDialog(props: Props) {
     const { t } = useTranslation()
-    const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings);
+    const [settingsEdit, setSettingsEdit] = React.useState<Settings>(props.settings)
     const handleRepliesTokensSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
         if (newValue === 8192) {
-            setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
+            setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' })
         } else {
-            setSettingsEdit({ ...settingsEdit, maxTokens: newValue.toString() });
+            setSettingsEdit({ ...settingsEdit, maxTokens: newValue.toString() })
         }
-    };
+    }
     const handleMaxContextSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
         if (newValue === 8192) {
-            setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
+            setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' })
         } else {
-            setSettingsEdit({ ...settingsEdit, maxContextSize: newValue.toString() });
+            setSettingsEdit({ ...settingsEdit, maxContextSize: newValue.toString() })
         }
-    };
+    }
     const handleTemperatureChange = (event: Event, newValue: number | number[], activeThumb: number) => {
         if (typeof newValue === 'number') {
-            setSettingsEdit({ ...settingsEdit, temperature: newValue });
+            setSettingsEdit({ ...settingsEdit, temperature: newValue })
         } else {
-            setSettingsEdit({ ...settingsEdit, temperature: newValue[activeThumb] });
+            setSettingsEdit({ ...settingsEdit, temperature: newValue[activeThumb] })
         }
-    };
+    }
     const handleRepliesTokensInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+        const value = event.target.value
         if (value === 'inf') {
-            setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
+            setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' })
         } else {
-            const numValue = Number(value);
+            const numValue = Number(value)
             if (!isNaN(numValue) && numValue >= 0) {
                 if (numValue > 8192) {
-                    setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' });
-                    return;
+                    setSettingsEdit({ ...settingsEdit, maxTokens: 'inf' })
+                    return
                 }
-                setSettingsEdit({ ...settingsEdit, maxTokens: value });
+                setSettingsEdit({ ...settingsEdit, maxTokens: value })
             }
         }
-    };
+    }
     const handleMaxContextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+        const value = event.target.value
         if (value === 'inf') {
-            setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
+            setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' })
         } else {
-            const numValue = Number(value);
+            const numValue = Number(value)
             if (!isNaN(numValue) && numValue >= 0) {
                 if (numValue > 8192) {
-                    setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' });
-                    return;
+                    setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' })
+                    return
                 }
-                setSettingsEdit({ ...settingsEdit, maxContextSize: value });
+                setSettingsEdit({ ...settingsEdit, maxContextSize: value })
             }
         }
-    };
+    }
 
-    const [, { setMode }] = useThemeSwicher();
+    const [, { setMode }] = useThemeSwicher()
     useEffect(() => {
         setSettingsEdit(props.settings)
     }, [props.settings])
@@ -99,19 +114,17 @@ export default function SettingWindow(props: Props) {
         setSettingsEdit(props.settings)
 
         // need to restore the previous theme
-        setMode(props.settings.theme ?? ThemeMode.System);
+        setMode(props.settings.theme ?? ThemeMode.System)
     }
 
     // preview theme
     const changeModeWithPreview = (newMode: ThemeMode) => {
-        setSettingsEdit({ ...settingsEdit, theme: newMode });
-        setMode(newMode);
+        setSettingsEdit({ ...settingsEdit, theme: newMode })
+        setMode(newMode)
     }
 
-    // @ts-ignore
-    // @ts-ignore
     return (
-        <Dialog open={props.open} onClose={onCancel} fullWidth >
+        <Dialog open={props.open} onClose={onCancel} fullWidth>
             <DialogTitle>{t('settings')}</DialogTitle>
             <DialogContent>
                 <TextField
@@ -131,8 +144,9 @@ export default function SettingWindow(props: Props) {
                         id="language-select"
                         value={settingsEdit.language}
                         onChange={(e) => {
-                            setSettingsEdit({ ...settingsEdit, language: e.target.value });
-                        }}>
+                            setSettingsEdit({ ...settingsEdit, language: e.target.value })
+                        }}
+                    >
                         {languages.map((language) => (
                             <MenuItem key={language} value={language}>
                                 {languageMap[language]}
@@ -142,7 +156,7 @@ export default function SettingWindow(props: Props) {
                 </FormControl>
                 <FormControl sx={{ flexDirection: 'row', alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
                     <span style={{ marginRight: 10 }}>{t('theme')}</span>
-                    <ThemeChangeButton value={settingsEdit.theme} onChange={theme => changeModeWithPreview(theme)} />
+                    <ThemeChangeButton value={settingsEdit.theme} onChange={(theme) => changeModeWithPreview(theme)} />
                 </FormControl>
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                     <InputLabel>Font Size</InputLabel>
@@ -154,23 +168,25 @@ export default function SettingWindow(props: Props) {
                             setSettingsEdit({ ...settingsEdit, fontSize: event.target.value as number })
                         }}
                     >
-                        {
-                            [12, 13, 14, 15, 16, 17, 18].map((size) => (
-                                <MenuItem key={size} value={size}>{size}px</MenuItem>
-                            ))
-                        }
+                        {[12, 13, 14, 15, 16, 17, 18].map((size) => (
+                            <MenuItem key={size} value={size}>
+                                {size}px
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
                 <FormGroup>
-                    <FormControlLabel control={<Switch />}
+                    <FormControlLabel
+                        control={<Switch />}
                         label={t('show word count')}
                         checked={settingsEdit.showWordCount}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showWordCount: checked })}
                     />
                 </FormGroup>
                 <FormGroup>
-                    <FormControlLabel control={<Switch />}
+                    <FormControlLabel
+                        control={<Switch />}
                         label={t('show estimated token count')}
                         checked={settingsEdit.showTokenCount}
                         onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showTokenCount: checked })}
@@ -191,56 +207,55 @@ export default function SettingWindow(props: Props) {
                             onChange={(e) => setSettingsEdit({ ...settingsEdit, apiHost: e.target.value.trim() })}
                         />
 
-                        {
-                            !settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
-                                <Alert severity="warning">
-                                    {t('proxy warning', {apiHost:settingsEdit.apiHost })}
-                                    <Button onClick={() => setSettingsEdit({ ...settingsEdit, apiHost: getDefaultSettings().apiHost })}>{t('reset')}</Button>
-                                </Alert>
-                            )
-                        }
-                        {
-                            settingsEdit.apiHost.startsWith('http://') && (
-                                <Alert severity="warning">
-                                    {<Trans
-                                    i18nKey="protocol warning"
-                                    components={{ bold: <strong /> }}
-                                    />}
-                                </Alert>
-                            )
-                        }
-                        {
-                            !settingsEdit.apiHost.startsWith('http') && (
-                                <Alert severity="error">
-                                    {<Trans
-                                    i18nKey="protocol error"
-                                    components={{ bold: <strong /> }}
-                                    />}
-                                </Alert>
-                            )
-                        }
-
+                        {!settingsEdit.apiHost.match(/^(https?:\/\/)?api.openai.com(:\d+)?$/) && (
+                            <Alert severity="warning">
+                                {t('proxy warning', { apiHost: settingsEdit.apiHost })}
+                                <Button
+                                    onClick={() =>
+                                        setSettingsEdit({ ...settingsEdit, apiHost: getDefaultSettings().apiHost })
+                                    }
+                                >
+                                    {t('reset')}
+                                </Button>
+                            </Alert>
+                        )}
+                        {settingsEdit.apiHost.startsWith('http://') && (
+                            <Alert severity="warning">
+                                {<Trans i18nKey="protocol warning" components={{ bold: <strong /> }} />}
+                            </Alert>
+                        )}
+                        {!settingsEdit.apiHost.startsWith('http') && (
+                            <Alert severity="error">
+                                {<Trans i18nKey="protocol error" components={{ bold: <strong /> }} />}
+                            </Alert>
+                        )}
                     </AccordionDetails>
                 </Accordion>
                 <Accordion>
-                    <AccordionSummary
-                        aria-controls="panel1a-content"
-                    >
-                        <Typography>{t('model')} & {t('token')} </Typography>
+                    <AccordionSummary aria-controls="panel1a-content">
+                        <Typography>
+                            {t('model')} & {t('token')}{' '}
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Alert severity="warning">
                             {t('settings modify warning')}
                             {t('please make sure you know what you are doing.')}
                             {t('click here to')}
-                            <Button onClick={() => setSettingsEdit({
-                                ...settingsEdit,
-                                model: getDefaultSettings().model,
-                                maxContextSize: getDefaultSettings().maxContextSize,
-                                maxTokens: getDefaultSettings().maxTokens,
-                                showModelName: getDefaultSettings().showModelName,
-                                temperature: getDefaultSettings().temperature,
-                            })}>{t('reset')}</Button>
+                            <Button
+                                onClick={() =>
+                                    setSettingsEdit({
+                                        ...settingsEdit,
+                                        model: getDefaultSettings().model,
+                                        maxContextSize: getDefaultSettings().maxContextSize,
+                                        maxTokens: getDefaultSettings().maxTokens,
+                                        showModelName: getDefaultSettings().showModelName,
+                                        temperature: getDefaultSettings().temperature,
+                                    })
+                                }
+                            >
+                                {t('reset')}
+                            </Button>
                             {t('to default values.')}
                         </Alert>
 
@@ -250,7 +265,8 @@ export default function SettingWindow(props: Props) {
                                 label="Model"
                                 id="model-select"
                                 value={settingsEdit.model}
-                                onChange={(e) => setSettingsEdit({ ...settingsEdit, model: e.target.value })}>
+                                onChange={(e) => setSettingsEdit({ ...settingsEdit, model: e.target.value })}
+                            >
                                 {models.map((model) => (
                                     <MenuItem key={model} value={model}>
                                         {model}
@@ -278,11 +294,23 @@ export default function SettingWindow(props: Props) {
                                     marks={[
                                         {
                                             value: 0.2,
-                                            label: <Chip size='small' icon={<PlaylistAddCheckCircleIcon />} label={t('meticulous')} />
+                                            label: (
+                                                <Chip
+                                                    size="small"
+                                                    icon={<PlaylistAddCheckCircleIcon />}
+                                                    label={t('meticulous')}
+                                                />
+                                            ),
                                         },
                                         {
                                             value: 0.8,
-                                            label: <Chip size='small' icon={<LightbulbCircleIcon />} label={t('creative')} />
+                                            label: (
+                                                <Chip
+                                                    size="small"
+                                                    icon={<LightbulbCircleIcon />}
+                                                    label={t('creative')}
+                                                />
+                                            ),
                                         },
                                     ]}
                                 />
@@ -297,11 +325,19 @@ export default function SettingWindow(props: Props) {
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
                             <Box sx={{ width: '92%' }}>
                                 <Slider
-                                    value={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
+                                    value={
+                                        settingsEdit.maxContextSize === 'inf'
+                                            ? 8192
+                                            : Number(settingsEdit.maxContextSize)
+                                    }
                                     onChange={handleMaxContextSliderChange}
                                     aria-labelledby="discrete-slider"
                                     valueLabelDisplay="auto"
-                                    defaultValue={settingsEdit.maxContextSize === 'inf' ? 8192 : Number(settingsEdit.maxContextSize)}
+                                    defaultValue={
+                                        settingsEdit.maxContextSize === 'inf'
+                                            ? 8192
+                                            : Number(settingsEdit.maxContextSize)
+                                    }
                                     step={64}
                                     min={64}
                                     max={8192}
@@ -326,7 +362,9 @@ export default function SettingWindow(props: Props) {
                             <Box sx={{ width: '92%' }}>
                                 <Slider
                                     value={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
-                                    defaultValue={settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)}
+                                    defaultValue={
+                                        settingsEdit.maxTokens === 'inf' ? 8192 : Number(settingsEdit.maxTokens)
+                                    }
                                     onChange={handleRepliesTokensSliderChange}
                                     aria-labelledby="discrete-slider"
                                     valueLabelDisplay="auto"
@@ -346,13 +384,13 @@ export default function SettingWindow(props: Props) {
                         </Box>
 
                         <FormGroup>
-                            <FormControlLabel control={<Switch />}
+                            <FormControlLabel
+                                control={<Switch />}
                                 label={t('show model name')}
                                 checked={settingsEdit.showModelName}
                                 onChange={(e, checked) => setSettingsEdit({ ...settingsEdit, showModelName: checked })}
                             />
                         </FormGroup>
-
                     </AccordionDetails>
                 </Accordion>
             </DialogContent>
@@ -361,31 +399,25 @@ export default function SettingWindow(props: Props) {
                 <Button onClick={() => props.save(settingsEdit)}>{t('save')}</Button>
             </DialogActions>
         </Dialog>
-    );
+    )
 }
 
-const Accordion = styled((props: AccordionProps) => (
-    <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-    border: `1px solid ${theme.palette.divider}`,
-    '&:not(:last-child)': {
-        borderBottom: 0,
-    },
-    '&:before': {
-        display: 'none',
-    },
-}));
+const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)(
+    ({ theme }) => ({
+        border: `1px solid ${theme.palette.divider}`,
+        '&:not(:last-child)': {
+            borderBottom: 0,
+        },
+        '&:before': {
+            display: 'none',
+        },
+    }),
+)
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-    <MuiAccordionSummary
-        expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-        {...props}
-    />
+    <MuiAccordionSummary expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />} {...props} />
 ))(({ theme }) => ({
-    backgroundColor:
-        theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, .05)'
-            : 'rgba(0, 0, 0, .03)',
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, .05)' : 'rgba(0, 0, 0, .03)',
     flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
         transform: 'rotate(90deg)',
@@ -393,9 +425,9 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
     '& .MuiAccordionSummary-content': {
         marginLeft: theme.spacing(1),
     },
-}));
+}))
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: '1px solid rgba(0, 0, 0, .125)',
-}));
+}))

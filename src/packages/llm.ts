@@ -1,15 +1,15 @@
-import { Message } from './types';
-import * as wordCount from './utils';
+import { Message } from '../stores/types'
+import * as wordCount from './utils'
 import { createParser } from 'eventsource-parser'
 
 export interface OnTextCallbackResult {
     // response content
-    text: string;
+    text: string
     // cancel for fetch
-    cancel: () => void;
+    cancel: () => void
 }
 
-export async function replay(
+export async function chat(
     apiKey: string,
     host: string,
     maxContextSize: string,
@@ -47,21 +47,21 @@ export async function replay(
     }
 
     // fetch has been canceled
-    let hasCancel = false;
+    let hasCancel = false
     // abort signal for fetch
-    const controller = new AbortController();
+    const controller = new AbortController()
     const cancel = () => {
-        hasCancel = true;
-        controller.abort();
-    };
+        hasCancel = true
+        controller.abort()
+    }
 
-    let fullText = '';
+    let fullText = ''
     try {
-        const messages = prompts.map(msg => ({ role: msg.role, content: msg.content }))
+        const messages = prompts.map((msg) => ({ role: msg.role, content: msg.content }))
         const response = await fetch(`${host}/v1/chat/completions`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${apiKey}`,
+                Authorization: `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -72,10 +72,10 @@ export async function replay(
                 stream: true,
             }),
             signal: controller.signal,
-        });
+        })
         await handleSSE(response, (message) => {
             if (message === '[DONE]') {
-                return;
+                return
             }
             const data = JSON.parse(message)
             if (data.error) {
@@ -94,7 +94,7 @@ export async function replay(
         // do not throw an exception
         // otherwise the content will be overwritten.
         if (hasCancel) {
-            return;
+            return
         }
         if (onError) {
             onError(error as any)
@@ -127,7 +127,7 @@ export async function handleSSE(response: Response, onMessage: (message: string)
 }
 
 export async function* iterableStreamAsync(stream: ReadableStream): AsyncIterableIterator<Uint8Array> {
-    const reader = stream.getReader();
+    const reader = stream.getReader()
     try {
         while (true) {
             const { value, done } = await reader.read()

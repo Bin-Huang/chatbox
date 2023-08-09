@@ -1,15 +1,18 @@
 import * as api from '@tauri-apps/api'
-import { Store } from "tauri-plugin-store-api";
+import { Store } from 'tauri-plugin-store-api'
 
 const store = new Store('config.json')
 
-setInterval(async () => {
-    try {
-        await store.save()
-    } catch (e) {
-        console.log(e)
-    }
-}, 5 * 60 * 1000)
+setInterval(
+    async () => {
+        try {
+            await store.save()
+        } catch (e) {
+            console.log(e)
+        }
+    },
+    5 * 60 * 1000,
+)
 
 export const writeStore = async (key: string, value: any) => {
     await store.set(key, value)
@@ -34,7 +37,7 @@ async function handleCompatibilityV0_1() {
             for (const key in oldConfig) {
                 await store.set(key, oldConfig[key])
             }
-            await store.set("hasHandleCompatibilityV0_1", true)
+            await store.set('hasHandleCompatibilityV0_1', true)
             await store.save()
         }
     } catch (e) {

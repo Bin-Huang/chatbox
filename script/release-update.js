@@ -4,39 +4,39 @@ const fs = require('fs-extra')
 // node script/release-update.js v0.4.2 cloudflare
 
 const data = {
-    "version": "v0.1.15",
-    "notes": "New version",
-    "pub_date": "2023-03-19T14:50:47.517Z",
-    "platforms": {
-        "darwin-x86_64": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox.app.tar.gz"
+    version: 'v0.1.15',
+    notes: 'New version',
+    pub_date: '2023-03-19T14:50:47.517Z',
+    platforms: {
+        'darwin-x86_64': {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox.app.tar.gz',
         },
-        "darwin-aarch64": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox.app.tar.gz"
+        'darwin-aarch64': {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox.app.tar.gz',
         },
-        "linux-x86_64": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_amd64.AppImage.tar.gz"
+        'linux-x86_64': {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_amd64.AppImage.tar.gz',
         },
-        "windows-x86_64": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_x64_en-US.msi.zip"
+        'windows-x86_64': {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_x64_en-US.msi.zip',
         },
-        "win64": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_x64_en-US.msi.zip"
+        win64: {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_x64_en-US.msi.zip',
         },
-        "linux": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_amd64.AppImage.tar.gz"
+        linux: {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox_0.1.15_amd64.AppImage.tar.gz',
         },
-        "darwin": {
-            "signature": "",
-            "url": "https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox.app.tar.gz"
-        }
-    }
+        darwin: {
+            signature: '',
+            url: 'https://github.com/Bin-Huang/chatbox/releases/download/Chatbox-v0.1.15/chatbox.app.tar.gz',
+        },
+    },
 }
 
 main()
@@ -45,7 +45,7 @@ async function main() {
     let storageFlag = process.argv[3] || 'github'
 
     const res = await axios.get('https://api.github.com/repos/Bin-Huang/chatbox/releases')
-    const release = version ? res.data.find(r => r.tag_name.endsWith(version)) : res.data[0]
+    const release = version ? res.data.find((r) => r.tag_name.endsWith(version)) : res.data[0]
 
     data.version = release.tag_name.replace('Chatbox-', '')
     data.pub_date = new Date().toISOString()
