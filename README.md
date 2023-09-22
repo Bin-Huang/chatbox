@@ -123,8 +123,12 @@ At first, I didn't know that it would be so popular. I listened to the feedback 
 -   [x] Azure OpenAI API compatibility
 -   [x] Improved prompt settings
 -   [x] Prompt Library
--   [x] Built-in AI services out of the box
+-   [x] Built-in AI services
 -   [x] Shortcut keys
+-   [x] Claude
+-   [x] Temperature Setting
+-   [x] Conversation Special Settings
+-   [x] Custom Model
 -   [ ] Talk with files
 -   [ ] Talk with URLs
 -   [ ] Mobile(Android, iOS)
