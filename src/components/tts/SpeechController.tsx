@@ -30,6 +30,9 @@ const SpeechController = memo((props: Props) => {
         return null
     }
 
+    // TODO 因为还有配置相关的工作未完成，这里先返回 null
+    return null
+
     return (
         <div>
             <TtsWorker text={props.text} messageId={props.messageId} options={options}></TtsWorker>
