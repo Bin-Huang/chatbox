@@ -61,6 +61,7 @@ import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSo
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableItem } from './components/SortableItem'
 import InputBox from './components/InputBox'
+import SpeechController from './components/tts/SpeechController'
 
 function Main() {
     const { t } = useTranslation()
@@ -281,6 +282,9 @@ function Main() {
         }
     }
 
+    const [speechText, setSpeechText] = useState('')
+    const [speechMessageId, setSpeechMessageId] = useState('')
+
     const generate = async (session: Session, promptMsgs: Message[], targetMsg: Message) => {
         messageScrollRef.current = { msgId: targetMsg.id, smooth: false }
         await llm.chat(
@@ -305,6 +309,8 @@ function Main() {
                     }
                 }
                 store.updateChatSession(session)
+                setSpeechText(text)
+                setSpeechMessageId(targetMsg.id)
             },
             (err) => {
                 for (let i = 0; i < session.messages.length; i++) {
@@ -757,6 +763,7 @@ function Main() {
                     />
                 ))}
             </Grid>
+            <SpeechController text={speechText} messageId={speechMessageId} enable></SpeechController>
         </Box>
     )
 }
