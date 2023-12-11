@@ -28,9 +28,15 @@
 
 <table style="width: 100%">
   <tr>
-    <td style="text-align:center"><b>Windows</b></td>
-    <td colspan="2" style="text-align:center"><b>MacOS</b></td>
-    <td style="text-align:center"><b>Linux</b></td>
+    <td width="25%" align="center">
+      <b>Windows</b>
+    </td>
+    <td width="25%" align="center" colspan="2">
+      <b>MacOS</b>
+    </td>
+    <td width="25%" align="center">
+      <b>Linux</b>
+    </td>
   </tr>
   <tr style="text-align: center">
     <td align="center" valign="middle">
