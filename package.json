@@ -13,7 +13,7 @@
         "build": "tauri build",
         "tauri": "tauri",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "prettier": "prettier -w ."
+        "prettier": "npx prettier -w ."
     },
     "repository": {
         "type": "git",
