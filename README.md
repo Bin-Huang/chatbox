@@ -3,7 +3,7 @@
 <span>Chatbox</span>
 </h1>
 <p align="center">
-    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for multiple cutting-edge LLM models, available on Windows, Mac, Linux</em>
+    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for ChatGPT, Claude and other cutting-edge LLM models, available on Windows, Mac, Linux</em>
 </p>
 
 <p align="center">
@@ -109,12 +109,6 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 ## FAQ
 
 -   [Frequently Asked Questions](./FAQ.md)
-
-## Chatbox Team Sharing Feature
-
-Using AI to enhance your team productivity, is an important feature of Chatbox.
-
-Chatbox allows your team members to share the resources of the same OpenAI API account without exposing your API KEY. View [tutorial](./team-sharing/README.md).
 
 ## Why I made Chatbox?
 
