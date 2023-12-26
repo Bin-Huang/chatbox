@@ -178,17 +178,22 @@ Any form of contribution is welcome, including but not limited to:
 ## Build Instructions for Chatboxai (Mac, Windows, Linux)
 
 1. Clone the repository from Github using the following command:
-
-// git clone https://github.com/Bin-Huang/chatbox.git
+   
+```bash
+git clone https://github.com/Bin-Huang/chatbox.git
+```
 
 2. Install the required dependencies by running the following command:
 
-// npm install
+```bash
+npm install
+```
 
 3. Start the application by running the following command:
 
-// npm start
-
+```bash
+npm start
+```
 
 
 
