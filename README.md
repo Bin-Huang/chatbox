@@ -113,6 +113,15 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 -   Cross-platform, available on Windows, Mac, Linux
 -   Web version, available on any device with a browser
 -   iOS & Android version, coming soon
+-   Multilingual Support
+    -   English
+    -   简体中文
+    -   繁體中文
+    -   日本語
+    -   한국어
+    -   Français
+    -   Deutsch
+    -   Русский
 -   More...
 
 ## FAQ
