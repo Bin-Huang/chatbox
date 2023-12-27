@@ -184,6 +184,28 @@ Any form of contribution is welcome, including but not limited to:
 -   Submitting translations
 -   Submitting any other forms of contribution
 
+## Build Instructions for Chatboxai (Mac, Windows, Linux)
+
+1. Clone the repository from Github using the following command:
+   
+```bash
+git clone https://github.com/Bin-Huang/chatbox.git
+```
+
+2. Install the required dependencies by running the following command:
+
+```bash
+npm install
+```
+
+3. Start the application by running the following command:
+
+```bash
+npm start
+```
+
+
+
 ## Buy Me a Coffee
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
