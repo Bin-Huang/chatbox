@@ -95,12 +95,12 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 
 -   Data is stored locally and will not be lost
 -   Supports multiple cutting-edge LLM models and providers
-    - OpenAI (ChatGPT)
-    - Azure OpenAI
-    - Claude
-    - Google Gemini Pro
-    - Ollama (enabling easy access to locally deployed models such as llama2, Mistral, Mixtral, codellama, vicuna, yi, and solar)
-    - ChatGLM-6B
+    -   OpenAI (ChatGPT)
+    -   Azure OpenAI
+    -   Claude
+    -   Google Gemini Pro
+    -   Ollama (enabling easy access to locally deployed models such as llama2, Mistral, Mixtral, codellama, vicuna, yi, and solar)
+    -   ChatGLM-6B
 -   Supports Dall-E-3, real-time image generation
 -   Enhanced prompting capability
 -   Keyboard shortcuts for improved productivity
@@ -187,7 +187,7 @@ Any form of contribution is welcome, including but not limited to:
 ## Build Instructions for Chatboxai (Mac, Windows, Linux)
 
 1. Clone the repository from Github using the following command:
-   
+
 ```bash
 git clone https://github.com/Bin-Huang/chatbox.git
 ```
@@ -203,8 +203,6 @@ npm install
 ```bash
 npm start
 ```
-
-
 
 ## Buy Me a Coffee
 
