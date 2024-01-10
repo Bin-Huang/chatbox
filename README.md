@@ -24,7 +24,7 @@
 </a>
 </p>
 
-## ⏬ Download
+## ⏬ Download for PC
 
 <table style="width: 100%">
   <tr>
@@ -71,6 +71,15 @@
 </table>
 
 Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
+
+## ⏬ Download for iOS/Android
+
+<a href='https://apps.apple.com/app/chatbox-ai/id6471368056'>
+<img src='./doc/app_store.webp' style="height:38px;" />
+</a>
+<a href='https://play.google.com/store/apps/details?id=xyz.chatboxapp.chatbox'>
+<img src='./doc/google_play.webp' style="height:38px;" />
+</a>
 
 ## 🌟 Features
 
