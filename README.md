@@ -131,6 +131,7 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
     -   Français
     -   Deutsch
     -   Русский
+    -   Dutch
 -   More...
 
 ## FAQ
