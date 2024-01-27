@@ -82,7 +82,7 @@ export async function chat(
                 throw new Error(`Error from OpenAI: ${JSON.stringify(data)}`)
             }
             const text = data.choices[0]?.delta?.content
-            if (text !== undefined) {
+            if (text !== undefined && text !== null) {
                 fullText += text
                 if (onText) {
                     onText({ text: fullText, cancel })
