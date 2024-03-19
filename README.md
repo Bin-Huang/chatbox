@@ -74,11 +74,15 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 
 ## ⏬ Download for iOS/Android
 
-<a href='https://apps.apple.com/app/chatbox-ai/id6471368056'>
+<a href='https://apps.apple.com/app/chatbox-ai/id6471368056' style='margin-right: 4px'>
 <img src='./doc/app_store.webp' style="height:38px;" />
 </a>
-<a href='https://play.google.com/store/apps/details?id=xyz.chatboxapp.chatbox'>
+<a href='https://play.google.com/store/apps/details?id=xyz.chatboxapp.chatbox' style='margin-right: 4px'>
 <img src='./doc/google_play.webp' style="height:38px;" />
+</a>
+<a href='https://chatboxai.app/zh/install?download=android_apk' style='margin-right: 4px; display: inline-flex; justify-content: center'>
+<img src='./doc/android.png' style="height:28px; display: inline-block" />
+.APK
 </a>
 
 ## 🌟 Features
