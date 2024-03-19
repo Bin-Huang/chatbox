@@ -26,7 +26,7 @@
     },
     "license": "GPL-3.0 license",
     "devDependencies": {
-        "@tauri-apps/cli": "^1.2.3",
+        "@tauri-apps/cli": "^1.5.9",
         "@types/highlight.js": "^10.1.0",
         "@types/markdown-it": "^12.2.3",
         "@types/markdown-it-link-attributes": "^3.0.1",

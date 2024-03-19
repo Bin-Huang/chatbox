@@ -2009,25 +2009,26 @@
   resolved "https://registry.npmjs.org/@tauri-apps/api/-/api-1.2.0.tgz"
   integrity sha512-lsI54KI6HGf7VImuf/T9pnoejfgkNoXveP14pVV7XarrQ46rOejIVJLFqHI9sRReJMGdh2YuCoI3cc/yCWCsrw==
 
-"@tauri-apps/cli-darwin-x64@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.npmjs.org/@tauri-apps/cli-darwin-x64/-/cli-darwin-x64-1.2.3.tgz"
-  integrity sha512-jFZ/y6z8z6v4yliIbXKBXA7BJgtZVMsITmEXSuD6s5+eCOpDhQxbRkr6CA+FFfr+/r96rWSDSgDenDQuSvPAKw==
+"@tauri-apps/cli-darwin-arm64@1.5.9":
+  version "1.5.9"
+  resolved "https://registry.npmjs.org/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-1.5.9.tgz"
+  integrity sha512-7C2Jf8f0gzv778mLYb7Eszqqv1bm9Wzews81MRTqKrUIcC+eZEtDXLex+JaEkEzFEUrgIafdOvMBVEavF030IA==
 
-"@tauri-apps/cli@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.npmjs.org/@tauri-apps/cli/-/cli-1.2.3.tgz"
-  integrity sha512-erxtXuPhMEGJPBtnhPILD4AjuT81GZsraqpFvXAmEJZ2p8P6t7MVBifCL8LznRknznM3jn90D3M8RNBP3wcXTw==
+"@tauri-apps/cli@^1.5.9":
+  version "1.5.9"
+  resolved "https://registry.npmjs.org/@tauri-apps/cli/-/cli-1.5.9.tgz"
+  integrity sha512-knSt/9AvCTeyfC6wkyeouF9hBW/0Mzuw+5vBKEvzaGPQsfFJo1ZCp5FkdiZpGBBfnm09BhugasGRTGofzatfqQ==
   optionalDependencies:
-    "@tauri-apps/cli-darwin-arm64" "1.2.3"
-    "@tauri-apps/cli-darwin-x64" "1.2.3"
-    "@tauri-apps/cli-linux-arm-gnueabihf" "1.2.3"
-    "@tauri-apps/cli-linux-arm64-gnu" "1.2.3"
-    "@tauri-apps/cli-linux-arm64-musl" "1.2.3"
-    "@tauri-apps/cli-linux-x64-gnu" "1.2.3"
-    "@tauri-apps/cli-linux-x64-musl" "1.2.3"
-    "@tauri-apps/cli-win32-ia32-msvc" "1.2.3"
-    "@tauri-apps/cli-win32-x64-msvc" "1.2.3"
+    "@tauri-apps/cli-darwin-arm64" "1.5.9"
+    "@tauri-apps/cli-darwin-x64" "1.5.9"
+    "@tauri-apps/cli-linux-arm-gnueabihf" "1.5.9"
+    "@tauri-apps/cli-linux-arm64-gnu" "1.5.9"
+    "@tauri-apps/cli-linux-arm64-musl" "1.5.9"
+    "@tauri-apps/cli-linux-x64-gnu" "1.5.9"
+    "@tauri-apps/cli-linux-x64-musl" "1.5.9"
+    "@tauri-apps/cli-win32-arm64-msvc" "1.5.9"
+    "@tauri-apps/cli-win32-ia32-msvc" "1.5.9"
+    "@tauri-apps/cli-win32-x64-msvc" "1.5.9"
 
 "@testing-library/dom@^8.5.0", "@testing-library/dom@>=7.21.4":
   version "8.20.0"

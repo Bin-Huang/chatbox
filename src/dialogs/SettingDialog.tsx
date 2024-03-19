@@ -34,7 +34,7 @@ import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCirc
 import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle'
 
 const { useEffect } = React
-const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314']
+const models: string[] = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-4', 'gpt-4-turbo-preview', 'gpt-4-0125-preview']
 const languages: string[] = ['en', 'zh-Hans', 'zh-Hant', 'jp']
 const languageMap: { [key: string]: string } = {
     en: 'English',
@@ -60,7 +60,7 @@ export default function SettingDialog(props: Props) {
         }
     }
     const handleMaxContextSliderChange = (event: Event, newValue: number | number[], activeThumb: number) => {
-        if (newValue === 8192) {
+        if (newValue === 128000) {
             setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' })
         } else {
             setSettingsEdit({ ...settingsEdit, maxContextSize: newValue.toString() })
@@ -95,7 +95,7 @@ export default function SettingDialog(props: Props) {
         } else {
             const numValue = Number(value)
             if (!isNaN(numValue) && numValue >= 0) {
-                if (numValue > 8192) {
+                if (numValue > 128000) {
                     setSettingsEdit({ ...settingsEdit, maxContextSize: 'inf' })
                     return
                 }
@@ -327,7 +327,7 @@ export default function SettingDialog(props: Props) {
                                 <Slider
                                     value={
                                         settingsEdit.maxContextSize === 'inf'
-                                            ? 8192
+                                            ? 128000
                                             : Number(settingsEdit.maxContextSize)
                                     }
                                     onChange={handleMaxContextSliderChange}
@@ -335,12 +335,12 @@ export default function SettingDialog(props: Props) {
                                     valueLabelDisplay="auto"
                                     defaultValue={
                                         settingsEdit.maxContextSize === 'inf'
-                                            ? 8192
+                                            ? 128000 
                                             : Number(settingsEdit.maxContextSize)
                                     }
                                     step={64}
                                     min={64}
-                                    max={8192}
+                                    max={128000}
                                 />
                             </Box>
                             <TextField
