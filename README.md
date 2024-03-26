@@ -108,67 +108,69 @@ Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** t
 
 # Features
 
-- **Local Data Storage**  
-  :floppy_disk: Your data remains on your device, ensuring it never gets lost and maintains your privacy.
+-   **Local Data Storage**  
+    :floppy_disk: Your data remains on your device, ensuring it never gets lost and maintains your privacy.
 
-- **No-Deployment Installation Packages**  
-  :package: Get started quickly with downloadable installation packages. No complex setup necessary!
+-   **No-Deployment Installation Packages**  
+    :package: Get started quickly with downloadable installation packages. No complex setup necessary!
 
-- **Support for Multiple LLM Providers**  
-  :gear: Seamlessly integrate with a variety of cutting-edge language models:
-    - OpenAI (ChatGPT)
-    - Azure OpenAI
-    - Claude
-    - Google Gemini Pro
-    - Ollama (enable access to local models like llama2, Mistral, Mixtral, codellama, vicuna, yi, and solar)
-    - ChatGLM-6B
+-   **Support for Multiple LLM Providers**  
+    :gear: Seamlessly integrate with a variety of cutting-edge language models:
 
-- **Image Generation with Dall-E-3**  
-  :art: Create the images of your imagination with Dall-E-3.
+    -   OpenAI (ChatGPT)
+    -   Azure OpenAI
+    -   Claude
+    -   Google Gemini Pro
+    -   Ollama (enable access to local models like llama2, Mistral, Mixtral, codellama, vicuna, yi, and solar)
+    -   ChatGLM-6B
 
-- **Enhanced Prompting**  
-  :speech_balloon: Advanced prompting features to refine and focus your queries for better responses.
+-   **Image Generation with Dall-E-3**  
+    :art: Create the images of your imagination with Dall-E-3.
 
-- **Keyboard Shortcuts**  
-  :keyboard: Stay productive with shortcuts that speed up your workflow.
+-   **Enhanced Prompting**  
+    :speech_balloon: Advanced prompting features to refine and focus your queries for better responses.
 
-- **Markdown, Latex & Code Highlighting**  
-  :scroll: Generate messages with the full power of Markdown and Latex formatting, coupled with syntax highlighting for various programming languages, enhancing readability and presentation.
+-   **Keyboard Shortcuts**  
+    :keyboard: Stay productive with shortcuts that speed up your workflow.
 
-- **Prompt Library & Message Quoting**  
-  :books: Save and organize prompts for reuse, and quote messages for context in discussions.
+-   **Markdown, Latex & Code Highlighting**  
+    :scroll: Generate messages with the full power of Markdown and Latex formatting, coupled with syntax highlighting for various programming languages, enhancing readability and presentation.
 
-- **Streaming Reply**  
-  :arrow_forward: Provide rapid responses to your interactions with immediate, progressive replies.
+-   **Prompt Library & Message Quoting**  
+    :books: Save and organize prompts for reuse, and quote messages for context in discussions.
 
-- **Ergonomic UI & Dark Theme**  
-  :new_moon: A user-friendly interface with a night mode option for reduced eye strain during extended use.
+-   **Streaming Reply**  
+    :arrow_forward: Provide rapid responses to your interactions with immediate, progressive replies.
 
-- **Team Collaboration**  
-  :busts_in_silhouette: Collaborate with ease and share OpenAI API resources among your team. [Learn More](./team-sharing/README.md)
+-   **Ergonomic UI & Dark Theme**  
+    :new_moon: A user-friendly interface with a night mode option for reduced eye strain during extended use.
 
-- **Cross-Platform Availability**  
-  :computer: Chatbox is ready for Windows, Mac, Linux users.
+-   **Team Collaboration**  
+    :busts_in_silhouette: Collaborate with ease and share OpenAI API resources among your team. [Learn More](./team-sharing/README.md)
 
-- **Access Anywhere with the Web Version**  
-  :globe_with_meridians: Use the web application on any device with a browser, anywhere.
+-   **Cross-Platform Availability**  
+    :computer: Chatbox is ready for Windows, Mac, Linux users.
 
-- **iOS & Android**  
-  :phone: Use the mobile applications that will bring this power to your fingertips on the go.
+-   **Access Anywhere with the Web Version**  
+    :globe_with_meridians: Use the web application on any device with a browser, anywhere.
 
-- **Multilingual Support**  
-  :earth_americas: We cater to a global audience with support for multiple languages:
-    - English
-    - 简体中文 (Simplified Chinese)
-    - 繁體中文 (Traditional Chinese)
-    - 日本語 (Japanese)
-    - 한국어 (Korean)
-    - Français (French)
-    - Deutsch (German)
-    - Русский (Russian)
+-   **iOS & Android**  
+    :phone: Use the mobile applications that will bring this power to your fingertips on the go.
 
-- **And More...**  
-  :sparkles: We're constantly adding new features to make your experience better!
+-   **Multilingual Support**  
+    :earth_americas: Catering to a global audience by offering support in multiple languages:
+
+    -   English
+    -   简体中文 (Simplified Chinese)
+    -   繁體中文 (Traditional Chinese)
+    -   日本語 (Japanese)
+    -   한국어 (Korean)
+    -   Français (French)
+    -   Deutsch (German)
+    -   Русский (Russian)
+
+-   **And More...**  
+    :sparkles: Constantly enhancing the experience with new features!
 
 ## FAQ
 
