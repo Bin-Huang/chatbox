@@ -2,9 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import ReactGA from 'react-ga4'
-import * as store from './stores/store'
-import * as runtime from './packages/runtime'
+// import ReactGA from 'react-ga4'
+// import * as store from './stores/store'
+// import * as runtime from './packages/runtime'
 import './i18n'
 
 import './styles/index.css'
@@ -39,26 +39,26 @@ function disableMenu() {
 disableMenu()
 
 // ga4
-;(async () => {
-    const GAID = 'G-B365F44W6E'
-    try {
-        const conf = await store.readConfig()
-        const version = await runtime.getVersion()
-        ReactGA.initialize([
-            {
-                trackingId: GAID,
-                gaOptions: {
-                    app_version: version,
-                    clientId: conf.uuid,
-                },
-                gtagOptions: {
-                    app_version: version,
-                    clientId: conf.uuid,
-                },
-            },
-        ])
-    } catch (e) {
-        ReactGA.initialize(GAID)
-        throw e
-    }
-})()
+// ;(async () => {
+//     const GAID = 'G-B365F44W6E'
+//     try {
+//         const conf = await store.readConfig()
+//         const version = await runtime.getVersion()
+//         ReactGA.initialize([
+//             {
+//                 trackingId: GAID,
+//                 gaOptions: {
+//                     app_version: version,
+//                     clientId: conf.uuid,
+//                 },
+//                 gtagOptions: {
+//                     app_version: version,
+//                     clientId: conf.uuid,
+//                 },
+//             },
+//         ])
+//     } catch (e) {
+//         ReactGA.initialize(GAID)
+//         throw e
+//     }
+// })()
