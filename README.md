@@ -197,7 +197,7 @@ Any form of contribution is welcome, including but not limited to:
 -   Submitting translations
 -   Submitting any other forms of contribution
 
-## Build Instructions for Chatboxai (Mac, Windows, Linux)
+## Build Instructions for Chatbox (Mac, Windows, Linux)
 
 1. Clone the repository from Github using the following command:
 
