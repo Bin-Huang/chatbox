@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, MutableRefObject } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MessageBox from './components/MessageBox'
 import * as llm from './packages/llm'
 import SessionItem from './components/SessionItem'
@@ -12,7 +12,6 @@ import {
     ListItemText,
     MenuList,
     IconButton,
-    Button,
     ButtonGroup,
     Stack,
     Grid,
@@ -20,7 +19,6 @@ import {
     ListItemIcon,
     Typography,
     Divider,
-    TextField,
     useTheme,
     useMediaQuery,
     debounce,

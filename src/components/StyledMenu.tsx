@@ -1,5 +1,4 @@
 import { Menu, MenuProps } from '@mui/material'
-import 'katex/dist/katex.min.css'
 import { styled, alpha } from '@mui/material/styles'
 
 const StyledMenu = styled((props: MenuProps) => (
