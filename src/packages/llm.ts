@@ -1,5 +1,5 @@
 import { Message } from '../stores/types'
-import * as wordCount from './utils'
+import * as utils from './utils'
 import { createParser } from 'eventsource-parser'
 
 export interface OnTextCallbackResult {
@@ -30,12 +30,12 @@ export async function chat(
 
     const maxTokensNumber = Number(maxTokens)
     const maxLen = Number(maxContextSize)
-    let totalLen = head ? wordCount.estimateTokens(head.content) : 0
+    let totalLen = head ? utils.estimateTokensFromMessages([head]) : 0
 
     let prompts: Message[] = []
     for (let i = msgs.length - 1; i >= 0; i--) {
         const msg = msgs[i]
-        const msgTokenSize: number = wordCount.estimateTokens(msg.content) + 200 // 200 作为预估的误差补偿
+        const msgTokenSize: number = utils.estimateTokensFromMessages([msg])
         if (msgTokenSize + totalLen > maxLen) {
             break
         }

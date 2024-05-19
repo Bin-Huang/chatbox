@@ -28,7 +28,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { styled, alpha } from '@mui/material/styles'
 import StopIcon from '@mui/icons-material/Stop'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import * as wordCount from '../packages/utils'
+import * as utils from '../packages/utils'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 import 'github-markdown-css/github-markdown-light.css'
 import mila from 'markdown-it-link-attributes'
@@ -115,10 +115,10 @@ function _MessageBox(props: Props) {
         tips.push(`model: ${props.msg.model || 'unknown'}`)
     }
     if (props.showWordCount) {
-        tips.push(`word count: ${wordCount.countWord(msg.content)}`)
+        tips.push(`word count: ${utils.countWord(msg.content)}`)
     }
     if (props.showTokenCount) {
-        tips.push(`token estimate: ${wordCount.estimateTokens(msg.content)}`)
+        tips.push(`token estimate: ${utils.estimateTokensFromMessages([msg])}`)
     }
     return (
         <ListItem
