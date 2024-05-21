@@ -42,7 +42,7 @@
         "fork-ts-checker-webpack-plugin": "^7.2.13",
         "node-loader": "^2.0.0",
         "prettier": "^3.0.1",
-        "react-scripts": "^5.0.1",
+        "react-scripts": "^3.0.1",
         "sass": "^1.59.3",
         "sass-loader": "^13.2.0",
         "style-loader": "^3.0.0",
