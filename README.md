@@ -1,3 +1,9 @@
+<p align="right">
+  <a href="README.md">English</a> |
+  <a href="README_cn.md">简体中文</a>
+</p>
+
+
 <h1 align="center">
 <img src='./doc/icon.png' width='30'>
 <span>Chatbox</span>
@@ -24,7 +30,7 @@
 </a>
 </p>
 
-## ⏬ Download for PC
+## ⏬ Download for Desktop
 
 <table style="width: 100%">
   <tr>
@@ -70,7 +76,7 @@
   </tr>
 </table>
 
-Visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
+Or visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
 
 ## ⏬ Download for iOS/Android
 
