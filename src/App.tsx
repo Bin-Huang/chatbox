@@ -262,6 +262,11 @@ function Main() {
             },
         )
     }
+    const generateTitle = (messages: Message[]) => {
+        const UsersFirstMsg = messages.find((msg) => msg.role ==='user')
+        const firstTwoWords = UsersFirstMsg? UsersFirstMsg.content.trim().split(' ').slice(0, 2).join(' ') : "Untitled !"
+        return firstTwoWords
+    }
     const saveSession = async (session: Session) => {
         const filePath = await save({
             filters: [
@@ -686,6 +691,7 @@ function Main() {
                                             newUserMsg,
                                             newAssistantMsg,
                                         ]
+                                        store.currentSession.name = generateTitle(store.currentSession.messages)
                                         store.updateChatSession(store.currentSession)
                                         generate(store.currentSession, promptsMsgs, newAssistantMsg)
                                         messageScrollRef.current = { msgId: newAssistantMsg.id, smooth: true }
