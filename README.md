@@ -174,6 +174,7 @@ Or visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)*
     -   Français (French)
     -   Deutsch (German)
     -   Русский (Russian)
+    -   Português do Brasil (Brazilian Portuguese)
 
 -   **And More...**  
     :sparkles: Constantly enhancing the experience with new features!
