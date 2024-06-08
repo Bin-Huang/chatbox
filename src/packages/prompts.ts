@@ -7,8 +7,8 @@ export function nameConversation(msgs: Message[]): Message[] {
             id: '1',
             role: 'system',
             content: `Name the conversation based on the chat records.
-Please provide a concise name, within 10 characters and without quotation marks.
-Please use the speak language in the conversation.
+Provide a descriptive title that clearly and uniquely summarizes the main topic of the conversation, such as "2024 Sales Conf Speech Prep", "Best Sushi Restaurants in Paris", "Groundskeeper Resume Revision".
+Keep it around 30 characters, in same language as conversation.
 You only need to answer with the name.
 The following is the conversation:
 
@@ -16,8 +16,8 @@ The following is the conversation:
 ${format(msgs.map((msg) => msg.content))}
 \`\`\`
 
-Please provide a concise name, within 10 characters and without quotation marks.
-Please use the speak language in the conversation.
+Provide a descriptive title that clearly and uniquely summarizes the main topic of the conversation, such as "2024 Sales Conf Speech Prep", "Best Sushi Restaurants in Paris", "Groundskeeper Resume Revision".
+Keep it around 30 characters, in same language as conversation.
 You only need to answer with the name.
 The conversation is named:`,
         },
