@@ -1,3 +1,0 @@
-.App {
-  text-align: center;
-}

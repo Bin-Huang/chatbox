@@ -2,14 +2,14 @@
     "$schema": "../node_modules/@tauri-apps/cli/schema.json",
     "build": {
         "beforeBuildCommand": "npm run build:react",
-        "beforeDevCommand": "BROWSER=none npm run start:react",
+        "beforeDevCommand": "cross-env BROWSER=none npm run start:react",
         "devPath": "http://localhost:3000",
         "distDir": "../build",
         "withGlobalTauri": true
     },
     "package": {
         "productName": "chatbox",
-        "version": "0.2.7"
+        "version": "0.0.1"
     },
     "tauri": {
         "allowlist": {
@@ -33,6 +33,14 @@
                 ]
             },
             "http": {
+                "all": true
+            },
+            "dialog": {
+                "all": true, 
+                "open": true, 
+                "save": true 
+            },
+            "os": {
                 "all": true
             }
         },
@@ -66,7 +74,11 @@
             "windows": {
                 "certificateThumbprint": null,
                 "digestAlgorithm": "sha256",
-                "timestampUrl": ""
+                "timestampUrl": "",
+                "webviewInstallMode": {
+                    "silent": true,
+                    "type": "embedBootstrapper"
+                }
             }
         },
         "security": {
@@ -75,7 +87,7 @@
         "updater": {
             "active": true,
             "endpoints": [
-                "https://releases.chatboxapp.xyz/chatbox/{{target}}/{{current_version}}",
+                "https://releases.chatboxai.app/chatbox/{{target}}/{{current_version}}",
                 "https://gist.githubusercontent.com/Bin-Huang/cf0b7684e28b30d760ba02417bbac916/raw/chatbox.releases.json",
                 "https://gist.githubusercontent.com/Bin-Huang/cf0b7684e28b30d760ba02417bbac916/raw"
             ],

@@ -121,6 +121,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# IDE / Editor
+.idea
+
 # vercel
 .vercel
 

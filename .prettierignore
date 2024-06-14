@@ -1,0 +1,5 @@
+.github
+.webpack
+build
+src-tauri
+tmp
