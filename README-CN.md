@@ -170,44 +170,6 @@
 
 -   [常见问题](./FAQ.md)
 
-## 路线图
-
--   [x] AI 聊天和会话管理
--   [x] 本地存储所有重要的消息数据。
--   [x] Markdown
--   [x] 流式回复
--   [x] API 主机配置
--   [x] 自动生成标签标题
--   [x] 清除消息的按钮。
--   [x] 夜间/深色模式
--   [x] 消息令牌估算
--   [x] GPT4
--   [x] i18n
--   [x] 代码块的复制按钮
--   [x] 停止 AI 消息生成的按钮
--   [x] 标签的拖放排序
--   [x] [Web 版本](https://web.chatboxai.app)
--   [x] Azure OpenAI API 兼容性
--   [x] 改进的提示设置
--   [x] 提示库
--   [x] 内置 AI 服务
--   [x] 快捷键
--   [x] Claude
--   [x] 温度设置
--   [x] 会话特殊设置
--   [x] OpenAI 自定义模型
--   [x] Dall-E-3
--   [x] 消息搜索
--   [x] 数据导出
--   [x] 支持 Google Gemini Pro
--   [x] 支持 Ollama (llama2, Mistral, Mixtral, codellama, vicuna, yi, 和 solar)
--   [x] 线程归档，历史消息列表
--   [x] 移动 (Android, iOS)
--   [x] 与文件对话
--   [ ] 与 URLs 对话
--   [ ] 跨设备同步
--   更多...
-
 ## 如何贡献
 
 欢迎任何形式的贡献，包括但不限于：
@@ -220,24 +182,36 @@
 -   提交翻译
 -   提交任何其他形式的贡献
 
-## 聊天盒的构建指南 (Mac, Windows, Linux)
+## 构建指南
 
-1. 使用以下命令从 Github 克隆仓库：
+1. 从 Github 克隆仓库
 
 ```bash
 git clone https://github.com/Bin-Huang/chatbox.git
 ```
 
-2. 运行以下命令安装所需的依赖项：
+2. 安装所需的依赖
 
 ```bash
 npm install
 ```
 
-3. 运行以下命令启动应用程序：
+3. 启动应用程序（开发模式）
 
 ```bash
-npm start
+npm run dev
+```
+
+4. 构建应用程序，为当前平台打包安装程序
+
+```bash
+npm run package
+```
+
+5. 构建应用程序，为所有平台打包安装程序
+
+```bash
+npm run package:all
 ```
 
 ## 请我喝咖啡
