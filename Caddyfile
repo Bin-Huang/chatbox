@@ -1,0 +1,10 @@
+:80 {
+    root * /usr/share/caddy # 将此处替换为你的静态文件路径
+    file_server
+
+    # 设置 gzip 压缩
+    encode gzip
+
+    # 设置缓存控制头
+    header Cache-Control "public, max-age=3600"
+}

@@ -1,0 +1,113 @@
+.msg-block {
+    -webkit-user-select: text;
+    user-select: text;
+
+    .msg-content p {
+        margin: 0.6rem 0 0.4rem 0;
+    }
+    .msg-content-small p {
+        margin: 0.3rem 0 0.2rem 0;
+    }
+
+    .msg-content ol {
+        padding-inline-start: 25px;
+    }
+
+    .msg-content ul {
+        padding-inline-start: 25px;
+    }
+    .msg-content img {
+        width: 100%;
+        max-width: 40rem;
+    }
+}
+
+/* // markdown table */
+html[data-theme='light'] .msg-block {
+    table {
+        background-color: #f8f8f8;
+        margin: 0 auto;
+        border-collapse: collapse;
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+        line-height: 1.2;
+        border: 1px solid #ddd;
+    }
+    table th,
+    table td {
+        padding: 0.5em 1.2em;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    table th {
+        background-color: #e5e5e5;
+        font-weight: bold;
+        color: #333;
+    }
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+}
+html[data-theme='dark'] .msg-block {
+    table {
+        background-color: #333;
+        color: #fff;
+        margin: 0 auto;
+        border-collapse: collapse;
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+        line-height: 1.2;
+        border: 1px solid #666;
+    }
+    table th,
+    table td {
+        padding: 0.5em 1.2em;
+        border: 1px solid #666;
+        text-align: center;
+    }
+    table th {
+        background-color: #555;
+        font-weight: bold;
+    }
+    table tr:nth-child(even) {
+        background-color: #444;
+    }
+}
+
+/* // message */
+html[data-theme='light'] {
+    .assistant-msg {
+        /* background-color: #fafafa; */
+    }
+    /* // .system-msg {
+    //     background-color: #fafafa;
+    // } */
+}
+html[data-theme='dark'] {
+    .assistant-msg {
+        /* background-color: #212121; */
+    }
+    /* // .system-msg { */
+    /* //     background-color: #212121; */
+    /* // } */
+}
+
+.loading {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #1976d2;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: loadingrotation 0.4s linear infinite;
+}
+
+@keyframes loadingrotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
