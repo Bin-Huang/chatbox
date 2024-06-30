@@ -2,7 +2,7 @@
     "name": "xyz.chatboxapp.app",
     "productName": "xyz.chatboxapp.app",
     "version": "0.0.1",
-    "private": true,
+    "license": "GPL-3.0 license",
     "description": "A desktop client for multiple cutting-edge AI models",
     "main": "./src/main/main.ts",
     "scripts": {
