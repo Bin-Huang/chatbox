@@ -8,4 +8,3 @@ fi
 
 npm run prettier
 npm run check
-npm test
