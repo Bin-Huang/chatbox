@@ -41,8 +41,8 @@ export default function InputBox(props: Props) {
         trackingEvent('send_message', { event_category: 'user' })
     }
 
-    const minTextareaHeight = 96
-    const maxTextareaHeight = 192
+    const minTextareaHeight = 66
+    const maxTextareaHeight = 96
 
     const onMessageInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const input = event.target.value
