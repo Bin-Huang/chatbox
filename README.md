@@ -188,44 +188,6 @@ I developed Chatbox initially because I was debugging some prompts and found mys
 
 At first, I didn't know that it would be so popular. I listened to the feedback from the open-source community and continued to develop and improve it. Now, it has become a very useful AI desktop application. There are many users who love Chatbox, and they not only use it for developing and debugging prompts, but also for daily chatting, and even to do some more interesting things like using well-designed prompts to make AI play various professional roles to assist them in everyday work...
 
-## Roadmap
-
--   [x] AI chat and session management
--   [x] Store all your important message data locally.
--   [x] Markdown
--   [x] Streaming reply
--   [x] API Host configuration
--   [x] Automatically generate tab titles
--   [x] Button for clearing messages.
--   [x] Night/Dark mode
--   [x] message token estimating
--   [x] GPT4
--   [x] i18n
--   [x] Copy button for code blocks
--   [x] Stop button for AI message generation
--   [x] Drag-and-drop sorting of tabs
--   [x] [Web version](https://web.chatboxai.app)
--   [x] Azure OpenAI API compatibility
--   [x] Improved prompt settings
--   [x] Prompt Library
--   [x] Built-in AI services
--   [x] Shortcut keys
--   [x] Claude
--   [x] Temperature Setting
--   [x] Conversation Special Settings
--   [x] OpenAI Custom Model
--   [x] Dall-E-3
--   [x] Message Search
--   [x] Data Export
--   [x] Support for Google Gemini Pro
--   [x] Support for Ollama (llama2, Mistral, Mixtral, codellama, vicuna, yi, and solar)
--   [x] Thread archive, history message list
--   [x] Mobile (Android, iOS)
--   [ ] Talk with files
--   [ ] Talk with URLs
--   [ ] Cross-device synchronization
--   More...
-
 ## How to Contribute
 
 Any form of contribution is welcome, including but not limited to:
@@ -238,24 +200,36 @@ Any form of contribution is welcome, including but not limited to:
 -   Submitting translations
 -   Submitting any other forms of contribution
 
-## Build Instructions for Chatbox (Mac, Windows, Linux)
+## Build Instructions
 
-1. Clone the repository from Github using the following command:
+1. Clone the repository from Github
 
 ```bash
 git clone https://github.com/Bin-Huang/chatbox.git
 ```
 
-2. Install the required dependencies by running the following command:
+2. Install the required dependencies
 
 ```bash
 npm install
 ```
 
-3. Start the application by running the following command:
+3. Start the application (in development mode)
 
 ```bash
-npm start
+npm run dev
+```
+
+4. Build the application, package the installer for current platform
+
+```bash
+npm run package
+```
+
+5. Build the application, package the installer for all platforms
+
+```bash
+npm run package:all
 ```
 
 ## Buy Me a Coffee
@@ -276,4 +250,4 @@ npm start
 
 ## License
 
-[MIT](./LICENSE)
+[LICENSE](./LICENSE)

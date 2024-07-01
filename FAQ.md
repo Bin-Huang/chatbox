@@ -1,5 +1,9 @@
 # Frequently Asked Questions
 
+<p align="center">
+    English | <a href="./FQA-CN.md">中文</a>
+</p>
+
 If you still haven't found the answer you're looking for, feel free to submit an [Issue](https://github.com/Bin-Huang/chatbox/issues/new/choose) as well.
 
 ### 1001
@@ -34,4 +38,4 @@ If you select GPT-4 and receive a similar error message when sending messages:
 {"error":{"message":"The model: gpt-4-32k does not exist","type":"invalid_request_error","param":null,"code":"model_not_found"}}
 ```
 
-This issue often occurs when you're using your own OpenAI account and have selected the GPT-4 model, but your OpenAI API account does not support GPT-4. As of July 4, 2023, all OpenAI API accounts require a request to be submitted to OpenAI before the GPT-4 model can be used. Here's the application link: https://openai.com/waitlist/gpt-4-api.
+This issue often occurs when you're using your own OpenAI account and have selected the GPT-4 model, but your OpenAI API account does not support GPT-4. As of July 4, 2023, all OpenAI API accounts require a request to be submitted to OpenAI before the GPT-4 model can be used. Here's the application link: https://openai.com/waitlist/gpt-4-api. Please note that even if you're a ChatGPT Plus user, you still need to apply for access to use the GPT-4 API model.
