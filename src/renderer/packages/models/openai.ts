@@ -125,6 +125,15 @@ export const openaiModelConfigs = {
         maxContextTokens: 16_385,
     },
 
+    'gpt-4o-mini': {
+        maxTokens: 4_096,
+        maxContextTokens: 128_000,
+    },
+    'gpt-4o-mini-2024-07-18	': {
+        maxTokens: 4_096,
+        maxContextTokens: 128_000,
+    },
+
     'gpt-4o': {
         maxTokens: 4_096,
         maxContextTokens: 128_000,
