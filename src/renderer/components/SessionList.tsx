@@ -61,7 +61,7 @@ export default function SessionList(props: Props) {
                 width: '100%',
                 position: 'relative',
                 overflow: 'auto',
-                height: '60vh',
+                flex: 1,
                 '& ul': { padding: 0 },
             }}
             component="div"
