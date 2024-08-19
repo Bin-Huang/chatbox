@@ -70,7 +70,7 @@ export function getModelDisplayName(settings: Settings, sessionType: SessionType
         case ModelProvider.Ollama:
             return `Ollama (${settings.ollamaModel})`
         case ModelProvider.SiliconFlow:
-            return `SiliconCloud (${settings.ollamaModel})`
+            return `SiliconCloud (${settings.siliconCloudModel})`
         default:
             return 'unknown'
     }
