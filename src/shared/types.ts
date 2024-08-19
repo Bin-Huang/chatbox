@@ -101,7 +101,7 @@ export interface ModelSettings {
     // siliconflow
     siliconCloudHost: string
     siliconCloudKey: string
-    siliconCloudModel: siliconflow.Model
+    siliconCloudModel: siliconflow.Model | 'custom-model'
 
     temperature: number
     topP: number

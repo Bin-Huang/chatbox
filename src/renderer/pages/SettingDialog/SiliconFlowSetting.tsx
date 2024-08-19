@@ -35,10 +35,10 @@ export default function SiliconFlowSetting(props: ModelConfigProps) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <SiliconFlowModelSelect
-                        model={settingsEdit.model}
+                        model={settingsEdit.siliconCloudModel}
                         siliconflowCustomModel={settingsEdit.openaiCustomModel}
-                        onChange={(model, openaiCustomModel) =>
-                            setSettingsEdit({ ...settingsEdit, model, openaiCustomModel })
+                        onChange={(siliconCloudModel, openaiCustomModel) =>
+                            setSettingsEdit({ ...settingsEdit, siliconCloudModel, openaiCustomModel })
                         }
                     />
 
