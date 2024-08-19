@@ -7,7 +7,6 @@ import TopPSlider from '../../components/TopPSlider'
 import PasswordTextField from '../../components/PasswordTextField'
 import MaxContextMessageCountSlider from '../../components/MaxContextMessageCountSlider'
 import SiliconFlowModelSelect from '../../components/SiliconFlowModelSelect'
-import TextFieldReset from '@/components/TextFieldReset'
 
 interface ModelConfigProps {
     settingsEdit: ModelSettings
