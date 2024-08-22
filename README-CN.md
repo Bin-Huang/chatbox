@@ -1,35 +1,11 @@
 <p align="right">
   <a href="README.md">English</a> |
-  <a href="README_cn.md">简体中文</a>
+  <a href="README_CN.md">简体中文</a>
 </p>
 
-<h1 align="center">
-<img src='./doc/icon.png' width='30'>
-<span>Chatbox</span>
-</h1>
-<p align="center">
-    <em>Chatbox 是一个 AI 模型桌面客户端，支持 ChatGPT、Claude、Google Gemini、Ollama 等主流模型，适用于 Windows、Mac、Linux、Web、Android 和 iOS 全平台</em>
-</p>
+这里是 Chatbox 社区版的代码仓库，以 GPLv3 许可证开源。对大多数用户来说，更建议直接使用 Chatbox 官方版（闭源）。它仍然完全免费，安装简单，而且支持更多最新功能。你可以在下面获取：
 
-<p align="center">
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
-</a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
-</a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
-</a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="下载量" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
-</a>
-<a href="https://twitter.com/benn_huang" target="_blank">
-<img alt="Twitter" src="https://img.shields.io/badge/关注-benn_huang-blue?style=flat&logo=Twitter" />
-</a>
-</p>
-
-## ⏬ 下载桌面版安装包
+### 下载电脑端
 
 <table style="width: 100%">
   <tr>
@@ -75,32 +51,61 @@
   </tr>
 </table>
 
-或者访问 **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** 下载最新版本或任何以前的版本。
-
-## ⏬ 下载 iOS/Android App
+### 下载移动端
 
 <a href='https://apps.apple.com/app/chatbox-ai/id6471368056' style='margin-right: 4px'>
 <img src='./doc/app_store.webp' style="height:38px;" />
 </a>
 <a href='https://play.google.com/store/apps/details?id=xyz.chatboxapp.chatbox' style='margin-right: 4px'>
-<img src='./doc/google_play.webp' style="height:38px;" />
+<img src='./doc/google_play.png' style="height:38px;" />
 </a>
 <a href='https://chatboxai.app/zh/install?download=android_apk' style='margin-right: 4px; display: inline-flex; justify-content: center'>
 <img src='./doc/android.png' style="height:28px; display: inline-block" />
 .APK
 </a>
 
-## 🌟 特性
+更多信息请访问: [chatboxai.app](https://chatboxai.app/)
 
-<a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 200px; height: 40px;" width="100" height="40" /></a>
+---
+---
+
+
+<h1 align="center">
+<img src='./doc/icon.png' width='30'>
+<span>
+    Chatbox
+    <span style="font-size:8px; font-weight: normal;">(Community Edition)</span>
+</span>
+</h1>
+<p align="center">
+    <em>Chatbox 是一个 AI 模型桌面客户端，支持 ChatGPT、Claude、Google Gemini、Ollama 等主流模型，适用于 Windows、Mac、Linux、Web、Android 和 iOS 全平台</em>
+</p>
+
+<p align="center">
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="下载量" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
+</a>
+<a href="https://twitter.com/benn_huang" target="_blank">
+<img alt="Twitter" src="https://img.shields.io/badge/关注-benn_huang-blue?style=flat&logo=Twitter" />
+</a>
+</p>
+
+<a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 150px; height: 30px;" width="100" height="40" /></a>
 
 <img src="./dec/../doc/demo_desktop_1.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
 
 <img src="./dec/../doc/demo_desktop_2.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
 
-<img src="./dec/../doc/demo_desktop_3.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
-
-# 特性
+## 特性
 
 -   **本地数据存储**  
     :floppy_disk: 您的数据保留在您的设备上，确保数据永不丢失并保护您的隐私。

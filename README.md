@@ -1,36 +1,11 @@
 <p align="right">
   <a href="README.md">English</a> |
-  <a href="README_cn.md">简体中文</a>
+  <a href="README_CN.md">简体中文</a>
 </p>
 
+This is the repository for the Chatbox Community Edition, open-sourced under the GPLv3 license. For most users, I recommend using the Chatbox Official Edition (closed-source). It's still completely free, easy to install, and supports more of the latest features. You can get it below:
 
-<h1 align="center">
-<img src='./doc/icon.png' width='30'>
-<span>Chatbox</span>
-</h1>
-<p align="center">
-    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for ChatGPT, Claude and other LLMs, available on Windows, Mac, Linux</em>
-</p>
-
-<p align="center">
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
-</a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
-</a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
-</a>
-<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
-<img alt="Downloads" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
-</a>
-<a href="https://twitter.com/benn_huang" target="_blank">
-<img alt="Twitter" src="https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter" />
-</a>
-</p>
-
-## ⏬ Download for Desktop
+### Download for Desktop
 
 <table style="width: 100%">
   <tr>
@@ -76,9 +51,7 @@
   </tr>
 </table>
 
-Or visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)** to download the latest version or any previous release.
-
-## ⏬ Download for iOS/Android
+### Download for iOS/Android
 
 <a href='https://apps.apple.com/app/chatbox-ai/id6471368056' style='margin-right: 4px'>
 <img src='./doc/app_store.webp' style="height:38px;" />
@@ -91,13 +64,44 @@ Or visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)*
 .APK
 </a>
 
-## 🌟 Features
+For more information: [chatboxai.app](https://chatboxai.app/)
 
-<a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 200px; height: 40px;" width="100" height="40" /></a>
+---
+---
+
+<h1 align="center">
+<img src='./doc/icon.png' width='30'>
+<span>
+    Chatbox
+    <span style="font-size:8px; font-weight: normal;">(Community Edition)</span>
+</span>
+</h1>
+<p align="center">
+    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for ChatGPT, Claude and other LLMs, available on Windows, Mac, Linux</em>
+</p>
+
+<p align="center">
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
+</a>
+<a href="https://github.com/Bin-Huang/chatbox/releases" target="_blank">
+<img alt="Downloads" src="https://img.shields.io/github/downloads/Bin-Huang/chatbox/total.svg?style=flat" />
+</a>
+<a href="https://twitter.com/benn_huang" target="_blank">
+<img alt="Twitter" src="https://img.shields.io/badge/follow-benn_huang-blue?style=flat&logo=Twitter" />
+</a>
+</p>
+
+<a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 150px; height: 30px;" width="100" height="40" /></a>
 
 <a href="./doc/demo_desktop_1.jpg"><img src="./doc/demo_desktop_1.jpg" width="400"/></a>
 <a href="./doc/demo_desktop_2.jpg"><img src="./doc/demo_desktop_2.jpg" width="400"/></a>
-<a href="./doc/demo_desktop_3.jpg"><img src="./doc/demo_desktop_3.jpg" width="400"/></a>
 
 <!-- <table>
 <tr>
@@ -110,7 +114,7 @@ Or visit the **[GitHub Releases](https://github.com/Bin-Huang/chatbox/releases)*
 </tr>
 </table> -->
 
-# Features
+## Features
 
 -   **Local Data Storage**  
     :floppy_disk: Your data remains on your device, ensuring it never gets lost and maintains your privacy.
