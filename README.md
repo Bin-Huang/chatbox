@@ -1,6 +1,6 @@
 <p align="right">
   <a href="README.md">English</a> |
-  <a href="README_CN.md">简体中文</a>
+  <a href="README-CN.md">简体中文</a>
 </p>
 
 This is the repository for the Chatbox Community Edition, open-sourced under the GPLv3 license. For most users, I recommend using the Chatbox Official Edition (closed-source). It's still completely free, easy to install, and supports more of the latest features. You can get it below:
@@ -66,7 +66,6 @@ This is the repository for the Chatbox Community Edition, open-sourced under the
 
 For more information: [chatboxai.app](https://chatboxai.app/)
 
----
 ---
 
 <h1 align="center">

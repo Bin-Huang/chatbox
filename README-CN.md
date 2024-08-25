@@ -1,6 +1,6 @@
 <p align="right">
   <a href="README.md">English</a> |
-  <a href="README_CN.md">简体中文</a>
+  <a href="README-CN.md">简体中文</a>
 </p>
 
 这里是 Chatbox 社区版的代码仓库，以 GPLv3 许可证开源。对大多数用户来说，更建议直接使用 Chatbox 官方版（闭源）。它仍然完全免费，安装简单，而且支持更多最新功能。你可以在下面获取：
@@ -66,7 +66,6 @@
 
 更多信息请访问: [chatboxai.app](https://chatboxai.app/)
 
----
 ---
 
 
