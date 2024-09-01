@@ -81,6 +81,10 @@ export class DesktopPlatform {
     public async shouldShowAboutDialogWhenStartUp(): Promise<boolean> {
         return this.ipc.invoke('shouldShowAboutDialogWhenStartUp')
     }
+
+    public async appLog(level: string, message: string) {
+        return this.ipc.invoke('appLog', JSON.stringify({ level, message }))
+    }
 }
 
 export default new DesktopPlatform(window.electronAPI as any)

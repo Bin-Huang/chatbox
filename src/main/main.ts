@@ -248,3 +248,18 @@ ipcMain.handle('shouldShowAboutDialogWhenStartUp', (event) => {
     store.set('lastShownAboutDialogVersion', currentVersion)
     return true
 })
+
+ipcMain.handle('appLog', (event, dataJson) => {
+    const data: { level: string; message: string } = JSON.parse(dataJson)
+    data.message = 'APP_LOG: ' + data.message
+    switch (data.level) {
+        case 'info':
+            log.info(data.message)
+            break
+        case 'error':
+            log.error(data.message)
+            break
+        default:
+            log.info(data.message)
+    }
+})
