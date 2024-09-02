@@ -40,6 +40,10 @@ export function settings(): Settings {
         allowReportingAndTracking: true,
 
         enableMarkdownRendering: true,
+
+        siliconCloudHost: 'https://api.siliconflow.cn',
+        siliconCloudKey: '',
+        siliconCloudModel: 'THUDM/glm-4-9b-chat',
     }
 }
 

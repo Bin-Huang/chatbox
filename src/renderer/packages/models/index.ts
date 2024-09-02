@@ -2,6 +2,7 @@ import OpenAI from './openai'
 import { Settings, Config, ModelProvider, SessionType, ModelSettings, Session } from '../../../shared/types'
 import ChatboxAI from './chatboxai'
 import Ollama from './ollama'
+import SiliconFlow from './siliconflow'
 
 export function getModel(setting: Settings, config: Config) {
     switch (setting.aiProvider) {
@@ -11,6 +12,8 @@ export function getModel(setting: Settings, config: Config) {
             return new OpenAI(setting)
         case ModelProvider.Ollama:
             return new Ollama(setting)
+        case ModelProvider.SiliconFlow:
+            return new SiliconFlow(setting)
         default:
             throw new Error('Cannot find model with provider: ' + setting.aiProvider)
     }
@@ -20,6 +23,7 @@ export const aiProviderNameHash = {
     [ModelProvider.OpenAI]: 'OpenAI API',
     [ModelProvider.ChatboxAI]: 'Chatbox AI',
     [ModelProvider.Ollama]: 'Ollama',
+    [ModelProvider.SiliconFlow]: 'SiliconCloud API',
 }
 
 export const AIModelProviderMenuOptionList = [
@@ -37,6 +41,11 @@ export const AIModelProviderMenuOptionList = [
     {
         value: ModelProvider.Ollama,
         label: aiProviderNameHash[ModelProvider.Ollama],
+        disabled: false,
+    },
+    {
+        value: ModelProvider.SiliconFlow,
+        label: aiProviderNameHash[ModelProvider.SiliconFlow],
         disabled: false,
     },
 ]
@@ -60,6 +69,8 @@ export function getModelDisplayName(settings: Settings, sessionType: SessionType
             return model.replace('chatboxai-', 'Chatbox AI ')
         case ModelProvider.Ollama:
             return `Ollama (${settings.ollamaModel})`
+        case ModelProvider.SiliconFlow:
+            return `SiliconCloud (${settings.siliconCloudModel})`
         default:
             return 'unknown'
     }

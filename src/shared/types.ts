@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Model } from '../renderer/packages/models/openai'
+import * as siliconflow from '../renderer/packages/models/siliconflow'
 
 export const MessageRoleEnum = {
     System: 'system',
@@ -64,6 +65,7 @@ export enum ModelProvider {
     ChatboxAI = 'chatbox-ai',
     OpenAI = 'openai',
     Ollama = 'ollama',
+    SiliconFlow = 'silicon-flow',
 }
 
 export interface ModelSettings {
@@ -95,6 +97,11 @@ export interface ModelSettings {
     // ollama
     ollamaHost: string
     ollamaModel: string
+
+    // siliconflow
+    siliconCloudHost: string
+    siliconCloudKey: string
+    siliconCloudModel: siliconflow.Model | 'custom-model'
 
     temperature: number
     topP: number
