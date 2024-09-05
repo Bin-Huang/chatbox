@@ -66,7 +66,7 @@ export enum ModelProvider {
     OpenAI = 'openai',
     Ollama = 'ollama',
     SiliconFlow = 'silicon-flow',
-    FeatherlessAI = "FeatherlessAI",
+    FeatherlessAI = 'FeatherlessAI',
 }
 
 export interface ModelSettings {
@@ -77,7 +77,7 @@ export interface ModelSettings {
     apiHost: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
-    
+
     // featherlessai
     featherlessKey: string
     featherlessApiHost: string

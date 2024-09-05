@@ -19,7 +19,7 @@ export default class StoreStorage extends BaseStorage {
         let value: T = await super.getItem(key, initialValue)
 
         if (key === StorageKey.ChatSessions && value === initialValue) {
-            const lang = await platform.getLocale().catch(e => 'en')
+            const lang = await platform.getLocale().catch((e) => 'en')
             if (lang.startsWith('zh')) {
                 value = defaultSessionsForCN as T
             } else {

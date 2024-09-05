@@ -6,7 +6,7 @@ export function trackingEvent(name: string, params: { [key: string]: string } = 
     const store = getDefaultStore()
     // ONLY track when user allow
     const allowReportingAndTracking = store.get(allowReportingAndTrackingAtom)
-    if (! allowReportingAndTracking) {
+    if (!allowReportingAndTracking) {
         return
     }
     platform.trackingEvent(name, params)

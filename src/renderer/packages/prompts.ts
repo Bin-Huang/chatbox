@@ -14,7 +14,7 @@ The following is the conversation:
 
 \`\`\`
 ${
-    format(msgs.map((msg) => msg.content.slice(0, 100)))    // only use the first 100 characters of each message to save tokens
+    format(msgs.map((msg) => msg.content.slice(0, 100))) // only use the first 100 characters of each message to save tokens
 }
 \`\`\`
 

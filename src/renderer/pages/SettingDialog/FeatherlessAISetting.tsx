@@ -36,7 +36,7 @@ export default function FeatherlessAISetting(props: ModelConfigProps) {
                     variant="outlined"
                     value={settingsEdit.apiHost}
                     placeholder="https://api.featherless.ai"
-                    defaultValue='https://api.featherless.ai'
+                    defaultValue="https://api.featherless.ai"
                     onValueChange={(value) => {
                         value = value.trim()
                         if (value.length > 4 && !value.startsWith('http')) {

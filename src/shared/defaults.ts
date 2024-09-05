@@ -45,9 +45,9 @@ export function settings(): Settings {
         siliconCloudKey: '',
         siliconCloudModel: 'THUDM/glm-4-9b-chat',
 
-        featherlessKey:'', 
-        featherlessApiHost: '', 
-        featherlessApiPath: '', 
+        featherlessKey: '',
+        featherlessApiHost: '',
+        featherlessApiPath: '',
         featherlessModel: 'custom-model',
     }
 }
