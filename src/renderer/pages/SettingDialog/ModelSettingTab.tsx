@@ -2,6 +2,7 @@ import { Divider, Box } from '@mui/material'
 import { ModelProvider, ModelSettings } from '../../../shared/types'
 import OpenAISetting from './OpenAISetting'
 import ChatboxAISetting from './ChatboxAISetting'
+import FeatherlessAISetting from './FeatherlessAISetting'
 import AIProviderSelect from '../../components/AIProviderSelect'
 import { OllamaHostInput, OllamaModelSelect } from './OllamaSetting'
 import SiliconFlowSetting from './SiliconFlowSetting'
@@ -24,6 +25,9 @@ export default function ModelSettingTab(props: ModelConfigProps) {
             <Divider sx={{ marginTop: '10px', marginBottom: '24px' }} />
             {settingsEdit.aiProvider === ModelProvider.OpenAI && (
                 <OpenAISetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
+            )}
+            {settingsEdit.aiProvider === ModelProvider.FeatherlessAI && (
+                <FeatherlessAISetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
             )}
             {settingsEdit.aiProvider === ModelProvider.ChatboxAI && (
                 <ChatboxAISetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />

@@ -74,6 +74,7 @@
         "electron": "^22.3.13",
         "electron-builder": "^24.13.3",
         "electron-devtools-installer": "^3.2.0",
+        "electron-reload": "^2.0.0-alpha.1",
         "electronmon": "^2.0.2",
         "eslint": "^8.42.0",
         "eslint-config-airbnb-base": "^15.0.0",
