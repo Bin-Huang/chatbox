@@ -6,7 +6,10 @@ import { models } from '../packages/models/featherlessai'
 export interface Props {
     model: ModelSettings['featherlessModel']
     featherlessCustomModel: ModelSettings['featherlessCustomModel']
-    onChange(model: ModelSettings['featherlessModel'], featherlessCustomModel: ModelSettings['featherlessCustomModel']): void
+    onChange(
+        model: ModelSettings['featherlessModel'],
+        featherlessCustomModel: ModelSettings['featherlessCustomModel']
+    ): void
     className?: string
 }
 

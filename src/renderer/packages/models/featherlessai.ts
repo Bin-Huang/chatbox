@@ -23,13 +23,13 @@ export default class FeatherlessAI extends Base {
 
         // Validate the model before proceeding to ensure only FeatherlessAI models are used
         if (!this.isValidModel(this.options.featherlessModel)) {
-            throw new Error(`Invalid model: ${this.options.featherlessModel}. Only FeatherlessAI models are supported.`);
+            throw new Error(`Invalid model: ${this.options.featherlessModel}. Only FeatherlessAI models are supported.`)
         }
     }
 
     // Ensure the model is from FeatherlessAI
     isValidModel(model: string): boolean {
-        return model in featherlessModelConfigs || model === 'custom-model';
+        return model in featherlessModelConfigs || model === 'custom-model'
     }
 
     async callChatCompletion(
@@ -39,7 +39,10 @@ export default class FeatherlessAI extends Base {
     ): Promise<string> {
         let messages = await populateFeatherlessMessage(rawMessages, this.options.featherlessModel)
 
-        const model = this.options.featherlessModel === 'custom-model' ? this.options.featherlessCustomModel || '' : this.options.featherlessModel
+        const model =
+            this.options.featherlessModel === 'custom-model'
+                ? this.options.featherlessCustomModel || ''
+                : this.options.featherlessModel
         messages = injectModelSystemPrompt(model, messages)
 
         const apiPath = this.options.apiPath || '/v1/chat/completions'
