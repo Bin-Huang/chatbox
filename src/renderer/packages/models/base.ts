@@ -1,24 +1,39 @@
 import { Message } from 'src/shared/types'
-import { ApiError, NetworkError, AIProviderNoImplementedPaintError, BaseError, AIProviderNoImplementedChatError } from './errors'
+import {
+    ApiError,
+    NetworkError,
+    AIProviderNoImplementedPaintError,
+    BaseError,
+    AIProviderNoImplementedChatError,
+} from './errors'
 import { createParser } from 'eventsource-parser'
 import _ from 'lodash'
 
 export default class Base {
     public name = 'Unknown'
 
-    constructor() {
-    }
+    constructor() {}
 
-    async callChatCompletion(messages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(
+        messages: Message[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
         throw new AIProviderNoImplementedChatError(this.name)
     }
 
-    async chat(messages: Message[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    async chat(
+        messages: Message[],
+        onResultUpdated?: (data: { text: string; cancel(): void }) => void
+    ): Promise<string> {
         messages = await this.preprocessMessage(messages)
         return await this._chat(messages, onResultUpdated)
     }
 
-    protected async _chat(messages: Message[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    protected async _chat(
+        messages: Message[],
+        onResultUpdated?: (data: { text: string; cancel(): void }) => void
+    ): Promise<string> {
         let canceled = false
         const controller = new AbortController()
         const stop = () => {
@@ -94,7 +109,7 @@ export default class Base {
         }
     }
 
-    async * iterableStreamAsync(stream: ReadableStream): AsyncIterableIterator<Uint8Array> {
+    async *iterableStreamAsync(stream: ReadableStream): AsyncIterableIterator<Uint8Array> {
         const reader = stream.getReader()
         try {
             while (true) {
@@ -149,12 +164,7 @@ export default class Base {
         }
     }
 
-    async get(
-        url: string,
-        headers: Record<string, string>,
-        signal?: AbortSignal,
-        retry = 3
-    ) {
+    async get(url: string, headers: Record<string, string>, signal?: AbortSignal, retry = 3) {
         let requestError: ApiError | NetworkError | null = null
         for (let i = 0; i < retry + 1; i++) {
             try {

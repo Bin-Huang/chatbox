@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Model } from '../renderer/packages/models/openai'
+import { featherlessModelConfigs, Model as FeatherlessModel } from '../renderer/packages/models/featherlessai'
 import * as siliconflow from '../renderer/packages/models/siliconflow'
 
 export const MessageRoleEnum = {
@@ -66,6 +67,7 @@ export enum ModelProvider {
     OpenAI = 'openai',
     Ollama = 'ollama',
     SiliconFlow = 'silicon-flow',
+    FeatherlessAI = 'FeatherlessAI',
 }
 
 export interface ModelSettings {
@@ -76,6 +78,13 @@ export interface ModelSettings {
     apiHost: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
+
+    // featherlessai
+    featherlessKey: string
+    featherlessApiHost: string
+    featherlessApiPath: string
+    featherlessModel: FeatherlessModel | 'custom-model'
+    featherlessCustomModel?: string
 
     // azure
     azureEndpoint: string

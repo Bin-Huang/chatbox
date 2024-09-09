@@ -6,7 +6,7 @@ import TemperatureSlider from '../../components/TemperatureSlider'
 import TopPSlider from '../../components/TopPSlider'
 import PasswordTextField from '../../components/PasswordTextField'
 import MaxContextMessageCountSlider from '../../components/MaxContextMessageCountSlider'
-import OpenAIModelSelect from '../../components/OpenAIModelSelect'
+import FeatherlessModelSelect from '../../components/FeatherlessModelSelect'
 import TextFieldReset from '@/components/TextFieldReset'
 
 interface ModelConfigProps {
@@ -14,18 +14,18 @@ interface ModelConfigProps {
     setSettingsEdit: (settings: ModelSettings) => void
 }
 
-export default function OpenAISetting(props: ModelConfigProps) {
+export default function FeatherlessAISetting(props: ModelConfigProps) {
     const { settingsEdit, setSettingsEdit } = props
     const { t } = useTranslation()
     return (
         <Box>
             <PasswordTextField
                 label={t('api key')}
-                value={settingsEdit.openaiKey}
+                value={settingsEdit.featherlessKey}
                 setValue={(value) => {
-                    setSettingsEdit({ ...settingsEdit, openaiKey: value })
+                    setSettingsEdit({ ...settingsEdit, featherlessKey: value })
                 }}
-                placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+                placeholder="rc-xxxxxxxxxxxxxxxxxxxxxxxx"
             />
             <>
                 <TextFieldReset
@@ -35,8 +35,8 @@ export default function OpenAISetting(props: ModelConfigProps) {
                     fullWidth
                     variant="outlined"
                     value={settingsEdit.apiHost}
-                    placeholder="https://api.openai.com"
-                    defaultValue="https://api.openai.com"
+                    placeholder="https://api.featherless.ai"
+                    defaultValue="https://api.featherless.ai"
                     onValueChange={(value) => {
                         value = value.trim()
                         if (value.length > 4 && !value.startsWith('http')) {
@@ -49,15 +49,15 @@ export default function OpenAISetting(props: ModelConfigProps) {
             <Accordion>
                 <AccordionSummary aria-controls="panel1a-content">
                     <Typography>
-                        {t('model')} & {t('token')}{' '}
+                        {t('featherlessModel')} & {t('token')}{' '}
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <OpenAIModelSelect
-                        model={settingsEdit.model}
-                        openaiCustomModel={settingsEdit.openaiCustomModel}
-                        onChange={(model, openaiCustomModel) =>
-                            setSettingsEdit({ ...settingsEdit, model, openaiCustomModel })
+                    <FeatherlessModelSelect
+                        model={settingsEdit.featherlessModel}
+                        featherlessCustomModel={settingsEdit.featherlessCustomModel}
+                        onChange={(featherlessModel, featherlessCustomModel) =>
+                            setSettingsEdit({ ...settingsEdit, featherlessModel, featherlessCustomModel })
                         }
                     />
 

@@ -3,11 +3,11 @@ import IconButton from '@mui/material/IconButton'
 import { useAtomValue, useSetAtom } from 'jotai'
 import * as atoms from '../stores/atoms'
 import { useTranslation } from 'react-i18next'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import StyledMenu from './StyledMenu'
 import { useState } from 'react'
 import { MenuItem } from '@mui/material'
-import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices'
 
 export default function Toolbar() {
     const { t } = useTranslation()
@@ -33,21 +33,13 @@ export default function Toolbar() {
 
     return (
         <Box>
-            <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="more-menu-button"
-                sx={{}}
-                onClick={handleMoreMenuOpen}
-            >
+            <IconButton edge="start" color="inherit" aria-label="more-menu-button" sx={{}} onClick={handleMoreMenuOpen}>
                 <MoreHorizIcon />
             </IconButton>
-            <StyledMenu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleMoreMenuClose}
-            >
-                <MenuItem onClick={handleSessionClean} disableRipple
+            <StyledMenu anchorEl={anchorEl} open={open} onClose={handleMoreMenuClose}>
+                <MenuItem
+                    onClick={handleSessionClean}
+                    disableRipple
                     sx={{
                         '&:hover': {
                             backgroundColor: 'rgba(255, 0, 0, 0.1)',

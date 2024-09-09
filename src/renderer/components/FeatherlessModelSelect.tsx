@@ -1,16 +1,19 @@
 import { Select, MenuItem, FormControl, InputLabel, TextField } from '@mui/material'
 import { ModelSettings } from '../../shared/types'
 import { useTranslation } from 'react-i18next'
-import { models } from '../packages/models/openai'
+import { models } from '../packages/models/featherlessai'
 
 export interface Props {
-    model: ModelSettings['model']
-    openaiCustomModel: ModelSettings['openaiCustomModel']
-    onChange(model: ModelSettings['model'], openaiCustomModel: ModelSettings['openaiCustomModel']): void
+    model: ModelSettings['featherlessModel']
+    featherlessCustomModel: ModelSettings['featherlessCustomModel']
+    onChange(
+        model: ModelSettings['featherlessModel'],
+        featherlessCustomModel: ModelSettings['featherlessCustomModel']
+    ): void
     className?: string
 }
 
-export default function OpenAIModelSelect(props: Props) {
+export default function FeatherlessModelSelect(props: Props) {
     const { t } = useTranslation()
     return (
         <FormControl fullWidth variant="outlined" margin="dense" className={props.className}>
@@ -19,7 +22,7 @@ export default function OpenAIModelSelect(props: Props) {
                 label={t('model')}
                 id="model-select"
                 value={props.model}
-                onChange={(e) => props.onChange(e.target.value as ModelSettings['model'], props.openaiCustomModel)}
+                onChange={(e) => props.onChange(e.target.value as ModelSettings['featherlessModel'], props.model)}
             >
                 {models.map((model) => (
                     <MenuItem key={model} value={model}>
@@ -37,7 +40,7 @@ export default function OpenAIModelSelect(props: Props) {
                     type="text"
                     fullWidth
                     variant="outlined"
-                    value={props.openaiCustomModel || ''}
+                    value={props.featherlessCustomModel || ''}
                     onChange={(e) => props.onChange(props.model, e.target.value.trim())}
                 />
             )}

@@ -1,7 +1,4 @@
-import {
-    Typography,
-    Box,
-} from '@mui/material'
+import { Typography, Box } from '@mui/material'
 import { Settings } from '../../../shared/types'
 import { useTranslation } from 'react-i18next'
 import { Accordion, AccordionSummary, AccordionDetails } from '../../components/Accordion'
@@ -55,26 +52,26 @@ export function AnalyticsSetting() {
     return (
         <Box>
             <div>
-                <p className='opacity-70'>
-                    {t('Chatbox respects your privacy and only uploads anonymous error data and events when necessary. You can change your preferences at any time in the settings.')}
+                <p className="opacity-70">
+                    {t(
+                        'Chatbox respects your privacy and only uploads anonymous error data and events when necessary. You can change your preferences at any time in the settings.'
+                    )}
                 </p>
             </div>
-            <div className='my-2'>
+            <div className="my-2">
                 <AllowReportingAndTrackingCheckbox />
             </div>
         </Box>
     )
 }
 
-export function AllowReportingAndTrackingCheckbox(props: {
-    className?: string
-}) {
+export function AllowReportingAndTrackingCheckbox(props: { className?: string }) {
     const { t } = useTranslation()
     const [allowReportingAndTracking, setAllowReportingAndTracking] = useAtom(atoms.allowReportingAndTrackingAtom)
     return (
         <span className={props.className}>
             <input
-                type='checkbox'
+                type="checkbox"
                 checked={allowReportingAndTracking}
                 onChange={(e) => setAllowReportingAndTracking(e.target.checked)}
             />

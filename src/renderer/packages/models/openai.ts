@@ -30,23 +30,32 @@ export default class OpenAI extends Base {
         }
     }
 
-    async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(
+        rawMessages: Message[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
         try {
             return await this._callChatCompletion(rawMessages, signal, onResultChange)
         } catch (e) {
-            if (e instanceof ApiError && e.message.includes('Invalid content type. image_url is only supported by certain models.')) {
+            if (
+                e instanceof ApiError &&
+                e.message.includes('Invalid content type. image_url is only supported by certain models.')
+            ) {
                 throw ChatboxAIAPIError.fromCodeName('model_not_support_image', 'model_not_support_image')
             }
             throw e
         }
     }
 
-    async _callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async _callChatCompletion(
+        rawMessages: Message[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
         let messages = await populateOpenAIMessage(rawMessages, this.options.model)
 
-        const model = this.options.model === 'custom-model'
-            ? this.options.openaiCustomModel || ''
-            : this.options.model
+        const model = this.options.model === 'custom-model' ? this.options.openaiCustomModel || '' : this.options.model
         messages = injectModelSystemPrompt(model, messages)
 
         const apiPath = this.options.apiPath || '/v1/chat/completions'
@@ -56,9 +65,10 @@ export default class OpenAI extends Base {
             {
                 messages,
                 model,
-                max_tokens: this.options.model === 'gpt-4-vision-preview'
-                    ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
-                    : undefined,
+                max_tokens:
+                    this.options.model === 'gpt-4-vision-preview'
+                        ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
+                        : undefined,
                 temperature: this.options.temperature,
                 top_p: this.options.topP,
                 stream: true,
@@ -95,7 +105,6 @@ export default class OpenAI extends Base {
         }
         return headers
     }
-
 }
 
 // Ref: https://platform.openai.com/docs/models/gpt-4
@@ -209,7 +218,10 @@ export const openaiModelConfigs = {
 export type Model = keyof typeof openaiModelConfigs
 export const models = Array.from(Object.keys(openaiModelConfigs)).sort() as Model[]
 
-export async function populateOpenAIMessage(rawMessages: Message[], model: Model | 'custom-model'): Promise<OpenAIMessage[]> {
+export async function populateOpenAIMessage(
+    rawMessages: Message[],
+    model: Model | 'custom-model'
+): Promise<OpenAIMessage[]> {
     return populateOpenAIMessageText(rawMessages)
 }
 
