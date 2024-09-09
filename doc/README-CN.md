@@ -1,5 +1,5 @@
 <p align="right">
-  <a href="README.md">English</a> |
+  <a href="../README.md">English</a> |
   <a href="README-CN.md">简体中文</a>
 </p>
 
@@ -22,28 +22,28 @@
   <tr style="text-align: center">
     <td align="center" valign="middle">
       <a href='https://chatboxai.app/?c=download-windows'>
-        <img src='./doc/windows.png' style="height:24px; width: 24px" />
+        <img src='./statics/windows.png' style="height:24px; width: 24px" />
         <br />
         <b>Setup.exe</b>
       </a>
     </td>
     <td align="center" valign="middle">
       <a href='https://chatboxai.app/?c=download-mac-intel'>
-        <img src='./doc/mac.png' style="height:24px; width: 24px" />
+        <img src='./statics/mac.png' style="height:24px; width: 24px" />
         <br />
         <b>Intel</b>
       </a>
     </td>
     <td align="center" valign="middle">
       <a href='https://chatboxai.app/?c=download-mac-aarch'>
-        <img src='./doc/mac.png' style="height:24px; width: 24px" />
+        <img src='./statics/mac.png' style="height:24px; width: 24px" />
         <br />
         <b>M1/M2</b>
       </a>
     </td>
     <td align="center" valign="middle">
       <a href='https://chatboxai.app/?c=download-linux'>
-        <img src='./doc/linux.png' style="height:24px; width: 24px" />
+        <img src='./statics/linux.png' style="height:24px; width: 24px" />
         <br />
         <b>AppImage</b>
       </a>
@@ -54,13 +54,13 @@
 ### 下载移动端
 
 <a href='https://apps.apple.com/app/chatbox-ai/id6471368056' style='margin-right: 4px'>
-<img src='./doc/app_store.webp' style="height:38px;" />
+<img src='./statics/app_store.webp' style="height:38px;" />
 </a>
 <a href='https://play.google.com/store/apps/details?id=xyz.chatboxapp.chatbox' style='margin-right: 4px'>
-<img src='./doc/google_play.png' style="height:38px;" />
+<img src='./statics/google_play.png' style="height:38px;" />
 </a>
 <a href='https://chatboxai.app/zh/install?download=android_apk' style='margin-right: 4px; display: inline-flex; justify-content: center'>
-<img src='./doc/android.png' style="height:28px; display: inline-block" />
+<img src='./statics/android.png' style="height:28px; display: inline-block" />
 .APK
 </a>
 
@@ -70,7 +70,7 @@
 
 
 <h1 align="center">
-<img src='./doc/icon.png' width='30'>
+<img src='./statics/icon.png' width='30'>
 <span>
     Chatbox
     <span style="font-size:8px; font-weight: normal;">(Community Edition)</span>
@@ -100,9 +100,9 @@
 
 <a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 150px; height: 30px;" width="100" height="40" /></a>
 
-<img src="./dec/../doc/demo_desktop_1.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
+<img src="./statics/demo_desktop_1.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
 
-<img src="./dec/../doc/demo_desktop_2.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
+<img src="./statics/demo_desktop_2.jpg" alt="应用截图" style="box-shadow: 2px 2px 10px rgba(0,0,0,0.1); border: 1px solid #ddd; border-radius: 8px; width: 700px" />
 
 ## 特性
 
@@ -172,7 +172,7 @@
 
 ## 常见问题解答
 
--   [常见问题](./FAQ.md)
+-   [常见问题](./FAQ-CN.md)
 
 ## 如何贡献
 
@@ -224,7 +224,7 @@ npm run package:all
 
 | Paypal                                            | 微信支付                                        | 支付宝                                      |
 | ------------------------------------------------- | ----------------------------------------------- | -------------------------------------------- |
-| [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/wechat_pay.JPG" height="240" /> | <img src="./doc/ali_pay.PNG" height="240" /> |
+| [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./statics/wechat_pay.JPG" height="240" /> | <img src="./statics/ali_pay.PNG" height="240" /> |
 
 ## Star History
 
