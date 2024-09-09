@@ -6,7 +6,7 @@ import TemperatureSlider from '../../components/TemperatureSlider'
 import TopPSlider from '../../components/TopPSlider'
 import PasswordTextField from '../../components/PasswordTextField'
 import MaxContextMessageCountSlider from '../../components/MaxContextMessageCountSlider'
-import OpenAIModelSelect from '../../components/OpenAIModelSelect'
+import FeatherlessModelSelect from '../../components/FeatherlessModelSelect'
 import TextFieldReset from '@/components/TextFieldReset'
 
 interface ModelConfigProps {
@@ -49,15 +49,15 @@ export default function FeatherlessAISetting(props: ModelConfigProps) {
             <Accordion>
                 <AccordionSummary aria-controls="panel1a-content">
                     <Typography>
-                        {t('model')} & {t('token')}{' '}
+                        {t('featherlessModel')} & {t('token')}{' '}
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <OpenAIModelSelect
-                        model={settingsEdit.model}
-                        openaiCustomModel={settingsEdit.featherlessCustomModel}
-                        onChange={(model, featherlessCustomModel) =>
-                            setSettingsEdit({ ...settingsEdit, model, featherlessCustomModel })
+                    <FeatherlessModelSelect
+                        model={settingsEdit.featherlessModel}
+                        featherlessCustomModel={settingsEdit.featherlessCustomModel}
+                        onChange={(featherlessModel, featherlessCustomModel) =>
+                            setSettingsEdit({ ...settingsEdit, featherlessModel, featherlessCustomModel })
                         }
                     />
 

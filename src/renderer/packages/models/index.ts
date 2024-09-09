@@ -74,15 +74,7 @@ export function getModelDisplayName(settings: Settings, sessionType: SessionType
             }
             return settings.model || 'unknown'
         case ModelProvider.FeatherlessAI:
-            if (settings.model === 'custom-model') {
-                let name = settings.featherlessCustomModel || ''
-                if (name.length >= 10) {
-                    name = name.slice(0, 10) + '...'
-                }
-                return `FeatherlessAI Custom Model (${name})`
-            }
-            return settings.model || 'unknown'
-
+            return `featherless (${settings.featherlessModel})`
         case ModelProvider.ChatboxAI:
             const model = settings.chatboxAIModel || 'chatboxai-3.5'
             return model.replace('chatboxai-', 'Chatbox AI ')

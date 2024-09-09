@@ -1,33 +1,35 @@
 import { Message } from 'src/shared/types'
-import { ApiError, ChatboxAIAPIError } from './errors'
+import { ApiError } from './errors'
 import Base, { onResultChange } from './base'
 
 interface Options {
     featherlessKey: string
     apiHost: string
     apiPath?: string
-    model: Model | 'custom-model'
-    openaiCustomModel?: string
+    featherlessModel: Model | 'custom-model'
+    featherlessCustomModel?: string
     temperature: number
     topP: number
 }
 
 export default class FeatherlessAI extends Base {
     public name = 'FeatherlessAI'
-
     public options: Options
+
     constructor(options: Options) {
         super()
         this.options = options
-        if (this.options.apiHost && this.options.apiHost.trim().length === 0) {
-            this.options.apiHost = 'https://api.featerless.ai'
+        this.options.apiHost = 'https://api.featherless.ai' // Hardcoded API host
+
+        // Validate the model before proceeding to ensure only FeatherlessAI models are used
+        if (!this.isValidModel(this.options.featherlessModel)) {
+            throw new Error(`Invalid model: ${this.options.featherlessModel}. Only FeatherlessAI models are supported.`);
         }
-        if (this.options.apiHost && this.options.apiHost.startsWith('https://openrouter.ai/api/v1')) {
-            this.options.apiHost = 'https://openrouter.ai/api'
-        }
-        if (this.options.apiPath && !this.options.apiPath.startsWith('/')) {
-            this.options.apiPath = '/' + this.options.apiPath
-        }
+    }
+
+    // Ensure the model is from FeatherlessAI
+    isValidModel(model: string): boolean {
+        return model in featherlessModelConfigs || model === 'custom-model';
     }
 
     async callChatCompletion(
@@ -35,27 +37,9 @@ export default class FeatherlessAI extends Base {
         signal?: AbortSignal,
         onResultChange?: onResultChange
     ): Promise<string> {
-        try {
-            return await this._callChatCompletion(rawMessages, signal, onResultChange)
-        } catch (e) {
-            if (
-                e instanceof ApiError &&
-                e.message.includes('Invalid content type. image_url is only supported by certain models.')
-            ) {
-                throw ChatboxAIAPIError.fromCodeName('model_not_support_image', 'model_not_support_image')
-            }
-            throw e
-        }
-    }
+        let messages = await populateFeatherlessMessage(rawMessages, this.options.featherlessModel)
 
-    async _callChatCompletion(
-        rawMessages: Message[],
-        signal?: AbortSignal,
-        onResultChange?: onResultChange
-    ): Promise<string> {
-        let messages = await populateOpenAIMessage(rawMessages, this.options.model)
-
-        const model = this.options.model === 'custom-model' ? this.options.openaiCustomModel || '' : this.options.model
+        const model = this.options.featherlessModel === 'custom-model' ? this.options.featherlessCustomModel || '' : this.options.featherlessModel
         messages = injectModelSystemPrompt(model, messages)
 
         const apiPath = this.options.apiPath || '/v1/chat/completions'
@@ -66,9 +50,9 @@ export default class FeatherlessAI extends Base {
                 messages,
                 model,
                 max_tokens:
-                    this.options.model === 'custom-model'
+                    this.options.featherlessModel === 'custom-model'
                         ? undefined
-                        : openaiModelConfigs[this.options.model].maxTokens,
+                        : featherlessModelConfigs[this.options.featherlessModel].maxTokens,
                 temperature: this.options.temperature,
                 top_p: this.options.topP,
                 stream: true,
@@ -82,7 +66,7 @@ export default class FeatherlessAI extends Base {
             }
             const data = JSON.parse(message)
             if (data.error) {
-                throw new ApiError(`Error from OpenAI: ${JSON.stringify(data)}`)
+                throw new ApiError(`Error from FeatherlessAI: ${JSON.stringify(data)}`)
             }
             const text = data.choices[0]?.delta?.content
             if (text !== undefined) {
@@ -99,41 +83,43 @@ export default class FeatherlessAI extends Base {
         const headers: Record<string, string> = {
             Authorization: `Bearer ${this.options.featherlessKey}`,
             'Content-Type': 'application/json',
-            'X-Title': 'chatbox',
-        }
-        if (this.options.apiHost.includes('openrouter.ai')) {
-            headers['HTTP-Referer'] = 'https://localhost:3000/'
         }
         return headers
     }
 }
-//todo: implement the following functions
-// Ref: https://platform.openai.com/docs/models/gpt-4
-export const openaiModelConfigs = {
-    'anthracite-org/magnum-v2-72b': {
-        maxTokens: 4096,
-        maxContextTokens: 4096,
-    },
-}
-export type Model = keyof typeof openaiModelConfigs
-export const models = Array.from(Object.keys(openaiModelConfigs)).sort() as Model[]
 
-export async function populateOpenAIMessage(
+// Model configuration for FeatherlessAI
+export const featherlessModelConfigs = {
+    'anthracite-org/magnum-v2-72b': { maxTokens: 4096 },
+    'TheDrummer/Rocinante-12B-v1.1': { maxTokens: 4096 },
+    'MarinaraSpaghetti/NemoMix-Unleashed-12B': { maxTokens: 4096 },
+    'alpindale/magnum-72b-v1': { maxTokens: 4096 },
+    'alpindale/WizardLM-2-8x22B': { maxTokens: 4096 },
+    'Sao10K/L3-70B-Euryale-v2.1': { maxTokens: 4096 },
+    'Sao10K/L3-70B-Euryale-v2.2': { maxTokens: 4096 },
+    'TheDrummer/Rocinante-12B-v1': { maxTokens: 4096 },
+    'nothingiisreal/MN-12B-Starcannon-v3': { maxTokens: 4096 },
+    'PygmalionAI/mythalion-13b': { maxTokens: 4096 },
+}
+export type Model = keyof typeof featherlessModelConfigs
+export const models = Array.from(Object.keys(featherlessModelConfigs)).sort() as Model[]
+
+export async function populateFeatherlessMessage(
     rawMessages: Message[],
     model: Model | 'custom-model'
-): Promise<OpenAIMessage[]> {
-    return populateOpenAIMessageText(rawMessages)
+): Promise<FeatherlessMessage[]> {
+    return populateFeatherlessMessageText(rawMessages)
 }
 
-export async function populateOpenAIMessageText(rawMessages: Message[]): Promise<OpenAIMessage[]> {
-    const messages: OpenAIMessage[] = rawMessages.map((m) => ({
+export async function populateFeatherlessMessageText(rawMessages: Message[]): Promise<FeatherlessMessage[]> {
+    const messages: FeatherlessMessage[] = rawMessages.map((m) => ({
         role: m.role,
         content: m.content,
     }))
     return messages
 }
 
-export function injectModelSystemPrompt(model: string, messages: OpenAIMessage[]) {
+export function injectModelSystemPrompt(model: string, messages: FeatherlessMessage[]) {
     for (const message of messages) {
         if (message.role === 'system') {
             if (typeof message.content == 'string') {
@@ -145,7 +131,7 @@ export function injectModelSystemPrompt(model: string, messages: OpenAIMessage[]
     return messages
 }
 
-export interface OpenAIMessage {
+export interface FeatherlessMessage {
     role: 'system' | 'user' | 'assistant'
     content: string
     name?: string
