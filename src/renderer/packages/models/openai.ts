@@ -42,27 +42,36 @@ export default class OpenAI extends Base {
     }
 
     async _callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
-        let messages = await populateOpenAIMessage(rawMessages, this.options.model)
-
         const model = this.options.model === 'custom-model'
             ? this.options.openaiCustomModel || ''
             : this.options.model
-        messages = injectModelSystemPrompt(model, messages)
 
+        rawMessages = injectModelSystemPrompt(model, rawMessages)
+
+        if (model.startsWith('o1')) {
+            const messages = await populateO1Message(rawMessages)
+            return this.requestChatCompletionsNotStream({ model, messages }, signal, onResultChange)
+        }
+        const messages = await populateGPTMessage(rawMessages)
+        return this.requestChatCompletionsStream({
+            messages,
+            model,
+            // vision 模型的默认 max_tokens 极低，基本很难回答完整，因此手动设置为模型最大值
+            max_tokens: this.options.model === 'gpt-4-vision-preview'
+                ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
+                : undefined,
+            temperature: this.options.temperature,
+            top_p: this.options.topP,
+            stream: true,
+        }, signal, onResultChange)
+    }
+
+    async requestChatCompletionsStream(requestBody: Record<string, any>, signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         const apiPath = this.options.apiPath || '/v1/chat/completions'
         const response = await this.post(
             `${this.options.apiHost}${apiPath}`,
             this.getHeaders(),
-            {
-                messages,
-                model,
-                max_tokens: this.options.model === 'gpt-4-vision-preview'
-                    ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
-                    : undefined,
-                temperature: this.options.temperature,
-                top_p: this.options.topP,
-                stream: true,
-            },
+            requestBody,
             signal
         )
         let result = ''
@@ -84,6 +93,25 @@ export default class OpenAI extends Base {
         })
         return result
     }
+
+    async requestChatCompletionsNotStream(requestBody: Record<string, any>, signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+        const apiPath = this.options.apiPath || '/v1/chat/completions'
+        const response = await this.post(
+            `${this.options.apiHost}${apiPath}`,
+            this.getHeaders(),
+            requestBody,
+            signal
+        )
+        const json = await response.json()
+        if (json.error) {
+            throw new ApiError(`Error from OpenAI: ${JSON.stringify(json)}`)
+        }
+        if (onResultChange) {
+            onResultChange(json.choices[0].message.content)
+        }
+        return json.choices[0].message.content
+    }
+
 
     getHeaders() {
         const headers: Record<string, string> = {
@@ -151,6 +179,23 @@ export const openaiModelConfigs = {
         maxContextTokens: 128_000,
     },
 
+    'o1-preview': {
+        maxTokens: 32_768,
+        maxContextTokens: 128_000,
+    },
+    'o1-preview-2024-09-12': {
+        maxTokens: 32_768,
+        maxContextTokens: 128_000,
+    },
+    'o1-mini': {
+        maxTokens: 65_536,
+        maxContextTokens: 128_000,
+    },
+    'o1-mini-2024-09-12': {
+        maxTokens: 65_536,
+        maxContextTokens: 128_000,
+    },
+
     'gpt-4': {
         maxTokens: 4_096,
         maxContextTokens: 8_192,
@@ -209,11 +254,7 @@ export const openaiModelConfigs = {
 export type Model = keyof typeof openaiModelConfigs
 export const models = Array.from(Object.keys(openaiModelConfigs)).sort() as Model[]
 
-export async function populateOpenAIMessage(rawMessages: Message[], model: Model | 'custom-model'): Promise<OpenAIMessage[]> {
-    return populateOpenAIMessageText(rawMessages)
-}
-
-export async function populateOpenAIMessageText(rawMessages: Message[]): Promise<OpenAIMessage[]> {
+export async function populateGPTMessage(rawMessages: Message[]): Promise<OpenAIMessage[]> {
     const messages: OpenAIMessage[] = rawMessages.map((m) => ({
         role: m.role,
         content: m.content,
@@ -221,16 +262,29 @@ export async function populateOpenAIMessageText(rawMessages: Message[]): Promise
     return messages
 }
 
-export function injectModelSystemPrompt(model: string, messages: OpenAIMessage[]) {
-    for (const message of messages) {
-        if (message.role === 'system') {
-            if (typeof message.content == 'string') {
-                message.content = `Current model: ${model}\n\n` + message.content
-            }
-            break
-        }
-    }
+export async function populateO1Message(rawMessages: Message[]): Promise<OpenAIMessage[]> {
+    const messages: OpenAIMessage[] = rawMessages.map((m) => ({
+        role: m.role === 'system' ? 'user' : m.role,
+        content: m.content,
+    }))
     return messages
+}
+
+export function injectModelSystemPrompt(model: string, messages: Message[]) {
+    const metadataPrompt = `
+Current model: ${model}
+Current date: ${new Date().toISOString()}
+
+`
+    let hasInjected = false
+    return messages.map((m) => {
+        if (m.role === 'system' && !hasInjected) {
+            m = { ...m }
+            m.content = metadataPrompt + m.content
+            hasInjected = true
+        }
+        return m
+    })
 }
 
 export interface OpenAIMessage {
