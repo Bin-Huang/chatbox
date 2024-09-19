@@ -1,11 +1,9 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
-import {
-    Typography,
-    Grid,
-    useTheme,
-} from '@mui/material'
+import { Typography, Grid, useTheme, Checkbox } from '@mui/material'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import PersonIcon from '@mui/icons-material/Person'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -25,7 +23,7 @@ import * as scrollActions from '../stores/scrollActions'
 import Markdown from '@/components/Markdown'
 import '../static/Block.css'
 import MessageErrTips from './MessageErrTips'
-import * as dateFns from "date-fns"
+import * as dateFns from 'date-fns'
 import { cn } from '@/lib/utils'
 import { estimateTokensFromMessages } from '@/packages/token'
 import { countWord } from '@/packages/word-count'
@@ -39,6 +37,10 @@ export interface Props {
     collapseThreshold?: number
     hiddenButtonGroup?: boolean
     small?: boolean
+    isDeleteMode: boolean
+    onSelectMessage: (id: string, selected: boolean) => void
+    isSystem: boolean
+    isSelected: boolean
 }
 
 export default function Message(props: Props) {
@@ -54,11 +56,12 @@ export default function Message(props: Props) {
     const currentSessionPicUrl = useAtomValue(currsentSessionPicUrlAtom)
     const setOpenSettingWindow = useSetAtom(openSettingDialogAtom)
 
-    const { msg, className, collapseThreshold, hiddenButtonGroup, small } = props
+    const { msg, className, collapseThreshold, hiddenButtonGroup, small, isSelected } = props
 
-    const needCollapse = collapseThreshold
-        && (JSON.stringify(msg.content)).length > collapseThreshold
-        && (JSON.stringify(msg.content)).length - collapseThreshold > 50
+    const needCollapse =
+        collapseThreshold &&
+        JSON.stringify(msg.content).length > collapseThreshold &&
+        JSON.stringify(msg.content).length - collapseThreshold > 50
     const [isCollapsed, setIsCollapsed] = useState(needCollapse)
 
     const ref = useRef<HTMLDivElement>(null)
@@ -115,7 +118,7 @@ export default function Message(props: Props) {
 
     const CollapseButton = (
         <span
-            className='cursor-pointer inline-block font-bold text-blue-500 hover:text-white hover:bg-blue-500'
+            className="inline-block font-bold text-blue-500 cursor-pointer hover:text-white hover:bg-blue-500"
             onClick={() => setIsCollapsed(!isCollapsed)}
         >
             [{isCollapsed ? t('Expand') : t('Collapse')}]
@@ -137,7 +140,7 @@ export default function Message(props: Props) {
                     system: 'system-msg',
                     assistant: 'assistant-msg',
                 }[msg?.role || 'user'],
-                className,
+                className
             )}
             sx={{
                 margin: '0',
@@ -149,6 +152,23 @@ export default function Message(props: Props) {
             }}
         >
             <Grid container wrap="nowrap" spacing={1.5}>
+                <Grid item>
+                    <Checkbox
+                        checked={isSelected}
+                        onChange={(e) => {
+                            if (!props.isSystem) {
+                                props.onSelectMessage(props.msg.id, e.target.checked)
+                            }
+                        }}
+                        icon={<CheckBoxOutlineBlankIcon />}
+                        checkedIcon={<CheckBoxIcon />}
+                        sx={{
+                            visibility: props.isDeleteMode ? 'visible' : 'hidden',
+                            opacity: props.isSystem ? 0.5 : 1,
+                            pointerEvents: props.isSystem ? 'none' : 'auto',
+                        }}
+                    />
+                </Grid>
                 <Grid item>
                     <Box sx={{ marginTop: '8px' }}>
                         {
@@ -169,7 +189,7 @@ export default function Message(props: Props) {
                                             height: '28px',
                                         }}
                                     >
-                                        <SmartToyIcon fontSize='small' />
+                                        <SmartToyIcon fontSize="small" />
                                     </Avatar>
                                 ),
                                 user: (
@@ -178,52 +198,44 @@ export default function Message(props: Props) {
                                             width: '28px',
                                             height: '28px',
                                         }}
-                                        className='cursor-pointer'
+                                        className="cursor-pointer"
                                         onClick={() => setOpenSettingWindow('chat')}
                                     >
-                                        <PersonIcon fontSize='small' />
+                                        <PersonIcon fontSize="small" />
                                     </Avatar>
                                 ),
-                                system:
-                                        <Avatar
-                                            sx={{
-                                                backgroundColor: theme.palette.warning.main,
-                                                width: '28px',
-                                                height: '28px',
-                                            }}
-                                        >
-                                            <SettingsIcon fontSize='small' />
-                                        </Avatar>
+                                system: (
+                                    <Avatar
+                                        sx={{
+                                            backgroundColor: theme.palette.warning.main,
+                                            width: '28px',
+                                            height: '28px',
+                                        }}
+                                    >
+                                        <SettingsIcon fontSize="small" />
+                                    </Avatar>
+                                ),
                             }[msg.role]
                         }
                     </Box>
                 </Grid>
                 <Grid item xs sm container sx={{ width: '0px', paddingRight: '15px' }}>
                     <Grid item xs>
-                        <Box className={cn('msg-content', { 'msg-content-small': small })} sx={
-                            small ? { fontSize: theme.typography.body2.fontSize } : {}
-                        }>
-                            {
-                                enableMarkdownRendering && !isCollapsed ? (
-                                    <Markdown>
-                                        {content}
-                                    </Markdown>
-                                ) : (
-                                    <div>
-                                        {content}
-                                        {
-                                            needCollapse && isCollapsed && (
-                                                CollapseButton
-                                            )
-                                        }
-                                    </div>
-                                )
-                            }
+                        <Box
+                            className={cn('msg-content', { 'msg-content-small': small })}
+                            sx={small ? { fontSize: theme.typography.body2.fontSize } : {}}
+                        >
+                            {enableMarkdownRendering && !isCollapsed ? (
+                                <Markdown>{content}</Markdown>
+                            ) : (
+                                <div>
+                                    {content}
+                                    {needCollapse && isCollapsed && CollapseButton}
+                                </div>
+                            )}
                         </Box>
                         <MessageErrTips msg={msg} />
-                        {
-                            needCollapse && !isCollapsed && CollapseButton
-                        }
+                        {needCollapse && !isCollapsed && CollapseButton}
                         <Typography variant="body2" sx={{ opacity: 0.5, paddingBottom: '2rem' }}>
                             {tips.join(', ')}
                         </Typography>
