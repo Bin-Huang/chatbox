@@ -12,6 +12,7 @@
         "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
         "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
         "package:all": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never --win --mac --linux",
+        "release": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish always --win --mac --linux",
         "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
         "dev": "npm start",
         "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
