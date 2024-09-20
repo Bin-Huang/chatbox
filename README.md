@@ -59,7 +59,7 @@ This is the repository for the Chatbox Community Edition, open-sourced under the
 <a href='https://play.google.com/store/apps/details?id=xyz.chatboxapp.chatbox' style='margin-right: 4px'>
 <img src='./doc/statics/google_play.png' style="height:38px;" />
 </a>
-<a href='https://chatboxai.app/zh/install?download=android_apk' style='margin-right: 4px; display: inline-flex; justify-content: center'>
+<a href='https://chatboxai.app/install?download=android_apk' style='margin-right: 4px; display: inline-flex; justify-content: center'>
 <img src='./doc/statics/android.png' style="height:28px; display: inline-block" />
 .APK
 </a>
@@ -99,8 +99,8 @@ For more information: [chatboxai.app](https://chatboxai.app/)
 
 <a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 150px; height: 30px;" width="100" height="40" /></a>
 
-<a href="./doc/statics/demo_desktop_1.jpg"><img src="./doc/statics/demo_desktop_1.jpg" width="400"/></a>
-<a href="./doc/statics/demo_desktop_2.jpg"><img src="./doc/statics/demo_desktop_2.jpg" width="400"/></a>
+<img src="./doc/statics/snapshot_light.png" width="400"/>
+<img src="./doc/statics/snapshot_dark.png" width="400"/>
 
 <!-- <table>
 <tr>
