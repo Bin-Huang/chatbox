@@ -99,8 +99,12 @@ For more information: [chatboxai.app](https://chatboxai.app/)
 
 <a href="https://www.producthunt.com/posts/chatbox?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chatbox" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=429547&theme=light" alt="Chatbox - Better&#0032;UI&#0032;&#0038;&#0032;Desktop&#0032;App&#0032;for&#0032;ChatGPT&#0044;&#0032;Claude&#0032;and&#0032;other&#0032;LLMs&#0046; | Product Hunt" style="width: 150px; height: 30px;" width="100" height="40" /></a>
 
+<a href="./doc/statics/snapshot_light.png">
 <img src="./doc/statics/snapshot_light.png" width="400"/>
+</a>
+<a href="./doc/statics/snapshot_dark.png">
 <img src="./doc/statics/snapshot_dark.png" width="400"/>
+</a>
 
 <!-- <table>
 <tr>
