@@ -2,12 +2,15 @@ import { ElectronIPC } from "src/shared/electron-types"
 import { Config, Settings } from "src/shared/types"
 import { getOS } from './navigator'
 import { parseLocale } from '@/i18n/parser'
+import Exporter from './exporter'
 
 export class DesktopPlatform {
     public ipc: ElectronIPC
     constructor(ipc: ElectronIPC) {
         this.ipc = ipc
     }
+
+    public exporter = new Exporter()
 
     public async getVersion() {
         return this.ipc.invoke('getVersion')
