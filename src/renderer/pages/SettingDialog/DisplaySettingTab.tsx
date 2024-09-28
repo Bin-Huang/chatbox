@@ -29,7 +29,7 @@ export default function DisplaySettingTab(props: {
                 label={t('Font Size')}
                 value={settingsEdit.fontSize}
                 onChange={(fontSize) => setSettingsEdit({ ...settingsEdit, fontSize: fontSize })}
-                options={[10, 11, 12, 13, 14, 15, 16, 17, 18].map((size) => ({ value: size, label: size }))}
+                options={[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].map((size) => ({ value: size, label: size }))}
             />
             <SimpleSelect
                 label={t('theme')}
