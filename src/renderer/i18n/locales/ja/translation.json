@@ -253,5 +253,6 @@
     "Follow System": "システムに従う",
     "Light Mode": "ライトモード",
     "Dark Mode": "ダークモード",
-    "Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.": "リモートOllamaサービスがリモート接続できることを確認してください。詳細については、<a>このチュートリアル</a>を参照してください。"
+    "Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.": "リモートOllamaサービスがリモート接続できることを確認してください。詳細については、<a>このチュートリアル</a>を参照してください。",
+    "Auto-Generate Chat Titles": "チャットタイトルの自動生成"
 }

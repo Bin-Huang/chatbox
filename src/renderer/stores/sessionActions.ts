@@ -17,6 +17,7 @@ import platform from '../packages/platform'
 import { throttle } from 'lodash'
 import { countWord } from '@/packages/word-count'
 import { estimateTokensFromMessages } from '@/packages/token'
+import * as settingActions from './settingActions'
 
 export function create(newSession: Session) {
     const store = getDefaultStore()
@@ -172,6 +173,10 @@ export async function generate(sessionId: string, targetMsg: Message) {
     const configs = await platform.getConfig()
     const session = getSession(sessionId)
     if (!session) {
+        return
+    }
+    const autoGenerateTitle = settingActions.getAutoGenerateTitle()
+    if (!autoGenerateTitle) {
         return
     }
     const placeholder = '...'

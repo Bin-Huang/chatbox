@@ -253,5 +253,6 @@
     "Follow System": "跟隨系統",
     "Light Mode": "淺色模式",
     "Dark Mode": "深色模式",
-    "Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.": "請確保遠程 Ollama 服務能夠遠程連接。有關更多詳情，請參閱<a>此教程</a>。"
+    "Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.": "請確保遠程 Ollama 服務能夠遠程連接。有關更多詳情，請參閱<a>此教程</a>。",
+    "Auto-Generate Chat Titles": "自動生成聊天標題"
 }

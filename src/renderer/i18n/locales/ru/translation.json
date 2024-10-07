@@ -253,5 +253,6 @@
     "Follow System": "Следовать системе",
     "Light Mode": "Светлый режим",
     "Dark Mode": "Темный режим",
-    "Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.": "Пожалуйста, убедитесь, что удаленный сервис Ollama может подключаться удаленно. Для получения дополнительной информации обратитесь к <a>этому руководству</a>."
+    "Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.": "Пожалуйста, убедитесь, что удаленный сервис Ollama может подключаться удаленно. Для получения дополнительной информации обратитесь к <a>этому руководству</a>.",
+    "Auto-Generate Chat Titles": "Автоматически генерировать названия чатов"
 }

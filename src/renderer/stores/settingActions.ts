@@ -47,3 +47,8 @@ export function getLicenseKey() {
     const settings = store.get(atoms.settingsAtom)
     return settings.licenseKey
 }
+
+export function getAutoGenerateTitle() {
+    const store = getDefaultStore()
+    return store.get(atoms.autoGenerateTitleAtom)
+}

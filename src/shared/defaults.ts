@@ -44,6 +44,8 @@ export function settings(): Settings {
         siliconCloudHost: 'https://api.siliconflow.cn',
         siliconCloudKey: '',
         siliconCloudModel: 'THUDM/glm-4-9b-chat',
+
+        autoGenerateTitle: true,
     }
 }
 

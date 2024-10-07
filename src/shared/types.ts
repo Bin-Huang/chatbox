@@ -130,6 +130,8 @@ export interface Settings extends ModelSettings {
     userAvatarKey?: string
 
     enableMarkdownRendering: boolean
+
+    autoGenerateTitle: boolean
 }
 
 export type Language = 'en' | 'zh-Hans' | 'zh-Hant' | 'ja' | 'ko' | 'ru' | 'de' | 'fr'

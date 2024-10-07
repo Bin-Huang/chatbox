@@ -47,6 +47,19 @@ export default function ChatSettingTab(props: {
             <FormGroup>
                 <FormControlLabel
                     control={<Switch />}
+                    label={t('Auto-Generate Chat Titles')}
+                    checked={settingsEdit.autoGenerateTitle}
+                    onChange={(e, checked) => {
+                        setSettingsEdit({
+                            ...settingsEdit,
+                            autoGenerateTitle: checked,
+                        })
+                    }}
+                />
+            </FormGroup>
+            <FormGroup>
+                <FormControlLabel
+                    control={<Switch />}
                     label={t('Spell Check')}
                     checked={settingsEdit.spellCheck}
                     onChange={(e, checked) => {
