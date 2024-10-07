@@ -16,7 +16,7 @@ export async function checkNeedUpdate(version: string, os: string, config: Confi
     type Response = {
         need_update?: boolean
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/chatbox_need_update/${version}`, {
+    const res = await ofetch<Response>(`${API_ORIGIN}/ce/chatbox_need_update/${version}`, {
         method: 'POST',
         retry: 3,
         body: {
