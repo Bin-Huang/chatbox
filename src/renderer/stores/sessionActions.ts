@@ -256,8 +256,11 @@ async function _generateName(sessionId: string, modifyName: (sessionId: string, 
     try {
         const model = getModel(settings, configs)
         let name = await model.chat(promptFormat.nameConversation(
-            session.messages.filter(m => m.role !== 'system')
-                .slice(0, 4))
+            session.messages
+                .filter(m => m.role !== 'system')
+                .slice(0, 4),
+            settings.language,
+        ),
         )
         name = name.replace(/['"“”]/g, '')
         name = name.slice(0, 10)
