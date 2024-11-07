@@ -15,8 +15,7 @@ export default function MessageList(props: Props) {
         setMessageListRef(ref)
     }, [ref])
     return (
-        <div className={cn('w-full h-3/4 mx-auto')}>
-            <div className='overflow-y-auto h-full pr-0 pl-0' ref={ref}>
+            <div className='overflow-y-auto w-full h-full pr-0 pl-0' ref={ref}>
                 {
                     currentMessageList.map((msg, index) => (
                         <Message
@@ -31,6 +30,5 @@ export default function MessageList(props: Props) {
                     ))
                 }
             </div>
-        </div>
     )
 }
