@@ -82,7 +82,7 @@ export default function Sidebar(props: Props) {
 
                     <Divider variant="fullWidth" />
 
-                    <MenuList sx={{ marginBottom: '20px' }}>
+                    <MenuList>
                         <MenuItem onClick={handleCreateNewSession} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
                             <ListItemIcon>
                                 <IconButton>
