@@ -35,8 +35,8 @@ export default function OpenAISetting(props: ModelConfigProps) {
                     fullWidth
                     variant="outlined"
                     value={settingsEdit.apiHost}
-                    placeholder="https://api.openai.com"
-                    defaultValue='https://api.openai.com'
+                    placeholder="https://api.openai.com/v1"
+                    defaultValue='https://api.openai.com/v1'
                     onValueChange={(value) => {
                         value = value.trim()
                         if (value.length > 4 && !value.startsWith('http')) {
