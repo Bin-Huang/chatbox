@@ -119,7 +119,8 @@ export default class OpenAI extends Base {
             'Content-Type': 'application/json',
         }
         if (this.options.apiHost.includes('openrouter.ai')) {
-            headers['HTTP-Referer'] = 'https://localhost:3000/'
+            headers['HTTP-Referer'] = 'https://chatboxai.app'
+            headers['X-Title'] = 'Chatbox AI'
         }
         return headers
     }
