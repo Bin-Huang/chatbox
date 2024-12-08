@@ -7,6 +7,7 @@ import { OllamaHostInput, OllamaModelSelect } from './OllamaSetting'
 import SiliconFlowSetting from './SiliconFlowSetting'
 import MaxContextMessageCountSlider from '@/components/MaxContextMessageCountSlider'
 import TemperatureSlider from '@/components/TemperatureSlider'
+import ClaudeSetting from './ClaudeSetting'
 
 interface ModelConfigProps {
     settingsEdit: ModelSettings
@@ -51,6 +52,9 @@ export default function ModelSettingTab(props: ModelConfigProps) {
             )}
              {settingsEdit.aiProvider === ModelProvider.SiliconFlow && (
                 <SiliconFlowSetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
+            )}
+            {settingsEdit.aiProvider === ModelProvider.Claude && (
+                <ClaudeSetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
             )}
         </Box>
     )

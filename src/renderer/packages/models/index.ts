@@ -1,8 +1,9 @@
 import OpenAI from './openai'
-import { Settings, Config, ModelProvider, SessionType, ModelSettings, Session } from '../../../shared/types'
+import { Settings, Config, ModelProvider, SessionType } from '../../../shared/types'
 import ChatboxAI from './chatboxai'
 import Ollama from './ollama'
 import SiliconFlow from './siliconflow'
+import Claude from './claude'
 
 export function getModel(setting: Settings, config: Config) {
     switch (setting.aiProvider) {
@@ -10,6 +11,8 @@ export function getModel(setting: Settings, config: Config) {
             return new ChatboxAI(setting, config)
         case ModelProvider.OpenAI:
             return new OpenAI(setting)
+        case ModelProvider.Claude:
+            return new Claude(setting)
         case ModelProvider.Ollama:
             return new Ollama(setting)
         case ModelProvider.SiliconFlow:
@@ -21,6 +24,7 @@ export function getModel(setting: Settings, config: Config) {
 
 export const aiProviderNameHash = {
     [ModelProvider.OpenAI]: 'OpenAI API',
+    [ModelProvider.Claude]: 'Claude API',
     [ModelProvider.ChatboxAI]: 'Chatbox AI',
     [ModelProvider.Ollama]: 'Ollama',
     [ModelProvider.SiliconFlow]: 'SiliconCloud API',
@@ -36,6 +40,11 @@ export const AIModelProviderMenuOptionList = [
     {
         value: ModelProvider.OpenAI,
         label: aiProviderNameHash[ModelProvider.OpenAI],
+        disabled: false,
+    },
+    {
+        value: ModelProvider.Claude,
+        label: aiProviderNameHash[ModelProvider.Claude],
         disabled: false,
     },
     {
@@ -64,6 +73,8 @@ export function getModelDisplayName(settings: Settings, sessionType: SessionType
                 return `OpenAI Custom Model (${name})`
             }
             return settings.model || 'unknown'
+        case ModelProvider.Claude:
+            return settings.claudeModel || 'unknown'
         case ModelProvider.ChatboxAI:
             const model = settings.chatboxAIModel || 'chatboxai-3.5'
             return model.replace('chatboxai-', 'Chatbox AI ')
