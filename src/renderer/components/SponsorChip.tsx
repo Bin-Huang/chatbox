@@ -13,14 +13,14 @@ export interface Props {
 export default function SponsorChip(props: Props) {
     const [showSponsorAD, setShowSponsorAD] = useState(true)
     const [sponsorAD, setSponsorAD] = useState<SponsorAd | null>(null)
-    useEffect(() => {
-        ;(async () => {
-            const ad = await remote.getSponsorAd()
-            if (ad) {
-                setSponsorAD(ad)
-            }
-        })()
-    }, [props.sessionId])
+    // useEffect(() => {
+    //     ;(async () => {
+    //         const ad = await remote.getSponsorAd()
+    //         if (ad) {
+    //             setSponsorAD(ad)
+    //         }
+    //     })()
+    // }, [props.sessionId])
     if (!showSponsorAD || !sponsorAD) {
         return <></>
     }
