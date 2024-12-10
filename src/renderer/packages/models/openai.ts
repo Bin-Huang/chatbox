@@ -20,11 +20,11 @@ export default class OpenAI extends Base {
         super()
         this.options = options
         if (this.options.apiHost && this.options.apiHost.trim().length === 0) {
-            this.options.apiHost = 'https://api.openai.com'
+            this.options.apiHost = 'https://api.openai.com/v1'
         }
-        if (this.options.apiHost && this.options.apiHost.startsWith('https://openrouter.ai/api/v1')) {
-            this.options.apiHost = 'https://openrouter.ai/api'
-        }
+        // if (this.options.apiHost && this.options.apiHost.startsWith('https://openrouter.ai/api/v1')) {
+        //     this.options.apiHost = 'https://openrouter.ai/api'
+        // }
         if (this.options.apiPath && !this.options.apiPath.startsWith('/')) {
             this.options.apiPath = '/' + this.options.apiPath
         }
@@ -67,7 +67,7 @@ export default class OpenAI extends Base {
     }
 
     async requestChatCompletionsStream(requestBody: Record<string, any>, signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
-        const apiPath = this.options.apiPath || '/v1/chat/completions'
+        const apiPath = this.options.apiPath || '/chat/completions'
         const response = await this.post(
             `${this.options.apiHost}${apiPath}`,
             this.getHeaders(),
@@ -95,7 +95,7 @@ export default class OpenAI extends Base {
     }
 
     async requestChatCompletionsNotStream(requestBody: Record<string, any>, signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
-        const apiPath = this.options.apiPath || '/v1/chat/completions'
+        const apiPath = this.options.apiPath || '/chat/completions'
         const response = await this.post(
             `${this.options.apiHost}${apiPath}`,
             this.getHeaders(),
