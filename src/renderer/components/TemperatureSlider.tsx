@@ -62,7 +62,7 @@ export default function TemperatureSlider(props: Props) {
                         valueLabelDisplay="auto"
                         step={0.01}
                         min={0}
-                        max={1}
+                        max={2}
                         marks={[
                             {
                                 value: 0.2,
