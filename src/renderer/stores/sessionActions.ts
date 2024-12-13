@@ -61,7 +61,7 @@ export function createEmpty(type: 'chat') {
 export function switchCurrentSession(sessionId: string) {
     const store = getDefaultStore()
     store.set(atoms.currentSessionIdAtom, sessionId)
-    scrollActions.scrollToBottom()
+    scrollActions.scrollToBottom(true)
 }
 
 export function remove(session: Session) {

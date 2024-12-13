@@ -98,7 +98,7 @@ export default function Message(props: Props) {
 
     useEffect(() => {
         if (msg.generating) {
-            scrollActions.scrollToBottom()
+            scrollActions.scrollToBottom(false)
         }
     }, [msg.content])
 
