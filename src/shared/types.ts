@@ -77,6 +77,10 @@ export interface ModelSettings {
     model: Model | 'custom-model'
     openaiCustomModel?: string
 
+    //LMStudio
+    LMStudioHost: string
+    LMStudioModel: string
+
     // azure
     azureEndpoint: string
     azureDeploymentName: string
