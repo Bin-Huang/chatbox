@@ -1,18 +1,18 @@
 import { Message } from 'src/shared/types'
 import Base, { onResultChange } from './base'
 import { ApiError } from './errors'
-import { log } from 'console'
 
-// import ollama from 'ollama/browser'
+// import LMStudio from 'LMStudio/browser'
 
 interface Options {
-    ollamaHost: string
-    ollamaModel: string
+    LMStudioHost: string
+    LMStudioModel: string
     temperature: number
+
 }
 
-export default class Ollama extends Base {
-    public name = 'Ollama'
+export default class LMStudio extends Base {
+    public name = 'LMStudio'
 
     public options: Options
     constructor(options: Options) {
@@ -21,15 +21,15 @@ export default class Ollama extends Base {
     }
 
     getHost(): string {
-        let host = this.options.ollamaHost.trim()
+        let host = this.options.LMStudioHost.trim()
         if (host.endsWith('/')) {
             host = host.slice(0, -1)
         }
         if (!host.startsWith('http')) {
             host = 'http://' + host
         }
-        if (host === 'http://localhost:11434') {
-            host = 'http://127.0.0.1:11434'
+        if (host === 'http://localhost:1234') {
+            host = 'http://127.0.0.1:1234'
         }
         return host
     }
@@ -37,42 +37,43 @@ export default class Ollama extends Base {
     async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         const messages = rawMessages.map(m => ({ role: m.role, content: m.content }))
         const res = await this.post(
-            `${this.getHost()}/api/chat`,
+            `${this.getHost()}/v1/chat/completions`,
             { 'Content-Type': 'application/json' },
             {
-                model: this.options.ollamaModel,
                 messages,
+                model: this.options.LMStudioModel,
+                temperature: this.options.temperature,
                 stream: true,
-                options: {
-                    temperature: this.options.temperature,
-                }
+                
             },
             signal,
         )
         let result = ''
-        await this.handleNdjson(res, (message) => {
-            const data = JSON.parse(message)
-            if (data['done']) {
+        await this.handleSSE(res, (message) => {
+            if (message === '[DONE]') {
                 return
             }
-            const word = data['message']?.['content']
-            if (! word) {
-                throw new ApiError(JSON.stringify(data))
+            const data = JSON.parse(message)
+            if (data.error) {
+                throw new ApiError(`Error from LMSdudio: ${JSON.stringify(data)}`)
             }
-            result += word
-            if (onResultChange) {
-                onResultChange(result)
+            const text = data.choices[0]?.delta?.content
+            if (text !== undefined) {
+                result += text
+                if (onResultChange) {
+                    onResultChange(result)
+                }
             }
         })
         return result
     }
 
     async listModels(): Promise<string[]> {
-        const res = await this.get(`${this.getHost()}/api/tags`, {})
+        const res = await this.get(`${this.getHost()}/v1/models`, {})
         const json = await res.json()
-        if (! json['models']) {
+        if (! json['data']) {
             throw new ApiError(JSON.stringify(json))
         }
-        return json['models'].map((m: any) => m['name'])
+        return json['data'].map((m: any) => m['id'])
     }
 }
