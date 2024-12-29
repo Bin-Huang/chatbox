@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
 import {
     Button,
     Paper,
     Badge,
     Box,
-    Divider,
     Dialog,
     DialogContent,
     DialogActions,
@@ -14,14 +12,9 @@ import {
 import iconPNG from '../static/icon.png'
 import { useTranslation } from 'react-i18next'
 import platform from '../packages/platform'
-import * as remote from '../packages/remote'
-import { SponsorAboutBanner } from '../../shared/types'
-import * as i18n from '../i18n'
 import useVersion from '../hooks/useVersion'
 import * as atoms from '../stores/atoms'
 import { useAtomValue } from 'jotai'
-import Markdown from '@/components/Markdown'
-import { trackingEvent } from '@/packages/event'
 
 interface Props {
     open: boolean
@@ -33,15 +26,6 @@ export default function AboutWindow(props: Props) {
     const theme = useTheme()
     const language = useAtomValue(atoms.languageAtom)
     const versionHook = useVersion()
-    const [sponsorBanners, setSponsorBanners] = useState<SponsorAboutBanner[]>([])
-    useEffect(() => {
-        if (props.open) {
-            remote.listSponsorAboutBanner().then(setSponsorBanners)
-            trackingEvent('about_window', { event_category: 'screen_view' })
-        } else {
-            setSponsorBanners([])
-        }
-    }, [props.open])
     return (
         <Dialog open={props.open} onClose={props.close} fullWidth>
             <DialogTitle>{t('About Chatbox')}</DialogTitle>
@@ -135,68 +119,6 @@ export default function AboutWindow(props: Props) {
                         </Button> */}
                     </div>
                 </Paper>
-
-                {sponsorBanners.length > 0 && (
-                    <Divider sx={{ margin: '10px 0 5px 0', opacity: 0.8 }}>
-                        {t('Special thanks to the following sponsors:')}
-                    </Divider>
-                )}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        '& > :not(style)': {
-                            m: 1,
-                        },
-                        justifyContent: 'center',
-                        opacity: 0.8,
-                    }}
-                >
-                    {sponsorBanners.map((item) => {
-                        return (
-                            <Paper
-                                key={item.name}
-                                elevation={1}
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    flexDirection: 'column',
-                                    textAlign: 'center',
-                                    autoflowY: 'auto',
-                                    width: '100%',
-                                    height: '128px',
-                                }}
-                            >
-                                {item.type === 'picture' ? (
-                                    <>
-                                        <a href={item.link} target="_blank">
-                                            <img
-                                                style={{
-                                                    maxWidth: '90%',
-                                                    maxHeight: '100px',
-                                                }}
-                                                src={item.pictureUrl}
-                                            />
-                                        </a>
-                                    </>
-                                ) : (
-                                    <>
-                                        <a href={item.link} target="_blank">
-                                            <img style={{ maxWidth: '140px' }} src={item.pictureUrl} />
-                                        </a>
-                                        <a href={item.link} target="_blank">
-                                            <b>{item.title}</b>
-                                        </a>
-                                        <a href={item.link} target="_blank">
-                                            <span>{item.description}</span>
-                                        </a>
-                                    </>
-                                )}
-                            </Paper>
-                        )
-                    })}
-                </Box>
                 {/* <Box>
                     <h4 className="text-center mb-1 mt-2">{t('Changelog')}</h4>
                     <Box className="px-6">

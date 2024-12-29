@@ -28,26 +28,6 @@ export async function checkNeedUpdate(version: string, os: string, config: Confi
     return !!res['need_update']
 }
 
-export async function getSponsorAd(): Promise<null | SponsorAd> {
-    type Response = {
-        data: null | SponsorAd
-    }
-    const res = await ofetch<Response>(`${API_ORIGIN}/sponsor_ad`, {
-        retry: 3,
-    })
-    return res['data'] || null
-}
-
-export async function listSponsorAboutBanner() {
-    type Response = {
-        data: SponsorAboutBanner[]
-    }
-    const res = await ofetch<Response>(`${API_ORIGIN}/sponsor_ad`, {
-        retry: 3,
-    })
-    return res['data'] || []
-}
-
 export async function listCopilots(lang: string) {
     type Response = {
         data: CopilotDetail[]
