@@ -23,6 +23,12 @@ export const modelConfig = {
         vision: true,
     },
 
+    'claude-3-5-haiku-20241022': {
+        contextWindow: 200_000,
+        maxOutput: 4096,
+        vision: true,
+    },
+
     'claude-3-opus-20240229': {
         contextWindow: 200_000,
         maxOutput: 4096,
