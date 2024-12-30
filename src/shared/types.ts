@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Model } from '../renderer/packages/models/openai'
 import * as siliconflow from '../renderer/packages/models/siliconflow'
+import { ClaudeModel } from '../renderer/packages/models/claude'
 
 export const MessageRoleEnum = {
     System: 'system',
@@ -64,6 +65,7 @@ export function createMessage(role: MessageRole = MessageRoleEnum.User, content:
 export enum ModelProvider {
     ChatboxAI = 'chatbox-ai',
     OpenAI = 'openai',
+    Claude = 'claude',
     Ollama = 'ollama',
     SiliconFlow = 'silicon-flow',
 }
@@ -76,6 +78,11 @@ export interface ModelSettings {
     apiHost: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
+
+    // claude
+    claudeApiKey: string
+    claudeApiHost: string
+    claudeModel: ClaudeModel
 
     // azure
     azureEndpoint: string

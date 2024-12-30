@@ -21,6 +21,10 @@ export function settings(): Settings {
         // maxContextSize: "4000",
         // maxTokens: "2048",
 
+        claudeApiKey: '',
+        claudeApiHost: 'https://api.anthropic.com',
+        claudeModel: 'claude-3-5-sonnet-20241022',
+
         ollamaHost: 'http://127.0.0.1:11434',
         ollamaModel: '',
 
