@@ -106,9 +106,6 @@ export default class SiliconFlow extends Base {
             throw new ApiError(JSON.stringify(json))
         }
         return json['data'].map((m: any) => m.id)
-    }
-}
-
 // Ref: https://siliconflow.cn/zh-cn/models
 export const siliconflowModelConfigs = {
     'Qwen/Qwen2-72B-Instruct': { maxTokens: 32768 },

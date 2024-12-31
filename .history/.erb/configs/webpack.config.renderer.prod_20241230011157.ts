@@ -16,10 +16,14 @@ import checkNodeEnv from '../scripts/check-node-env'
 import deleteSourceMaps from '../scripts/delete-source-maps'
 
 checkNodeEnv('production')
-deleteSourceMaps()
+
+let enableSourceMap = false
+if (! enableSourceMap) {
+    deleteSourceMaps()
+}
 
 const configuration: webpack.Configuration = {
-    devtool: 'source-map',
+    devtool: enableSourceMap ? 'source-map' : false,
 
     mode: 'production',
 
@@ -51,32 +55,12 @@ const configuration: webpack.Configuration = {
                         },
                     },
                     'sass-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            postcssOptions: {
-                                plugins: [require('tailwindcss'), require('autoprefixer')],
-                            },
-                        },
-                    },
                 ],
                 include: /\.module\.s?(c|a)ss$/,
             },
             {
                 test: /\.s?(a|c)ss$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            postcssOptions: {
-                                plugins: [require('tailwindcss'), require('autoprefixer')],
-                            },
-                        },
-                    },
-                ],
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader', 'postcss-loader'],
                 exclude: /\.module\.s?(c|a)ss$/,
             },
             // Fonts
@@ -113,12 +97,7 @@ const configuration: webpack.Configuration = {
 
     optimization: {
         minimize: true,
-        minimizer: [
-            new TerserPlugin({
-                parallel: true,
-            }),
-            new CssMinimizerPlugin(),
-        ],
+        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     },
 
     plugins: [

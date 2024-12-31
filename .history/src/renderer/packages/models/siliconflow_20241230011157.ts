@@ -94,19 +94,6 @@ export default class SiliconFlow extends Base {
         }
         return headers
     }
-
-    async listModels(): Promise<string[]> {
-        const res = await this.get(`${this.options.apiHost}/v1/models`, {
-            headers: {
-                'Authorization': `Bearer ${this.options.siliconCloudKey}`,
-            },
-        })
-        const json = await res.json()
-        if (!json['data']) {
-            throw new ApiError(JSON.stringify(json))
-        }
-        return json['data'].map((m: any) => m.id)
-    }
 }
 
 // Ref: https://siliconflow.cn/zh-cn/models

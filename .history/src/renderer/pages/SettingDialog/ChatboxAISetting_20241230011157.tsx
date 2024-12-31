@@ -118,8 +118,7 @@ export default function ChatboxAISetting(props: ModelConfigProps) {
                 {activated && (
                     <ChatboxAIModelSelect
                         value={settingsEdit.chatboxAIModel}
-                        customModel={settingsEdit.openaiCustomModel}
-                        onChange={(model, customModel) => setSettingsEdit({ ...settingsEdit, chatboxAIModel: model, openaiCustomModel: customModel })}
+                        onChange={(v) => setSettingsEdit({ ...settingsEdit, chatboxAIModel: v })}
                     />
                 )}
                 <DetailCard licenseKey={settingsEdit.licenseKey} activated={activated} />

@@ -1,20 +1,16 @@
 import { Select, MenuItem, FormControl, InputLabel, TextField } from '@mui/material'
-import { ChatboxAIModel, ModelSettings } from '../../shared/types'
+import { ModelSettings } from '../../shared/types'
 import { useTranslation } from 'react-i18next'
+import { models } from '../packages/models/openai'
 
 export interface Props {
-    value?: ChatboxAIModel | 'custom-model'
-    customModel?: string
-    onChange(value?: ChatboxAIModel | 'custom-model', customModel?: string): void
+    model: ModelSettings['model']
+    openaiCustomModel: ModelSettings['openaiCustomModel']
+    onChange(model: ModelSettings['model'], openaiCustomModel: ModelSettings['openaiCustomModel']): void
     className?: string
 }
 
-const chatboxAIModelLabelHash: { [key: string]: string } = {
-    'chatboxai-3.5': 'Chatbox AI 3.5',
-    'chatboxai-4': 'Chatbox AI 4',
-}
-
-export default function ChatboxAIModelSelect(props: Props) {
+export default function OpenAIModelSelect(props: Props) {
     const { t } = useTranslation()
     return (
         <FormControl fullWidth variant="outlined" margin="dense" className={props.className}>
@@ -22,28 +18,28 @@ export default function ChatboxAIModelSelect(props: Props) {
             <Select
                 label={t('model')}
                 id="model-select"
-                value={props.value || 'chatboxai-3.5'}
-                onChange={(e) => props.onChange(e.target.value as ChatboxAIModel | 'custom-model', props.customModel)}
+                value={props.model}
+                onChange={(e) => props.onChange(e.target.value as ModelSettings['model'], props.openaiCustomModel)}
             >
-                {Object.entries(chatboxAIModelLabelHash).map(([value, label]) => (
-                    <MenuItem key={value} value={value}>
-                        {label}
+                {models.map((model) => (
+                    <MenuItem key={model} value={model}>
+                        {model}
                     </MenuItem>
                 ))}
                 <MenuItem key="custom-model" value={'custom-model'}>
                     {t('Custom Model')}
                 </MenuItem>
             </Select>
-            {props.value === 'custom-model' && (
+            {props.model === 'custom-model' && (
                 <TextField
                     margin="dense"
                     label={t('Custom Model Name')}
                     type="text"
                     fullWidth
                     variant="outlined"
-                    value={props.customModel || ''}
+                    value={props.openaiCustomModel || ''}
                     onChange={(e) =>
-                        props.onChange(props.value, e.target.value.trim())
+                        props.onChange(props.model, e.target.value.trim())
                     }
                 />
             )}

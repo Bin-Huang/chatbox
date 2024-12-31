@@ -59,8 +59,6 @@ export default function OpenAISetting(props: ModelConfigProps) {
                         onChange={(model, openaiCustomModel) =>
                             setSettingsEdit({ ...settingsEdit, model, openaiCustomModel })
                         }
-                        apiHost={settingsEdit.apiHost}
-                        apiKey={settingsEdit.openaiKey}
                     />
 
                     <TemperatureSlider

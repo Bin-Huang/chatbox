@@ -88,8 +88,7 @@ export interface ModelSettings {
 
     // chatbox-ai
     licenseKey?: string
-    chatboxAIModel?: ChatboxAIModel | 'custom-model'
-    chatboxAICustomModel?: string
+    chatboxAIModel?: ChatboxAIModel
     licenseInstances?: {
         [key: string]: string
     }

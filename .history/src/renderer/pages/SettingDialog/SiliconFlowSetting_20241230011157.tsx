@@ -6,46 +6,26 @@ import TemperatureSlider from '../../components/TemperatureSlider'
 import TopPSlider from '../../components/TopPSlider'
 import PasswordTextField from '../../components/PasswordTextField'
 import MaxContextMessageCountSlider from '../../components/MaxContextMessageCountSlider'
-import OpenAIModelSelect from '../../components/OpenAIModelSelect'
-import TextFieldReset from '@/components/TextFieldReset'
+import SiliconFlowModelSelect from '../../components/SiliconFlowModelSelect'
 
 interface ModelConfigProps {
     settingsEdit: ModelSettings
     setSettingsEdit: (settings: ModelSettings) => void
 }
 
-export default function OpenAISetting(props: ModelConfigProps) {
+export default function SiliconFlowSetting(props: ModelConfigProps) {
     const { settingsEdit, setSettingsEdit } = props
     const { t } = useTranslation()
     return (
         <Box>
             <PasswordTextField
                 label={t('api key')}
-                value={settingsEdit.openaiKey}
+                value={settingsEdit.siliconCloudKey}
                 setValue={(value) => {
-                    setSettingsEdit({ ...settingsEdit, openaiKey: value })
+                    setSettingsEdit({ ...settingsEdit, siliconCloudKey: value })
                 }}
                 placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
             />
-            <>
-                <TextFieldReset
-                    margin="dense"
-                    label={t('api host')}
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={settingsEdit.apiHost}
-                    placeholder="https://api.openai.com"
-                    defaultValue='https://api.openai.com'
-                    onValueChange={(value) => {
-                        value = value.trim()
-                        if (value.length > 4 && !value.startsWith('http')) {
-                            value = 'https://' + value
-                        }
-                        setSettingsEdit({ ...settingsEdit, apiHost: value })
-                    }}
-                />
-            </>
             <Accordion>
                 <AccordionSummary aria-controls="panel1a-content">
                     <Typography>
@@ -53,14 +33,12 @@ export default function OpenAISetting(props: ModelConfigProps) {
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <OpenAIModelSelect
-                        model={settingsEdit.model}
-                        openaiCustomModel={settingsEdit.openaiCustomModel}
-                        onChange={(model, openaiCustomModel) =>
-                            setSettingsEdit({ ...settingsEdit, model, openaiCustomModel })
+                    <SiliconFlowModelSelect
+                        model={settingsEdit.siliconCloudModel}
+                        siliconflowCustomModel={settingsEdit.openaiCustomModel}
+                        onChange={(siliconCloudModel, openaiCustomModel) =>
+                            setSettingsEdit({ ...settingsEdit, siliconCloudModel, openaiCustomModel })
                         }
-                        apiHost={settingsEdit.apiHost}
-                        apiKey={settingsEdit.openaiKey}
                     />
 
                     <TemperatureSlider

@@ -8,8 +8,7 @@ export const chatboxAIModels: ChatboxAIModel[] = ['chatboxai-3.5', 'chatboxai-4'
 
 interface Options {
     licenseKey?: string
-    chatboxAIModel?: ChatboxAIModel | 'custom-model'
-    chatboxAICustomModel?: string
+    chatboxAIModel?: ChatboxAIModel
     licenseInstances?: {
         [key: string]: string
     }
@@ -35,17 +34,15 @@ export default class ChatboxAI extends Base {
 
     async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         const messages = await populateChatboxAIMessage(rawMessages)
-        const model = this.options.chatboxAIModel === 'custom-model' 
-            ? this.options.chatboxAICustomModel || 'chatboxai-3.5'
-            : this.options.chatboxAIModel || 'chatboxai-3.5'
-
         const response = await this.post(
-            `${API_ORIGIN}/v1/chat/completions`,
+            `${API_ORIGIN}/api/ai/chat`,
             this.getHeaders(),
             {
+                uuid: this.config.uuid,
+                model: this.options.chatboxAIModel || 'chatboxai-3.5',
                 messages,
-                model,
                 temperature: this.options.temperature,
+                language: this.options.language,
                 stream: true,
             },
             signal

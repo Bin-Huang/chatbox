@@ -130,7 +130,6 @@
         "@dnd-kit/utilities": "^3.2.1",
         "@emotion/react": "^11.10.6",
         "@emotion/styled": "^11.10.6",
-        "@ionic/pwa-elements": "^3.3.0",
         "@mui/icons-material": "^5.11.11",
         "@mui/material": "^5.11.11",
         "@radix-ui/react-dialog": "^1.0.5",

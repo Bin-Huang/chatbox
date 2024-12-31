@@ -125,22 +125,6 @@ export default class OpenAI extends Base {
         return headers
     }
 
-    async listModels(): Promise<string[]> {
-        const res = await this.get(`${this.options.apiHost}/v1/models`, {
-            headers: {
-                'Authorization': `Bearer ${this.options.openaiKey}`,
-            },
-        })
-        const json = await res.json()
-        if (!json['data']) {
-            throw new ApiError(JSON.stringify(json))
-        }
-        return json['data']
-            .map((m: any) => m.id)
-            .filter((id: string) => id.startsWith('gpt-') || id.startsWith('o1-'))
-            .sort()
-    }
-
 }
 
 // Ref: https://platform.openai.com/docs/models/gpt-4
