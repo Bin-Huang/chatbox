@@ -1,19 +1,19 @@
 import { Select, MenuItem, FormControl, InputLabel, TextField } from '@mui/material'
-import { ChatboxAIModel, ModelSettings } from '../../shared/types'
+import { ModelSettings } from '../../shared/types'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
-import ChatboxAI from '../packages/models/chatboxai'
-import { API_ORIGIN } from '../packages/remote'
+import Gemini from '../packages/models/gemini'
 
 export interface Props {
-    value?: ChatboxAIModel | 'custom-model'
-    customModel?: string
-    onChange(value?: ChatboxAIModel | 'custom-model', customModel?: string): void
+    model: ModelSettings['geminiModel']
+    geminiCustomModel: ModelSettings['geminiCustomModel']
+    onChange(model: ModelSettings['geminiModel'], geminiCustomModel: ModelSettings['geminiCustomModel']): void
     className?: string
-    licenseKey?: string
+    apiHost: string
+    apiKey: string
 }
 
-export default function ChatboxAIModelSelect(props: Props) {
+export default function GeminiModelSelect(props: Props) {
     const { t } = useTranslation()
     const [models, setModels] = useState<string[]>([])
     const [loading, setLoading] = useState(true)
@@ -21,17 +21,16 @@ export default function ChatboxAIModelSelect(props: Props) {
 
     useEffect(() => {
         const fetchModels = async () => {
-            if (!props.licenseKey) {
+            if (!props.apiKey) {
                 setLoading(false)
                 return
             }
             try {
-                const client = new ChatboxAI({
-                    licenseKey: props.licenseKey,
-                    language: 'en',
+                const client = new Gemini({
+                    geminiKey: props.apiKey,
+                    apiHost: props.apiHost,
+                    model: props.model,
                     temperature: 0.7,
-                }, {
-                    uuid: 'test',
                 })
                 const modelList = await client.listModels()
                 setModels(modelList)
@@ -44,7 +43,7 @@ export default function ChatboxAIModelSelect(props: Props) {
             }
         }
         fetchModels()
-    }, [props.licenseKey])
+    }, [props.apiHost, props.apiKey])
 
     return (
         <FormControl fullWidth variant="outlined" margin="dense" className={props.className}>
@@ -52,8 +51,8 @@ export default function ChatboxAIModelSelect(props: Props) {
             <Select
                 label={t('model')}
                 id="model-select"
-                value={props.value || 'chatboxai-3.5'}
-                onChange={(e) => props.onChange(e.target.value as ChatboxAIModel | 'custom-model', props.customModel)}
+                value={props.model}
+                onChange={(e) => props.onChange(e.target.value as ModelSettings['geminiModel'], props.geminiCustomModel)}
             >
                 {loading ? (
                     <MenuItem disabled>{t('Loading models...')}</MenuItem>
@@ -72,19 +71,19 @@ export default function ChatboxAIModelSelect(props: Props) {
                     </>
                 )}
             </Select>
-            {props.value === 'custom-model' && (
+            {props.model === 'custom-model' && (
                 <TextField
                     margin="dense"
                     label={t('Custom Model Name')}
                     type="text"
                     fullWidth
                     variant="outlined"
-                    value={props.customModel || ''}
+                    value={props.geminiCustomModel || ''}
                     onChange={(e) =>
-                        props.onChange(props.value, e.target.value.trim())
+                        props.onChange(props.model, e.target.value.trim())
                     }
                 />
             )}
         </FormControl>
     )
-}
+} 
