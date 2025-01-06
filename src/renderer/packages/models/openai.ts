@@ -175,6 +175,10 @@ export const openaiModelConfigs = {
         maxTokens: 16_384,
         maxContextTokens: 128_000,
     },
+    'gpt-4o-2024-11-20': {
+        maxTokens: 16_384,
+        maxContextTokens: 128_000,
+    },
     'chatgpt-4o-latest': {
         maxTokens: 16_384,
         maxContextTokens: 128_000,
