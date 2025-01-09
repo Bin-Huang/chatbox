@@ -1,9 +1,11 @@
 import OpenAI from './openai'
-import { Settings, Config, ModelProvider, SessionType, ModelSettings, Session } from '../../../shared/types'
+import { Settings, Config, ModelProvider, SessionType } from '../../../shared/types'
 import ChatboxAI from './chatboxai'
 import Ollama from './ollama'
 import SiliconFlow from './siliconflow'
 import LMStudio from './lmstudio'
+import Claude from './claude'
+
 
 export function getModel(setting: Settings, config: Config) {
     switch (setting.aiProvider) {
@@ -13,6 +15,8 @@ export function getModel(setting: Settings, config: Config) {
             return new OpenAI(setting)
         case ModelProvider.LMStudio:
             return new LMStudio(setting)
+        case ModelProvider.Claude:
+            return new Claude(setting)
         case ModelProvider.Ollama:
             return new Ollama(setting)
         case ModelProvider.SiliconFlow:
@@ -24,6 +28,7 @@ export function getModel(setting: Settings, config: Config) {
 
 export const aiProviderNameHash = {
     [ModelProvider.OpenAI]: 'OpenAI API',
+    [ModelProvider.Claude]: 'Claude API',
     [ModelProvider.ChatboxAI]: 'Chatbox AI',
     [ModelProvider.LMStudio]: 'LMStudio',
     [ModelProvider.Ollama]: 'Ollama',
@@ -45,6 +50,11 @@ export const AIModelProviderMenuOptionList = [
     {
         value: ModelProvider.LMStudio,
         label: aiProviderNameHash[ModelProvider.LMStudio],
+        disabled: false,
+    },
+     {
+        value: ModelProvider.Claude,
+        label: aiProviderNameHash[ModelProvider.Claude],
         disabled: false,
     },
     {
@@ -73,6 +83,8 @@ export function getModelDisplayName(settings: Settings, sessionType: SessionType
                 return `OpenAI Custom Model (${name})`
             }
             return settings.model || 'unknown'
+        case ModelProvider.Claude:
+            return settings.claudeModel || 'unknown'
         case ModelProvider.ChatboxAI:
             const model = settings.chatboxAIModel || 'chatboxai-3.5'
             return model.replace('chatboxai-', 'Chatbox AI ')

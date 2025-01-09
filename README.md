@@ -241,9 +241,6 @@ npm run package:all
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
-| Paypal                                            | Wechat Pay                                      | Ali Pay                                      |
-| ------------------------------------------------- | ----------------------------------------------- | -------------------------------------------- |
-| [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./doc/statics/wechat_pay.JPG" height="240" /> | <img src="./doc/statics/ali_pay.PNG" height="240" /> |
 
 ## Star History
 

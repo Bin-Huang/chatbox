@@ -222,10 +222,6 @@ npm run package:all
 
 [!["请我喝咖啡"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/benn)
 
-| Paypal                                            | 微信支付                                        | 支付宝                                      |
-| ------------------------------------------------- | ----------------------------------------------- | -------------------------------------------- |
-| [**`Paypal`**](https://www.paypal.me/tobennhuang) | <img src="./statics/wechat_pay.JPG" height="240" /> | <img src="./statics/ali_pay.PNG" height="240" /> |
-
 ## Star History
 
 [![星星历史图表](https://api.star-history.com/svg?repos=Bin-Huang/chatbox&type=Date)](https://star-history.com/#Bin-Huang/chatbox&Date)
