@@ -28,6 +28,9 @@ export function settings(): Settings {
         ollamaHost: 'http://127.0.0.1:11434',
         ollamaModel: '',
 
+        LMStudioHost: 'http://127.0.0.1:11434',
+        LMStudioModel: '',
+
         showWordCount: true,
         showTokenCount: false,
         showTokenUsed: true,

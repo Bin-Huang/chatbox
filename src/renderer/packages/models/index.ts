@@ -3,7 +3,9 @@ import { Settings, Config, ModelProvider, SessionType } from '../../../shared/ty
 import ChatboxAI from './chatboxai'
 import Ollama from './ollama'
 import SiliconFlow from './siliconflow'
+import LMStudio from './lmstudio'
 import Claude from './claude'
+
 
 export function getModel(setting: Settings, config: Config) {
     switch (setting.aiProvider) {
@@ -11,6 +13,8 @@ export function getModel(setting: Settings, config: Config) {
             return new ChatboxAI(setting, config)
         case ModelProvider.OpenAI:
             return new OpenAI(setting)
+        case ModelProvider.LMStudio:
+            return new LMStudio(setting)
         case ModelProvider.Claude:
             return new Claude(setting)
         case ModelProvider.Ollama:
@@ -26,6 +30,7 @@ export const aiProviderNameHash = {
     [ModelProvider.OpenAI]: 'OpenAI API',
     [ModelProvider.Claude]: 'Claude API',
     [ModelProvider.ChatboxAI]: 'Chatbox AI',
+    [ModelProvider.LMStudio]: 'LMStudio',
     [ModelProvider.Ollama]: 'Ollama',
     [ModelProvider.SiliconFlow]: 'SiliconCloud API',
 }
@@ -43,6 +48,11 @@ export const AIModelProviderMenuOptionList = [
         disabled: false,
     },
     {
+        value: ModelProvider.LMStudio,
+        label: aiProviderNameHash[ModelProvider.LMStudio],
+        disabled: false,
+    },
+     {
         value: ModelProvider.Claude,
         label: aiProviderNameHash[ModelProvider.Claude],
         disabled: false,
@@ -80,6 +90,8 @@ export function getModelDisplayName(settings: Settings, sessionType: SessionType
             return model.replace('chatboxai-', 'Chatbox AI ')
         case ModelProvider.Ollama:
             return `Ollama (${settings.ollamaModel})`
+        case ModelProvider.LMStudio:
+            return `LMStudio (${settings.LMStudioModel})`
         case ModelProvider.SiliconFlow:
             return `SiliconCloud (${settings.siliconCloudModel})`
         default:

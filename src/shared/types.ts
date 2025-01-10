@@ -79,10 +79,16 @@ export interface ModelSettings {
     model: Model | 'custom-model'
     openaiCustomModel?: string
 
+
+    //LMStudio
+    LMStudioHost: string
+    LMStudioModel: string
+
     // claude
     claudeApiKey: string
     claudeApiHost: string
     claudeModel: ClaudeModel
+
 
     // azure
     azureEndpoint: string

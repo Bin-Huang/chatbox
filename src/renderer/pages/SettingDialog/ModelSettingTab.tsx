@@ -4,6 +4,7 @@ import OpenAISetting from './OpenAISetting'
 import ChatboxAISetting from './ChatboxAISetting'
 import AIProviderSelect from '../../components/AIProviderSelect'
 import { OllamaHostInput, OllamaModelSelect } from './OllamaSetting'
+import { LMStudioHostInput, LMStudioModelSelect } from './LMStudioSetting'
 import SiliconFlowSetting from './SiliconFlowSetting'
 import MaxContextMessageCountSlider from '@/components/MaxContextMessageCountSlider'
 import TemperatureSlider from '@/components/TemperatureSlider'
@@ -50,6 +51,30 @@ export default function ModelSettingTab(props: ModelConfigProps) {
                     />
                 </>
             )}
+
+            {settingsEdit.aiProvider === ModelProvider.LMStudio && (
+                <>
+                    <LMStudioHostInput
+                        LMStudioHost={settingsEdit.LMStudioHost}
+                        setLMStudioHost={(v) => setSettingsEdit({ ...settingsEdit, LMStudioHost: v })}
+                    />
+                    <LMStudioModelSelect
+                        LMStudioModel={settingsEdit.LMStudioModel}
+                        setOlamaModel={(v) => setSettingsEdit({ ...settingsEdit, LMStudioModel: v })}
+                        LMStudioHost={settingsEdit.LMStudioHost}
+                    />
+                    <MaxContextMessageCountSlider
+                        value={settingsEdit.openaiMaxContextMessageCount}
+                        onChange={(v) => setSettingsEdit({ ...settingsEdit, openaiMaxContextMessageCount: v })}
+                    />
+                    <TemperatureSlider
+                        value={settingsEdit.temperature}
+                        onChange={(v) => setSettingsEdit({ ...settingsEdit, temperature: v })}
+                    />
+                </>
+            )}
+
+
              {settingsEdit.aiProvider === ModelProvider.SiliconFlow && (
                 <SiliconFlowSetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
             )}
