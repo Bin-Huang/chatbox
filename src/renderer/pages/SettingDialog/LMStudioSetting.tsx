@@ -34,7 +34,7 @@ export function LMStudioHostInput(props: {
                         <Trans i18nKey='Please ensure that the Remote LMStudio Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.'
                             components={{
                                 a: <a className='cursor-pointer font-bold' onClick={() => {
-                                    platform.openLink(`https://chatboxai.app/redirect_app/LMStudio_guide/${language}`)
+                                    platform.openLink(`https://chatboxai.app/redirect_app/lm_studio_guide/${language}`)
                                 }}></a>,
                             }}
                         />
