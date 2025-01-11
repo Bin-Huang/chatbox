@@ -5,8 +5,8 @@ import { ApiError } from './errors'
 // import LMStudio from 'LMStudio/browser'
 
 interface Options {
-    LMStudioHost: string
-    LMStudioModel: string
+    lmStudioHost: string
+    lmStudioModel: string
     temperature: number
 
 }
@@ -21,7 +21,7 @@ export default class LMStudio extends Base {
     }
 
     getHost(): string {
-        let host = this.options.LMStudioHost.trim()
+        let host = this.options.lmStudioHost.trim()
         if (host.endsWith('/')) {
             host = host.slice(0, -1)
         }
@@ -41,7 +41,7 @@ export default class LMStudio extends Base {
             { 'Content-Type': 'application/json' },
             {
                 messages,
-                model: this.options.LMStudioModel,
+                model: this.options.lmStudioModel,
                 temperature: this.options.temperature,
                 stream: true,
                 

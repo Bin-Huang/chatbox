@@ -55,13 +55,13 @@ export default function ModelSettingTab(props: ModelConfigProps) {
             {settingsEdit.aiProvider === ModelProvider.LMStudio && (
                 <>
                     <LMStudioHostInput
-                        LMStudioHost={settingsEdit.LMStudioHost}
-                        setLMStudioHost={(v) => setSettingsEdit({ ...settingsEdit, LMStudioHost: v })}
+                        LMStudioHost={settingsEdit.lmStudioHost}
+                        setLMStudioHost={(v) => setSettingsEdit({ ...settingsEdit, lmStudioHost: v })}
                     />
                     <LMStudioModelSelect
-                        LMStudioModel={settingsEdit.LMStudioModel}
-                        setLMStudioModel={(v) => setSettingsEdit({ ...settingsEdit, LMStudioModel: v })}
-                        LMStudioHost={settingsEdit.LMStudioHost}
+                        LMStudioModel={settingsEdit.lmStudioModel}
+                        setLMStudioModel={(v) => setSettingsEdit({ ...settingsEdit, lmStudioModel: v })}
+                        LMStudioHost={settingsEdit.lmStudioHost}
                     />
                     <MaxContextMessageCountSlider
                         value={settingsEdit.openaiMaxContextMessageCount}

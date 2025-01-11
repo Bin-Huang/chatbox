@@ -46,8 +46,8 @@ export function LMStudioHostInput(props: {
 }
 
 export function LMStudioModelSelect(props: {
-    LMStudioModel: ModelSettings['LMStudioModel']
-    setLMStudioModel: (model: ModelSettings['LMStudioModel']) => void
+    LMStudioModel: ModelSettings['lmStudioModel']
+    setLMStudioModel: (model: ModelSettings['lmStudioModel']) => void
     LMStudioHost: string
     className?: string
 }) {
@@ -55,8 +55,8 @@ export function LMStudioModelSelect(props: {
     const [models, setModels] = useState<string[]>([])
     useEffect(() => {
         const model = new LMStudio({
-            LMStudioHost: props.LMStudioHost,
-            LMStudioModel: props.LMStudioModel,
+            lmStudioHost: props.LMStudioHost,
+            lmStudioModel: props.LMStudioModel,
             temperature: 0.5
         })
         model.listModels().then((models) => {
