@@ -31,7 +31,7 @@ export function LMStudioHostInput(props: {
                 && !props.LMStudioHost.includes('localhost')
                 && !props.LMStudioHost.includes('127.0.0.1') && (
                     <Alert icon={false} severity='info' className='my-4'>
-                        <Trans i18nKey='Please ensure that the Remote LMStudio Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.'
+                        <Trans i18nKey='Please ensure that the Remote LM Studio Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.'
                             components={{
                                 a: <a className='cursor-pointer font-bold' onClick={() => {
                                     platform.openLink(`https://chatboxai.app/redirect_app/lm_studio_guide/${language}`)
