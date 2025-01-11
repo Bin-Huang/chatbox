@@ -48,11 +48,6 @@ export const AIModelProviderMenuOptionList = [
         disabled: false,
     },
     {
-        value: ModelProvider.LMStudio,
-        label: aiProviderNameHash[ModelProvider.LMStudio],
-        disabled: false,
-    },
-     {
         value: ModelProvider.Claude,
         label: aiProviderNameHash[ModelProvider.Claude],
         disabled: false,
@@ -60,6 +55,11 @@ export const AIModelProviderMenuOptionList = [
     {
         value: ModelProvider.Ollama,
         label: aiProviderNameHash[ModelProvider.Ollama],
+        disabled: false,
+    },
+    {
+        value: ModelProvider.LMStudio,
+        label: aiProviderNameHash[ModelProvider.LMStudio],
         disabled: false,
     },
     {

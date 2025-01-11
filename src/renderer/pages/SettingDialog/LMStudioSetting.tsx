@@ -47,7 +47,7 @@ export function LMStudioHostInput(props: {
 
 export function LMStudioModelSelect(props: {
     LMStudioModel: ModelSettings['LMStudioModel']
-    setOlamaModel: (model: ModelSettings['LMStudioModel']) => void
+    setLMStudioModel: (model: ModelSettings['LMStudioModel']) => void
     LMStudioHost: string
     className?: string
 }) {
@@ -63,7 +63,7 @@ export function LMStudioModelSelect(props: {
             setModels(models)
         })
         if (props.LMStudioModel && models.length > 0 && !models.includes(props.LMStudioModel)) {
-            props.setOlamaModel(models[0])
+            props.setLMStudioModel(models[0])
         }
     }, [props.LMStudioHost])
     return (
@@ -74,7 +74,7 @@ export function LMStudioModelSelect(props: {
                 id="LMStudio-model-select"
                 value={props.LMStudioModel}
                 onChange={(e) =>
-                    props.setOlamaModel(e.target.value)
+                    props.setLMStudioModel(e.target.value)
                 }
             >
                 {models.map((model) => (

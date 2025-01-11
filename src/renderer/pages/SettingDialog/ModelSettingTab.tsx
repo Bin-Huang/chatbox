@@ -60,7 +60,7 @@ export default function ModelSettingTab(props: ModelConfigProps) {
                     />
                     <LMStudioModelSelect
                         LMStudioModel={settingsEdit.LMStudioModel}
-                        setOlamaModel={(v) => setSettingsEdit({ ...settingsEdit, LMStudioModel: v })}
+                        setLMStudioModel={(v) => setSettingsEdit({ ...settingsEdit, LMStudioModel: v })}
                         LMStudioHost={settingsEdit.LMStudioHost}
                     />
                     <MaxContextMessageCountSlider

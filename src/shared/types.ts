@@ -68,6 +68,7 @@ export enum ModelProvider {
     Claude = 'claude',
     Ollama = 'ollama',
     SiliconFlow = 'silicon-flow',
+    LMStudio = 'lm-studio',
 }
 
 export interface ModelSettings {
@@ -79,7 +80,6 @@ export interface ModelSettings {
     model: Model | 'custom-model'
     openaiCustomModel?: string
 
-
     //LMStudio
     LMStudioHost: string
     LMStudioModel: string
@@ -88,7 +88,6 @@ export interface ModelSettings {
     claudeApiKey: string
     claudeApiHost: string
     claudeModel: ClaudeModel
-
 
     // azure
     azureEndpoint: string
