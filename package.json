@@ -168,7 +168,7 @@
         "tailwind-merge": "^1.14.0",
         "tailwindcss-animate": "^1.0.7",
         "uuid": "^9.0.0",
-        "web-vitals": "^2.1.4"
+        "web-vitals": "^4.2.4"
     },
     "browserslist": [],
     "prettier": {
