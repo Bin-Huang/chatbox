@@ -73,7 +73,7 @@
         "detect-port": "^1.5.1",
         "dotenv": "^16.3.1",
         "electron": "^22.3.13",
-        "electron-builder": "^24.13.3",
+        "electron-builder": "^25.1.8",
         "electron-devtools-installer": "^3.2.0",
         "electronmon": "^2.0.2",
         "eslint": "^8.42.0",
