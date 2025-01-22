@@ -179,6 +179,7 @@ For more information: [chatboxai.app](https://chatboxai.app/)
     -   Français (French)
     -   Deutsch (German)
     -   Русский (Russian)
+    -   Türkçe (Turkish)
 
 -   **And More...**  
     :sparkles: Constantly enhancing the experience with new features!
