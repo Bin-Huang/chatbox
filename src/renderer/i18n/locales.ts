@@ -9,6 +9,7 @@ export const languageNameMap = {
     ru: 'Русский', // Russian
     de: 'Deutsch', // German
     fr: 'Français', // French
+    tr: 'Türkçe',
 }
 
 export const languages = Array.from(Object.keys(languageNameMap)) as Language[]
