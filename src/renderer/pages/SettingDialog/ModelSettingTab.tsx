@@ -9,6 +9,7 @@ import SiliconFlowSetting from './SiliconFlowSetting'
 import MaxContextMessageCountSlider from '@/components/MaxContextMessageCountSlider'
 import TemperatureSlider from '@/components/TemperatureSlider'
 import ClaudeSetting from './ClaudeSetting'
+import ContextLengthSlider from '@/components/ContextLengthSlider'
 
 interface ModelConfigProps {
     settingsEdit: ModelSettings
@@ -48,6 +49,10 @@ export default function ModelSettingTab(props: ModelConfigProps) {
                     <TemperatureSlider
                         value={settingsEdit.temperature}
                         onChange={(v) => setSettingsEdit({ ...settingsEdit, temperature: v })}
+                    />
+                    <ContextLengthSlider
+                        value={settingsEdit.ollamaContextLength}
+                        onChange={(v) => setSettingsEdit({ ...settingsEdit, ollamaContextLength: v })}
                     />
                 </>
             )}

@@ -27,6 +27,7 @@ export function settings(): Settings {
 
         ollamaHost: 'http://127.0.0.1:11434',
         ollamaModel: '',
+        ollamaContextLength: 8192,
 
         lmStudioHost: 'http://127.0.0.1:1234',
         lmStudioModel: '',

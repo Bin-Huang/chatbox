@@ -58,6 +58,7 @@ export function OllamaModelSelect(props: {
             ollamaHost: props.ollamaHost,
             ollamaModel: props.ollamaModel,
             temperature: 0.5,
+            ollamaContextLength: 8192,
         })
         model.listModels().then((models) => {
             setModels(models)

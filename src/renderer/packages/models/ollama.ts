@@ -9,6 +9,7 @@ interface Options {
     ollamaHost: string
     ollamaModel: string
     temperature: number
+    ollamaContextLength: number
 }
 
 export default class Ollama extends Base {
@@ -45,6 +46,7 @@ export default class Ollama extends Base {
                 stream: true,
                 options: {
                     temperature: this.options.temperature,
+                    num_ctx: this.options.ollamaContextLength
                 }
             },
             signal,
