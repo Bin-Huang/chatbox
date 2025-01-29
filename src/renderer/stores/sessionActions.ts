@@ -1,10 +1,5 @@
 import { getDefaultStore } from 'jotai'
-import {
-    Settings,
-    createMessage,
-    Message,
-    Session,
-} from '../../shared/types'
+import { Settings, createMessage, Message, Session, SessionsDump } from '../../shared/types'
 import * as atoms from './atoms'
 import * as promptFormat from '../packages/prompts'
 import * as Sentry from '@sentry/react'
@@ -18,35 +13,41 @@ import { throttle } from 'lodash'
 import { countWord } from '@/packages/word-count'
 import { estimateTokensFromMessages } from '@/packages/token'
 import * as settingActions from './settingActions'
+import { scheduleSaveSessionsToBackend } from '@/packages/sync-sessions'
 
 export function create(newSession: Session) {
     const store = getDefaultStore()
-    store.set(atoms.sessionsAtom, (sessions) => [...sessions, newSession])
+    store.set(atoms.sessionsAtom, ({ sessions }) => ({
+        ts: Date.now(),
+        sessions: [...sessions, newSession],
+    }))
     switchCurrentSession(newSession.id)
 }
 
 export function modify(update: Session) {
     const store = getDefaultStore()
-    store.set(atoms.sessionsAtom, (sessions) =>
-        sessions.map((s) => {
+    store.set(atoms.sessionsAtom, ({ sessions }) => ({
+        ts: Date.now(),
+        sessions: sessions.map((s) => {
             if (s.id === update.id) {
                 return update
             }
             return s
-        })
-    )
+        }),
+    }))
 }
 
 export function modifyName(sessionId: string, name: string) {
     const store = getDefaultStore()
-    store.set(atoms.sessionsAtom, (sessions) =>
-        sessions.map((s) => {
+    store.set(atoms.sessionsAtom, ({ sessions }) => ({
+        ts: Date.now(),
+        sessions: sessions.map((s) => {
             if (s.id === sessionId) {
                 return { ...s, name, threadName: name }
             }
             return s
-        })
-    )
+        }),
+    }))
 }
 
 export function createEmpty(type: 'chat') {
@@ -66,7 +67,10 @@ export function switchCurrentSession(sessionId: string) {
 
 export function remove(session: Session) {
     const store = getDefaultStore()
-    store.set(atoms.sessionsAtom, (sessions) => sessions.filter((s) => s.id !== session.id))
+    store.set(atoms.sessionsAtom, ({ sessions }) => ({
+        ts: Date.now(),
+        sessions: sessions.filter((s) => s.id !== session.id),
+    }))
 }
 
 export function clear(sessionId: string) {
@@ -84,20 +88,20 @@ export async function copy(source: Session) {
     const store = getDefaultStore()
     const newSession = { ...source }
     newSession.id = uuidv4()
-    store.set(atoms.sessionsAtom, (sessions) => {
+    store.set(atoms.sessionsAtom, ({ sessions }) => {
         let originIndex = sessions.findIndex((s) => s.id === source.id)
         if (originIndex < 0) {
             originIndex = 0
         }
         const newSessions = [...sessions]
         newSessions.splice(originIndex + 1, 0, newSession)
-        return newSessions
+        return { ts: Date.now(), sessions: newSessions }
     })
 }
 
 export function getSession(sessionId: string) {
     const store = getDefaultStore()
-    const sessions = store.get(atoms.sessionsAtom)
+    const { sessions } = store.get(atoms.sessionsAtom)
     return sessions.find((s) => s.id === sessionId)
 }
 
@@ -105,8 +109,9 @@ export function insertMessage(sessionId: string, msg: Message) {
     const store = getDefaultStore()
     msg.wordCount = countWord(msg.content)
     msg.tokenCount = estimateTokensFromMessages([msg])
-    store.set(atoms.sessionsAtom, (sessions) =>
-        sessions.map((s) => {
+    store.set(atoms.sessionsAtom, ({ sessions }) => ({
+        ts: Date.now(),
+        sessions: sessions.map((s) => {
             if (s.id === sessionId) {
                 const newMessages = [...s.messages]
                 newMessages.push(msg)
@@ -116,8 +121,8 @@ export function insertMessage(sessionId: string, msg: Message) {
                 }
             }
             return s
-        })
-    )
+        }),
+    }))
 }
 
 export function modifyMessage(sessionId: string, updated: Message, refreshCounting?: boolean) {
@@ -139,15 +144,16 @@ export function modifyMessage(sessionId: string, updated: Message, refreshCounti
             return m
         })
     }
-    store.set(atoms.sessionsAtom, (sessions) =>
-        sessions.map((s) => {
+    store.set(atoms.sessionsAtom, ({ sessions }) => ({
+        ts: Date.now(),
+        sessions: sessions.map((s) => {
             if (s.id !== sessionId) {
                 return s
             }
             s.messages = handle(s.messages)
             return { ...s }
-        })
-    )
+        }),
+    }))
 }
 
 export async function submitNewUserMessage(params: {
@@ -329,9 +335,25 @@ export function initEmptyChatSession(): Session {
     }
 }
 
-export function getSessions() {
+export function replaceSessionsFromBackend(newDump: SessionsDump) {
+    const store = getDefaultStore()
+    const currentDump = store.get(atoms.sessionsAtom)
+
+    if (newDump.ts > currentDump.ts) {
+        store.set(atoms.sessionsAtom, newDump)
+    } else if (newDump.ts < currentDump.ts) {
+        scheduleSaveSessionsToBackend(currentDump)
+    }
+}
+
+export function getSessionsDump() {
     const store = getDefaultStore()
     return store.get(atoms.sessionsAtom)
+}
+
+export function getSessions() {
+    const store = getDefaultStore()
+    return store.get(atoms.sessionsAtom).sessions
 }
 
 export function getSortedSessions() {

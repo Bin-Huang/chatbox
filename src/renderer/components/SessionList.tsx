@@ -52,7 +52,10 @@ export default function SessionList(props: Props) {
             const oldIndex = sortedSessions.findIndex(s => s.id === activeId)
             const newIndex = sortedSessions.findIndex(s => s.id === overId)
             const newReversed = arrayMove(sortedSessions, oldIndex, newIndex)
-            setSessions(atoms.sortSessions(newReversed))
+            setSessions({
+                ts: Date.now(),
+                sessions: atoms.sortSessions(newReversed),
+            })
         }
     }
     return (
