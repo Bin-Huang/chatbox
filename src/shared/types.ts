@@ -109,6 +109,7 @@ export interface ModelSettings {
     // ollama
     ollamaHost: string
     ollamaModel: string
+    ollamaContextLength: number
 
     // siliconflow
     siliconCloudHost: string
