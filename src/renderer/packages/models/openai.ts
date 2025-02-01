@@ -184,6 +184,15 @@ export const openaiModelConfigs = {
         maxContextTokens: 128_000,
     },
 
+    // https://platform.openai.com/docs/models#o1
+    'o1': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
+    },
+    'o1-2024-12-17': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
+    },
     'o1-preview': {
         maxTokens: 32_768,
         maxContextTokens: 128_000,
@@ -199,6 +208,16 @@ export const openaiModelConfigs = {
     'o1-mini-2024-09-12': {
         maxTokens: 65_536,
         maxContextTokens: 128_000,
+    },
+
+    // https://platform.openai.com/docs/models#o3-mini
+    'o3-mini': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
+    },
+    'o3-mini-2025-01-31': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
     },
 
     'gpt-4': {
