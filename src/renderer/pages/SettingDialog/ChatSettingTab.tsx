@@ -12,7 +12,7 @@ export default function ChatSettingTab(props: {
 
     return (
         <Box>
-            <Box className='mb-2'>
+            <Box className="mb-2">
                 <TextField
                     margin="dense"
                     label={t('Default Prompt for New Conversation')}

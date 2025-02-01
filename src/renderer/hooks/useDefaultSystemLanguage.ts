@@ -6,7 +6,7 @@ import platform from '../packages/platform'
 export function useSystemLanguageWhenInit() {
     useEffect(() => {
         setTimeout(() => {
-            ; (async () => {
+            ;(async () => {
                 const store = getDefaultStore()
                 const settings = store.get(settingsAtom)
                 if (!settings.languageInited) {

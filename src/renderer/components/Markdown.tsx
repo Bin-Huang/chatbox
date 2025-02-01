@@ -15,37 +15,34 @@ import { sanitizeUrl } from '@braintree/sanitize-url'
 import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
 import { copyToClipboard } from '@/packages/navigator'
 
-export default function Markdown(props: {
-    children: string
-    hiddenCodeCopyButton?: boolean
-    className?: string
-}) {
+export default function Markdown(props: { children: string; hiddenCodeCopyButton?: boolean; className?: string }) {
     const { children, hiddenCodeCopyButton, className } = props
-    return useMemo(() => (
-        <ReactMarkdown
-            remarkPlugins={
-                [remarkGfm, remarkMath, remarkBreaks]
-            }
-            rehypePlugins={[rehypeKatex]}
-            className={`break-words ${className || ''}`}
-            urlTransform={(url) => sanitizeUrl(url)}
-            components={{
-                code: (props: any) => CodeBlock({ ...props, hiddenCodeCopyButton }),
-                a: ({ node, ...props }) => (
-                    <a
-                        {...props}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                        }}
-                    />
-                ),
-            }}
-        >
-            { children }
-        </ReactMarkdown>
-    ), [children])
+    return useMemo(
+        () => (
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+                rehypePlugins={[rehypeKatex]}
+                className={`break-words ${className || ''}`}
+                urlTransform={(url) => sanitizeUrl(url)}
+                components={{
+                    code: (props: any) => CodeBlock({ ...props, hiddenCodeCopyButton }),
+                    a: ({ node, ...props }) => (
+                        <a
+                            {...props}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                            }}
+                        />
+                    ),
+                }}
+            >
+                {children}
+            </ReactMarkdown>
+        ),
+        [children]
+    )
 }
 
 export function CodeBlock(props: any) {
@@ -74,7 +71,7 @@ export function CodeBlock(props: any) {
             )
         }
         return (
-            <div className='group/code-block relative'>
+            <div className="group/code-block relative">
                 <div
                     style={{
                         display: 'flex',
@@ -100,44 +97,33 @@ export function CodeBlock(props: any) {
                     >
                         {'<' + language.toUpperCase() + '>'}
                     </span>
-                    {
-                        !hiddenCodeCopyButton && (
-                           <button
-                                aria-label={t('copy')}
-                                className=' opacity-50 hover:opacity-100'
-                                style={{
-                                    textDecoration: 'none',
-                                    color: 'white',
-                                    padding: '1px',
-                                    margin: '2px 10px 0 10px',
-                                    cursor: 'pointer',
-                                    backgroundColor: 'transparent',
-                                    border: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                                onClick={() => {
-                                    copyToClipboard(String(children))
-                                    toastActions.add(t('copied to clipboard'))
-                                }}
-                            >
-                               <ContentCopyIcon
-                                    sx={{
-                                       
-                                        
-                                    }}
-                                 />
-                            </button>
-                        )
-                    }
+                    {!hiddenCodeCopyButton && (
+                        <button
+                            aria-label={t('copy') || undefined}
+                            className=" opacity-50 hover:opacity-100"
+                            style={{
+                                textDecoration: 'none',
+                                color: 'white',
+                                padding: '1px',
+                                margin: '2px 10px 0 10px',
+                                cursor: 'pointer',
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                            onClick={() => {
+                                copyToClipboard(String(children))
+                                toastActions.add(t('copied to clipboard'))
+                            }}
+                        >
+                            <ContentCopyIcon sx={{}} />
+                        </button>
+                    )}
                 </div>
                 <SyntaxHighlighter
                     children={String(children).replace(/\n$/, '')}
-                    style={
-                        theme.palette.mode === 'dark'
-                            ? atomDark
-                            : a11yDark
-                    }
+                    style={theme.palette.mode === 'dark' ? atomDark : a11yDark}
                     language={language}
                     PreTag="div"
                     customStyle={{

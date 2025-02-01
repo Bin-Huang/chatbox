@@ -1,14 +1,4 @@
-import {
-    Button,
-    Paper,
-    Badge,
-    Box,
-    Dialog,
-    DialogContent,
-    DialogActions,
-    DialogTitle,
-    useTheme,
-} from '@mui/material'
+import { Button, Paper, Badge, Box, Dialog, DialogContent, DialogActions, DialogTitle, useTheme } from '@mui/material'
 import iconPNG from '../static/icon.png'
 import { useTranslation } from 'react-i18next'
 import platform from '../packages/platform'
@@ -32,12 +22,9 @@ export default function AboutWindow(props: Props) {
             <DialogContent>
                 <Box sx={{ textAlign: 'center', padding: '0 20px' }}>
                     <img src={iconPNG} style={{ width: '100px', margin: 0, display: 'inline-block' }} />
-                    <h3 style={{ margin: '4px 0 5px 0' }}>Chatbox
-                        {
-                            /\d/.test(versionHook.version)
-                                ? `(v${versionHook.version})`
-                                : ''
-                        }
+                    <h3 style={{ margin: '4px 0 5px 0' }}>
+                        Chatbox
+                        {/\d/.test(versionHook.version) ? `(v${versionHook.version})` : ''}
                     </h3>
                     <p className="p-0 m-0">{t('about-slogan')}</p>
                     <p className="p-0 m-0 opacity-60 text-xs">{t('about-introduction')}</p>
@@ -49,14 +36,19 @@ export default function AboutWindow(props: Props) {
                         alignItems: 'center',
                         flexWrap: 'wrap',
                     }}
-                    className='mt-1'
+                    className="mt-1"
                 >
-                    <Badge color="primary" variant="dot" invisible={!versionHook.needCheckUpdate}
+                    <Badge
+                        color="primary"
+                        variant="dot"
+                        invisible={!versionHook.needCheckUpdate}
                         sx={{ margin: '4px' }}
                     >
                         <Button
                             variant="outlined"
-                            onClick={() => platform.openLink(`https://chatboxai.app/redirect_app/check_update/${language}`)}
+                            onClick={() =>
+                                platform.openLink(`https://chatboxai.app/redirect_app/check_update/${language}`)
+                            }
                         >
                             {t('Check Update')}
                         </Button>
@@ -90,21 +82,23 @@ export default function AboutWindow(props: Props) {
                         backgroundColor: 'paper',
                     }}
                 >
-                    <div className='my-1'>
+                    <div className="my-1">
                         <b>Benn:</b>
                     </div>
-                    <div className='my-1'>
+                    <div className="my-1">
                         <span>{t('Auther Message')}</span>
                     </div>
-                    <div className='my-1'>
+                    <div className="my-1">
                         <a
-                            className='underline font-normal cursor-pointer mr-4' style={{ color: theme.palette.primary.main }}
+                            className="underline font-normal cursor-pointer mr-4"
+                            style={{ color: theme.palette.primary.main }}
                             onClick={() => platform.openLink(`https://chatboxai.app/redirect_app/donate/${language}`)}
                         >
                             {t('Donate')}
                         </a>
                         <a
-                            className='underline font-normal cursor-pointer mr-4' style={{ color: theme.palette.primary.main }}
+                            className="underline font-normal cursor-pointer mr-4"
+                            style={{ color: theme.palette.primary.main }}
                             onClick={() => platform.openLink(`https://chatboxai.app/redirect_app/author/${language}`)}
                         >
                             {t('Follow me on Twitter(X)')}

@@ -5,10 +5,7 @@ import { useTranslation } from 'react-i18next'
 import * as atoms from '../stores/atoms'
 import { useSetAtom } from 'jotai'
 import * as sessionActions from '../stores/sessionActions'
-import {
-    SendHorizontal,
-    Settings2,
-} from 'lucide-react'
+import { SendHorizontal, Settings2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import icon from '../static/icon.png'
 import { trackingEvent } from '@/packages/event'
@@ -50,13 +47,7 @@ export default function InputBox(props: Props) {
     }
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (
-            event.keyCode === 13 &&
-            !event.shiftKey &&
-            !event.ctrlKey &&
-            !event.altKey &&
-            !event.metaKey
-        ) {
+        if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
             event.preventDefault()
             handleSubmit()
             return
@@ -71,7 +62,8 @@ export default function InputBox(props: Props) {
     const [easterEgg, setEasterEgg] = useState(false)
 
     return (
-        <div className='pl-2 pr-4'
+        <div
+            className="pl-2 pr-4"
             style={{
                 borderTopWidth: '1px',
                 borderTopStyle: 'solid',
@@ -79,10 +71,12 @@ export default function InputBox(props: Props) {
             }}
         >
             <div className={cn('w-full mx-auto flex flex-col')} role="region" aria-label={t('Input Area') || undefined}>
-                <h6 className='sr-only'>{t('Input Area')}</h6>
-                <div className='flex flex-row flex-nowrap justify-between py-1'>
-                    <div className='flex flex-row items-center'>
-                        <MiniButton className='mr-2 hover:bg-transparent' style={{ color: theme.palette.text.primary }}
+                <h6 className="sr-only">{t('Input Area')}</h6>
+                <div className="flex flex-row flex-nowrap justify-between py-1">
+                    <div className="flex flex-row items-center">
+                        <MiniButton
+                            className="mr-2 hover:bg-transparent"
+                            style={{ color: theme.palette.text.primary }}
                             onClick={() => {
                                 setEasterEgg(true)
                                 setTimeout(() => setEasterEgg(false), 1000)
@@ -91,21 +85,24 @@ export default function InputBox(props: Props) {
                         >
                             <img className={cn('w-5 h-5', easterEgg ? 'animate-spin' : '')} src={icon} />
                         </MiniButton>
-                        <MiniButton className='mr-2' style={{ color: theme.palette.text.primary }}
+                        <MiniButton
+                            className="mr-2"
+                            style={{ color: theme.palette.text.primary }}
                             onClick={() => setChatConfigDialogSession(sessionActions.getCurrentSession())}
                             tooltipTitle={
-                                <div className='text-center inline-block'>
+                                <div className="text-center inline-block">
                                     <span>{t('Customize settings for the current conversation')}</span>
                                 </div>
                             }
                             ariaLabel={t('Customize settings for the current conversation') || undefined}
-                            tooltipPlacement='top'
+                            tooltipPlacement="top"
                         >
-                            <Settings2 size='22' strokeWidth={1} />
+                            <Settings2 size="22" strokeWidth={1} />
                         </MiniButton>
                     </div>
-                    <div className='flex flex-row items-center'>
-                        <MiniButton className='w-8 ml-2'
+                    <div className="flex flex-row items-center">
+                        <MiniButton
+                            className="w-8 ml-2"
                             style={{
                                 color: theme.palette.getContrastText(theme.palette.primary.main),
                                 backgroundColor: theme.palette.primary.main,
@@ -115,22 +112,23 @@ export default function InputBox(props: Props) {
                                     {t('[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating')}
                                 </Typography>
                             }
-                            tooltipPlacement='top'
+                            tooltipPlacement="top"
                             onClick={() => handleSubmit()}
                             ariaLabel={t('send') || undefined}
                         >
-                            <SendHorizontal size='22' strokeWidth={1} />
+                            <SendHorizontal size="22" strokeWidth={1} />
                         </MiniButton>
                     </div>
                 </div>
-                <div className='w-full pl-1 pb-2'>
+                <div className="w-full pl-1 pb-2">
                     <textarea
                         className={cn(
                             `w-full max-h-[${maxTextareaHeight}px]`,
                             'overflow-y resize-none border-none outline-none',
                             'bg-transparent p-1'
                         )}
-                        value={messageInput} onChange={onMessageInput}
+                        value={messageInput}
+                        onChange={onMessageInput}
                         onKeyDown={onKeyDown}
                         ref={inputRef}
                         style={{
@@ -142,8 +140,7 @@ export default function InputBox(props: Props) {
                         }}
                         placeholder={t('Type your question here...') || ''}
                     />
-                    <div className='flex flex-row items-center'>
-                    </div>
+                    <div className="flex flex-row items-center"></div>
                 </div>
             </div>
         </div>

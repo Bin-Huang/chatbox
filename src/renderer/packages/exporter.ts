@@ -1,6 +1,5 @@
 export default class WebExporter {
-    constructor() {
-    }
+    constructor() {}
 
     async exportTextFile(filename: string, content: string) {
         const eleLink = document.createElement('a')
@@ -12,5 +11,4 @@ export default class WebExporter {
         eleLink.click()
         document.body.removeChild(eleLink)
     }
-
 }

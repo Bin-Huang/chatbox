@@ -1,6 +1,5 @@
 import { atom, SetStateAction } from 'jotai'
-import { Session, Toast, Settings, CopilotDetail, Message, SettingWindowTab
-} from '../../shared/types'
+import { Session, Toast, Settings, CopilotDetail, Message, SettingWindowTab } from '../../shared/types'
 import { selectAtom, atomWithStorage } from 'jotai/utils'
 import { focusAtom } from 'jotai-optics'
 import * as defaults from '../../shared/defaults'
@@ -89,14 +88,13 @@ export const currentSessionAtom = atom((get) => {
     const sessions = get(sessionsAtom)
     let current = sessions.find((session) => session.id === id)
     if (!current) {
-        return sessions[sessions.length - 1]    // fallback to the last session
+        return sessions[sessions.length - 1] // fallback to the last session
     }
     return current
 })
 
 export const currentSessionNameAtom = selectAtom(currentSessionAtom, (s) => s.name)
 export const currsentSessionPicUrlAtom = selectAtom(currentSessionAtom, (s) => s.picUrl)
-
 
 export const currentMessageListAtom = selectAtom(currentSessionAtom, (s) => {
     let messageContext: Message[] = []

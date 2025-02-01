@@ -1,5 +1,5 @@
-import { ElectronIPC } from "src/shared/electron-types"
-import { Config, Settings } from "src/shared/types"
+import { ElectronIPC } from 'src/shared/electron-types'
+import { Config, Settings } from 'src/shared/types'
 import { getOS } from './navigator'
 import { parseLocale } from '@/i18n/parser'
 import Exporter from './exporter'

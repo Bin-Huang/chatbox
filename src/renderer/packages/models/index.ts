@@ -6,7 +6,6 @@ import SiliconFlow from './siliconflow'
 import LMStudio from './lmstudio'
 import Claude from './claude'
 
-
 export function getModel(setting: Settings, config: Config) {
     switch (setting.aiProvider) {
         case ModelProvider.ChatboxAI:

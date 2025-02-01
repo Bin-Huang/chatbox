@@ -30,21 +30,30 @@ export default class OpenAI extends Base {
         }
     }
 
-    async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(
+        rawMessages: Message[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
         try {
             return await this._callChatCompletion(rawMessages, signal, onResultChange)
         } catch (e) {
-            if (e instanceof ApiError && e.message.includes('Invalid content type. image_url is only supported by certain models.')) {
+            if (
+                e instanceof ApiError &&
+                e.message.includes('Invalid content type. image_url is only supported by certain models.')
+            ) {
                 throw ChatboxAIAPIError.fromCodeName('model_not_support_image', 'model_not_support_image')
             }
             throw e
         }
     }
 
-    async _callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
-        const model = this.options.model === 'custom-model'
-            ? this.options.openaiCustomModel || ''
-            : this.options.model
+    async _callChatCompletion(
+        rawMessages: Message[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
+        const model = this.options.model === 'custom-model' ? this.options.openaiCustomModel || '' : this.options.model
 
         rawMessages = injectModelSystemPrompt(model, rawMessages)
 
@@ -53,27 +62,31 @@ export default class OpenAI extends Base {
             return this.requestChatCompletionsNotStream({ model, messages }, signal, onResultChange)
         }
         const messages = await populateGPTMessage(rawMessages)
-        return this.requestChatCompletionsStream({
-            messages,
-            model,
-            // vision 模型的默认 max_tokens 极低，基本很难回答完整，因此手动设置为模型最大值
-            max_tokens: this.options.model === 'gpt-4-vision-preview'
-                ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
-                : undefined,
-            temperature: this.options.temperature,
-            top_p: this.options.topP,
-            stream: true,
-        }, signal, onResultChange)
+        return this.requestChatCompletionsStream(
+            {
+                messages,
+                model,
+                // vision 模型的默认 max_tokens 极低，基本很难回答完整，因此手动设置为模型最大值
+                max_tokens:
+                    this.options.model === 'gpt-4-vision-preview'
+                        ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
+                        : undefined,
+                temperature: this.options.temperature,
+                top_p: this.options.topP,
+                stream: true,
+            },
+            signal,
+            onResultChange
+        )
     }
 
-    async requestChatCompletionsStream(requestBody: Record<string, any>, signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async requestChatCompletionsStream(
+        requestBody: Record<string, any>,
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
         const apiPath = this.options.apiPath || '/v1/chat/completions'
-        const response = await this.post(
-            `${this.options.apiHost}${apiPath}`,
-            this.getHeaders(),
-            requestBody,
-            signal
-        )
+        const response = await this.post(`${this.options.apiHost}${apiPath}`, this.getHeaders(), requestBody, signal)
         let result = ''
         await this.handleSSE(response, (message) => {
             if (message === '[DONE]') {
@@ -94,14 +107,13 @@ export default class OpenAI extends Base {
         return result
     }
 
-    async requestChatCompletionsNotStream(requestBody: Record<string, any>, signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async requestChatCompletionsNotStream(
+        requestBody: Record<string, any>,
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+    ): Promise<string> {
         const apiPath = this.options.apiPath || '/v1/chat/completions'
-        const response = await this.post(
-            `${this.options.apiHost}${apiPath}`,
-            this.getHeaders(),
-            requestBody,
-            signal
-        )
+        const response = await this.post(`${this.options.apiHost}${apiPath}`, this.getHeaders(), requestBody, signal)
         const json = await response.json()
         if (json.error) {
             throw new ApiError(`Error from OpenAI: ${JSON.stringify(json)}`)
@@ -111,7 +123,6 @@ export default class OpenAI extends Base {
         }
         return json.choices[0].message.content
     }
-
 
     getHeaders() {
         const headers: Record<string, string> = {
@@ -124,7 +135,6 @@ export default class OpenAI extends Base {
         }
         return headers
     }
-
 }
 
 // Ref: https://platform.openai.com/docs/models/gpt-4
