@@ -36,7 +36,7 @@ export default function Header(props: Props) {
                 borderBottomColor: theme.palette.divider,
             }}
         >
-            <div className={cn('w-full mx-auto flex flex-row')}>
+            <div className={cn('w-full mx-auto flex flex-row')} role='main' aria-label={currentSession.name}>
                 <Typography
                     variant="h6"
                     color="inherit"

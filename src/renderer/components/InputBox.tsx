@@ -78,7 +78,8 @@ export default function InputBox(props: Props) {
                 borderTopColor: theme.palette.divider,
             }}
         >
-            <div className={cn('w-full mx-auto flex flex-col')}>
+            <div className={cn('w-full mx-auto flex flex-col')} role="region" aria-label={t('Input Area') || undefined}>
+                <h6 className='sr-only'>{t('Input Area')}</h6>
                 <div className='flex flex-row flex-nowrap justify-between py-1'>
                     <div className='flex flex-row items-center'>
                         <MiniButton className='mr-2 hover:bg-transparent' style={{ color: theme.palette.text.primary }}
@@ -86,6 +87,7 @@ export default function InputBox(props: Props) {
                                 setEasterEgg(true)
                                 setTimeout(() => setEasterEgg(false), 1000)
                             }}
+                            ariaHidden={true}
                         >
                             <img className={cn('w-5 h-5', easterEgg ? 'animate-spin' : '')} src={icon} />
                         </MiniButton>
@@ -96,6 +98,7 @@ export default function InputBox(props: Props) {
                                     <span>{t('Customize settings for the current conversation')}</span>
                                 </div>
                             }
+                            ariaLabel={t('Customize settings for the current conversation') || undefined}
                             tooltipPlacement='top'
                         >
                             <Settings2 size='22' strokeWidth={1} />
@@ -114,6 +117,7 @@ export default function InputBox(props: Props) {
                             }
                             tooltipPlacement='top'
                             onClick={() => handleSubmit()}
+                            ariaLabel={t('send') || undefined}
                         >
                             <SendHorizontal size='22' strokeWidth={1} />
                         </MiniButton>

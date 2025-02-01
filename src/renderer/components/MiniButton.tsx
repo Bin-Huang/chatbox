@@ -10,8 +10,10 @@ export default function MiniButton(props: {
     style?: React.CSSProperties
     tooltipTitle?: React.ReactNode
     tooltipPlacement?: "top" | "bottom" | "left" | "right" | "bottom-end" | "bottom-start" | "left-end" | "left-start" | "right-end" | "right-start" | "top-end" | "top-start"
+    ariaLabel?: string
+    ariaHidden?: boolean
 }) {
-    const { onClick, disabled, className, style, tooltipTitle, tooltipPlacement, children } = props
+    const { onClick, disabled, className, style, tooltipTitle, tooltipPlacement, children, ariaLabel = '', ariaHidden = false } = props
     const button = (
         <button onClick={onClick} disabled={disabled}
             className={cn(
@@ -22,6 +24,8 @@ export default function MiniButton(props: {
                 className,
             )}
             style={style}
+            aria-label={ariaLabel}
+            aria-hidden={ariaHidden}
         >
             {children}
         </button>

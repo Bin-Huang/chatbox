@@ -74,7 +74,7 @@ export function CodeBlock(props: any) {
             )
         }
         return (
-            <div>
+            <div className='group/code-block relative'>
                 <div
                     style={{
                         display: 'flex',
@@ -87,6 +87,7 @@ export function CodeBlock(props: any) {
                         borderTopRightRadius: '0.3rem',
                         borderBottomLeftRadius: '0',
                         borderBottomRightRadius: '0',
+                        position: 'relative',
                     }}
                 >
                     <span
@@ -101,24 +102,32 @@ export function CodeBlock(props: any) {
                     </span>
                     {
                         !hiddenCodeCopyButton && (
-                            <ContentCopyIcon
-                                sx={{
+                           <button
+                                aria-label={t('copy')}
+                                className=' opacity-50 hover:opacity-100'
+                                style={{
                                     textDecoration: 'none',
                                     color: 'white',
                                     padding: '1px',
                                     margin: '2px 10px 0 10px',
                                     cursor: 'pointer',
-                                    opacity: 0.5,
-                                    ':hover': {
-                                        backgroundColor: 'rgb(80, 80, 80)',
-                                        opacity: 1,
-                                    },
+                                    backgroundColor: 'transparent',
+                                    border: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
                                 }}
                                 onClick={() => {
                                     copyToClipboard(String(children))
                                     toastActions.add(t('copied to clipboard'))
                                 }}
-                            />
+                            >
+                               <ContentCopyIcon
+                                    sx={{
+                                       
+                                        
+                                    }}
+                                 />
+                            </button>
                         )
                     }
                 </div>

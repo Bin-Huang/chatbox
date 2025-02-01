@@ -117,10 +117,27 @@ export default function Message(props: Props) {
         <span
             className='cursor-pointer inline-block font-bold text-blue-500 hover:text-white hover:bg-blue-500'
             onClick={() => setIsCollapsed(!isCollapsed)}
+            role='button'
         >
             [{isCollapsed ? t('Expand') : t('Collapse')}]
         </span>
     )
+
+    const getSenderName = () => {
+        switch (msg.role) {
+            case 'assistant':
+                return  currentSessionPicUrl ? 'AI Assistant' : t('assistant')
+            case 'user':
+                return t('user');
+            case 'system':
+                return t('system')
+            default:
+                return t('user');
+        }
+    };
+
+    const senderName = getSenderName();
+
 
     return (
         <Box
@@ -200,7 +217,18 @@ export default function Message(props: Props) {
                 </Grid>
                 <Grid item xs sm container sx={{ width: '0px', paddingRight: '15px' }}>
                     <Grid item xs>
-                        <Box className={cn('msg-content', { 'msg-content-small': small })} sx={
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                             <Typography
+                                  component={'h4'}
+                                   variant="subtitle2"
+                                   sx={{
+                                      marginRight: '0.5rem',
+                                     }}
+                                  >
+                                   {senderName}
+                                </Typography>
+                         </Box>
+                         <Box className={cn('msg-content', { 'msg-content-small': small })} sx={
                             small ? { fontSize: theme.typography.body2.fontSize } : {}
                         }>
                             {
