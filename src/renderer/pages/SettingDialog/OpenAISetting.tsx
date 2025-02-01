@@ -2,6 +2,7 @@ import { Typography, Box } from '@mui/material'
 import { ModelSettings } from '../../../shared/types'
 import { useTranslation } from 'react-i18next'
 import { Accordion, AccordionSummary, AccordionDetails } from '../../components/Accordion'
+import ReasoningEffortSelect from '../../components/ReasoningEffortSelect'
 import TemperatureSlider from '../../components/TemperatureSlider'
 import TopPSlider from '../../components/TopPSlider'
 import PasswordTextField from '../../components/PasswordTextField'
@@ -17,6 +18,11 @@ interface ModelConfigProps {
 export default function OpenAISetting(props: ModelConfigProps) {
     const { settingsEdit, setSettingsEdit } = props
     const { t } = useTranslation()
+    const model = settingsEdit.model;
+    const isReasoningModel = model?.startsWith('o') && 
+        !model?.startsWith('o1-preview') && 
+        !model?.startsWith('o1-mini');
+
     return (
         <Box>
             <PasswordTextField
@@ -61,14 +67,26 @@ export default function OpenAISetting(props: ModelConfigProps) {
                         }
                     />
 
-                    <TemperatureSlider
-                        value={settingsEdit.temperature}
-                        onChange={(value) => setSettingsEdit({ ...settingsEdit, temperature: value })}
-                    />
-                    <TopPSlider
-                        topP={settingsEdit.topP}
-                        setTopP={(v) => setSettingsEdit({ ...settingsEdit, topP: v })}
-                    />
+                    {isReasoningModel && (
+                        <ReasoningEffortSelect
+                            value={settingsEdit.openaiReasoningEffort}
+                            onChange={(value) => setSettingsEdit({ ...settingsEdit, openaiReasoningEffort: value })}
+                        />
+                    )}
+
+                    {!model?.startsWith('o') && (
+                        <>
+                            <TemperatureSlider
+                                value={settingsEdit.temperature}
+                                onChange={(value) => setSettingsEdit({ ...settingsEdit, temperature: value })}
+                            />
+                            <TopPSlider
+                                topP={settingsEdit.topP}
+                                setTopP={(v) => setSettingsEdit({ ...settingsEdit, topP: v })}
+                            />
+                        </>
+                    )}
+                    
                     <MaxContextMessageCountSlider
                         value={settingsEdit.openaiMaxContextMessageCount}
                         onChange={(v) => setSettingsEdit({ ...settingsEdit, openaiMaxContextMessageCount: v })}

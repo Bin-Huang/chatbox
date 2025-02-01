@@ -8,6 +8,7 @@ interface Options {
     apiPath?: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
+    openaiReasoningEffort: string
     temperature: number
     topP: number
 }
@@ -48,10 +49,25 @@ export default class OpenAI extends Base {
 
         rawMessages = injectModelSystemPrompt(model, rawMessages)
 
-        if (model.startsWith('o1')) {
-            const messages = await populateO1Message(rawMessages)
-            return this.requestChatCompletionsNotStream({ model, messages }, signal, onResultChange)
+        // o1-mini and o1-preview does not support reasoning unlike o1 relase
+        if (model.startsWith('o1-mini') || model.startsWith('o1-preview')) {
+            const messages = await populateReasoningMessage(rawMessages)
+            return this.requestChatCompletionsNotStream({
+                model, 
+                messages,
+            }, signal, onResultChange)
         }
+
+        // https://platform.openai.com/docs/guides/reasoning
+        if (model.startsWith('o')) {
+            const messages = await populateReasoningMessage(rawMessages)
+            return this.requestChatCompletionsNotStream({
+                model, 
+                messages,
+                reasoning_effort: this.options.openaiReasoningEffort,
+            }, signal, onResultChange)
+        }
+
         const messages = await populateGPTMessage(rawMessages)
         return this.requestChatCompletionsStream({
             messages,
@@ -286,7 +302,7 @@ export async function populateGPTMessage(rawMessages: Message[]): Promise<OpenAI
     return messages
 }
 
-export async function populateO1Message(rawMessages: Message[]): Promise<OpenAIMessage[]> {
+export async function populateReasoningMessage(rawMessages: Message[]): Promise<OpenAIMessage[]> {
     const messages: OpenAIMessage[] = rawMessages.map((m) => ({
         role: m.role === 'system' ? 'user' : m.role,
         content: m.content,
