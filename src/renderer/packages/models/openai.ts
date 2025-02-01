@@ -8,6 +8,7 @@ interface Options {
     apiPath?: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
+    openaiReasoningEffort: string
     temperature: number
     topP: number
 }
@@ -48,10 +49,25 @@ export default class OpenAI extends Base {
 
         rawMessages = injectModelSystemPrompt(model, rawMessages)
 
-        if (model.startsWith('o1')) {
-            const messages = await populateO1Message(rawMessages)
-            return this.requestChatCompletionsNotStream({ model, messages }, signal, onResultChange)
+        // o1-mini and o1-preview does not support reasoning unlike o1 relase
+        if (model.startsWith('o1-mini') || model.startsWith('o1-preview')) {
+            const messages = await populateReasoningMessage(rawMessages)
+            return this.requestChatCompletionsNotStream({
+                model, 
+                messages,
+            }, signal, onResultChange)
         }
+
+        // https://platform.openai.com/docs/guides/reasoning
+        if (model.startsWith('o')) {
+            const messages = await populateReasoningMessage(rawMessages)
+            return this.requestChatCompletionsNotStream({
+                model, 
+                messages,
+                reasoning_effort: this.options.openaiReasoningEffort,
+            }, signal, onResultChange)
+        }
+
         const messages = await populateGPTMessage(rawMessages)
         return this.requestChatCompletionsStream({
             messages,
@@ -184,6 +200,15 @@ export const openaiModelConfigs = {
         maxContextTokens: 128_000,
     },
 
+    // https://platform.openai.com/docs/models#o1
+    'o1': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
+    },
+    'o1-2024-12-17': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
+    },
     'o1-preview': {
         maxTokens: 32_768,
         maxContextTokens: 128_000,
@@ -199,6 +224,16 @@ export const openaiModelConfigs = {
     'o1-mini-2024-09-12': {
         maxTokens: 65_536,
         maxContextTokens: 128_000,
+    },
+
+    // https://platform.openai.com/docs/models#o3-mini
+    'o3-mini': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
+    },
+    'o3-mini-2025-01-31': {
+        maxTokens: 100_000,
+        maxContextTokens: 200_000,
     },
 
     'gpt-4': {
@@ -267,7 +302,7 @@ export async function populateGPTMessage(rawMessages: Message[]): Promise<OpenAI
     return messages
 }
 
-export async function populateO1Message(rawMessages: Message[]): Promise<OpenAIMessage[]> {
+export async function populateReasoningMessage(rawMessages: Message[]): Promise<OpenAIMessage[]> {
     const messages: OpenAIMessage[] = rawMessages.map((m) => ({
         role: m.role === 'system' ? 'user' : m.role,
         content: m.content,
