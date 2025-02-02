@@ -129,6 +129,46 @@ export default class OpenAI extends Base {
     }
 
 
+
+    async callChatCompletionWithFunctions(
+        rawMessages: Message[],
+        functions: any[],  // array of function definitions
+        signal?: AbortSignal,
+        onResultChange?: onResultChange
+      ): Promise<string> {
+        // Determine the effective model
+        const model = this.options.model === 'custom-model'
+          ? this.options.openaiCustomModel || ''
+          : this.options.model;
+      
+        // Check if the model supports functions
+        if (!model.startsWith('o3')) {
+          throw new Error('Function calling is only supported by models starting with o3');
+        }
+      
+        // Inject metadata to system prompt
+        rawMessages = injectModelSystemPrompt(model, rawMessages);
+      
+        // Choose the proper message format
+        const messages = await populateGPTMessage(rawMessages);
+      
+        // Build the payload
+        const payload: Record<string, any> = {
+          model,
+          messages,
+          functions,
+          temperature: this.options.temperature,
+          top_p: this.options.topP,
+        };
+      
+        // Add reasoning_effort
+        payload.reasoning_effort = this.options.openaiReasoningEffort;
+      
+        // Make the non-streaming API call
+        return this.requestChatCompletionsNotStream(payload, signal, onResultChange);
+      }
+      
+      
     getHeaders() {
         const headers: Record<string, string> = {
             Authorization: `Bearer ${this.options.openaiKey}`,
@@ -332,3 +372,4 @@ export interface OpenAIMessage {
     content: string
     name?: string
 }
+
