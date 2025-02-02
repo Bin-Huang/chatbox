@@ -65,7 +65,7 @@ export default function Message(props: Props) {
 
     const tips: string[] = []
     if (props.sessionType === 'chat' || !props.sessionType) {
-        if (showWordCount && !msg.generating) {
+        if (showWordCount && !msg.generating && msg.role != 'system') {
             tips.push(`word count: ${msg.wordCount !== undefined ? msg.wordCount : countWord(msg.content)}`)
         }
         if (showTokenCount && !msg.generating) {
@@ -135,8 +135,8 @@ export default function Message(props: Props) {
                 {
                     user: 'user-msg',
                     system: 'system-msg',
-                    assistant: 'assistant-msg',
-                }[msg?.role || 'user'],
+                    assistant: 'assistant-msg'
+                }[msg?.role === 'unknown' ? 'assistant' : msg.role],
                 className,
             )}
             sx={{
@@ -194,7 +194,7 @@ export default function Message(props: Props) {
                                         >
                                             <SettingsIcon fontSize='small' />
                                         </Avatar>
-                            }[msg.role]
+                            }[msg.role === 'unknown' ? 'assistant' : msg.role]
                         }
                     </Box>
                 </Grid>

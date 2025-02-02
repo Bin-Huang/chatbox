@@ -1,3 +1,4 @@
+
 import { Message } from 'src/shared/types'
 import Base, { onResultChange } from './base'
 import { ApiError } from './errors'
@@ -50,6 +51,7 @@ export default class Ollama extends Base {
             signal,
         )
         let result = ''
+        let role = 'unknown'
         await this.handleNdjson(res, (message) => {
             const data = JSON.parse(message)
             if (data['done']) {
@@ -59,9 +61,19 @@ export default class Ollama extends Base {
             if (! word) {
                 throw new ApiError(JSON.stringify(data))
             }
+
+            const messageRole = data['message']?.['role'];
+
+            if (role === 'unknown') {
+                role = messageRole;
+            } else if (role !== messageRole) {
+                role = messageRole;
+                result = '';
+            }
+
             result += word
             if (onResultChange) {
-                onResultChange(result)
+                onResultChange(result, messageRole)
             }
         })
         return result

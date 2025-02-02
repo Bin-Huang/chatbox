@@ -7,6 +7,7 @@ export const MessageRoleEnum = {
     System: 'system',
     User: 'user',
     Assistant: 'assistant',
+    Unknown: "unknown"
 } as const
 
 export type MessageRole = (typeof MessageRoleEnum)[keyof typeof MessageRoleEnum]
