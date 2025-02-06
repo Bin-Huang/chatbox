@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Model } from '../renderer/packages/models/openai'
 import * as siliconflow from '../renderer/packages/models/siliconflow'
 import { ClaudeModel } from '../renderer/packages/models/claude'
+import { AddFunctionType } from '../renderer/components/AddFunction'
 
 export const MessageRoleEnum = {
     System: 'system',
@@ -79,7 +80,7 @@ export interface ModelSettings {
     apiHost: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
-
+    functions?: AddFunctionType[]
     //LMStudio
     lmStudioHost: string
     lmStudioModel: string
@@ -118,6 +119,7 @@ export interface ModelSettings {
     temperature: number
     topP: number
     openaiMaxContextMessageCount: number
+    openaiReasoningEffort: string
 }
 
 export interface Settings extends ModelSettings {

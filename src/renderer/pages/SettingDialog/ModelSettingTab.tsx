@@ -4,16 +4,18 @@ import OpenAISetting from './OpenAISetting'
 import ChatboxAISetting from './ChatboxAISetting'
 import AIProviderSelect from '../../components/AIProviderSelect'
 import { OllamaHostInput, OllamaModelSelect } from './OllamaSetting'
-import { LMStudioHostInput, LMStudioModelSelect } from './LMStudioSetting'
+import { LMStudioHostInput, LMStudioModelSelect } from './LMStudioSetting'  
 import SiliconFlowSetting from './SiliconFlowSetting'
 import MaxContextMessageCountSlider from '@/components/MaxContextMessageCountSlider'
 import TemperatureSlider from '@/components/TemperatureSlider'
 import ClaudeSetting from './ClaudeSetting'
+import AddFunction, { AddFunctionType } from '../../components/AddFunction'
 
 interface ModelConfigProps {
     settingsEdit: ModelSettings
     setSettingsEdit: (settings: ModelSettings) => void
 }
+
 
 export default function ModelSettingTab(props: ModelConfigProps) {
     const { settingsEdit, setSettingsEdit } = props
@@ -25,7 +27,10 @@ export default function ModelSettingTab(props: ModelConfigProps) {
             />
             <Divider sx={{ marginTop: '10px', marginBottom: '24px' }} />
             {settingsEdit.aiProvider === ModelProvider.OpenAI && (
-                <OpenAISetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
+                <OpenAISetting 
+                    settingsEdit={settingsEdit} 
+                    setSettingsEdit={(settings: ModelSettings) => setSettingsEdit(settings)} 
+                />
             )}
             {settingsEdit.aiProvider === ModelProvider.ChatboxAI && (
                 <ChatboxAISetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />

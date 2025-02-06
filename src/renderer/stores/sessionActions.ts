@@ -1,3 +1,5 @@
+// sessionActions.ts
+import { AddFunctionType } from '@/components/AddFunction'
 import { getDefaultStore } from 'jotai'
 import {
     Settings,
@@ -175,10 +177,13 @@ export async function generate(sessionId: string, targetMsg: Message) {
     if (!session) {
         return
     }
-    const autoGenerateTitle = settingActions.getAutoGenerateTitle()
-    if (!autoGenerateTitle) {
-        return
-    }
+
+    const functionsEnabled = localStorage.getItem('functionsEnabled') === 'true'
+    const functions: AddFunctionType[] = functionsEnabled ? JSON.parse(localStorage.getItem('functions') || '[]') : []
+    
+    console.log("Functions enabled:", functionsEnabled);
+    console.log("Functions:", functions);
+
     const placeholder = '...'
     targetMsg = {
         ...targetMsg,
@@ -191,9 +196,10 @@ export async function generate(sessionId: string, targetMsg: Message) {
         error: undefined,
         errorExtra: undefined,
     }
+
     modifyMessage(sessionId, targetMsg)
 
-    let messages = session.messages
+    let messages = session.messages.filter(msg => msg.content !== null);
     let targetMsgIx = messages.findIndex((m) => m.id === targetMsg.id)
 
     try {
@@ -202,16 +208,41 @@ export async function generate(sessionId: string, targetMsg: Message) {
             case 'chat':
             case undefined:
                 const promptMsgs = genMessageContext(settings, messages.slice(0, targetMsgIx))
-                const throttledModifyMessage = throttle(({ text, cancel }: { text: string, cancel: () => void }) => {
-                    targetMsg = { ...targetMsg, content: text, cancel }
+                let isFirstUpdate = true
+                const updateMessage = ({ text, cancel }: { text: string, cancel: () => void }) => {
+                    if (isFirstUpdate) {
+                        targetMsg = { ...targetMsg, content: text || placeholder, cancel }
+                        isFirstUpdate = false
+                    } else {
+                        targetMsg = { ...targetMsg, content: text ? (targetMsg.content === placeholder ? text : targetMsg.content + text) : targetMsg.content, cancel }
+                    }
                     modifyMessage(sessionId, targetMsg)
-                }, 100)
-                await model.chat(promptMsgs, throttledModifyMessage)
+                }
+
+                let result: string;
+                if (functionsEnabled && functions.length > 0 && model.callChatCompletionWithFunctions) {
+                    result = await model.callChatCompletionWithFunctions(
+                        promptMsgs,
+                        functions,
+                        undefined, // signal
+                        updateMessage
+                    )
+                } else {
+                    result = await model.chat(promptMsgs, updateMessage)
+                }
+
+                console.log("Generated result:", result);
+
+                // Calculate tokens
+                const allMessages = [...promptMsgs, { ...targetMsg, content: result }]
+                const tokensUsed = estimateTokensFromMessages(allMessages)
+
                 targetMsg = {
                     ...targetMsg,
+                    content: result,
                     generating: false,
                     cancel: undefined,
-                    tokensUsed: estimateTokensFromMessages([...promptMsgs, targetMsg]),
+                    tokensUsed: tokensUsed,
                 }
                 modifyMessage(sessionId, targetMsg, true)
                 break
@@ -219,6 +250,7 @@ export async function generate(sessionId: string, targetMsg: Message) {
                 throw new Error(`Unknown session type: ${session.type}, generate failed`)
         }
     } catch (err: any) {
+        console.error('Error in generate function:', err);
         if (!(err instanceof Error)) {
             err = new Error(`${err}`)
         }
@@ -233,7 +265,7 @@ export async function generate(sessionId: string, targetMsg: Message) {
             ...targetMsg,
             generating: false,
             cancel: undefined,
-            content: targetMsg.content === placeholder ? '' : targetMsg.content,
+            content: targetMsg.content === placeholder ? 'An error occurred while processing the request.' : targetMsg.content,
             errorCode,
             error: `${err.message}`,
             errorExtra: {

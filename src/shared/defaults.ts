@@ -53,6 +53,7 @@ export function settings(): Settings {
         siliconCloudModel: 'THUDM/glm-4-9b-chat',
 
         autoGenerateTitle: true,
+        openaiReasoningEffort: 'medium',
     }
 }
 
