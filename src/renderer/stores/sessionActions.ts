@@ -1,6 +1,5 @@
 // sessionActions.ts
-allowImportingTsExtensions: true
-import { AddFunctionType } from 'src/renderer/components/AddFunction.tsx' // Adjust the import path as needed
+import { AddFunctionType } from '@/components/AddFunction'
 import { getDefaultStore } from 'jotai'
 import {
     Settings,
