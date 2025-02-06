@@ -80,7 +80,7 @@ export interface ModelSettings {
     apiHost: string
     model: Model | 'custom-model'
     openaiCustomModel?: string
-    functions?: AddFunctionType[] 
+    functions?: AddFunctionType[]
     //LMStudio
     lmStudioHost: string
     lmStudioModel: string

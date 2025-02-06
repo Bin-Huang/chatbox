@@ -1,3 +1,6 @@
+// sessionActions.ts
+allowImportingTsExtensions: true
+import { AddFunctionType } from 'src/renderer/components/AddFunction.tsx' // Adjust the import path as needed
 import { getDefaultStore } from 'jotai'
 import {
     Settings,
@@ -175,10 +178,11 @@ export async function generate(sessionId: string, targetMsg: Message) {
     if (!session) {
         return
     }
-    const autoGenerateTitle = settingActions.getAutoGenerateTitle()
-    if (!autoGenerateTitle) {
-        return
-    }
+
+    // Add functions check
+    const functionsEnabled = localStorage.getItem('functionsEnabled') === 'true'
+    const functions: AddFunctionType[] = functionsEnabled ? JSON.parse(localStorage.getItem('functions') || '[]') : []
+    
     const placeholder = '...'
     targetMsg = {
         ...targetMsg,
@@ -191,9 +195,13 @@ export async function generate(sessionId: string, targetMsg: Message) {
         error: undefined,
         errorExtra: undefined,
     }
+    // Add this near the beginning of the generate function
+    console.log("Functions enabled:", functionsEnabled);
+    console.log("Functions:", functions);
+
     modifyMessage(sessionId, targetMsg)
 
-    let messages = session.messages
+    let messages = session.messages.filter(msg => msg.content !== null);
     let targetMsgIx = messages.findIndex((m) => m.id === targetMsg.id)
 
     try {
@@ -206,7 +214,18 @@ export async function generate(sessionId: string, targetMsg: Message) {
                     targetMsg = { ...targetMsg, content: text, cancel }
                     modifyMessage(sessionId, targetMsg)
                 }, 100)
-                await model.chat(promptMsgs, throttledModifyMessage)
+
+                // Use functions if enabled and available
+                if (functionsEnabled && functions.length > 0 && model.callChatCompletionWithFunctions) {
+                    await model.callChatCompletionWithFunctions(
+                        promptMsgs,
+                        functions,
+                        undefined, // signal
+                        throttledModifyMessage
+                    )
+                } else {
+                    await model.chat(promptMsgs, throttledModifyMessage)
+                }
                 targetMsg = {
                     ...targetMsg,
                     generating: false,
