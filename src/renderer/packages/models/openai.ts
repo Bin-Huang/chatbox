@@ -13,8 +13,6 @@ interface Options {
   topP: number
 }
 
-
-
 export interface AddFunctionType {
   name: string
   description: string
@@ -110,26 +108,13 @@ export default class OpenAI extends Base {
         
     if (model.startsWith('o3')) {
       const messages = await populateReasoningMessage(rawMessages)
-      if (tools.length > 0) {
-        const payload = {
-          model,
-          messages,
-          reasoning_effort: this.options.openaiReasoningEffort,
-          tools,
-          tool_choice: 'auto',
-        }
-      } else {
-        const payload = {
-          model,
-          messages,
-          reasoning_effort: this.options.openaiReasoningEffort,
-        }
-        return this.requestChatCompletionsNotStream(
-          payload,
-          signal,
-          onResultChange
-        )
+      const payload = {
+        model,
+        messages,
+        reasoning_effort: this.options.openaiReasoningEffort,
+        ...(tools.length > 0 ? { tools, tool_choice: 'auto' } : {})
       }
+      return this.requestChatCompletionsNotStream(payload, signal, onResultChange)
     }
 
     if (model.startsWith('o1-mini') || model.startsWith('o1-preview')) {
@@ -157,39 +142,20 @@ export default class OpenAI extends Base {
       )
     }
 
-    if (tools.length > 0) {
-      const messages = await populateGPTMessage(rawMessages)
-      const payload = {
-        model,
-        messages,
-        tools,
-        tool_choice: 'auto',
-        temperature: this.options.temperature,
-        top_p: this.options.topP,
-      }
-      return this.requestChatCompletionsNotStreamWithFunctionCall(
-        payload,
-        signal,
-        onResultChange
-      )
-    } else {
-      const messages = await populateGPTMessage(rawMessages)
-      return this.requestChatCompletionsStream(
-        {
-          messages,
-          model,
-          max_tokens:
-            this.options.model === 'gpt-4-vision-preview'
-              ? openaiModelConfigs['gpt-4-vision-preview'].maxTokens
-              : undefined,
-          temperature: this.options.temperature,
-          top_p: this.options.topP,
-          stream: true,
-        },
-        signal,
-        onResultChange
-      )
+    const messages = await populateGPTMessage(rawMessages)
+    const payload = {
+      messages,
+      model,
+      temperature: this.options.temperature,
+      top_p: this.options.topP,
+      ...(tools.length > 0 ? { tools, tool_choice: 'auto' } : {}),
+      ...(this.options.model === 'gpt-4-vision-preview' ? { max_tokens: openaiModelConfigs['gpt-4-vision-preview'].maxTokens } : {}),
+      ...(tools.length === 0 ? { stream: true } : {})
     }
+
+    return tools.length > 0
+      ? this.requestChatCompletionsNotStream(payload, signal, onResultChange)
+      : this.requestChatCompletionsStream(payload, signal, onResultChange)
   }
 
   async requestChatCompletionsStream(
@@ -229,6 +195,7 @@ export default class OpenAI extends Base {
     signal?: AbortSignal,
     onResultChange?: onResultChange
   ): Promise<string> {
+
     console.log('Request payload:', JSON.stringify(requestBody, null, 2))
     const apiPath = this.options.apiPath || '/v1/chat/completions'
     const response = await this.post(
@@ -243,34 +210,27 @@ export default class OpenAI extends Base {
     }
     
     const message = json.choices[0].message;
+    let result = '';
     
     if (message.tool_calls) {
-      try {
-        const toolCall = message.tool_calls[0];
-        const functionCall = {
-          name: toolCall.function.name,
-          arguments: JSON.parse(toolCall.function.arguments),
-        }
-        const funcCallStr = JSON.stringify(functionCall, null, 2)
-        if (onResultChange) {
-          onResultChange(`Function Call:\n${funcCallStr}`)
-        }
-        return funcCallStr
-      } catch (error) {
-        console.error('Error parsing function call:', error)
-        return JSON.stringify(message.tool_calls[0].function)
+      const toolCall = message.tool_calls[0];
+      const functionCall = {
+        name: toolCall.function.name,
+        arguments: JSON.parse(toolCall.function.arguments),
       }
+      result = `Function Call:\n${JSON.stringify(functionCall, null, 2)}`;
     } else if (message.content) {
-      if (onResultChange) {
-        onResultChange(message.content)
-      }
-      return message.content
+      result = message.content;
     } else {
-      throw new Error('Unexpected response format from OpenAI')
+      throw new Error('Unexpected response format from OpenAI');
     }
+    
+    if (onResultChange) {
+      onResultChange(result);
+    }
+    return result;
   }
   
-
   async callChatCompletionWithFunctions(
     rawMessages: Message[],
     functions: AddFunctionType[],
@@ -313,6 +273,8 @@ export default class OpenAI extends Base {
     }
   }
 }
+
+
 
 // Ref: https://platform.openai.com/docs/models/gpt-4
 export const openaiModelConfigs = {
