@@ -1,22 +1,26 @@
 {
     "compilerOptions": {
-        "incremental": true,
-        "target": "es2021",
-        "module": "commonjs",
-        "lib": ["dom", "es2021"],
-        "jsx": "react-jsx",
-        "strict": true,
-        "sourceMap": true,
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./src/renderer/*"]
-        },
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "resolveJsonModule": true,
-        "allowJs": true,
-        "outDir": ".erb/dll"
+      "target": "ES2020",
+      "useDefineForClassFields": true,
+      "lib": ["ES2020", "DOM", "DOM.Iterable"],
+      "module": "ESNext",
+      "skipLibCheck": true,
+  
+      /* Bundler mode */
+      "moduleResolution": "bundler",
+      "allowImportingTsExtensions": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noEmit": true,
+      "jsx": "react-jsx",
+  
+      /* Linting */
+      "strict": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noFallthroughCasesInSwitch": true
     },
-    "exclude": ["node_modules", "dist", "tmp", "test", "release", ".erb/dll"]
-}
+    "include": ["src"],
+    "references": [{ "path": "./tsconfig.node.json" }]
+  }
+  
