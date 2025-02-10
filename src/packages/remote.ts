@@ -9,7 +9,7 @@ import {
 } from '../shared/types'
 import { ofetch } from 'ofetch'
 
-export const API_ORIGIN = 'https://chatboxai.app'
+export const API_ORIGIN = 'http://localhost:1420'
 
 
 export async function checkNeedUpdate(version: string, os: string, config: Config, settings: Settings) {

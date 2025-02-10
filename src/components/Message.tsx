@@ -10,7 +10,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useTranslation } from 'react-i18next'
-import { Message, SessionType } from '../shared/types'
+import { IMessage, SessionType } from '../shared/types'
 import { useAtomValue, useSetAtom } from 'jotai'
 import {
     showMessageTimestampAtom,
@@ -34,7 +34,7 @@ export interface Props {
     id?: string
     sessionId: string
     sessionType: SessionType
-    msg: Message
+    msg: IMessage
     className?: string
     collapseThreshold?: number
     hiddenButtonGroup?: boolean

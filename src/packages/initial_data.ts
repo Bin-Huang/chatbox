@@ -1,6 +1,6 @@
-import { Session } from '../shared/types'
+import { ISession } from '../shared/types'
 
-export const defaultSessionsForEN: Session[] = [
+export const defaultSessionsForEN: ISession[] = [
     {
         id: 'justchat-b612-406a-985b-3ab4d2c482ff',
         name: 'Just chat',
@@ -202,7 +202,7 @@ export const defaultSessionsForEN: Session[] = [
     },
 ]
 
-export const defaultSessionsForCN: Session[] = [
+export const defaultSessionsForCN: ISession[] = [
     {
         id: '81cfc426-48b4-4a13-ad42-bfcfc4544299',
         name: '小红书文案生成器 (示例)',

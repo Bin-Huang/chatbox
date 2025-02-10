@@ -1,4 +1,4 @@
-import { Message } from 'src/shared/types'
+import { IMessage } from '@/shared/types'
 import { ApiError, ChatboxAIAPIError } from './errors'
 import Base, { onResultChange } from './base'
 
@@ -23,7 +23,7 @@ export default class SiliconFlow extends Base {
     }
 
     async callChatCompletion(
-        rawMessages: Message[],
+        rawMessages: IMessage[],
         signal?: AbortSignal,
         onResultChange?: onResultChange
     ): Promise<string> {
@@ -41,7 +41,7 @@ export default class SiliconFlow extends Base {
     }
 
     async _callChatCompletion(
-        rawMessages: Message[],
+        rawMessages: IMessage[],
         signal?: AbortSignal,
         onResultChange?: onResultChange
     ): Promise<string> {
@@ -130,13 +130,13 @@ export type Model = keyof typeof siliconflowModelConfigs
 export const models = Array.from(Object.keys(siliconflowModelConfigs)).sort() as Model[]
 
 export async function populateSiliconFlowMessage(
-    rawMessages: Message[],
+    rawMessages: IMessage[],
     model: Model | 'custom-model'
 ): Promise<SiliconFlowMessage[]> {
     return populateSiliconFlowMessageText(rawMessages)
 }
 
-export async function populateSiliconFlowMessageText(rawMessages: Message[]): Promise<SiliconFlowMessage[]> {
+export async function populateSiliconFlowMessageText(rawMessages: IMessage[]): Promise<SiliconFlowMessage[]> {
     const messages: SiliconFlowMessage[] = rawMessages.map((m) => ({
         role: m.role,
         content: m.content,

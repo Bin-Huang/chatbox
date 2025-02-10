@@ -1,4 +1,4 @@
-import { Message } from 'src/shared/types'
+import { IMessage } from '@/shared/types'
 import Base, { onResultChange } from './base'
 import { ApiError } from './errors'
 import { get } from 'lodash'
@@ -79,7 +79,7 @@ export default class Claude extends Base {
     }
 
     async callChatCompletion(
-        rawMessages: Message[],
+        rawMessages: IMessage[],
         signal?: AbortSignal,
         onResultChange?: onResultChange
     ): Promise<string> {
@@ -137,11 +137,11 @@ export default class Claude extends Base {
         return result
     }
 
-    public isMessageEmpty(m: Message): boolean {
+    public isMessageEmpty(m: IMessage): boolean {
         return m.content === ''
     }
 
-    public mergeMessages(a: Message, b: Message): Message {
+    public mergeMessages(a: IMessage, b: IMessage): IMessage {
         const ret = { ...a }
         if (ret.content != '') {
             ret.content += '\n\n'
@@ -150,9 +150,9 @@ export default class Claude extends Base {
         return ret
     }
 
-    public sequenceMessages(msgs: Message[]): Message[] {
+    public sequenceMessages(msgs: IMessage[]): IMessage[] {
         // Merge all system messages first
-        let system: Message = {
+        let system: IMessage = {
             id: '',
             role: 'system',
             content: '',
@@ -163,8 +163,8 @@ export default class Claude extends Base {
             }
         }
         // Initialize the result array with the non-empty system message, if present
-        let ret: Message[] = this.isMessageEmpty(system) ? [] : [system]
-        let next: Message = {
+        let ret: IMessage[] = this.isMessageEmpty(system) ? [] : [system]
+        let next: IMessage = {
             id: '',
             role: 'user',
             content: '',

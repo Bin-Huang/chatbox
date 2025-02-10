@@ -2,8 +2,8 @@ import { getDefaultStore } from 'jotai'
 import {
     Settings,
     createMessage,
-    Message,
-    Session,
+    IMessage,
+    ISession,
 } from '../shared/types'
 import * as atoms from './atoms'
 import * as promptFormat from '../packages/prompts'
@@ -19,13 +19,13 @@ import { countWord } from '@/packages/word-count'
 import { estimateTokensFromMessages } from '@/packages/token'
 import * as settingActions from './settingActions'
 
-export function create(newSession: Session) {
+export function create(newSession: ISession) {
     const store = getDefaultStore()
     store.set(atoms.sessionsAtom, (sessions) => [...sessions, newSession])
     switchCurrentSession(newSession.id)
 }
 
-export function modify(update: Session) {
+export function modify(update: ISession) {
     const store = getDefaultStore()
     store.set(atoms.sessionsAtom, (sessions) =>
         sessions.map((s) => {
@@ -64,7 +64,7 @@ export function switchCurrentSession(sessionId: string) {
     scrollActions.scrollToBottom()
 }
 
-export function remove(session: Session) {
+export function remove(session: ISession) {
     const store = getDefaultStore()
     store.set(atoms.sessionsAtom, (sessions) => sessions.filter((s) => s.id !== session.id))
 }
@@ -80,7 +80,7 @@ export function clear(sessionId: string) {
     })
 }
 
-export async function copy(source: Session) {
+export async function copy(source: ISession) {
     const store = getDefaultStore()
     const newSession = { ...source }
     newSession.id = uuidv4()
@@ -101,7 +101,7 @@ export function getSession(sessionId: string) {
     return sessions.find((s) => s.id === sessionId)
 }
 
-export function insertMessage(sessionId: string, msg: Message) {
+export function insertMessage(sessionId: string, msg: IMessage) {
     const store = getDefaultStore()
     msg.wordCount = countWord(msg.content)
     msg.tokenCount = estimateTokensFromMessages([msg])
@@ -120,7 +120,7 @@ export function insertMessage(sessionId: string, msg: Message) {
     )
 }
 
-export function modifyMessage(sessionId: string, updated: Message, refreshCounting?: boolean) {
+export function modifyMessage(sessionId: string, updated: IMessage, refreshCounting?: boolean) {
     const store = getDefaultStore()
     if (refreshCounting) {
         updated.wordCount = countWord(updated.content)
@@ -130,7 +130,7 @@ export function modifyMessage(sessionId: string, updated: Message, refreshCounti
     updated.timestamp = new Date().getTime()
 
     let hasHandled = false
-    const handle = (msgs: Message[]) => {
+    const handle = (msgs: IMessage[]) => {
         return msgs.map((m) => {
             if (m.id === updated.id) {
                 hasHandled = true
@@ -152,7 +152,7 @@ export function modifyMessage(sessionId: string, updated: Message, refreshCounti
 
 export async function submitNewUserMessage(params: {
     currentSessionId: string
-    newUserMsg: Message
+    newUserMsg: IMessage
     needGenerating: boolean
 }) {
     const { currentSessionId, newUserMsg, needGenerating } = params
@@ -167,7 +167,7 @@ export async function submitNewUserMessage(params: {
     }
 }
 
-export async function generate(sessionId: string, targetMsg: Message) {
+export async function generate(sessionId: string, targetMsg: IMessage) {
     const store = getDefaultStore()
     const settings = store.get(atoms.settingsAtom)
     const configs = await platform.getConfig()
@@ -276,7 +276,7 @@ export async function generateName(sessionId: string) {
     return _generateName(sessionId, modifyName)
 }
 
-function genMessageContext(settings: Settings, msgs: Message[]) {
+function genMessageContext(settings: Settings, msgs: IMessage[]) {
     const {
         openaiMaxContextMessageCount
     } = settings
@@ -288,7 +288,7 @@ function genMessageContext(settings: Settings, msgs: Message[]) {
         msgs = msgs.slice(1)
     }
     let totalLen = head ? estimateTokensFromMessages([head]) : 0
-    let prompts: Message[] = []
+    let prompts: IMessage[] = []
     for (let i = msgs.length - 1; i >= 0; i--) {
         const msg = msgs[i]
         if (msg.error || msg.errorCode) {
@@ -312,7 +312,7 @@ function genMessageContext(settings: Settings, msgs: Message[]) {
     return prompts
 }
 
-export function initEmptyChatSession(): Session {
+export function initEmptyChatSession(): ISession {
     const store = getDefaultStore()
     const settings = store.get(atoms.settingsAtom)
     return {

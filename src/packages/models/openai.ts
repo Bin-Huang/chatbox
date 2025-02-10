@@ -1,4 +1,4 @@
-import { Message } from 'src/shared/types'
+import { IMessage } from '@/shared/types'
 import { ApiError, ChatboxAIAPIError } from './errors'
 import Base, { onResultChange } from './base'
 
@@ -30,7 +30,7 @@ export default class OpenAI extends Base {
         }
     }
 
-    async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(rawMessages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         try {
             return await this._callChatCompletion(rawMessages, signal, onResultChange)
         } catch (e) {
@@ -41,7 +41,7 @@ export default class OpenAI extends Base {
         }
     }
 
-    async _callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async _callChatCompletion(rawMessages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         const model = this.options.model === 'custom-model'
             ? this.options.openaiCustomModel || ''
             : this.options.model
@@ -270,7 +270,7 @@ export const openaiModelConfigs = {
 export type Model = keyof typeof openaiModelConfigs
 export const models = Array.from(Object.keys(openaiModelConfigs)).sort() as Model[]
 
-export async function populateGPTMessage(rawMessages: Message[]): Promise<OpenAIMessage[]> {
+export async function populateGPTMessage(rawMessages: IMessage[]): Promise<OpenAIMessage[]> {
     const messages: OpenAIMessage[] = rawMessages.map((m) => ({
         role: m.role,
         content: m.content,
@@ -278,7 +278,7 @@ export async function populateGPTMessage(rawMessages: Message[]): Promise<OpenAI
     return messages
 }
 
-export async function populateO1Message(rawMessages: Message[]): Promise<OpenAIMessage[]> {
+export async function populateO1Message(rawMessages: IMessage[]): Promise<OpenAIMessage[]> {
     const messages: OpenAIMessage[] = rawMessages.map((m) => ({
         role: m.role === 'system' ? 'user' : m.role,
         content: m.content,
@@ -286,7 +286,7 @@ export async function populateO1Message(rawMessages: Message[]): Promise<OpenAIM
     return messages
 }
 
-export function injectModelSystemPrompt(model: string, messages: Message[]) {
+export function injectModelSystemPrompt(model: string, messages: IMessage[]) {
     const metadataPrompt = `
 Current model: ${model}
 Current date: ${new Date().toISOString()}

@@ -1,4 +1,4 @@
-import { Theme, Config, Settings, ModelProvider, Session } from './types'
+import { Theme, Config, Settings, ModelProvider, ISession } from './types'
 import { v4 as uuidv4 } from 'uuid'
 
 export function settings(): Settings {
@@ -68,6 +68,6 @@ export function getDefaultPrompt() {
     return 'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.'
 }
 
-export function sessions(): Session[] {
+export function sessions(): ISession[] {
     return [{ id: uuidv4(), name: 'Untitled', messages: [], type: 'chat' }]
 }

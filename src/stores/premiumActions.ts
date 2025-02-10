@@ -6,7 +6,7 @@ import platform from '../packages/platform'
 import { FetchError } from 'ofetch'
 import omit from 'lodash/omit'
 import * as Sentry from '@sentry/react'
-import { ModelProvider, Settings } from 'src/shared/types'
+import { ModelProvider, Settings } from '@/shared/types'
 
 export function useAutoValidate() {
     const [settings, setSettings] = useAtom(settingsAtom)

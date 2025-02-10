@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useSetAtom } from 'jotai'
 import { ListItemText, MenuItem, Avatar, IconButton, Typography, ListItemIcon, useTheme } from '@mui/material'
-import { Session } from '../shared/types'
+import { ISession } from '../shared/types'
 import CopyIcon from '@mui/icons-material/CopyAll'
 import EditIcon from '@mui/icons-material/Edit'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
@@ -14,7 +14,7 @@ import * as atoms from '@/stores/atoms'
 import { cn } from '@/lib/utils'
 
 export interface Props {
-    session: Session
+    session: ISession
     selected: boolean
 }
 

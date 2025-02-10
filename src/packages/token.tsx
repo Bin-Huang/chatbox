@@ -3,7 +3,7 @@ import { Tiktoken } from 'js-tiktoken/lite'
 // @ts-ignore
 import cl100k_base from 'js-tiktoken/ranks/cl100k_base'
 
-import { Message } from '../shared/types'
+import { IMessage } from '../shared/types'
 
 const encoding = new Tiktoken(cl100k_base)
 function estimateTokens(str: string): number {
@@ -13,7 +13,7 @@ function estimateTokens(str: string): number {
 }
 
 // OpenAI Cookbook: https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
-export function estimateTokensFromMessages(messages: Message[]) {
+export function estimateTokensFromMessages(messages: IMessage[]) {
     try {
         const tokensPerMessage = 3
         const tokensPerName = 1

@@ -1,4 +1,4 @@
-import { Message } from 'src/shared/types'
+import { IMessage } from 'src/shared/types'
 import { ApiError } from './errors'
 import Base, { onResultChange } from './base'
 
@@ -21,7 +21,7 @@ export default class PPIO extends Base {
     }
 
     async callChatCompletion(
-        rawMessages: Message[],
+        rawMessages: IMessage[],
         signal?: AbortSignal,
         onResultChange?: onResultChange
     ): Promise<string> {

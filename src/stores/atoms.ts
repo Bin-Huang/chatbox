@@ -1,5 +1,5 @@
 import { atom, SetStateAction } from 'jotai'
-import { Session, Toast, Settings, CopilotDetail, Message, SettingWindowTab
+import { ISession, Toast, Settings, CopilotDetail, IMessage, SettingWindowTab
 } from '../shared/types'
 import { selectAtom, atomWithStorage } from 'jotai/utils'
 import { focusAtom } from 'jotai-optics'
@@ -43,7 +43,7 @@ export const myCopilotsAtom = atomWithStorage<CopilotDetail[]>(StorageKey.MyCopi
 
 // sessions
 
-const _sessionsAtom = atomWithStorage<Session[]>(StorageKey.ChatSessions, [], storage)
+const _sessionsAtom = atomWithStorage<ISession[]>(StorageKey.ChatSessions, [], storage)
 export const sessionsAtom = atom(
     (get) => {
         let sessions = get(_sessionsAtom)
@@ -52,7 +52,7 @@ export const sessionsAtom = atom(
         }
         return sessions
     },
-    (get, set, update: SetStateAction<Session[]>) => {
+    (get, set, update: SetStateAction<ISession[]>) => {
         const sessions = get(_sessionsAtom)
         let newSessions = typeof update === 'function' ? update(sessions) : update
         if (newSessions.length === 0) {
@@ -65,7 +65,7 @@ export const sortedSessionsAtom = atom((get) => {
     return sortSessions(get(sessionsAtom))
 })
 
-export function sortSessions(sessions: Session[]): Session[] {
+export function sortSessions(sessions: ISession[]): ISession[] {
     return [...sessions].reverse()
 }
 
@@ -99,9 +99,10 @@ export const currsentSessionPicUrlAtom = selectAtom(currentSessionAtom, (s) => s
 
 
 export const currentMessageListAtom = selectAtom(currentSessionAtom, (s) => {
-    let messageContext: Message[] = []
-    if (s.messages) {
-        messageContext = messageContext.concat(s.messages)
+    let messageContext: IMessage[] = []
+    const session = s
+    if (session.messages) {
+        messageContext = messageContext.concat(session.messages)
     }
     return messageContext
 })
@@ -119,5 +120,5 @@ export const configVersionAtom = atomWithStorage<number>(StorageKey.ConfigVersio
 export const messageListRefAtom = atom<null | React.MutableRefObject<HTMLDivElement | null>>(null)
 
 export const openSettingDialogAtom = atom<SettingWindowTab | null>(null)
-export const sessionCleanDialogAtom = atom<Session | null>(null)
-export const chatConfigDialogAtom = atom<Session | null>(null)
+export const sessionCleanDialogAtom = atom<ISession | null>(null)
+export const chatConfigDialogAtom = atom<ISession | null>(null)

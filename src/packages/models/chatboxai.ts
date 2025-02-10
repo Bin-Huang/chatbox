@@ -1,4 +1,4 @@
-import { ChatboxAILicenseDetail, ChatboxAIModel, Message, MessageRole } from 'src/shared/types'
+import { ChatboxAILicenseDetail, ChatboxAIModel, IMessage, MessageRole } from '@/shared/types'
 import Base, { onResultChange } from './base'
 import { API_ORIGIN } from '../remote'
 import { BaseError, ApiError, NetworkError, ChatboxAIAPIError } from './errors'
@@ -32,7 +32,7 @@ export default class ChatboxAI extends Base {
         this.config = config
     }
 
-    async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(rawMessages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         const messages = await populateChatboxAIMessage(rawMessages)
         const response = await this.post(
             `${API_ORIGIN}/api/ai/chat`,
@@ -176,7 +176,7 @@ export interface ChatboxAIMessage {
     }[]
 }
 
-export async function populateChatboxAIMessage(rawMessages: Message[]): Promise<ChatboxAIMessage[]> {
+export async function populateChatboxAIMessage(rawMessages: IMessage[]): Promise<ChatboxAIMessage[]> {
     const messages: ChatboxAIMessage[] = []
     for (const raw of rawMessages) {
         const newMessage: ChatboxAIMessage = {

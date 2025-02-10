@@ -1,4 +1,4 @@
-import { Message } from 'src/shared/types'
+import { IMessage } from '@/shared/types'
 import { ApiError, NetworkError, AIProviderNoImplementedPaintError, BaseError, AIProviderNoImplementedChatError } from './errors'
 import { createParser } from 'eventsource-parser'
 import _ from 'lodash'
@@ -9,16 +9,16 @@ export default class Base {
     constructor() {
     }
 
-    async callChatCompletion(messages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(messages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         throw new AIProviderNoImplementedChatError(this.name)
     }
 
-    async chat(messages: Message[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    async chat(messages: IMessage[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
         messages = await this.preprocessMessage(messages)
         return await this._chat(messages, onResultUpdated)
     }
 
-    protected async _chat(messages: Message[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    protected async _chat(messages: IMessage[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
         let canceled = false
         const controller = new AbortController()
         const stop = () => {
@@ -45,7 +45,7 @@ export default class Base {
         return result
     }
 
-    async preprocessMessage(messages: Message[]): Promise<Message[]> {
+    async preprocessMessage(messages: IMessage[]): Promise<IMessage[]> {
         return messages
     }
 

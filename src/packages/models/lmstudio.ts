@@ -1,4 +1,4 @@
-import { Message } from 'src/shared/types'
+import { IMessage } from '@/shared/types'
 import Base, { onResultChange } from './base'
 import { ApiError } from './errors'
 
@@ -34,7 +34,7 @@ export default class LMStudio extends Base {
         return host
     }
 
-    async callChatCompletion(rawMessages: Message[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(rawMessages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
         const messages = rawMessages.map(m => ({ role: m.role, content: m.content }))
         const res = await this.post(
             `${this.getHost()}/v1/chat/completions`,

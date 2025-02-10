@@ -1,6 +1,6 @@
-import { Message } from '../shared/types'
+import { IMessage } from '../shared/types'
 
-export function nameConversation(msgs: Message[], language: string): Message[] {
+export function nameConversation(msgs: IMessage[], language: string): IMessage[] {
     const format = (msgs: string[]) => msgs.map((msg) => msg).join('\n\n---------\n\n')
     return [
         {

@@ -11,7 +11,7 @@ export const MessageRoleEnum = {
 
 export type MessageRole = (typeof MessageRoleEnum)[keyof typeof MessageRoleEnum]
 
-export interface Message {
+export interface IMessage {
     id: string
 
     role: MessageRole
@@ -40,20 +40,20 @@ export type SettingWindowTab = 'ai' | 'display' | 'chat' | 'advanced'
 
 export type SessionType = 'chat'
 
-export function isChatSession(session: Session) {
+export function isChatSession(session: ISession) {
     return session.type === 'chat' || !session.type
 }
 
-export interface Session {
+export interface ISession {
     id: string
     type?: SessionType
     name: string
     picUrl?: string
-    messages: Message[]
+    messages: IMessage[]
     copilotId?: string
 }
 
-export function createMessage(role: MessageRole = MessageRoleEnum.User, content: string = ''): Message {
+export function createMessage(role: MessageRole = MessageRoleEnum.User, content: string = ''): IMessage {
     return {
         id: uuidv4(),
         content: content,

@@ -9,7 +9,7 @@ import {
     TextField,
 } from '@mui/material'
 import {
-    Session,
+    ISession,
     createMessage,
 } from '../shared/types'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +25,7 @@ export default function ChatConfigWindow(props: Props) {
     const { t } = useTranslation()
     const [chatConfigDialogSession, setChatConfigDialogSession] = useAtom(atoms.chatConfigDialogAtom)
 
-    const [editingData, setEditingData] = React.useState<Session | null>(chatConfigDialogSession)
+    const [editingData, setEditingData] = React.useState<ISession | null>(chatConfigDialogSession)
     useEffect(() => {
         if (!chatConfigDialogSession) {
             setEditingData(null)

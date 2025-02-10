@@ -20,7 +20,7 @@ import {
     Box,
     ButtonGroup,
 } from '@mui/material'
-import { CopilotDetail, Message } from '../shared/types'
+import { CopilotDetail, IMessage } from '../shared/types'
 import { useTranslation } from 'react-i18next'
 import EditIcon from '@mui/icons-material/Edit'
 import StyledMenu from '../components/StyledMenu'
@@ -52,7 +52,7 @@ export default function CopilotWindow(props: Props) {
     const remoteStore = useRemoteCopilots(language, props.open)
 
     const createChatSessionWithCopilot = (copilot: CopilotDetail) => {
-        const msgs: Message[] = []
+        const msgs: IMessage[] = []
         msgs.push({ id: uuidv4(), role: 'system', content: copilot.prompt })
         if (copilot.demoQuestion) {
             msgs.push({

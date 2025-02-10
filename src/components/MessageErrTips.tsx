@@ -1,7 +1,7 @@
 import React from 'react'
 import Alert from '@mui/material/Alert'
 import { Trans } from 'react-i18next'
-import { Message } from '../shared/types'
+import { IMessage } from '../shared/types'
 import { aiProviderNameHash } from '../packages/models'
 import * as atoms from '../stores/atoms'
 import * as settingActions from '../stores/settingActions'
@@ -11,7 +11,7 @@ import { ChatboxAIAPIError } from '@/packages/models/errors'
 import platform from '@/packages/platform'
 import { trackingEvent } from '@/packages/event'
 
-export default function MessageErrTips(props: { msg: Message }) {
+export default function MessageErrTips(props: { msg: IMessage }) {
     const { msg } = props
     const setOpenSettingDialogAtom = useSetAtom(atoms.openSettingDialogAtom)
     if (!msg.error) {
