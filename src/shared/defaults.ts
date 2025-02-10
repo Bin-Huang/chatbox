@@ -52,6 +52,10 @@ export function settings(): Settings {
         siliconCloudKey: '',
         siliconCloudModel: 'THUDM/glm-4-9b-chat',
 
+        ppioHost: 'https://api.ppinfra.com/v3/openai',
+        ppioKey: '',
+        ppioModel: 'deepseek/deepseek-r1/community',
+
         autoGenerateTitle: true,
     }
 }
