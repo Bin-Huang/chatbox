@@ -91,7 +91,7 @@ export default function Sidebar(props: Props) {
                     <MenuList sx={{ marginBottom: '20px' }}>
                         <MenuItem onClick={handleCreateNewSession} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
                             <ListItemIcon>
-                                <IconButton>
+                                <IconButton aria-label={t('new chat') || undefined}>
                                     <AddIcon fontSize="small" />
                                 </IconButton>
                             </ListItemIcon>
@@ -103,7 +103,7 @@ export default function Sidebar(props: Props) {
 
                         <MenuItem onClick={props.openCopilotWindow} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
                             <ListItemIcon>
-                                <IconButton>
+                                <IconButton aria-label={t('My Copilots') || undefined}>
                                     <SmartToyIcon fontSize="small" />
                                 </IconButton>
                             </ListItemIcon>
@@ -119,7 +119,7 @@ export default function Sidebar(props: Props) {
                             sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}
                         >
                             <ListItemIcon>
-                                <IconButton>
+                                <IconButton aria-label={t('settings') || undefined}>
                                     <SettingsIcon fontSize="small" />
                                 </IconButton>
                             </ListItemIcon>
@@ -131,7 +131,7 @@ export default function Sidebar(props: Props) {
 
                         <MenuItem onClick={props.openAboutWindow} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
                             <ListItemIcon>
-                                <IconButton>
+                                <IconButton aria-label={t('About') || undefined}>
                                     <InfoOutlinedIcon fontSize="small" />
                                 </IconButton>
                             </ListItemIcon>

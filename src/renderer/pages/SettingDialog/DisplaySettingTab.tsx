@@ -15,12 +15,12 @@ export default function DisplaySettingTab(props: {
     return (
         <Box>
             <SimpleSelect
-                label={(
+                label={
                     <span className="inline-flex items-center justify-center">
                         <TranslateIcon fontSize="small" />
                         {t('language')}
                     </span>
-                )}
+                }
                 value={settingsEdit.language}
                 onChange={(language) => setSettingsEdit({ ...settingsEdit, language: language })}
                 options={languages.map((language) => ({ value: language, label: languageNameMap[language] }))}
@@ -29,7 +29,10 @@ export default function DisplaySettingTab(props: {
                 label={t('Font Size')}
                 value={settingsEdit.fontSize}
                 onChange={(fontSize) => setSettingsEdit({ ...settingsEdit, fontSize: fontSize })}
-                options={[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].map((size) => ({ value: size, label: size }))}
+                options={[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].map((size) => ({
+                    value: size,
+                    label: size,
+                }))}
             />
             <SimpleSelect
                 label={t('theme')}

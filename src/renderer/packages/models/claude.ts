@@ -214,16 +214,16 @@ export interface ClaudeMessage {
     role: 'assistant' | 'user'
     content: (
         | {
-            text: string
-            type: 'text'
-        }
+              text: string
+              type: 'text'
+          }
         | {
-            type: 'image'
-            source: {
-                type: 'base64'
-                media_type: string
-                data: string
-            }
-        }
+              type: 'image'
+              source: {
+                  type: 'base64'
+                  media_type: string
+                  data: string
+              }
+          }
     )[]
 }

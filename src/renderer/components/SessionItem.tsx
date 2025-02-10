@@ -45,12 +45,16 @@ function _SessionItem(props: Props) {
                 selected={selected}
                 onClick={onClick}
                 sx={{ padding: '0.1rem', margin: '0.1rem' }}
-                className='group/session-item'
+                className="group/session-item"
             >
                 <ListItemIcon>
                     <IconButton color={'inherit'} onClick={onClick}>
                         {session.picUrl ? (
-                            <Avatar sizes={medianSize} sx={{ width: medianSize, height: medianSize }} src={session.picUrl} />
+                            <Avatar
+                                sizes={medianSize}
+                                sx={{ width: medianSize, height: medianSize }}
+                                src={session.picUrl}
+                            />
                         ) : (
                             <ChatBubbleOutlineOutlinedIcon fontSize="small" />
                         )}
