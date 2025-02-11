@@ -69,6 +69,7 @@ export enum ModelProvider {
     Ollama = 'ollama',
     SiliconFlow = 'silicon-flow',
     LMStudio = 'lm-studio',
+    PPIO = 'ppio',
 }
 
 export interface ModelSettings {
@@ -114,6 +115,11 @@ export interface ModelSettings {
     siliconCloudHost: string
     siliconCloudKey: string
     siliconCloudModel: siliconflow.Model | 'custom-model'
+
+    // ppio
+    ppioHost: string
+    ppioKey: string
+    ppioModel: string
 
     temperature: number
     topP: number
