@@ -1,51 +1,66 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import React from 'react'
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
+import { Box, Grid } from '@mui/material'
+import SettingDialog from './pages/SettingDialog'
+import ChatConfigWindow from './pages/ChatConfigWindow'
+import CleanWidnow from './pages/CleanWindow'
+import AboutWindow from './pages/AboutWindow'
+import useAppTheme from './hooks/useAppTheme'
+import CopilotWindow from './pages/CopilotWindow'
+import { useI18nEffect } from './hooks/useI18nEffect'
+import Toasts from './components/Toasts'
+import RemoteDialogWindow from './pages/RemoteDialogWindow'
+import { useSystemLanguageWhenInit } from './hooks/useDefaultSystemLanguage'
+import MainPane from './MainPane'
+import { useAtom, useAtomValue } from 'jotai'
+import * as atoms from './stores/atoms'
+import Sidebar from './Sidebar'
+import * as premiumActions from './stores/premiumActions'
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+function Main() {
+    const spellCheck = useAtomValue(atoms.spellCheckAtom)
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+    const [openSettingWindow, setOpenSettingWindow] = useAtom(atoms.openSettingDialogAtom)
 
-  return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+    const [openAboutWindow, setOpenAboutWindow] = React.useState(false)
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
+    const [openCopilotWindow, setOpenCopilotWindow] = React.useState(false)
 
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
-  );
+    return (
+        <Box className="box-border App" spellCheck={spellCheck}>
+            <Grid container className="h-full">
+                <Sidebar
+                    openCopilotWindow={() => setOpenCopilotWindow(true)}
+                    openAboutWindow={() => setOpenAboutWindow(true)}
+                    setOpenSettingWindow={setOpenSettingWindow}
+                />
+                <MainPane />
+            </Grid>
+            <SettingDialog
+                open={!!openSettingWindow}
+                targetTab={openSettingWindow || undefined}
+                close={() => setOpenSettingWindow(null)}
+            />
+            <AboutWindow open={openAboutWindow} close={() => setOpenAboutWindow(false)} />
+            <ChatConfigWindow />
+            <CleanWidnow />
+            <CopilotWindow open={openCopilotWindow} close={() => setOpenCopilotWindow(false)} />
+            <RemoteDialogWindow />
+            <Toasts />
+        </Box>
+    )
 }
 
-export default App;
+export default function App() {
+    useI18nEffect()
+    premiumActions.useAutoValidate()
+    useSystemLanguageWhenInit()
+    const theme = useAppTheme()
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Main />
+        </ThemeProvider>
+    )
+}

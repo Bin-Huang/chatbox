@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
-import { Model } from '../renderer/packages/models/openai'
-import * as siliconflow from '../renderer/packages/models/siliconflow'
-import { ClaudeModel } from '../renderer/packages/models/claude'
+import { Model } from '../packages/models/openai'
+import * as siliconflow from '../packages/models/siliconflow'
+import { ClaudeModel } from '../packages/models/claude'
 
 export const MessageRoleEnum = {
     System: 'system',
