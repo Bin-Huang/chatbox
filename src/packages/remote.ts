@@ -7,16 +7,16 @@ import {
     ChatboxAILicenseDetail,
     Settings,
 } from '../shared/types'
-import { ofetch } from 'ofetch'
+import { fetch } from '@tauri-apps/plugin-http'
 
-export const API_ORIGIN = 'http://localhost:1420'
+export const API_ORIGIN = 'https://chatboxai.app'
 
 
 export async function checkNeedUpdate(version: string, os: string, config: Config, settings: Settings) {
     type Response = {
         need_update?: boolean
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/ce/chatbox_need_update/${version}`, {
+    const res = await fetch<Response>(`${API_ORIGIN}/ce/chatbox_need_update/${version}`, {
         method: 'POST',
         retry: 3,
         body: {
@@ -32,7 +32,7 @@ export async function listCopilots(lang: string) {
     type Response = {
         data: CopilotDetail[]
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/api/copilots/list`, {
+    const res = await fetch<Response>(`${API_ORIGIN}/api/copilots/list`, {
         method: 'POST',
         retry: 3,
         body: { lang },
@@ -41,7 +41,7 @@ export async function listCopilots(lang: string) {
 }
 
 export async function recordCopilotShare(detail: CopilotDetail) {
-    await ofetch(`${API_ORIGIN}/api/copilots/share-record`, {
+    await fetch(`${API_ORIGIN}/api/copilots/share-record`, {
         method: 'POST',
         body: {
             detail: detail,
@@ -53,7 +53,7 @@ export async function getRemoteConfig(config: keyof RemoteConfig) {
     type Response = {
         data: Pick<RemoteConfig, typeof config>
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/api/remote_config/${config}`, {
+    const res = await fetch<Response>(`${API_ORIGIN}/api/remote_config/${config}`, {
         retry: 3,
     })
     return res['data']
@@ -68,7 +68,7 @@ export async function getDialogConfig(params: { uuid: string; language: string; 
     type Response = {
         data: null | DialogConfig
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/api/dialog_config`, {
+    const res = await fetch<Response>(`${API_ORIGIN}/api/dialog_config`, {
         method: 'POST',
         retry: 3,
         body: params,
@@ -80,7 +80,7 @@ export async function getLicenseDetail(params: { licenseKey: string }) {
     type Response = {
         data: ChatboxAILicenseDetail | null
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/api/license/detail`, {
+    const res = await fetch<Response>(`${API_ORIGIN}/api/license/detail`, {
         retry: 3,
         headers: {
             Authorization: params.licenseKey,
@@ -93,7 +93,7 @@ export async function getLicenseDetailRealtime(params: { licenseKey: string }) {
     type Response = {
         data: ChatboxAILicenseDetail | null
     }
-    const res = await ofetch<Response>(`${API_ORIGIN}/api/license/detail/realtime`, {
+    const res = await fetch<Response>(`${API_ORIGIN}/api/license/detail/realtime`, {
         retry: 3,
         headers: {
             Authorization: params.licenseKey,
@@ -113,7 +113,7 @@ export async function activateLicense(params: {
             error: string
         }
     }
-    const res = await ofetch(`${API_ORIGIN}/api/license/activate`, {
+    const res = await fetch(`${API_ORIGIN}/api/license/activate`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export async function deactivateLicense(params: {
     licenseKey: string,
     instanceId: string
 }) {
-    await ofetch(`${API_ORIGIN}/api/license/deactivate`, {
+    await fetch(`${API_ORIGIN}/api/license/deactivate`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export async function validateLicense(params: {
             valid: boolean
         }
     }
-    const res = await ofetch(`${API_ORIGIN}/api/license/validate`, {
+    const res = await fetch(`${API_ORIGIN}/api/license/validate`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

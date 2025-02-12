@@ -21,6 +21,7 @@
         "@sentry/react": "^8.54.0",
         "@tailwindcss/postcss": "^4.0.4",
         "@tauri-apps/api": "^2",
+        "@tauri-apps/plugin-http": "^2.3.0",
         "@tauri-apps/plugin-opener": "^2",
         "copy-to-clipboard": "^3.3.3",
         "date-fns": "^4.1.0",
@@ -61,7 +62,8 @@
     "resolutions": {
         "@types/react": "^18.3.1",
         "jotai": "2.1.0",
-        "jotai-optics": "0.3.0"
+        "jotai-optics": "0.3.0",
+        "mdast-util-gfm-autolink-literal@npm:^2.0.0": "patch:mdast-util-gfm-autolink-literal@npm%3A2.0.1#~/.yarn/patches/mdast-util-gfm-autolink-literal-npm-2.0.1-dd870d9308.patch"
     },
     "packageManager": "yarn@4.6.0"
 }

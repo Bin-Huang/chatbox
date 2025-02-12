@@ -1344,6 +1344,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tauri-apps/plugin-http@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@tauri-apps/plugin-http@npm:2.3.0"
+  dependencies:
+    "@tauri-apps/api": "npm:^2.0.0"
+  checksum: 10c0/49994a9ccd28867033a56405f577276d6c00e21904a61bc41626c886f411247c4fcd8bd80b2d2727e14433ff1164dfde2e0edd6c13a8016eb2a1a0c1db255acf
+  languageName: node
+  linkType: hard
+
 "@tauri-apps/plugin-opener@npm:^2":
   version: 2.2.5
   resolution: "@tauri-apps/plugin-opener@npm:2.2.5"
@@ -2926,6 +2935,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:^4.0.4"
     "@tauri-apps/api": "npm:^2"
     "@tauri-apps/cli": "npm:^2"
+    "@tauri-apps/plugin-http": "npm:^2.3.0"
     "@tauri-apps/plugin-opener": "npm:^2"
     "@types/lodash": "npm:^4"
     "@types/node": "npm:^20"
@@ -3020,7 +3030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-gfm-autolink-literal@npm:^2.0.0":
+"mdast-util-gfm-autolink-literal@npm:2.0.1":
   version: 2.0.1
   resolution: "mdast-util-gfm-autolink-literal@npm:2.0.1"
   dependencies:
@@ -3030,6 +3040,19 @@ __metadata:
     mdast-util-find-and-replace: "npm:^3.0.0"
     micromark-util-character: "npm:^2.0.0"
   checksum: 10c0/963cd22bd42aebdec7bdd0a527c9494d024d1ad0739c43dc040fee35bdfb5e29c22564330a7418a72b5eab51d47a6eff32bc0255ef3ccb5cebfe8970e91b81b6
+  languageName: node
+  linkType: hard
+
+"mdast-util-gfm-autolink-literal@patch:mdast-util-gfm-autolink-literal@npm%3A2.0.1#~/.yarn/patches/mdast-util-gfm-autolink-literal-npm-2.0.1-dd870d9308.patch":
+  version: 2.0.1
+  resolution: "mdast-util-gfm-autolink-literal@patch:mdast-util-gfm-autolink-literal@npm%3A2.0.1#~/.yarn/patches/mdast-util-gfm-autolink-literal-npm-2.0.1-dd870d9308.patch::version=2.0.1&hash=08d86a"
+  dependencies:
+    "@types/mdast": "npm:^4.0.0"
+    ccount: "npm:^2.0.0"
+    devlop: "npm:^1.0.0"
+    mdast-util-find-and-replace: "npm:^3.0.0"
+    micromark-util-character: "npm:^2.0.0"
+  checksum: 10c0/84e4187181541e03ddfd22a1058c70b5aef5b2ba89590f6aedf8a2ab2dce2c6fd3e4129a06e01de82638fe728350ebf471e5785c6a6c0d9793bc0806bcbfa9c7
   languageName: node
   linkType: hard
 

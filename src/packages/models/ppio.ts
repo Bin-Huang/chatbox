@@ -1,6 +1,7 @@
 import { IMessage } from 'src/shared/types'
 import { ApiError } from './errors'
 import Base, { onResultChange } from './base'
+import { fetch } from '@tauri-apps/plugin-http'
 
 interface Options {
     ppioKey: string

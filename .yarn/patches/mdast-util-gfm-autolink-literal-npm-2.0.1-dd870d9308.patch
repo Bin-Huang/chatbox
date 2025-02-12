@@ -1,0 +1,13 @@
+diff --git a/lib/index.js b/lib/index.js
+index c5ca771c24dd914e342f791716a822431ee32b3a..df536acc8c47cfed19766c3d3f2e3c25f6e50348 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -132,7 +132,7 @@ function transformGfmAutolinkLiterals(tree) {
+     tree,
+     [
+       [/(https?:\/\/|www(?=\.))([-.\w]+)([^ \t\r\n]*)/gi, findUrl],
+-      [/(?<=^|\s|\p{P}|\p{S})([-.\w+]+)@([-\w]+(?:\.[-\w]+)+)/gu, findEmail]
++      [/(?:^|\s|[^\w\s])([-.a-zA-Z0-9+]+)@([-a-zA-Z0-9]+(?:\.[-a-zA-Z0-9]+)+)/g, findEmail]
+     ],
+     {ignore: ['link', 'linkReference']}
+   )

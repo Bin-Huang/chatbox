@@ -5,6 +5,17 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default"
+    "opener:default",  
+    {
+			"identifier": "http:default",
+			"allow": [
+				{
+					"url": "http://**"
+				},
+				{
+					"url": "https://**"
+				}
+			]
+		}
   ]
 }
