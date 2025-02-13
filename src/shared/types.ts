@@ -53,6 +53,11 @@ export interface Session {
     copilotId?: string
 }
 
+export interface SessionsDump {
+    ts: number
+    sessions: Session[]
+}
+
 export function createMessage(role: MessageRole = MessageRoleEnum.User, content: string = ''): Message {
     return {
         id: uuidv4(),

@@ -4,6 +4,7 @@ import platform from '@/packages/platform'
 
 export enum StorageKey {
     ChatSessions = 'chat-sessions',
+    ChatSessionsTs = 'chat-sessions-ts',
     Configs = 'configs',
     Settings = 'settings',
     MyCopilots = 'myCopilots',
