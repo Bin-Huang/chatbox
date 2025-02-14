@@ -2,7 +2,7 @@ import { IMessage } from '@/shared/types'
 import { ApiError, NetworkError, AIProviderNoImplementedPaintError, BaseError, AIProviderNoImplementedChatError } from './errors'
 import { createParser } from 'eventsource-parser'
 import _ from 'lodash'
-import { fetch } from '@tauri-apps/plugin-http'
+import { fetch } from '@/utils'
 
 export default class Base {
     public name = 'Unknown'

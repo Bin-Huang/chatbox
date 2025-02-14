@@ -3,7 +3,7 @@ import Base, { onResultChange } from './base'
 import { API_ORIGIN } from '../remote'
 import { BaseError, ApiError, NetworkError, ChatboxAIAPIError } from './errors'
 import { parseJsonOrEmpty } from '@/lib/utils'
-import { fetch } from '@tauri-apps/plugin-http'
+import { fetch } from '@/utils'
 
 export const chatboxAIModels: ChatboxAIModel[] = ['chatboxai-3.5', 'chatboxai-4']
 

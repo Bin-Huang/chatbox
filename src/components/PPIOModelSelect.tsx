@@ -2,7 +2,7 @@ import { Select, MenuItem, FormControl, InputLabel, TextField } from '@mui/mater
 import { ModelSettings } from '../shared/types'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
-import { fetch } from '@tauri-apps/plugin-http'
+import { fetch } from '@/utils'
 
 export interface Props {
     model: ModelSettings['ppioModel']

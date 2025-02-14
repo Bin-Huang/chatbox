@@ -7,7 +7,7 @@ import {
     ChatboxAILicenseDetail,
     Settings,
 } from '../shared/types'
-import { fetch } from '@tauri-apps/plugin-http'
+import { fetch } from '@/utils'
 
 export const API_ORIGIN = 'https://chatboxai.app'
 
