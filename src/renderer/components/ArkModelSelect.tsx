@@ -32,7 +32,7 @@ export default function ArkModelSelect(props: Props) {
       </Select>
       <TextField
         margin="dense"
-        label={t('EndpointId')}
+        label={t('Model or Endpoint')}
         type="text"
         fullWidth
         variant="outlined"

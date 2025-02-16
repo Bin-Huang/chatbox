@@ -30,7 +30,7 @@ export default function VolcArkSetting(props: ModelConfigProps) {
       <>
         <TextFieldReset
           margin="dense"
-          label={t('api Base URL')}
+          label={t('Base URL')}
           type="text"
           fullWidth
           variant="outlined"
