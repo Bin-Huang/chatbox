@@ -18,7 +18,7 @@ export default class Base {
         return await this._chat(messages, onResultUpdated)
     }
 
-    protected async _chat(messages: Message[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    protected async _chat(messages: Message[], onResultUpdated?: (data: { text: string, role?: string, cancel(): void }) => void): Promise<string> {
         let canceled = false
         const controller = new AbortController()
         const stop = () => {
@@ -30,9 +30,9 @@ export default class Base {
             let onResultChange: onResultChange | undefined = undefined
             if (onResultUpdated) {
                 onResultUpdated({ text: result, cancel: stop })
-                onResultChange = (newResult: string) => {
+                onResultChange = (newResult: string, role?: string) => {
                     result = newResult
-                    onResultUpdated({ text: result, cancel: stop })
+                    onResultUpdated({ text: result, role: role, cancel: stop })
                 }
             }
             result = await this.callChatCompletion(messages, controller.signal, onResultChange)
@@ -186,4 +186,4 @@ export default class Base {
     }
 }
 
-export type onResultChange = (result: string) => void
+export type onResultChange = (result: string, role?: string) => void

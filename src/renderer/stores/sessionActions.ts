@@ -1,9 +1,11 @@
+
 import { getDefaultStore } from 'jotai'
 import {
     Settings,
     createMessage,
     Message,
     Session,
+    MessageRole,
 } from '../../shared/types'
 import * as atoms from './atoms'
 import * as promptFormat from '../packages/prompts'
@@ -157,31 +159,20 @@ export async function submitNewUserMessage(params: {
 }) {
     const { currentSessionId, newUserMsg, needGenerating } = params
     insertMessage(currentSessionId, newUserMsg)
-    let newAssistantMsg = createMessage('assistant', '')
     if (needGenerating) {
-        newAssistantMsg.generating = true
-        insertMessage(currentSessionId, newAssistantMsg)
-    }
-    if (needGenerating) {
-        return generate(currentSessionId, newAssistantMsg)
+        return generate(currentSessionId)
     }
 }
 
-export async function generate(sessionId: string, targetMsg: Message) {
-    const store = getDefaultStore()
-    const settings = store.get(atoms.settingsAtom)
-    const configs = await platform.getConfig()
-    const session = getSession(sessionId)
-    if (!session) {
-        return
-    }
-    const autoGenerateTitle = settingActions.getAutoGenerateTitle()
-    if (!autoGenerateTitle) {
-        return
-    }
-    const placeholder = '...'
-    targetMsg = {
-        ...targetMsg,
+const placeholder = '...'
+
+function prepareNewMessage(sessionId: string, settings: Settings, session: Session, sender?: MessageRole) {
+    let message = createMessage(sender || 'unknown', '');
+    message.generating = true;
+    insertMessage(sessionId, message);
+
+    message = {
+        ...message,
         content: placeholder,
         cancel: undefined,
         aiProvider: settings.aiProvider,
@@ -191,29 +182,61 @@ export async function generate(sessionId: string, targetMsg: Message) {
         error: undefined,
         errorExtra: undefined,
     }
-    modifyMessage(sessionId, targetMsg)
+
+    modifyMessage(sessionId, message)
+
+    return message
+}
+
+export async function generate(sessionId: string) {
+    const store = getDefaultStore()
+    const settings = store.get(atoms.settingsAtom)
+    const configs = await platform.getConfig()
+    const session = getSession(sessionId)
+    if (!session) {
+        return
+    }
+
+    let incomingMessage = prepareNewMessage(sessionId, settings, session)
 
     let messages = session.messages
-    let targetMsgIx = messages.findIndex((m) => m.id === targetMsg.id)
+    let targetMsgIx = messages.findIndex((m) => m.id === incomingMessage.id)
 
     try {
         const model = getModel(settings, configs)
         switch (session.type) {
             case 'chat':
             case undefined:
-                const promptMsgs = genMessageContext(settings, messages.slice(0, targetMsgIx))
-                const throttledModifyMessage = throttle(({ text, cancel }: { text: string, cancel: () => void }) => {
-                    targetMsg = { ...targetMsg, content: text, cancel }
-                    modifyMessage(sessionId, targetMsg)
+                const promptMsgs = genMessageContext(settings, targetMsgIx >= 0 ? messages.slice(0, targetMsgIx) : messages)
+                const throttledModifyMessage = throttle(({ text, role, cancel }: { text: string, role?: MessageRole, cancel: () => void }) => {
+                    if (role) {
+                        if (incomingMessage.role === "unknown") {
+                            incomingMessage = { ...incomingMessage, role }
+                        } else if (incomingMessage.role !== role) {
+                            incomingMessage = {
+                                ...incomingMessage,
+                                generating: false,
+                                cancel: undefined,
+                                tokensUsed: estimateTokensFromMessages([...promptMsgs, incomingMessage]),
+                            }
+                            modifyMessage(sessionId, incomingMessage, true)
+                            promptMsgs.push(incomingMessage)
+
+                            incomingMessage = prepareNewMessage(sessionId, settings, session, role)
+                            targetMsgIx = messages.findIndex((m) => m.id === incomingMessage.id)
+                        }
+                    }
+                    incomingMessage = { ...incomingMessage, content: text, cancel }
+                    modifyMessage(sessionId, incomingMessage)
                 }, 100)
                 await model.chat(promptMsgs, throttledModifyMessage)
-                targetMsg = {
-                    ...targetMsg,
+                incomingMessage = {
+                    ...incomingMessage,
                     generating: false,
                     cancel: undefined,
-                    tokensUsed: estimateTokensFromMessages([...promptMsgs, targetMsg]),
+                    tokensUsed: estimateTokensFromMessages([...promptMsgs, incomingMessage]),
                 }
-                modifyMessage(sessionId, targetMsg, true)
+                modifyMessage(sessionId, incomingMessage, true)
                 break
             default:
                 throw new Error(`Unknown session type: ${session.type}, generate failed`)
@@ -229,11 +252,11 @@ export async function generate(sessionId: string, targetMsg: Message) {
         if (err instanceof BaseError) {
             errorCode = err.code
         }
-        targetMsg = {
-            ...targetMsg,
+        incomingMessage = {
+            ...incomingMessage,
             generating: false,
             cancel: undefined,
-            content: targetMsg.content === placeholder ? '' : targetMsg.content,
+            content: incomingMessage.content === placeholder ? '' : incomingMessage.content,
             errorCode,
             error: `${err.message}`,
             errorExtra: {
@@ -241,7 +264,7 @@ export async function generate(sessionId: string, targetMsg: Message) {
                 host: err['host'],
             },
         }
-        modifyMessage(sessionId, targetMsg, true)
+        modifyMessage(sessionId, incomingMessage, true)
     }
 }
 
