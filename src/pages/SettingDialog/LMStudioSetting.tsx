@@ -20,27 +20,33 @@ export function LMStudioHostInput(props: {
             <TextFieldReset
                 label={t('api host')}
                 value={props.LMStudioHost}
-                defaultValue='http://localhost:1234'
+                defaultValue="http://localhost:1234"
                 onValueChange={props.setLMStudioHost}
                 fullWidth
                 className={props.className}
             />
-            {
-                props.LMStudioHost
-                && props.LMStudioHost.length > 16
-                && !props.LMStudioHost.includes('localhost')
-                && !props.LMStudioHost.includes('127.0.0.1') && (
-                    <Alert icon={false} severity='info' className='my-4'>
-                        <Trans i18nKey='Please ensure that the Remote LM Studio Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.'
+            {props.LMStudioHost &&
+                props.LMStudioHost.length > 16 &&
+                !props.LMStudioHost.includes('localhost') &&
+                !props.LMStudioHost.includes('127.0.0.1') && (
+                    <Alert icon={false} severity="info" className="my-4">
+                        <Trans
+                            i18nKey="Please ensure that the Remote LM Studio Service is able to connect remotely. For more details, refer to <a>this tutorial</a>."
                             components={{
-                                a: <a className='cursor-pointer font-bold' onClick={() => {
-                                    platform.openLink(`https://chatboxai.app/redirect_app/lm_studio_guide/${language}`)
-                                }}></a>,
+                                a: (
+                                    <a
+                                        className="cursor-pointer font-bold"
+                                        onClick={() => {
+                                            platform.openLink(
+                                                `https://chatboxai.app/redirect_app/lm_studio_guide/${language}`,
+                                            )
+                                        }}
+                                    ></a>
+                                ),
                             }}
                         />
                     </Alert>
-                )
-            }
+                )}
         </>
     )
 }
@@ -57,7 +63,7 @@ export function LMStudioModelSelect(props: {
         const model = new LMStudio({
             lmStudioHost: props.LMStudioHost,
             lmStudioModel: props.LMStudioModel,
-            temperature: 0.5
+            temperature: 0.5,
         })
         model.listModels().then((models) => {
             setModels(models)
@@ -73,9 +79,7 @@ export function LMStudioModelSelect(props: {
                 label={t('model')}
                 id="LMStudio-model-select"
                 value={props.LMStudioModel}
-                onChange={(e) =>
-                    props.setLMStudioModel(e.target.value)
-                }
+                onChange={(e) => props.setLMStudioModel(e.target.value)}
             >
                 {models.map((model) => (
                     <MenuItem key={model} value={model}>

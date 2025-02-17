@@ -7,7 +7,8 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "tauri": "tauri"
+        "tauri": "tauri",
+        "format": "prettier --write src/**/*.{js,jsx,ts,tsx} --config ./.prettierrc.json"
     },
     "dependencies": {
         "@braintree/sanitize-url": "^7.1.1",
@@ -56,6 +57,7 @@
         "@types/react-dom": "^18.3.1",
         "@types/react-syntax-highlighter": "^15",
         "@vitejs/plugin-react": "^4.3.4",
+        "prettier": "^3.5.1",
         "typescript": "~5.6.2",
         "vite": "^6.0.3"
     },

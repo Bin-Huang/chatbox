@@ -8,7 +8,6 @@ interface Options {
     lmStudioHost: string
     lmStudioModel: string
     temperature: number
-
 }
 
 export default class LMStudio extends Base {
@@ -34,8 +33,12 @@ export default class LMStudio extends Base {
         return host
     }
 
-    async callChatCompletion(rawMessages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
-        const messages = rawMessages.map(m => ({ role: m.role, content: m.content }))
+    async callChatCompletion(
+        rawMessages: IMessage[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange,
+    ): Promise<string> {
+        const messages = rawMessages.map((m) => ({ role: m.role, content: m.content }))
         const res = await this.post(
             `${this.getHost()}/v1/chat/completions`,
             { 'Content-Type': 'application/json' },
@@ -44,7 +47,6 @@ export default class LMStudio extends Base {
                 model: this.options.lmStudioModel,
                 temperature: this.options.temperature,
                 stream: true,
-                
             },
             signal,
         )
@@ -71,7 +73,7 @@ export default class LMStudio extends Base {
     async listModels(): Promise<string[]> {
         const res = await this.get(`${this.getHost()}/v1/models`, {})
         const json = await res.json()
-        if (! json['data']) {
+        if (!json['data']) {
             throw new ApiError(JSON.stringify(json))
         }
         return json['data'].map((m: any) => m['id'])

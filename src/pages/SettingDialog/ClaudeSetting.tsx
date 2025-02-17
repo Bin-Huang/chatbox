@@ -51,7 +51,9 @@ export default function ClaudeSetting(props: ModelConfigProps) {
                     value: model,
                     label: model,
                 }))}
-                onChange={(value) => setSettingsEdit({ ...settingsEdit, claudeModel: value as ModelSettings['claudeModel'] })}
+                onChange={(value) =>
+                    setSettingsEdit({ ...settingsEdit, claudeModel: value as ModelSettings['claudeModel'] })
+                }
             />
             <Accordion>
                 <AccordionSummary aria-controls="panel1a-content">

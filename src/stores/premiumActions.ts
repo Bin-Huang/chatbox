@@ -11,7 +11,7 @@ import { ModelProvider, Settings } from '@/shared/types'
 export function useAutoValidate() {
     const [settings, setSettings] = useAtom(settingsAtom)
     const clearValidatedData = () => {
-        setSettings(settings => ({
+        setSettings((settings) => ({
             ...settings,
             licenseKey: '',
             licenseInstances: omit(settings.licenseInstances, settings.licenseKey || ''),
@@ -19,7 +19,7 @@ export function useAutoValidate() {
         }))
     }
     useEffect(() => {
-        ; (async () => {
+        ;(async () => {
             if (!settings.licenseKey || !settings.licenseInstances) {
                 return
             }
@@ -38,11 +38,7 @@ export function useAutoValidate() {
                     return
                 }
             } catch (err) {
-                if (
-                    err instanceof FetchError
-                    && err.status
-                    && [401, 403, 404].includes(err.status)
-                ) {
+                if (err instanceof FetchError && err.status && [401, 403, 404].includes(err.status)) {
                     clearValidatedData()
                 } else {
                     Sentry.captureException(err)

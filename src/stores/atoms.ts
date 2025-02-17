@@ -1,6 +1,5 @@
 import { atom, SetStateAction } from 'jotai'
-import { ISession, Toast, Settings, CopilotDetail, IMessage, SettingWindowTab
-} from '../shared/types'
+import { ISession, Toast, Settings, CopilotDetail, IMessage, SettingWindowTab } from '../shared/types'
 import { selectAtom, atomWithStorage } from 'jotai/utils'
 import { focusAtom } from 'jotai-optics'
 import * as defaults from '../shared/defaults'
@@ -20,7 +19,7 @@ export const settingsAtom = atom(
             platform.ensureProxyConfig({ proxy: newSettings.proxy })
         }
         set(_settingsAtom, newSettings)
-    }
+    },
 )
 
 export const languageAtom = focusAtom(settingsAtom, (optic) => optic.prop('language'))
@@ -59,7 +58,7 @@ export const sessionsAtom = atom(
             newSessions = defaults.sessions()
         }
         set(_sessionsAtom, newSessions)
-    }
+    },
 )
 export const sortedSessionsAtom = atom((get) => {
     return sortSessions(get(sessionsAtom))
@@ -81,7 +80,7 @@ export const currentSessionIdAtom = atom(
     },
     (_get, set, update: string) => {
         set(_currentSessionIdCachedAtom, update)
-    }
+    },
 )
 
 export const currentSessionAtom = atom((get) => {
@@ -89,14 +88,13 @@ export const currentSessionAtom = atom((get) => {
     const sessions = get(sessionsAtom)
     let current = sessions.find((session) => session.id === id)
     if (!current) {
-        return sessions[sessions.length - 1]    // fallback to the last session
+        return sessions[sessions.length - 1] // fallback to the last session
     }
     return current
 })
 
 export const currentSessionNameAtom = selectAtom(currentSessionAtom, (s) => s.name)
 export const currsentSessionPicUrlAtom = selectAtom(currentSessionAtom, (s) => s.picUrl)
-
 
 export const currentMessageListAtom = selectAtom(currentSessionAtom, (s) => {
     let messageContext: IMessage[] = []

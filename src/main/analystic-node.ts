@@ -31,7 +31,7 @@ export async function event(name: string, params: any = {}) {
                     },
                 ],
             },
-        }
+        },
     )
     return res
 }

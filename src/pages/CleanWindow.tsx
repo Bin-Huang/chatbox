@@ -5,8 +5,7 @@ import { useAtom } from 'jotai'
 import * as sessionActions from '../stores/sessionActions'
 import { trackingEvent } from '@/packages/event'
 
-interface Props {
-}
+interface Props {}
 
 export default function CleanWindow(props: Props) {
     const [sessionClean, setSessionClean] = useAtom(atoms.sessionCleanDialogAtom)

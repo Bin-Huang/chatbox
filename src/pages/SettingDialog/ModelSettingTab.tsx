@@ -20,10 +20,7 @@ export default function ModelSettingTab(props: ModelConfigProps) {
     const { settingsEdit, setSettingsEdit } = props
     return (
         <Box>
-            <AIProviderSelect
-                settings={settingsEdit}
-                setSettings={setSettingsEdit}
-            />
+            <AIProviderSelect settings={settingsEdit} setSettings={setSettingsEdit} />
             <Divider sx={{ marginTop: '10px', marginBottom: '24px' }} />
             {settingsEdit.aiProvider === ModelProvider.OpenAI && (
                 <OpenAISetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
@@ -75,8 +72,7 @@ export default function ModelSettingTab(props: ModelConfigProps) {
                 </>
             )}
 
-
-             {settingsEdit.aiProvider === ModelProvider.SiliconFlow && (
+            {settingsEdit.aiProvider === ModelProvider.SiliconFlow && (
                 <SiliconFlowSetting settingsEdit={settingsEdit} setSettingsEdit={setSettingsEdit} />
             )}
             {settingsEdit.aiProvider === ModelProvider.Claude && (

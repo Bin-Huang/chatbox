@@ -11,7 +11,6 @@ import { fetch } from '@/utils'
 
 export const API_ORIGIN = 'https://chatboxai.app'
 
-
 export async function checkNeedUpdate(version: string, os: string, config: Config, settings: Settings) {
     type Response = {
         need_update?: boolean
@@ -102,10 +101,7 @@ export async function getLicenseDetailRealtime(params: { licenseKey: string }) {
     return res['data'] || null
 }
 
-export async function activateLicense(params: {
-    licenseKey: string,
-    instanceName: string
-}) {
+export async function activateLicense(params: { licenseKey: string; instanceName: string }) {
     type Response = {
         data: {
             valid: boolean
@@ -124,10 +120,7 @@ export async function activateLicense(params: {
     return json['data']
 }
 
-export async function deactivateLicense(params: {
-    licenseKey: string,
-    instanceId: string
-}) {
+export async function deactivateLicense(params: { licenseKey: string; instanceId: string }) {
     await fetch(`${API_ORIGIN}/api/license/deactivate`, {
         method: 'POST',
         headers: {
@@ -137,10 +130,7 @@ export async function deactivateLicense(params: {
     })
 }
 
-export async function validateLicense(params: {
-    licenseKey: string,
-    instanceId: string
-}) {
+export async function validateLicense(params: { licenseKey: string; instanceId: string }) {
     type Response = {
         data: {
             valid: boolean

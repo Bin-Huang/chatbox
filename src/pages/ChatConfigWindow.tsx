@@ -1,25 +1,13 @@
 import React, { useEffect } from 'react'
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogActions,
-    DialogTitle,
-    DialogContentText,
-    TextField,
-} from '@mui/material'
-import {
-    ISession,
-    createMessage,
-} from '../shared/types'
+import { Button, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText, TextField } from '@mui/material'
+import { ISession, createMessage } from '../shared/types'
 import { useTranslation } from 'react-i18next'
 import * as sessionActions from '../stores/sessionActions'
 import * as atoms from '../stores/atoms'
 import { useAtom } from 'jotai'
 import { trackingEvent } from '@/packages/event'
 
-interface Props {
-}
+interface Props {}
 
 export default function ChatConfigWindow(props: Props) {
     const { t } = useTranslation()
@@ -95,7 +83,7 @@ export default function ChatConfigWindow(props: Props) {
                     value={editingData.name}
                     onChange={(e) => setEditingData({ ...editingData, name: e.target.value })}
                 />
-                <div className='mt-1'>
+                <div className="mt-1">
                     <TextField
                         margin="dense"
                         label={t('Instruction (System Prompt)')}

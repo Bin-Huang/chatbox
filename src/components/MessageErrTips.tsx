@@ -18,7 +18,7 @@ export default function MessageErrTips(props: { msg: IMessage }) {
         return null
     }
     const tips: React.ReactNode[] = []
-    let onlyShowTips = false 
+    let onlyShowTips = false
     if (msg.error.startsWith('API Error')) {
         tips.push(
             <Trans
@@ -32,7 +32,7 @@ export default function MessageErrTips(props: { msg: IMessage }) {
                         target="_blank"
                     ></a>,
                 ]}
-            />
+            />,
         )
     } else if (msg.error.startsWith('Network Error')) {
         tips.push(
@@ -41,7 +41,7 @@ export default function MessageErrTips(props: { msg: IMessage }) {
                 values={{
                     host: msg.errorExtra?.['host'] || 'AI Provider',
                 }}
-            />
+            />,
         )
         const proxy = settingActions.getProxy()
         if (proxy) {
@@ -57,7 +57,7 @@ export default function MessageErrTips(props: { msg: IMessage }) {
                 components={[
                     <Link className="cursor-pointer font-bold" onClick={() => setOpenSettingDialogAtom('ai')}></Link>,
                 ]}
-            />
+            />,
         )
     } else if (msg.errorCode && ChatboxAIAPIError.getDetail(msg.errorCode)) {
         const chatboxAIErrorDetail = ChatboxAIAPIError.getDetail(msg.errorCode)
@@ -71,16 +71,24 @@ export default function MessageErrTips(props: { msg: IMessage }) {
                     }}
                     components={{
                         OpenSettingButton: (
-                            <Link className="cursor-pointer italic" onClick={() => setOpenSettingDialogAtom('ai')}></Link>
+                            <Link
+                                className="cursor-pointer italic"
+                                onClick={() => setOpenSettingDialogAtom('ai')}
+                            ></Link>
                         ),
                         OpenMorePlanButton: (
-                            <Link className="cursor-pointer italic" onClick={() => {
-                                platform.openLink('https://chatboxai.app/redirect_app/view_more_plans')
-                                trackingEvent('click_view_more_plans_button_from_upgrade_error_tips', { event_category: 'user' })
-                            }}></Link>
-                        )
+                            <Link
+                                className="cursor-pointer italic"
+                                onClick={() => {
+                                    platform.openLink('https://chatboxai.app/redirect_app/view_more_plans')
+                                    trackingEvent('click_view_more_plans_button_from_upgrade_error_tips', {
+                                        event_category: 'user',
+                                    })
+                                }}
+                            ></Link>
+                        ),
                     }}
-                />
+                />,
             )
         }
     } else {
@@ -93,21 +101,23 @@ export default function MessageErrTips(props: { msg: IMessage }) {
                         target="_blank"
                     ></a>,
                 ]}
-            />
+            />,
         )
     }
     return (
         <Alert icon={false} severity="error">
-            {tips.map((tip, i) => (<b key={i}>{tip}</b>))}
-            {
-                onlyShowTips
-                    ? <></>
-                    : <>
-                        <br />
-                        <br />
-                        {msg.error}
-                    </>
-            }
+            {tips.map((tip, i) => (
+                <b key={i}>{tip}</b>
+            ))}
+            {onlyShowTips ? (
+                <></>
+            ) : (
+                <>
+                    <br />
+                    <br />
+                    {msg.error}
+                </>
+            )}
         </Alert>
     )
 }

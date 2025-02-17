@@ -1,10 +1,5 @@
 import { getDefaultStore } from 'jotai'
-import {
-    Settings,
-    createMessage,
-    IMessage,
-    ISession,
-} from '../shared/types'
+import { Settings, createMessage, IMessage, ISession } from '../shared/types'
 import * as atoms from './atoms'
 import * as promptFormat from '../packages/prompts'
 import * as Sentry from '@sentry/react'
@@ -12,7 +7,13 @@ import { v4 as uuidv4 } from 'uuid'
 import * as defaults from '../shared/defaults'
 import * as scrollActions from './scrollActions'
 import { getModel, getModelDisplayName } from '@/packages/models'
-import { AIProviderNoImplementedPaintError, NetworkError, ApiError, BaseError, ChatboxAIAPIError } from '@/packages/models/errors'
+import {
+    AIProviderNoImplementedPaintError,
+    NetworkError,
+    ApiError,
+    BaseError,
+    ChatboxAIAPIError,
+} from '@/packages/models/errors'
 import platform from '../packages/platform'
 import { throttle } from 'lodash'
 import { countWord } from '@/packages/word-count'
@@ -33,7 +34,7 @@ export function modify(update: ISession) {
                 return update
             }
             return s
-        })
+        }),
     )
 }
 
@@ -45,7 +46,7 @@ export function modifyName(sessionId: string, name: string) {
                 return { ...s, name, threadName: name }
             }
             return s
-        })
+        }),
     )
 }
 
@@ -116,7 +117,7 @@ export function insertMessage(sessionId: string, msg: IMessage) {
                 }
             }
             return s
-        })
+        }),
     )
 }
 
@@ -146,7 +147,7 @@ export function modifyMessage(sessionId: string, updated: IMessage, refreshCount
             }
             s.messages = handle(s.messages)
             return { ...s }
-        })
+        }),
     )
 }
 
@@ -202,10 +203,21 @@ export async function generate(sessionId: string, targetMsg: IMessage) {
             case 'chat':
             case undefined:
                 const promptMsgs = genMessageContext(settings, messages.slice(0, targetMsgIx))
-                const throttledModifyMessage = throttle(({ text, reasoningContent, cancel }: { text: string, reasoningContent: string, cancel: () => void }) => {
-                    targetMsg = { ...targetMsg, content: text, reasoning_content: reasoningContent, cancel }
-                    modifyMessage(sessionId, targetMsg)
-                }, 100)
+                const throttledModifyMessage = throttle(
+                    ({
+                        text,
+                        reasoningContent,
+                        cancel,
+                    }: {
+                        text: string
+                        reasoningContent: string
+                        cancel: () => void
+                    }) => {
+                        targetMsg = { ...targetMsg, content: text, reasoning_content: reasoningContent, cancel }
+                        modifyMessage(sessionId, targetMsg)
+                    },
+                    100,
+                )
                 await model.chat(promptMsgs, throttledModifyMessage)
                 targetMsg = {
                     ...targetMsg,
@@ -222,7 +234,13 @@ export async function generate(sessionId: string, targetMsg: IMessage) {
         if (!(err instanceof Error)) {
             err = new Error(`${err}`)
         }
-        if (!(err instanceof ApiError || err instanceof NetworkError || err instanceof AIProviderNoImplementedPaintError)) {
+        if (
+            !(
+                err instanceof ApiError ||
+                err instanceof NetworkError ||
+                err instanceof AIProviderNoImplementedPaintError
+            )
+        ) {
             Sentry.captureException(err) // unexpected error should be reported
         }
         let errorCode: number | undefined = undefined
@@ -255,12 +273,11 @@ async function _generateName(sessionId: string, modifyName: (sessionId: string, 
     const configs = await platform.getConfig()
     try {
         const model = getModel(settings, configs)
-        let name = await model.chat(promptFormat.nameConversation(
-            session.messages
-                .filter(m => m.role !== 'system')
-                .slice(0, 4),
-            settings.language,
-        ),
+        let name = await model.chat(
+            promptFormat.nameConversation(
+                session.messages.filter((m) => m.role !== 'system').slice(0, 4),
+                settings.language,
+            ),
         )
         name = name.replace(/['"“”]/g, '')
         name = name.slice(0, 10)
@@ -277,9 +294,7 @@ export async function generateName(sessionId: string) {
 }
 
 function genMessageContext(settings: Settings, msgs: IMessage[]) {
-    const {
-        openaiMaxContextMessageCount
-    } = settings
+    const { openaiMaxContextMessageCount } = settings
     if (msgs.length === 0) {
         throw new Error('No messages to replay')
     }
@@ -297,10 +312,7 @@ function genMessageContext(settings: Settings, msgs: IMessage[]) {
         const size = estimateTokensFromMessages([msg]) + 20 // 20 is a rough estimation of the overhead of the prompt
         if (settings.aiProvider === 'openai') {
         }
-        if (
-            openaiMaxContextMessageCount <= 20 &&
-            prompts.length >= openaiMaxContextMessageCount + 1
-        ) {
+        if (openaiMaxContextMessageCount <= 20 && prompts.length >= openaiMaxContextMessageCount + 1) {
             break
         }
         prompts = [msg, ...prompts]

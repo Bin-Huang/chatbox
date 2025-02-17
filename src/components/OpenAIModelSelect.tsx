@@ -38,9 +38,7 @@ export default function OpenAIModelSelect(props: Props) {
                     fullWidth
                     variant="outlined"
                     value={props.openaiCustomModel || ''}
-                    onChange={(e) =>
-                        props.onChange(props.model, e.target.value.trim())
-                    }
+                    onChange={(e) => props.onChange(props.model, e.target.value.trim())}
                 />
             )}
         </FormControl>

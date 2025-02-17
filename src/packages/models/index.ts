@@ -7,7 +7,6 @@ import LMStudio from './lmstudio'
 import Claude from './claude'
 import PPIO from './ppio'
 
-
 export function getModel(setting: Settings, config: Config) {
     switch (setting.aiProvider) {
         case ModelProvider.ChatboxAI:

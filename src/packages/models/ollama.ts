@@ -34,8 +34,12 @@ export default class Ollama extends Base {
         return host
     }
 
-    async callChatCompletion(rawMessages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
-        const messages = rawMessages.map(m => ({ role: m.role, content: m.content }))
+    async callChatCompletion(
+        rawMessages: IMessage[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange,
+    ): Promise<string> {
+        const messages = rawMessages.map((m) => ({ role: m.role, content: m.content }))
         const res = await this.post(
             `${this.getHost()}/api/chat`,
             { 'Content-Type': 'application/json' },
@@ -45,7 +49,7 @@ export default class Ollama extends Base {
                 stream: true,
                 options: {
                     temperature: this.options.temperature,
-                }
+                },
             },
             signal,
         )
@@ -56,7 +60,7 @@ export default class Ollama extends Base {
                 return
             }
             const word = data['message']?.['content']
-            if (! word) {
+            if (!word) {
                 throw new ApiError(JSON.stringify(data))
             }
             result += word
@@ -70,7 +74,7 @@ export default class Ollama extends Base {
     async listModels(): Promise<string[]> {
         const res = await this.get(`${this.getHost()}/api/tags`, {})
         const json = await res.json()
-        if (! json['models']) {
+        if (!json['models']) {
             throw new ApiError(JSON.stringify(json))
         }
         return json['models'].map((m: any) => m['name'])

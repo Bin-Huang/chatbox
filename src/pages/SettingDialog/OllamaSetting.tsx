@@ -20,27 +20,33 @@ export function OllamaHostInput(props: {
             <TextFieldReset
                 label={t('api host')}
                 value={props.ollamaHost}
-                defaultValue='http://localhost:11434'
+                defaultValue="http://localhost:11434"
                 onValueChange={props.setOllamaHost}
                 fullWidth
                 className={props.className}
             />
-            {
-                props.ollamaHost
-                && props.ollamaHost.length > 16
-                && !props.ollamaHost.includes('localhost')
-                && !props.ollamaHost.includes('127.0.0.1') && (
-                    <Alert icon={false} severity='info' className='my-4'>
-                        <Trans i18nKey='Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>.'
+            {props.ollamaHost &&
+                props.ollamaHost.length > 16 &&
+                !props.ollamaHost.includes('localhost') &&
+                !props.ollamaHost.includes('127.0.0.1') && (
+                    <Alert icon={false} severity="info" className="my-4">
+                        <Trans
+                            i18nKey="Please ensure that the Remote Ollama Service is able to connect remotely. For more details, refer to <a>this tutorial</a>."
                             components={{
-                                a: <a className='cursor-pointer font-bold' onClick={() => {
-                                    platform.openLink(`https://chatboxai.app/redirect_app/ollama_guide/${language}`)
-                                }}></a>,
+                                a: (
+                                    <a
+                                        className="cursor-pointer font-bold"
+                                        onClick={() => {
+                                            platform.openLink(
+                                                `https://chatboxai.app/redirect_app/ollama_guide/${language}`,
+                                            )
+                                        }}
+                                    ></a>
+                                ),
                             }}
                         />
                     </Alert>
-                )
-            }
+                )}
         </>
     )
 }
@@ -73,9 +79,7 @@ export function OllamaModelSelect(props: {
                 label={t('model')}
                 id="ollama-model-select"
                 value={props.ollamaModel}
-                onChange={(e) =>
-                    props.setOlamaModel(e.target.value)
-                }
+                onChange={(e) => props.setOlamaModel(e.target.value)}
             >
                 {models.map((model) => (
                     <MenuItem key={model} value={model}>

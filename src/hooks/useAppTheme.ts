@@ -55,11 +55,11 @@ export function getThemeDesign(realTheme: 'light' | 'dark', fontSize: number): T
             ...(realTheme === 'light'
                 ? {}
                 : {
-                    background: {
-                        default: 'rgb(40, 40, 40)',
-                        paper: 'rgb(40, 40, 40)',
-                    },
-                }),
+                      background: {
+                          default: 'rgb(40, 40, 40)',
+                          paper: 'rgb(40, 40, 40)',
+                      },
+                  }),
         },
         typography: {
             fontSize,

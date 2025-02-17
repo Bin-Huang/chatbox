@@ -6,7 +6,7 @@ import * as sessionActions from '../stores/sessionActions'
 import Toolbar from './Toolbar'
 import { cn } from '@/lib/utils'
 
-interface Props { }
+interface Props {}
 
 export default function Header(props: Props) {
     const theme = useTheme()
@@ -14,12 +14,9 @@ export default function Header(props: Props) {
     const setChatConfigDialogSession = useSetAtom(atoms.chatConfigDialogAtom)
 
     useEffect(() => {
-        if (
-            currentSession.name === 'Untitled'
-            && currentSession.messages.length >= 2
-        ) {
+        if (currentSession.name === 'Untitled' && currentSession.messages.length >= 2) {
             sessionActions.generateName(currentSession.id)
-            return 
+            return
         }
     }, [currentSession.messages.length])
 

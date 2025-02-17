@@ -24,7 +24,7 @@ export default class PPIO extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange
+        onResultChange?: onResultChange,
     ): Promise<string> {
         const messages = rawMessages.map((m) => ({
             role: m.role,
@@ -41,7 +41,7 @@ export default class PPIO extends Base {
                 top_p: this.options.topP,
                 stream: true,
             },
-            signal
+            signal,
         )
 
         let result = ''
@@ -92,4 +92,4 @@ export default class PPIO extends Base {
         }
         return res
     }
-} 
+}

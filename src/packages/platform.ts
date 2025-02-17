@@ -1,5 +1,5 @@
-import { ElectronIPC } from "src/shared/electron-types"
-import { Config, Settings } from "src/shared/types"
+import { ElectronIPC } from 'src/shared/electron-types'
+import { Config, Settings } from 'src/shared/types'
 import { getOS } from './navigator'
 import { parseLocale } from '@/i18n/parser'
 import Exporter from './exporter'
@@ -94,7 +94,7 @@ export class BrowserPlatform {
     public exporter = new Exporter()
 
     public async getVersion(): Promise<string> {
-        return "1.0.0"
+        return '1.0.0'
     }
 
     public async getPlatform(): Promise<string> {
@@ -201,7 +201,7 @@ export class BrowserPlatform {
 
     public async appLog(level: string, message: string): Promise<void> {
         // Browser equivalent of logging
-        switch(level) {
+        switch (level) {
             case 'error':
                 console.error(message)
                 break

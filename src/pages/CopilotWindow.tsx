@@ -132,7 +132,7 @@ export default function CopilotWindow(props: Props) {
                 <ScrollableTabsButtonAuto
                     values={[{ value: 'my', label: t('My Copilots') }]}
                     currentValue="my"
-                    onChange={() => { }}
+                    onChange={() => {}}
                 />
                 <div
                     style={{
@@ -174,7 +174,7 @@ export default function CopilotWindow(props: Props) {
                         },
                     ]}
                     currentValue="chatbox-featured"
-                    onChange={() => { }}
+                    onChange={() => {}}
                 />
                 <div
                     style={{
@@ -200,18 +200,18 @@ export default function CopilotWindow(props: Props) {
 
 type MiniItemProps =
     | {
-        mode: 'local'
-        detail: CopilotDetail
-        useMe(): void
-        switchStarred(): void
-        editMe(): void
-        deleteMe(): void
-    }
+          mode: 'local'
+          detail: CopilotDetail
+          useMe(): void
+          switchStarred(): void
+          editMe(): void
+          deleteMe(): void
+      }
     | {
-        mode: 'remote'
-        detail: CopilotDetail
-        useMe(): void
-    }
+          mode: 'remote'
+          detail: CopilotDetail
+          useMe(): void
+      }
 
 function MiniItem(props: MiniItemProps) {
     const { t } = useTranslation()
@@ -248,19 +248,15 @@ function MiniItem(props: MiniItemProps) {
                     opacity: 1,
                 },
             }}
-            className='w-48 hover:bg-slate-400/25 border-solid border-slate-400/20 rounded-md'
+            className="w-48 hover:bg-slate-400/25 border-solid border-slate-400/20 rounded-md"
             onClick={useCopilot}
         >
-            <Avatar
-                sizes="30px"
-                sx={{ width: '30px', height: '30px' }}
-                src={props.detail.picUrl}
-            ></Avatar>
+            <Avatar sizes="30px" sx={{ width: '30px', height: '30px' }} src={props.detail.picUrl}></Avatar>
             <div
                 style={{
                     marginLeft: '5px',
                 }}
-                className='w-28'
+                className="w-28"
             >
                 <Typography variant="body1" noWrap>
                     {props.detail.name}

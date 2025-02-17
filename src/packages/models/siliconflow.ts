@@ -25,7 +25,7 @@ export default class SiliconFlow extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange
+        onResultChange?: onResultChange,
     ): Promise<string> {
         try {
             return await this._callChatCompletion(rawMessages, signal, onResultChange)
@@ -43,7 +43,7 @@ export default class SiliconFlow extends Base {
     async _callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange
+        onResultChange?: onResultChange,
     ): Promise<string> {
         let messages = await populateSiliconFlowMessage(rawMessages, this.options.siliconCloudModel)
 
@@ -65,7 +65,7 @@ export default class SiliconFlow extends Base {
                 top_p: this.options.topP,
                 stream: true,
             },
-            signal
+            signal,
         )
         let result = ''
         await this.handleSSE(response, (message) => {
@@ -131,7 +131,7 @@ export const models = Array.from(Object.keys(siliconflowModelConfigs)).sort() as
 
 export async function populateSiliconFlowMessage(
     rawMessages: IMessage[],
-    model: Model | 'custom-model'
+    model: Model | 'custom-model',
 ): Promise<SiliconFlowMessage[]> {
     return populateSiliconFlowMessageText(rawMessages)
 }

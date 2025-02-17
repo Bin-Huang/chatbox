@@ -81,7 +81,7 @@ export default class Claude extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange
+        onResultChange?: onResultChange,
     ): Promise<string> {
         rawMessages = this.sequenceMessages(rawMessages)
         let prompt = ''
@@ -118,7 +118,7 @@ export default class Claude extends Base {
                 messages: messages,
                 stream: true,
             },
-            signal
+            signal,
         )
         let result = ''
         await this.handleSSE(response, (message) => {
@@ -214,16 +214,16 @@ export interface ClaudeMessage {
     role: 'assistant' | 'user'
     content: (
         | {
-            text: string
-            type: 'text'
-        }
+              text: string
+              type: 'text'
+          }
         | {
-            type: 'image'
-            source: {
-                type: 'base64'
-                media_type: string
-                data: string
-            }
-        }
+              type: 'image'
+              source: {
+                  type: 'base64'
+                  media_type: string
+                  data: string
+              }
+          }
     )[]
 }

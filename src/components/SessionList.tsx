@@ -40,7 +40,7 @@ export default function SessionList(props: Props) {
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
-        })
+        }),
     )
     const onDragEnd = (event: DragEndEvent) => {
         if (!event.over) {
@@ -49,8 +49,8 @@ export default function SessionList(props: Props) {
         const activeId = event.active.id
         const overId = event.over.id
         if (activeId !== overId) {
-            const oldIndex = sortedSessions.findIndex(s => s.id === activeId)
-            const newIndex = sortedSessions.findIndex(s => s.id === overId)
+            const oldIndex = sortedSessions.findIndex((s) => s.id === activeId)
+            const newIndex = sortedSessions.findIndex((s) => s.id === overId)
             const newReversed = arrayMove(sortedSessions, oldIndex, newIndex)
             setSessions(atoms.sortSessions(newReversed))
         }
@@ -88,10 +88,7 @@ export default function SessionList(props: Props) {
     )
 }
 
-function SortableItem(props: {
-    id: string
-    children?: React.ReactNode
-}) {
+function SortableItem(props: { id: string; children?: React.ReactNode }) {
     const { id, children } = props
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
     return (

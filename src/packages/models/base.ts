@@ -1,5 +1,11 @@
 import { IMessage } from '@/shared/types'
-import { ApiError, NetworkError, AIProviderNoImplementedPaintError, BaseError, AIProviderNoImplementedChatError } from './errors'
+import {
+    ApiError,
+    NetworkError,
+    AIProviderNoImplementedPaintError,
+    BaseError,
+    AIProviderNoImplementedChatError,
+} from './errors'
 import { createParser } from 'eventsource-parser'
 import _ from 'lodash'
 import { fetch } from '@/utils/stream-fetch'
@@ -7,19 +13,28 @@ import { fetch } from '@/utils/stream-fetch'
 export default class Base {
     public name = 'Unknown'
 
-    constructor() {
-    }
+    constructor() {}
 
-    async callChatCompletion(messages: IMessage[], signal?: AbortSignal, onResultChange?: onResultChange): Promise<string> {
+    async callChatCompletion(
+        messages: IMessage[],
+        signal?: AbortSignal,
+        onResultChange?: onResultChange,
+    ): Promise<string> {
         throw new AIProviderNoImplementedChatError(this.name)
     }
 
-    async chat(messages: IMessage[], onResultUpdated?: (data: { text: string, reasoningContent: string, cancel(): void }) => void): Promise<string> {
+    async chat(
+        messages: IMessage[],
+        onResultUpdated?: (data: { text: string; reasoningContent: string; cancel(): void }) => void,
+    ): Promise<string> {
         messages = await this.preprocessMessage(messages)
         return await this._chat(messages, onResultUpdated)
     }
 
-    protected async _chat(messages: IMessage[], onResultUpdated?: (data: { text: string, reasoningContent: string, cancel(): void }) => void): Promise<string> {
+    protected async _chat(
+        messages: IMessage[],
+        onResultUpdated?: (data: { text: string; reasoningContent: string; cancel(): void }) => void,
+    ): Promise<string> {
         let canceled = false
         const controller = new AbortController()
         const stop = () => {
@@ -95,7 +110,7 @@ export default class Base {
         }
     }
 
-    async * iterableStreamAsync(stream: ReadableStream): AsyncIterableIterator<Uint8Array> {
+    async *iterableStreamAsync(stream: ReadableStream): AsyncIterableIterator<Uint8Array> {
         const reader = stream.getReader()
         try {
             while (true) {
@@ -116,7 +131,7 @@ export default class Base {
         headers: Record<string, string>,
         body: Record<string, any>,
         signal?: AbortSignal,
-        retry = 3
+        retry = 3,
     ) {
         let requestError: ApiError | NetworkError | null = null
         for (let i = 0; i < retry + 1; i++) {
@@ -150,12 +165,7 @@ export default class Base {
         }
     }
 
-    async get(
-        url: string,
-        headers: Record<string, string>,
-        signal?: AbortSignal,
-        retry = 3
-    ) {
+    async get(url: string, headers: Record<string, string>, signal?: AbortSignal, retry = 3) {
         let requestError: ApiError | NetworkError | null = null
         for (let i = 0; i < retry + 1; i++) {
             try {

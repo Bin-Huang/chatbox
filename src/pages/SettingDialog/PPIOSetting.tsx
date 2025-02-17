@@ -36,9 +36,7 @@ export default function PPIOSetting(props: ModelConfigProps) {
                     <PPIOModelSelect
                         model={settingsEdit.ppioModel}
                         ppioHost={settingsEdit.ppioHost}
-                        onChange={(model) =>
-                            setSettingsEdit({ ...settingsEdit, ppioModel: model })
-                        }
+                        onChange={(model) => setSettingsEdit({ ...settingsEdit, ppioModel: model })}
                     />
                     <TemperatureSlider
                         value={settingsEdit.temperature}
@@ -56,4 +54,4 @@ export default function PPIOSetting(props: ModelConfigProps) {
             </Accordion>
         </Box>
     )
-} 
+}
