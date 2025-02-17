@@ -77,8 +77,7 @@ export default function Sidebar(props: Props) {
                             >
                                 <img src={icon} className="w-8 h-8 mr-3" />
                                 <div className="flex flex-col items-start">
-                                    <span className="text-2xl font-medium">Chatbox</span>
-                                    <span className="text-[10px] opacity-50">Community Edition</span>
+                                    <span className="text-2xl font-medium">Lumina AI</span>
                                 </div>
                             </a>
                         </Box>
