@@ -15,6 +15,7 @@ export interface IMessage {
     id: string
 
     role: MessageRole
+    reasoning_content?: string
     content: string
     name?: string
 

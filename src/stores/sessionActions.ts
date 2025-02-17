@@ -202,8 +202,8 @@ export async function generate(sessionId: string, targetMsg: IMessage) {
             case 'chat':
             case undefined:
                 const promptMsgs = genMessageContext(settings, messages.slice(0, targetMsgIx))
-                const throttledModifyMessage = throttle(({ text, cancel }: { text: string, cancel: () => void }) => {
-                    targetMsg = { ...targetMsg, content: text, cancel }
+                const throttledModifyMessage = throttle(({ text, reasoningContent, cancel }: { text: string, reasoningContent: string, cancel: () => void }) => {
+                    targetMsg = { ...targetMsg, content: text, reasoning_content: reasoningContent, cancel }
                     modifyMessage(sessionId, targetMsg)
                 }, 100)
                 await model.chat(promptMsgs, throttledModifyMessage)

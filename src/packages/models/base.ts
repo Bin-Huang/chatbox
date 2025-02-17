@@ -14,12 +14,12 @@ export default class Base {
         throw new AIProviderNoImplementedChatError(this.name)
     }
 
-    async chat(messages: IMessage[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    async chat(messages: IMessage[], onResultUpdated?: (data: { text: string, reasoningContent: string, cancel(): void }) => void): Promise<string> {
         messages = await this.preprocessMessage(messages)
         return await this._chat(messages, onResultUpdated)
     }
 
-    protected async _chat(messages: IMessage[], onResultUpdated?: (data: { text: string, cancel(): void }) => void): Promise<string> {
+    protected async _chat(messages: IMessage[], onResultUpdated?: (data: { text: string, reasoningContent: string, cancel(): void }) => void): Promise<string> {
         let canceled = false
         const controller = new AbortController()
         const stop = () => {
@@ -30,10 +30,10 @@ export default class Base {
         try {
             let onResultChange: onResultChange | undefined = undefined
             if (onResultUpdated) {
-                onResultUpdated({ text: result, cancel: stop })
-                onResultChange = (newResult: string) => {
+                onResultUpdated({ text: result, reasoningContent: '', cancel: stop })
+                onResultChange = (newResult: string, reasoningContent: string) => {
                     result = newResult
-                    onResultUpdated({ text: result, cancel: stop })
+                    onResultUpdated({ text: result, reasoningContent, cancel: stop })
                 }
             }
             result = await this.callChatCompletion(messages, controller.signal, onResultChange)
@@ -187,4 +187,4 @@ export default class Base {
     }
 }
 
-export type onResultChange = (result: string) => void
+export type onResultChange = (result: string, reasoningContent?: string) => void

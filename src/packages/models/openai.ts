@@ -75,6 +75,7 @@ export default class OpenAI extends Base {
             signal
         )
         let result = ''
+        let reasoningContentAll = ''
         await this.handleSSE(response, (message) => {
             if (message === '[DONE]') {
                 return
@@ -84,10 +85,17 @@ export default class OpenAI extends Base {
                 throw new ApiError(`Error from OpenAI: ${JSON.stringify(data)}`)
             }
             const text = data.choices[0]?.delta?.content
-            if (text !== undefined) {
+            const reasoningContent = data.choices[0]?.delta?.reasoning_content
+            if (reasoningContent !== undefined && reasoningContent !== null) {
+                reasoningContentAll += reasoningContent
+                if (onResultChange) {
+                    onResultChange(result, reasoningContentAll)
+                }
+            }
+            if (text !== undefined && text !== null) {
                 result += text
                 if (onResultChange) {
-                    onResultChange(result)
+                    onResultChange(result, reasoningContentAll)
                 }
             }
         })

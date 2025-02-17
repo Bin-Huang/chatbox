@@ -5,6 +5,7 @@ import {
     Typography,
     Grid,
     useTheme,
+    Collapse
 } from '@mui/material'
 import PersonIcon from '@mui/icons-material/Person'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
@@ -61,6 +62,8 @@ export default function Message(props: Props) {
         && (JSON.stringify(msg.content)).length - collapseThreshold > 50
     const [isCollapsed, setIsCollapsed] = useState(needCollapse)
 
+    const [isReasoningContentCollapsed, setIsReasoningContentCollapsed] = useState(false)
+
     const ref = useRef<HTMLDivElement>(null)
 
     const tips: string[] = []
@@ -105,6 +108,10 @@ export default function Message(props: Props) {
     let content = msg.content
     if (typeof msg.content !== 'string') {
         content = JSON.stringify(msg.content)
+    }
+    let reasoningContent = msg.reasoning_content
+    if (typeof msg.reasoning_content !== 'string') {
+        reasoningContent = JSON.stringify(msg.reasoning_content)
     }
     if (msg.generating) {
         content += '...'
@@ -200,6 +207,32 @@ export default function Message(props: Props) {
                 </Grid>
                 <Grid item xs sm container sx={{ width: '0px', paddingRight: '15px' }}>
                     <Grid item xs>
+                        {reasoningContent && (
+                            <Box sx={{ marginTop: '0.5rem', fontSize: '0.875rem', color: theme.palette.text.secondary }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                                        {t('Think')}
+                                    </Typography>
+                                    <span
+                                        className='cursor-pointer inline-block font-bold text-blue-500 hover:text-white hover:bg-blue-500'
+                                        onClick={() => setIsReasoningContentCollapsed(!isReasoningContentCollapsed)}
+                                    >
+                                        [{isReasoningContentCollapsed ? t('Expand') : t('Collapse')}]
+                                    </span>
+                                </Box>
+                                <Collapse in={!isReasoningContentCollapsed} timeout="auto" unmountOnExit>
+                                    {enableMarkdownRendering ? (
+                                        <Markdown>
+                                            {reasoningContent}
+                                        </Markdown>
+                                    ) : (
+                                        <Typography variant="body2">
+                                            {reasoningContent}
+                                        </Typography>
+                                    )}
+                                </Collapse>
+                            </Box>
+                        )}
                         <Box className={cn('msg-content', { 'msg-content-small': small })} sx={
                             small ? { fontSize: theme.typography.body2.fontSize } : {}
                         }>
