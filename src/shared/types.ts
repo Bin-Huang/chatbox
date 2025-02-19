@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
+import { ClaudeModel } from '../renderer/packages/models/claude'
 import { Model } from '../renderer/packages/models/openai'
 import * as siliconflow from '../renderer/packages/models/siliconflow'
-import { ClaudeModel } from '../renderer/packages/models/claude'
 
 export const MessageRoleEnum = {
     System: 'system',
@@ -152,7 +152,7 @@ export interface Settings extends ModelSettings {
     autoGenerateTitle: boolean
 }
 
-export type Language = 'en' | 'zh-Hans' | 'zh-Hant' | 'ja' | 'ko' | 'ru' | 'de' | 'fr'
+export type Language = 'en' | 'zh-Hans' | 'zh-Hant' | 'ja' | 'ko' | 'ru' | 'de' | 'fr' | 'tr'
 
 export interface Config {
     uuid: string

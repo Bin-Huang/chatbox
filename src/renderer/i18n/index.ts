@@ -1,18 +1,19 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import de from './locales/de/translation.json'
 import en from './locales/en/translation.json'
-import zhHans from './locales/zh-Hans/translation.json'
-import zhHant from './locales/zh-Hant/translation.json'
+import fr from './locales/fr/translation.json'
 import ja from './locales/ja/translation.json'
 import ko from './locales/ko/translation.json'
 import ru from './locales/ru/translation.json'
-import de from './locales/de/translation.json'
-import fr from './locales/fr/translation.json'
+import tr from './locales/tr/translation.json'
+import zhHans from './locales/zh-Hans/translation.json'
+import zhHant from './locales/zh-Hant/translation.json'
 
+import changelogEn from './changelogs/changelog_en'
 import changelogZhHans from './changelogs/changelog_zh_Hans'
 import changelogZhHant from './changelogs/changelog_zh_Hant'
-import changelogEn from './changelogs/changelog_en'
 
 i18n.use(initReactI18next).init({
     resources: {
@@ -39,6 +40,9 @@ i18n.use(initReactI18next).init({
         },
         fr: {
             translation: fr,
+        },
+        tr: {
+            translation: tr,
         },
     },
     fallbackLng: 'en',
