@@ -38,13 +38,10 @@ export default function SettingWindow(props: Props) {
         }
     }, [props.open])
 
-    const [settingsEdit, _setSettingsEdit] = React.useState<Settings>(settings)
-    const setSettingsEdit = (updated: Settings) => {
-        _setSettingsEdit(updated)
-    }
+    const [settingsEdit, setSettingsEdit] = React.useState<Settings>(settings)
 
     useEffect(() => {
-        _setSettingsEdit(settings)
+        setSettingsEdit(settings)
     }, [settings])
 
     const onSave = () => {
