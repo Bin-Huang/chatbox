@@ -1,5 +1,5 @@
 import OpenAI from './openai'
-import { Settings, Config, ModelProvider, SessionType } from '../../shared/types'
+import { Settings, Config, ModelProvider } from '../../shared/types'
 import ChatboxAI from './chatboxai'
 import Ollama from './ollama'
 import SiliconFlow from './siliconflow'
@@ -77,7 +77,7 @@ export const AIModelProviderMenuOptionList = [
     },
 ]
 
-export function getModelDisplayName(settings: Settings, sessionType: SessionType): string {
+export function getModelDisplayName(settings: Settings): string {
     if (!settings) {
         return 'unknown'
     }

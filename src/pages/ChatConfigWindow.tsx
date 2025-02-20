@@ -7,9 +7,7 @@ import * as atoms from '../stores/atoms'
 import { useAtom } from 'jotai'
 import { trackingEvent } from '@/packages/event'
 
-interface Props {}
-
-export default function ChatConfigWindow(props: Props) {
+export default function ChatConfigWindow() {
     const { t } = useTranslation()
     const [chatConfigDialogSession, setChatConfigDialogSession] = useAtom(atoms.chatConfigDialogAtom)
 

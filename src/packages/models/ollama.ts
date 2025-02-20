@@ -1,7 +1,6 @@
 import { IMessage } from '@/shared/types'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 import { ApiError } from './errors'
-import { log } from 'console'
 
 // import ollama from 'ollama/browser'
 
@@ -37,7 +36,7 @@ export default class Ollama extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const messages = rawMessages.map((m) => ({ role: m.role, content: m.content }))
         const res = await this.post(

@@ -6,9 +6,8 @@ import PasswordTextField from '../../components/PasswordTextField'
 import MaxContextMessageCountSlider from '../../components/MaxContextMessageCountSlider'
 import TextFieldReset from '@/components/TextFieldReset'
 import { Accordion, AccordionSummary, AccordionDetails } from '../../components/Accordion'
-import { useAtomValue } from 'jotai'
 import SimpleSelect from '../../components/SimpleSelect'
-import { ClaudeModel, claudeModels } from '../../packages/models/claude'
+import { claudeModels } from '../../packages/models/claude'
 
 interface ModelConfigProps {
     settingsEdit: ModelSettings

@@ -11,12 +11,10 @@ import StarIcon from '@mui/icons-material/Star'
 interface ModelConfigProps {
     settings: ModelSettings
     setSettings(value: ModelSettings): void
-    className?: string
-    hideCustomProviderManage?: boolean
 }
 
 export default function AIProviderSelect(props: ModelConfigProps) {
-    const { settings, setSettings, className, hideCustomProviderManage } = props
+    const { settings, setSettings } = props
     const { t } = useTranslation()
 
     const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null)

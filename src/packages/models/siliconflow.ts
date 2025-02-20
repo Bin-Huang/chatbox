@@ -1,6 +1,6 @@
 import { IMessage } from '@/shared/types'
 import { ApiError, ChatboxAIAPIError } from './errors'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 
 interface Options {
     siliconCloudKey: string
@@ -25,7 +25,7 @@ export default class SiliconFlow extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         try {
             return await this._callChatCompletion(rawMessages, signal, onResultChange)
@@ -43,7 +43,7 @@ export default class SiliconFlow extends Base {
     async _callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         let messages = await populateSiliconFlowMessage(rawMessages, this.options.siliconCloudModel)
 
@@ -131,7 +131,7 @@ export const models = Array.from(Object.keys(siliconflowModelConfigs)).sort() as
 
 export async function populateSiliconFlowMessage(
     rawMessages: IMessage[],
-    model: Model | 'custom-model',
+    _model: Model | 'custom-model',
 ): Promise<SiliconFlowMessage[]> {
     return populateSiliconFlowMessageText(rawMessages)
 }

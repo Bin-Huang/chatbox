@@ -16,7 +16,7 @@ export default function TemperatureSlider(props: Props) {
     useEffect(() => {
         setInput(`${props.value}`)
     }, [props.value])
-    const handleTemperatureChange = (event: Event, newValue: number | number[], activeThumb: number) => {
+    const handleTemperatureChange = (_event: Event, newValue: number | number[], activeThumb: number) => {
         if (typeof newValue === 'number') {
             props.onChange(newValue)
         } else {

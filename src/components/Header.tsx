@@ -6,9 +6,7 @@ import * as sessionActions from '../stores/sessionActions'
 import Toolbar from './Toolbar'
 import { cn } from '@/lib/utils'
 
-interface Props {}
-
-export default function Header(props: Props) {
+export default function Header() {
     const theme = useTheme()
     const currentSession = useAtomValue(atoms.currentSessionAtom)
     const setChatConfigDialogSession = useSetAtom(atoms.chatConfigDialogAtom)

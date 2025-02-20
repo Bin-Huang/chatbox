@@ -1,4 +1,4 @@
-import { Select, MenuItem, FormControl, InputLabel, TextField } from '@mui/material'
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material'
 import { ModelSettings } from '../shared/types'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'

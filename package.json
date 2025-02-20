@@ -19,7 +19,7 @@
         "@emotion/styled": "^11.14.0",
         "@mui/icons-material": "^6.4.3",
         "@mui/material": "^6.4.3",
-        "@sentry/react": "^8.54.0",
+        "@sentry/react": "^7.120.3",
         "@tailwindcss/postcss": "^4.0.4",
         "@tauri-apps/api": "^2",
         "@tauri-apps/plugin-http": "^2.3.0",

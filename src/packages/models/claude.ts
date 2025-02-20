@@ -1,5 +1,5 @@
 import { IMessage } from '@/shared/types'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 import { ApiError } from './errors'
 import { get } from 'lodash'
 
@@ -81,7 +81,7 @@ export default class Claude extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         rawMessages = this.sequenceMessages(rawMessages)
         let prompt = ''

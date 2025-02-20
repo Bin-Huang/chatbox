@@ -73,7 +73,7 @@ export default function SessionList(props: Props) {
                 onDragEnd={onDragEnd}
             >
                 <SortableContext items={sortedSessions} strategy={verticalListSortingStrategy}>
-                    {sortedSessions.map((session, ix) => (
+                    {sortedSessions.map((session) => (
                         <SortableItem key={session.id} id={session.id}>
                             <SessionItem
                                 key={session.id}

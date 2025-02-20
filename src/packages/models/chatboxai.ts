@@ -1,5 +1,5 @@
 import { ChatboxAILicenseDetail, ChatboxAIModel, IMessage, MessageRole } from '@/shared/types'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 import { API_ORIGIN } from '../remote'
 import { BaseError, ApiError, NetworkError, ChatboxAIAPIError } from './errors'
 import { parseJsonOrEmpty } from '@/lib/utils'
@@ -36,7 +36,7 @@ export default class ChatboxAI extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const messages = await populateChatboxAIMessage(rawMessages)
         const response = await this.post(
@@ -100,7 +100,7 @@ export default class ChatboxAI extends Base {
                     signal,
                 })
                 if (!res.ok) {
-                    const response = await res.text().catch((e) => '')
+                    const response = await res.text().catch(() => '')
                     const errorCodeName = parseJsonOrEmpty(response)?.error?.code
                     const chatboxAIError = ChatboxAIAPIError.fromCodeName(response, errorCodeName)
                     if (chatboxAIError) {
@@ -137,7 +137,7 @@ export default class ChatboxAI extends Base {
                     signal,
                 })
                 if (!res.ok) {
-                    const response = await res.text().catch((e) => '')
+                    const response = await res.text().catch(() => '')
                     const errorCodeName = parseJsonOrEmpty(response)?.error?.code
                     const chatboxAIError = ChatboxAIAPIError.fromCodeName(response, errorCodeName)
                     if (chatboxAIError) {

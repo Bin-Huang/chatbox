@@ -7,13 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import * as defaults from '../shared/defaults'
 import * as scrollActions from './scrollActions'
 import { getModel, getModelDisplayName } from '@/packages/models'
-import {
-    AIProviderNoImplementedPaintError,
-    NetworkError,
-    ApiError,
-    BaseError,
-    ChatboxAIAPIError,
-} from '@/packages/models/errors'
+import { AIProviderNoImplementedPaintError, NetworkError, ApiError, BaseError } from '@/packages/models/errors'
 import platform from '../packages/platform'
 import { throttle } from 'lodash'
 import { countWord } from '@/packages/word-count'
@@ -130,11 +124,9 @@ export function modifyMessage(sessionId: string, updated: IMessage, refreshCount
 
     updated.timestamp = new Date().getTime()
 
-    let hasHandled = false
     const handle = (msgs: IMessage[]) => {
         return msgs.map((m) => {
             if (m.id === updated.id) {
-                hasHandled = true
                 return { ...updated }
             }
             return m
@@ -186,7 +178,7 @@ export async function generate(sessionId: string, targetMsg: IMessage) {
         content: placeholder,
         cancel: undefined,
         aiProvider: settings.aiProvider,
-        model: getModelDisplayName(settings, session.type || 'chat'),
+        model: getModelDisplayName(settings),
         generating: true,
         errorCode: undefined,
         error: undefined,

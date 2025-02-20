@@ -2,11 +2,8 @@ import { useEffect, useRef } from 'react'
 import Message from './Message'
 import * as atoms from '../stores/atoms'
 import { useAtom, useAtomValue } from 'jotai'
-import { cn } from '@/lib/utils'
 
-interface Props {}
-
-export default function MessageList(props: Props) {
+export default function MessageList() {
     const currentSession = useAtomValue(atoms.currentSessionAtom)
     const currentMessageList = useAtomValue(atoms.currentMessageListAtom)
     const ref = useRef<HTMLDivElement | null>(null)

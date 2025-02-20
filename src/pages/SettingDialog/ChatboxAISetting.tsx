@@ -26,7 +26,7 @@ export default function ChatboxAISetting(props: ModelConfigProps) {
     const { t } = useTranslation()
     const activated = premiumActions.useAutoValidate()
     const [loading, setLoading] = useState(false)
-    const [tip, setTip] = useState<React.ReactNode | null>(null)
+    const [_tip, setTip] = useState<React.ReactNode | null>(null)
     const language = useAtomValue(languageAtom)
 
     const onInputChange = (value: string) => {
@@ -250,7 +250,7 @@ function BorderLinearProgress(props: LinearProgressProps) {
     )
 }
 
-const _BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+const _BorderLinearProgress = styled(LinearProgress)(() => ({
     height: 5,
     borderRadius: 5,
     [`&.${linearProgressClasses.colorPrimary}`]: {},
@@ -264,7 +264,7 @@ function LicenseDetail(props: { licenseKey?: string }) {
     const { t } = useTranslation()
     const [expanded, setExpanded] = useState<boolean>(false)
     const [licenseDetail, setLicenseDetail] = useState<ChatboxAILicenseDetail | null>(null)
-    const onChange = (event: React.SyntheticEvent, newExpanded: boolean) => {
+    const onChange = (_event: React.SyntheticEvent, newExpanded: boolean) => {
         setExpanded(newExpanded)
         if (!newExpanded) {
             setLicenseDetail(null)

@@ -1,61 +1,53 @@
-import {
-    Config,
-    CopilotDetail,
-    SponsorAboutBanner,
-    SponsorAd,
-    RemoteConfig,
-    ChatboxAILicenseDetail,
-    Settings,
-} from '../shared/types'
+import { Config, CopilotDetail, RemoteConfig, ChatboxAILicenseDetail, Settings } from '../shared/types'
 import { fetch } from '@/utils'
 
 export const API_ORIGIN = 'https://chatboxai.app'
 
 export async function checkNeedUpdate(version: string, os: string, config: Config, settings: Settings) {
-    type Response = {
-        need_update?: boolean
-    }
-    const res = await fetch<Response>(`${API_ORIGIN}/ce/chatbox_need_update/${version}`, {
+    // type Response = {
+    //     need_update?: boolean
+    // }
+    const res: any = await fetch(`${API_ORIGIN}/ce/chatbox_need_update/${version}`, {
         method: 'POST',
-        retry: 3,
-        body: {
+        // retry: 3,
+        body: JSON.stringify({
             uuid: config.uuid,
             os: os,
             allowReportingAndTracking: settings.allowReportingAndTracking ? 1 : 0,
-        },
+        }),
     })
     return !!res['need_update']
 }
 
 export async function listCopilots(lang: string) {
-    type Response = {
-        data: CopilotDetail[]
-    }
-    const res = await fetch<Response>(`${API_ORIGIN}/api/copilots/list`, {
+    // type Response = {
+    //     data: CopilotDetail[]
+    // }
+    const res: any = await fetch(`${API_ORIGIN}/api/copilots/list`, {
         method: 'POST',
-        retry: 3,
-        body: { lang },
+        // retry: 3,
+        body: JSON.stringify({ lang }),
     })
-    return res['data']
+    return res['data'] as CopilotDetail[]
 }
 
 export async function recordCopilotShare(detail: CopilotDetail) {
     await fetch(`${API_ORIGIN}/api/copilots/share-record`, {
         method: 'POST',
-        body: {
+        body: JSON.stringify({
             detail: detail,
-        },
+        }),
     })
 }
 
 export async function getRemoteConfig(config: keyof RemoteConfig) {
-    type Response = {
-        data: Pick<RemoteConfig, typeof config>
-    }
-    const res = await fetch<Response>(`${API_ORIGIN}/api/remote_config/${config}`, {
-        retry: 3,
+    // type Response = {
+    //     data: Pick<RemoteConfig, typeof config>
+    // }
+    const res: any = await fetch(`${API_ORIGIN}/api/remote_config/${config}`, {
+        // retry: 3,
     })
-    return res['data']
+    return res['data'] as Pick<RemoteConfig, typeof config>
 }
 
 export interface DialogConfig {
@@ -64,41 +56,41 @@ export interface DialogConfig {
 }
 
 export async function getDialogConfig(params: { uuid: string; language: string; version: string }) {
-    type Response = {
-        data: null | DialogConfig
-    }
-    const res = await fetch<Response>(`${API_ORIGIN}/api/dialog_config`, {
+    // type Response = {
+    //     data: null | DialogConfig
+    // }
+    const res: any = await fetch(`${API_ORIGIN}/api/dialog_config`, {
         method: 'POST',
-        retry: 3,
-        body: params,
+        // retry: 3,
+        body: JSON.stringify(params),
     })
-    return res['data'] || null
+    return (res['data'] as DialogConfig) || null
 }
 
 export async function getLicenseDetail(params: { licenseKey: string }) {
-    type Response = {
-        data: ChatboxAILicenseDetail | null
-    }
-    const res = await fetch<Response>(`${API_ORIGIN}/api/license/detail`, {
-        retry: 3,
+    // type Response = {
+    //     data: ChatboxAILicenseDetail | null
+    // }
+    const res: any = await fetch(`${API_ORIGIN}/api/license/detail`, {
+        // retry: 3,
         headers: {
             Authorization: params.licenseKey,
         },
     })
-    return res['data'] || null
+    return (res['data'] as ChatboxAILicenseDetail) || null
 }
 
 export async function getLicenseDetailRealtime(params: { licenseKey: string }) {
-    type Response = {
-        data: ChatboxAILicenseDetail | null
-    }
-    const res = await fetch<Response>(`${API_ORIGIN}/api/license/detail/realtime`, {
-        retry: 3,
+    // type Response = {
+    //     data: ChatboxAILicenseDetail | null
+    // }
+    const res: any = await fetch(`${API_ORIGIN}/api/license/detail/realtime`, {
+        // retry: 3,
         headers: {
             Authorization: params.licenseKey,
         },
     })
-    return res['data'] || null
+    return (res['data'] as ChatboxAILicenseDetail) || null
 }
 
 export async function activateLicense(params: { licenseKey: string; instanceName: string }) {

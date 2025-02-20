@@ -360,7 +360,7 @@ function ScrollableTabsButtonAuto(props: TabsProps) {
             <Tabs
                 component="a"
                 value={props.currentValue}
-                onChange={(event, newValue) => {
+                onChange={(_event, newValue) => {
                     props.onChange(newValue)
                 }}
                 variant="scrollable"
@@ -468,7 +468,7 @@ function CopilotForm(props: CopilotFormProps) {
                         control={<Switch />}
                         label={t('Share with Chatbox')}
                         checked={copilotEdit.shared}
-                        onChange={(e, checked) => setCopilotEdit({ ...copilotEdit, shared: checked })}
+                        onChange={(_, checked) => setCopilotEdit({ ...copilotEdit, shared: checked })}
                     />
                 </FormGroup>
                 <ButtonGroup>

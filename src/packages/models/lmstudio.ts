@@ -1,5 +1,5 @@
 import { IMessage } from '@/shared/types'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 import { ApiError } from './errors'
 
 // import LMStudio from 'LMStudio/browser'
@@ -36,7 +36,7 @@ export default class LMStudio extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const messages = rawMessages.map((m) => ({ role: m.role, content: m.content }))
         const res = await this.post(

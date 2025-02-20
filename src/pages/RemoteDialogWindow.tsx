@@ -47,7 +47,7 @@ export default function RemoteDialogWindow() {
         }
     }, [open])
 
-    const onClose = (event?: any, reason?: 'backdropClick' | 'escapeKeyDown') => {
+    const onClose = (_?: any, reason?: 'backdropClick' | 'escapeKeyDown') => {
         if (reason === 'backdropClick') {
             return
         }
@@ -60,7 +60,7 @@ export default function RemoteDialogWindow() {
                 <DialogContentText>
                     <Markdown>{dialogConfig?.markdown || ''}</Markdown>
                     <Box>
-                        {dialogConfig?.buttons.map((button, index) => (
+                        {dialogConfig?.buttons.map((button) => (
                             <Button onClick={() => platform.openLink(button.url)}>{button.label}</Button>
                         ))}
                     </Box>

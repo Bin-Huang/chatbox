@@ -194,7 +194,7 @@ function ExportAndImport(props: { onCancel: () => void }) {
                                 control={
                                     <Checkbox
                                         checked={exportItems.includes(item.value)}
-                                        onChange={(e, checked) => {
+                                        onChange={(_, checked) => {
                                             if (checked && !exportItems.includes(item.value)) {
                                                 setExportItems([...exportItems, item.value])
                                             } else if (!checked) {

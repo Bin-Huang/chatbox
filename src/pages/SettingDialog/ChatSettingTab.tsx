@@ -1,4 +1,4 @@
-import { Button, TextField, Box, FormControlLabel, Switch, FormGroup, Badge, IconButton, useTheme } from '@mui/material'
+import { Button, TextField, Box, FormControlLabel, Switch, FormGroup } from '@mui/material'
 import { Settings } from '../../shared/types'
 import { useTranslation } from 'react-i18next'
 import * as defaults from '../../shared/defaults'
@@ -49,7 +49,7 @@ export default function ChatSettingTab(props: {
                     control={<Switch />}
                     label={t('Auto-Generate Chat Titles')}
                     checked={settingsEdit.autoGenerateTitle}
-                    onChange={(e, checked) => {
+                    onChange={(_, checked) => {
                         setSettingsEdit({
                             ...settingsEdit,
                             autoGenerateTitle: checked,
@@ -62,7 +62,7 @@ export default function ChatSettingTab(props: {
                     control={<Switch />}
                     label={t('Spell Check')}
                     checked={settingsEdit.spellCheck}
-                    onChange={(e, checked) => {
+                    onChange={(_, checked) => {
                         setSettingsEdit({
                             ...settingsEdit,
                             spellCheck: checked,
@@ -75,7 +75,7 @@ export default function ChatSettingTab(props: {
                     control={<Switch />}
                     label={t('Markdown Rendering')}
                     checked={settingsEdit.enableMarkdownRendering}
-                    onChange={(e, checked) => {
+                    onChange={(_, checked) => {
                         settingsEdit.enableMarkdownRendering = checked
                         setSettingsEdit({ ...settingsEdit })
                     }}

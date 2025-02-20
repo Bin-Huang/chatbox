@@ -1,11 +1,5 @@
 import { IMessage } from '@/shared/types'
-import {
-    ApiError,
-    NetworkError,
-    AIProviderNoImplementedPaintError,
-    BaseError,
-    AIProviderNoImplementedChatError,
-} from './errors'
+import { ApiError, NetworkError, BaseError, AIProviderNoImplementedChatError } from './errors'
 import { createParser } from 'eventsource-parser'
 import _ from 'lodash'
 import { fetch } from '@/utils/stream-fetch'
@@ -16,9 +10,9 @@ export default class Base {
     constructor() {}
 
     async callChatCompletion(
-        messages: IMessage[],
-        signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        _messages: IMessage[],
+        _signal?: AbortSignal,
+        _onResultChange?: onResultChangeFun,
     ): Promise<string> {
         throw new AIProviderNoImplementedChatError(this.name)
     }
@@ -43,12 +37,12 @@ export default class Base {
         }
         let result = ''
         try {
-            let onResultChange: onResultChange | undefined = undefined
+            let onResultChange: onResultChangeFun | undefined = undefined
             if (onResultUpdated) {
                 onResultUpdated({ text: result, reasoningContent: '', cancel: stop })
-                onResultChange = (newResult: string, reasoningContent: string) => {
+                onResultChange = (newResult: string, reasoningContent?: string) => {
                     result = newResult
-                    onResultUpdated({ text: result, reasoningContent, cancel: stop })
+                    onResultUpdated({ text: result, reasoningContent: reasoningContent || '', cancel: stop })
                 }
             }
             result = await this.callChatCompletion(messages, controller.signal, onResultChange)
@@ -143,7 +137,7 @@ export default class Base {
                     signal,
                 })
                 if (!res.ok) {
-                    const err = await res.text().catch((e) => null)
+                    const err = await res.text().catch(() => null)
                     throw new ApiError(`Status Code ${res.status}, ${err}`)
                 }
                 return res
@@ -175,7 +169,7 @@ export default class Base {
                     signal,
                 })
                 if (!res.ok) {
-                    const err = await res.text().catch((e) => null)
+                    const err = await res.text().catch(() => null)
                     throw new ApiError(`Status Code ${res.status}, ${err}`)
                 }
                 return res
@@ -197,4 +191,4 @@ export default class Base {
     }
 }
 
-export type onResultChange = (result: string, reasoningContent?: string) => void
+export type onResultChangeFun = (result: string, reasoningContent?: string) => void

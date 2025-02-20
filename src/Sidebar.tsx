@@ -21,10 +21,6 @@ import AddIcon from '@mui/icons-material/AddCircleOutline'
 import useVersion from './hooks/useVersion'
 import SessionList from './components/SessionList'
 import * as sessionActions from './stores/sessionActions'
-import MenuOpenIcon from '@mui/icons-material/MenuOpen'
-import { useSetAtom } from 'jotai'
-import * as atoms from './stores/atoms'
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
 import { trackingEvent } from './packages/event'
 
 export const drawerWidth = 240

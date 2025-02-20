@@ -33,7 +33,6 @@ export interface Props {
     msg: IMessage
     className?: string
     collapseThreshold?: number
-    hiddenButtonGroup?: boolean
     small?: boolean
 }
 
@@ -50,7 +49,7 @@ export default function Message(props: Props) {
     const currentSessionPicUrl = useAtomValue(currsentSessionPicUrlAtom)
     const setOpenSettingWindow = useSetAtom(openSettingDialogAtom)
 
-    const { msg, className, collapseThreshold, hiddenButtonGroup, small } = props
+    const { msg, className, collapseThreshold, small } = props
 
     const needCollapse =
         collapseThreshold &&

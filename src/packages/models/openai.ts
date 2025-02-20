@@ -1,6 +1,6 @@
 import { IMessage } from '@/shared/types'
 import { ApiError, ChatboxAIAPIError } from './errors'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 
 interface Options {
     openaiKey: string
@@ -33,7 +33,7 @@ export default class OpenAI extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         try {
             return await this._callChatCompletion(rawMessages, signal, onResultChange)
@@ -51,7 +51,7 @@ export default class OpenAI extends Base {
     async _callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const model = this.options.model === 'custom-model' ? this.options.openaiCustomModel || '' : this.options.model
 
@@ -83,7 +83,7 @@ export default class OpenAI extends Base {
     async requestChatCompletionsStream(
         requestBody: Record<string, any>,
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const apiPath = this.options.apiPath || '/v1/chat/completions'
         const response = await this.post(`${this.options.apiHost}${apiPath}`, this.getHeaders(), requestBody, signal)
@@ -118,7 +118,7 @@ export default class OpenAI extends Base {
     async requestChatCompletionsNotStream(
         requestBody: Record<string, any>,
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const apiPath = this.options.apiPath || '/v1/chat/completions'
         const response = await this.post(`${this.options.apiHost}${apiPath}`, this.getHeaders(), requestBody, signal)

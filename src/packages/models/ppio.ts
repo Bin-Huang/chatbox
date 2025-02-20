@@ -1,6 +1,6 @@
 import { IMessage } from 'src/shared/types'
 import { ApiError } from './errors'
-import Base, { onResultChange } from './base'
+import Base, { onResultChangeFun } from './base'
 import { fetch } from '@/utils'
 
 interface Options {
@@ -24,7 +24,7 @@ export default class PPIO extends Base {
     async callChatCompletion(
         rawMessages: IMessage[],
         signal?: AbortSignal,
-        onResultChange?: onResultChange,
+        onResultChange?: onResultChangeFun,
     ): Promise<string> {
         const messages = rawMessages.map((m) => ({
             role: m.role,
@@ -87,7 +87,7 @@ export default class PPIO extends Base {
             headers,
         })
         if (!res.ok) {
-            const err = await res.text().catch((e) => null)
+            const err = await res.text().catch(() => null)
             throw new ApiError(`Status Code ${res.status}, ${err}`)
         }
         return res

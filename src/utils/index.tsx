@@ -10,4 +10,4 @@ declare global {
     }
 }
 
-export const fetch = window.__TAURI__ ? tauriFetch : window.fetch
+export const fetch = (window.__TAURI__ ? tauriFetch : window.fetch) as typeof window.fetch
