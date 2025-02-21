@@ -1879,6 +1879,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:^3.40.0":
+  version: 3.40.0
+  resolution: "core-js@npm:3.40.0"
+  checksum: 10c0/db7946ada881e845d8b157061945b1187618fa45cf162f392a151e8a497962aed2da688c982eaa1d444c864be97a70f8be4d73385294b515d224dd164d19f1d4
+  languageName: node
+  linkType: hard
+
 "cosmiconfig@npm:^7.0.0":
   version: 7.1.0
   resolution: "cosmiconfig@npm:7.1.0"
@@ -3013,6 +3020,7 @@ __metadata:
     "@types/react-syntax-highlighter": "npm:^15"
     "@vitejs/plugin-react": "npm:^4.3.4"
     copy-to-clipboard: "npm:^3.3.3"
+    core-js: "npm:^3.40.0"
     date-fns: "npm:^4.1.0"
     eventsource-parser: "npm:^1.0.0"
     i18next: "npm:^24.2.2"

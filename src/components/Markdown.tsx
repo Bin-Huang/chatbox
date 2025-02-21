@@ -1,3 +1,4 @@
+import "core-js/stable/url/can-parse"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeKatex from 'rehype-katex'

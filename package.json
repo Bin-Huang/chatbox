@@ -25,6 +25,7 @@
         "@tauri-apps/plugin-http": "^2.3.0",
         "@tauri-apps/plugin-opener": "^2",
         "copy-to-clipboard": "^3.3.3",
+        "core-js": "^3.40.0",
         "date-fns": "^4.1.0",
         "eventsource-parser": "^1.0.0",
         "i18next": "^24.2.2",
