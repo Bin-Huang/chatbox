@@ -152,7 +152,7 @@ export interface Settings extends ModelSettings {
     autoGenerateTitle: boolean
 }
 
-export type Language = 'en' | 'zh-Hans' | 'zh-Hant' | 'ja' | 'ko' | 'ru' | 'de' | 'fr'
+export type Language = 'en' | 'zh-Hans' | 'zh-Hant' | 'ja' | 'ko' | 'ru' | 'de' | 'fr' | 'es'
 
 export interface Config {
     uuid: string
