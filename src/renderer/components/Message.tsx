@@ -103,7 +103,6 @@ export default function Message(props: Props) {
         if (msg.generating) {
             scrollActions.scrollToBottom()
         }
-        console.log(msg)
     }, [msg.content])
 
     let content = msg.content
