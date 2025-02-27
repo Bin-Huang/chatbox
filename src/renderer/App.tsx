@@ -39,7 +39,7 @@ function Main() {
                     toggleSidebar={setOpenSidebar}
                     sidebarOpen={openSidebar}
                 />
-                <MainPane toggleSidebar={() => setOpenSidebar(true)}/>
+                <MainPane toggleSidebar={() => setOpenSidebar(true)} />
             </Grid>
             <SettingDialog
                 open={!!openSettingWindow}

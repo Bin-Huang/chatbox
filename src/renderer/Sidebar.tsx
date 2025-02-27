@@ -10,7 +10,8 @@ import {
     ListItemIcon,
     Typography,
     Divider,
-    useTheme, Drawer
+    useTheme,
+    Drawer,
 } from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
@@ -55,7 +56,9 @@ export default function Sidebar(props: Props) {
     return (
         <Drawer
             open={props.sidebarOpen}
-            onClose={() => {props.toggleSidebar(false)}}
+            onClose={() => {
+                props.toggleSidebar(false)
+            }}
             className="fixed top-0 left-0 h-full z-50"
             style={{
                 boxSizing: 'border-box',
@@ -88,52 +91,50 @@ export default function Sidebar(props: Props) {
                         </Box>
                     </Box>
 
-                        <SessionList sessionListRef={sessionListRef} />
+                    <SessionList sessionListRef={sessionListRef} />
 
-                        <Divider variant="fullWidth" />
+                    <Divider variant="fullWidth" />
 
-                        <MenuList sx={{ marginBottom: '20px' }}>
-                            <MenuItem onClick={handleCreateNewSession}
-                                      sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
-                                <ListItemIcon>
-                                    <IconButton>
-                                        <AddIcon fontSize="small" />
-                                    </IconButton>
-                                </ListItemIcon>
-                                <ListItemText>{t('new chat')}</ListItemText>
-                                <Typography variant="body2" color="text.secondary">
-                                    {/* ⌘N */}
-                                </Typography>
-                            </MenuItem>
+                    <MenuList sx={{ marginBottom: '20px' }}>
+                        <MenuItem onClick={handleCreateNewSession} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
+                            <ListItemIcon>
+                                <IconButton>
+                                    <AddIcon fontSize="small" />
+                                </IconButton>
+                            </ListItemIcon>
+                            <ListItemText>{t('new chat')}</ListItemText>
+                            <Typography variant="body2" color="text.secondary">
+                                {/* ⌘N */}
+                            </Typography>
+                        </MenuItem>
 
-                            <MenuItem onClick={props.openCopilotWindow}
-                                      sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
-                                <ListItemIcon>
-                                    <IconButton>
-                                        <SmartToyIcon fontSize="small" />
-                                    </IconButton>
-                                </ListItemIcon>
-                                <ListItemText>
-                                    <Typography>{t('My Copilots')}</Typography>
-                                </ListItemText>
-                            </MenuItem>
+                        <MenuItem onClick={props.openCopilotWindow} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
+                            <ListItemIcon>
+                                <IconButton>
+                                    <SmartToyIcon fontSize="small" />
+                                </IconButton>
+                            </ListItemIcon>
+                            <ListItemText>
+                                <Typography>{t('My Copilots')}</Typography>
+                            </ListItemText>
+                        </MenuItem>
 
-                            <MenuItem
-                                onClick={() => {
-                                    props.setOpenSettingWindow('ai')
-                                }}
-                                sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}
-                            >
-                                <ListItemIcon>
-                                    <IconButton>
-                                        <SettingsIcon fontSize="small" />
-                                    </IconButton>
-                                </ListItemIcon>
-                                <ListItemText>{t('settings')}</ListItemText>
-                                <Typography variant="body2" color="text.secondary">
-                                    {/* ⌘N */}
-                                </Typography>
-                            </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                props.setOpenSettingWindow('ai')
+                            }}
+                            sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}
+                        >
+                            <ListItemIcon>
+                                <IconButton>
+                                    <SettingsIcon fontSize="small" />
+                                </IconButton>
+                            </ListItemIcon>
+                            <ListItemText>{t('settings')}</ListItemText>
+                            <Typography variant="body2" color="text.secondary">
+                                {/* ⌘N */}
+                            </Typography>
+                        </MenuItem>
 
                         <MenuItem onClick={props.openAboutWindow} sx={{ padding: '0.2rem 0.1rem', margin: '0.1rem' }}>
                             <ListItemIcon>
