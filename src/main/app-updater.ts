@@ -7,6 +7,17 @@ import { getLogger } from './util'
 
 const log = getLogger('app-updater')
 
+// 本分支与官方 Chatbox（github.com/chatboxai/chatbox）独立演进：更新只来自
+// fork 自己的 GitHub Releases。官方 chatboxai.app 的 feed 已刻意移除，禁止再
+// 接回，否则官方构建（如 v1.23.5）会被当作更新推送、覆盖 fork 的功能。
+// 该仓库需保持公开并发布带 latest.yml 的 Release（publish 配置见
+// electron-builder.yml），否则检查更新会按"无更新"处理。
+const FORK_UPDATE_FEED = {
+  provider: 'github' as const,
+  owner: 'ytterbium7',
+  repo: 'chatbox',
+}
+
 function sendToRenderer(win: BrowserWindow | null, channel: string, data?: unknown) {
   if (win && !win.isDestroyed()) {
     win.webContents.send(channel, data)
@@ -16,7 +27,6 @@ function sendToRenderer(win: BrowserWindow | null, channel: string, data?: unkno
 export class AppUpdater {
   private getWindow: () => BrowserWindow | null
   private isChecking = false
-  private suppressError = false
 
   constructor(getWindow: () => BrowserWindow | null) {
     this.getWindow = getWindow
@@ -53,10 +63,7 @@ export class AppUpdater {
 
     autoUpdater.on('error', (err) => {
       log.error('auto_updater error:', err)
-      // Suppress error events during feed URL fallback to avoid false error flashes
-      if (!this.suppressError) {
-        sendToRenderer(this.getWindow(), 'updater:error', { message: err?.message || 'Unknown error' })
-      }
+      sendToRenderer(this.getWindow(), 'updater:error', { message: err?.message || 'Unknown error' })
     })
 
     // Guard against double-registration (defensive — AppUpdater is singleton)
@@ -100,39 +107,30 @@ export class AppUpdater {
 
     this.isChecking = true
     try {
-      const feedUrls = [
-        'https://chatboxai.app/api/auto_upgrade',
-        'https://api.chatboxai.app/api/auto_upgrade',
-        'https://api.ai-chatbox.com/api/auto_upgrade',
-        'https://api.chatboxapp.xyz/api/auto_upgrade',
-        'https://api.chatboxai.com/api/auto_upgrade',
-      ]
-
       const settings = getSettings()
       autoUpdater.channel = settings.betaUpdate ? 'beta' : 'latest'
       autoUpdater.allowDowngrade = false
 
-      let lastError: Error | null = null
-      for (const url of feedUrls) {
-        try {
-          autoUpdater.setFeedURL(url)
-          // Suppress error events from failed URLs — only the final error matters
-          this.suppressError = true
-          const result = await autoUpdater.checkForUpdates()
-          this.suppressError = false
-          return result
-        } catch (e) {
-          lastError = e instanceof Error ? e : new Error(String(e))
-          log.error(`auto_updater: attempt failed: ${url}. `, e)
+      autoUpdater.setFeedURL(FORK_UPDATE_FEED)
+      try {
+        return await autoUpdater.checkForUpdates()
+      } catch (e) {
+        // fork 仓库还没有发布过 Release 时 GitHub provider 会抛
+        // ERR_UPDATER_NO_PUBLISHED_VERSIONS（缺 latest.yml 时同理），按"无更新"
+        // 处理，避免设置页/关于页一直显示"更新失败"
+        const code = (e as { code?: string })?.code
+        const message = e instanceof Error ? e.message : String(e)
+        if (
+          code === 'ERR_UPDATER_NO_PUBLISHED_VERSIONS' ||
+          /no published versions|cannot find latest\.yml|ENOENT|\b404\b/i.test(message)
+        ) {
+          log.info('auto_updater: fork feed has no published release yet, treating as up-to-date')
+          return null
         }
+        throw e
       }
-      this.suppressError = false
-      // All URLs failed — throw so callers handle it (don't return null, which would be misread as "no update")
-      if (lastError) throw lastError
-      return null
     } finally {
       this.isChecking = false
-      this.suppressError = false
     }
   }
 }

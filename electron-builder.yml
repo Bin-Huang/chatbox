@@ -82,9 +82,10 @@ directories:
 extraResources:
   - ./assets/**
 
+# fork 独立更新源：发布到 ytterbium7/chatbox 的 GitHub Releases（latest.yml 等
+# 更新元数据由 electron-builder 生成并上传）。与 src/main/app-updater.ts 中的
+# FORK_UPDATE_FEED 保持一致。
 publish:
-  - provider: s3
-    bucket: chatbox
-    endpoint: https://208624959c9d215edea0720162a740c1.r2.cloudflarestorage.com
-    path: /releases
-    channel: ${env.UPDATE_CHANNEL}
+  - provider: github
+    owner: ytterbium7
+    repo: chatbox
