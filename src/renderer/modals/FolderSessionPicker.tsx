@@ -4,16 +4,17 @@ import type { SessionFolder, SessionMetaRecord } from '@shared/types'
 import { IconSearch, IconX } from '@tabler/icons-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { rendererApplication } from '@/app/renderer-application'
 import { AdaptiveModal } from '@/components/common/AdaptiveModal'
 import { ScalableIcon } from '@/components/common/ScalableIcon'
-import { rendererApplication } from '@/app/renderer-application'
 import { moveSessionsToFolder } from '@/stores/sessionFolders'
+import * as toastActions from '@/stores/toastActions'
 
 /** Current members of a folder, read from the session list cache. */
 function folderMemberIds(folderId: string): Set<string> {
   return new Set(
-    rendererApplication
-      .sessionQueryBridge.getCachedSessionsMeta()
+    rendererApplication.sessionQueryBridge
+      .getCachedSessionsMeta()
       .filter((s) => s.folderId === folderId)
       .map((s) => s.id)
   )
@@ -31,16 +32,20 @@ const FolderSessionPicker = NiceModal.create((props: { folder: SessionFolder }) 
   const [query, setQuery] = useState('')
   const [saving, setSaving] = useState(false)
   // Checked = will be in this folder after saving. Pre-check current members.
-  // NiceModal keeps this component mounted across show() calls, so state must
-  // be re-derived whenever the picker opens for a different folder — a plain
-  // useState initializer would leak the previous folder's checks into the
-  // save diff (same pattern as SessionSettingsModal's props sync).
+  // NiceModal keeps this component mounted across hide()/show() and only swaps
+  // props, so every open must re-derive ALL open-time state: the checked set,
+  // the diff baseline, and the search box. Gating on modal.visible (not just
+  // folder.id) also resets the same-folder reopen path, where a stale baseline
+  // would silently skip writes the user just saw themselves make.
   const [checkedIds, setCheckedIds] = useState<Set<string>>(() => folderMemberIds(folder.id))
-  const originalIds = useMemo(() => folderMemberIds(folder.id), [folder.id])
+  const [originalIds, setOriginalIds] = useState<Set<string>>(() => folderMemberIds(folder.id))
   useEffect(() => {
-    setCheckedIds(folderMemberIds(folder.id))
+    if (!modal.visible) return
+    const members = folderMemberIds(folder.id)
+    setCheckedIds(members)
+    setOriginalIds(members)
     setQuery('')
-  }, [folder.id])
+  }, [modal.visible, folder.id])
 
   const sessions = useMemo(() => {
     const all = rendererApplication.sessionQueryBridge.getCachedSessionsMeta()
@@ -96,6 +101,11 @@ const FolderSessionPicker = NiceModal.create((props: { folder: SessionFolder }) 
       await moveSessionsToFolder(entries)
       modal.resolve(undefined)
       modal.hide()
+    } catch (error) {
+      // Partial writes converge on retry: the next open re-baselines against
+      // current membership, so keep the picker open with its state intact.
+      console.error('Failed to save folder membership:', error)
+      toastActions.add(t('Failed to move chats to folder. Please try again.') || '')
     } finally {
       setSaving(false)
     }
@@ -134,7 +144,13 @@ const FolderSessionPicker = NiceModal.create((props: { folder: SessionFolder }) 
   const someVisibleChecked = sessions.some((s) => checkedIds.has(s.id))
 
   return (
-    <AdaptiveModal opened={modal.visible} onClose={close} centered size="md" title={`${t('Add Chats to Folder')} — ${folder.name}`}>
+    <AdaptiveModal
+      opened={modal.visible}
+      onClose={close}
+      centered
+      size="md"
+      title={`${t('Add Chats to Folder')} — ${folder.name}`}
+    >
       <Input
         data-autofocus
         leftSection={<ScalableIcon icon={IconSearch} size={16} />}

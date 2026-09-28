@@ -6,11 +6,15 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { ComponentType } from 'react'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-const { hideMock, moveSessionsToFolderMock, resolveMock, sessionsState } = vi.hoisted(() => ({
+const { hideMock, modalState, moveSessionsToFolderMock, resolveMock, sessionsState, toastAddMock } = vi.hoisted(() => ({
   hideMock: vi.fn(),
+  // Tests drive visibility to simulate NiceModal's hide() -> show() reuse cycle;
+  // useModal reads this during render, so mutating before rerender takes effect.
+  modalState: { visible: true },
   moveSessionsToFolderMock: vi.fn(),
   resolveMock: vi.fn(),
   sessionsState: { sessions: [] as SessionMetaRecord[] },
+  toastAddMock: vi.fn(),
 }))
 
 // NiceModal keeps a shown modal mounted across hide()/show() calls; its props are
@@ -23,7 +27,7 @@ vi.mock('@ebay/nice-modal-react', async () => {
     default: {
       create: <P,>(Component: React.ComponentType<P>) => Component,
     },
-    useModal: () => ({ hide: hideMock, remove: vi.fn(), resolve: resolveMock, visible: true }),
+    useModal: () => ({ hide: hideMock, remove: vi.fn(), resolve: resolveMock, visible: modalState.visible }),
   }
 })
 
@@ -51,6 +55,7 @@ vi.mock('@/app/renderer-application', () => ({
   },
 }))
 vi.mock('@/stores/sessionFolders', () => ({ moveSessionsToFolder: moveSessionsToFolderMock }))
+vi.mock('@/stores/toastActions', () => ({ add: toastAddMock }))
 
 import FolderSessionPicker from './FolderSessionPicker'
 
@@ -94,6 +99,14 @@ function renderPicker(folder: SessionFolder) {
   )
 }
 
+function treePicker(folder: SessionFolder) {
+  return (
+    <MantineProvider>
+      <Picker folder={folder} />
+    </MantineProvider>
+  )
+}
+
 describe('FolderSessionPicker state reset across NiceModal reuse', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -111,6 +124,7 @@ describe('FolderSessionPicker state reset across NiceModal reuse', () => {
       })),
     })
     sessionsState.sessions = sessions
+    modalState.visible = true
   })
 
   test('pre-checks only the current folder members', () => {
@@ -145,6 +159,62 @@ describe('FolderSessionPicker state reset across NiceModal reuse', () => {
     expect(rowFor('Session in A').getAttribute('aria-pressed')).toBe('false')
     expect(rowFor('Unfiled session').getAttribute('aria-pressed')).toBe('false')
     expect((screen.getByPlaceholderText('Search') as HTMLInputElement).value).toBe('')
+  })
+
+  test('reopening for the SAME folder discards the draft and refreshes the diff baseline', async () => {
+    const { rerender } = renderPicker(folderA)
+
+    // Dirty the state: uncheck the member, check an outsider, type a search.
+    fireEvent.click(rowFor('Session in A'))
+    fireEvent.click(rowFor('Unfiled session'))
+    fireEvent.change(screen.getByPlaceholderText('Search'), { target: { value: 'xyz' } })
+
+    // hide() keeps the component mounted with all its state.
+    modalState.visible = false
+    rerender(treePicker(folderA))
+
+    // While hidden, membership changes through another path (e.g. the
+    // session-item "Move to Folder" action): s1 leaves folder A.
+    sessionsState.sessions = sessions.map((s) => (s.id === 's1' ? { ...s, folderId: undefined } : s))
+
+    // show() again for the SAME folder: props identity is unchanged, only the
+    // visibility edge fires. Without a visible-gated reset, checkedIds AND the
+    // originalIds baseline stay stale from the first open.
+    modalState.visible = true
+    rerender(treePicker(folderA))
+
+    expect((screen.getByPlaceholderText('Search') as HTMLInputElement).value).toBe('')
+    expect(rowFor('Session in A').getAttribute('aria-pressed')).toBe('false')
+    expect(rowFor('Unfiled session').getAttribute('aria-pressed')).toBe('false')
+
+    // Re-check s1 and save: with a fresh baseline the write must happen —
+    // a stale baseline judged "member -> member" and silently skipped it.
+    fireEvent.click(rowFor('Session in A'))
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    await waitFor(() => {
+      expect(moveSessionsToFolderMock).toHaveBeenCalledWith([{ sessionId: 's1', folderId: 'folder-a' }])
+    })
+  })
+
+  test('a failed save shows a toast and keeps the picker open for retry', async () => {
+    moveSessionsToFolderMock.mockRejectedValueOnce(new Error('storage down'))
+    renderPicker(folderA)
+
+    fireEvent.click(rowFor('Unfiled session'))
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    await waitFor(() => {
+      expect(toastAddMock).toHaveBeenCalledTimes(1)
+    })
+    expect(hideMock).not.toHaveBeenCalled()
+
+    // The diff-against-open-snapshot design makes retry converge, so keeping
+    // the modal open (state intact) is the useful failure mode.
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+    await waitFor(() => {
+      expect(moveSessionsToFolderMock).toHaveBeenCalledTimes(2)
+    })
   })
 
   test('saving only writes the sessions whose membership changed', async () => {

@@ -1,3 +1,4 @@
+import NiceModal from '@ebay/nice-modal-react'
 import { ActionIcon, Flex, Text } from '@mantine/core'
 import type { SessionFolder } from '@shared/types'
 import {
@@ -10,11 +11,11 @@ import {
   IconTrash,
 } from '@tabler/icons-react'
 import clsx from 'clsx'
-import NiceModal from '@ebay/nice-modal-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
 import { deleteFolder } from '@/stores/sessionFolders'
+import * as toastActions from '@/stores/toastActions'
 import { useUIStore } from '@/stores/uiStore'
 import ActionMenu, { type ActionMenuItemProps } from '../ActionMenu'
 import { ScalableIcon } from '../common/ScalableIcon'
@@ -56,7 +57,10 @@ function FolderHeader(props: Props) {
       color: 'chatbox-error',
       doubleCheck: true,
       onClick: () => {
-        void deleteFolder(folder.id)
+        deleteFolder(folder.id).catch((error) => {
+          console.error('Failed to delete folder:', error)
+          toastActions.add(t('Failed to delete folder. Please try again.') || '')
+        })
       },
     },
   ]
@@ -82,9 +86,7 @@ function FolderHeader(props: Props) {
         {folder.name}
       </Text>
       <Flex
-        className={clsx(
-          isSmallScreen || menuOpened ? 'flex' : 'group-hover/folder-header:flex hidden'
-        )}
+        className={clsx(isSmallScreen || menuOpened ? 'flex' : 'group-hover/folder-header:flex hidden')}
         onClick={(event) => event.stopPropagation()}
       >
         <ActionMenu

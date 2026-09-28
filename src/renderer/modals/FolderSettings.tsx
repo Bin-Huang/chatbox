@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { AdaptiveModal } from '@/components/common/AdaptiveModal'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
 import { createFolder, renameFolder } from '@/stores/sessionFolders'
+import * as toastActions from '@/stores/toastActions'
 
 type FolderSettingsModalProps = {
   mode: 'create' | 'rename'
@@ -17,14 +18,16 @@ const FolderSettings = NiceModal.create((props: FolderSettingsModalProps) => {
   const { t } = useTranslation()
   const isSmallScreen = useIsSmallScreen()
   const [name, setName] = useState(props.folder?.name ?? '')
-  // NiceModal keeps this component mounted across show() calls, so the input
-  // must be re-derived when the modal targets a different folder — a useState
-  // initializer alone would keep the previous folder's name in the box. Create
-  // mode passes no folder, so create/rename switches also land here.
-  useEffect(() => {
-    setName(props.folder?.name ?? '')
-  }, [props.folder])
   const [saving, setSaving] = useState(false)
+  // NiceModal keeps this modal mounted across hide()/show() and only swaps
+  // props; re-derive the input on every open. Gating on modal.visible (not the
+  // folder prop) also resets the same-target reopen path, where the prop keeps
+  // its identity and a cancelled draft would otherwise survive into the next
+  // open (create -> create passes undefined both times).
+  useEffect(() => {
+    if (!modal.visible) return
+    setName(props.folder?.name ?? '')
+  }, [modal.visible, props.folder])
 
   const title = props.mode === 'create' ? t('New Folder') : t('Rename Folder')
 
@@ -46,6 +49,9 @@ const FolderSettings = NiceModal.create((props: FolderSettingsModalProps) => {
         modal.resolve(undefined)
       }
       modal.hide()
+    } catch (error) {
+      console.error('Failed to save folder:', error)
+      toastActions.add(t('Failed to save folder. Please try again.') || '')
     } finally {
       setSaving(false)
     }
