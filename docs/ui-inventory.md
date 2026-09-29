@@ -1264,7 +1264,7 @@ This inventory is code-derived from `src/renderer/routes`, `src/renderer/compone
 - Preview links: [Storybook: App icons provider avatars file icons and static feedback states](http://localhost:6006/?path=/story/real-components-app-base--app-icons-provider-avatars-file-icons-and-static-feedback-states)
 - States: None detected
 - Variants: `size:xs`
-- Text: `AI-generated content may be inaccurate. Please verify important information.`
+- Text: `AI can be wrong. Verify key facts.`
 
 ### components/EditableAvatar
 

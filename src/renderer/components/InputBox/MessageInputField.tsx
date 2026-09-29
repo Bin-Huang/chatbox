@@ -1,9 +1,13 @@
 import { Textarea } from '@mantine/core'
 import { TestId } from '@shared/automation/testids'
 import type React from 'react'
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { useMessageInput } from '@/hooks/useMessageInput'
 import * as dom from '../../hooks/dom'
+
+function isNativeComposing(nativeEvent: Event): boolean {
+  return 'isComposing' in nativeEvent && nativeEvent.isComposing === true
+}
 
 export type MessageInputFieldRef = {
   getValue: () => string
@@ -19,7 +23,7 @@ type MessageInputFieldProps = {
   placeholder: string
   ariaLabel: string
   autoFocus: boolean
-  /** Called on every value change (including programmatic setValue). */
+  /** Called on every committed value change (including programmatic setValue). */
   onValueChange: (value: string) => void
   /** Called only on real user typing (onChange), not programmatic setValue. */
   onUserInput?: () => void
@@ -48,6 +52,16 @@ export const MessageInputField = memo(
       const inputRef = useRef<HTMLTextAreaElement | null>(null)
       const messageInputRef = useRef(messageInput)
       messageInputRef.current = messageInput
+      const [editValue, setEditValue] = useState(messageInput)
+      const editValueRef = useRef(editValue)
+      editValueRef.current = editValue
+      const isComposingRef = useRef(false)
+      const compositionRangeRef = useRef<{ start: number; end: number } | null>(null)
+      const skipCompositionEndCommitRef = useRef(false)
+
+      useEffect(() => {
+        setEditValue(messageInput)
+      }, [messageInput])
 
       useEffect(() => {
         onValueChange(messageInput)
@@ -56,7 +70,7 @@ export const MessageInputField = memo(
       useImperativeHandle(
         ref,
         () => ({
-          getValue: () => messageInputRef.current,
+          getValue: () => editValueRef.current,
           setValue: (val) => setMessageInput(val),
           clearDraft: () => clearDraft(),
           getElement: () => inputRef.current,
@@ -64,12 +78,81 @@ export const MessageInputField = memo(
         [setMessageInput, clearDraft]
       )
 
-      const onChange = useCallback(
-        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-          setMessageInput(event.target.value)
+      const commitValue = useCallback(
+        (value: string) => {
+          setEditValue(value)
+          setMessageInput(value)
           onUserInput?.()
         },
         [setMessageInput, onUserInput]
+      )
+
+      const onChange = useCallback(
+        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+          const next = event.target.value
+          const composing = isNativeComposing(event.nativeEvent)
+          if (composing) {
+            isComposingRef.current = true
+          } else {
+            isComposingRef.current = false
+          }
+          // Keep the controlled display in sync during IME so React does not restore the pre-composition value.
+          setEditValue(next)
+          if (composing) {
+            return
+          }
+          setMessageInput(next)
+          onUserInput?.()
+        },
+        [setMessageInput, onUserInput]
+      )
+
+      const onCompositionStart = useCallback((event: React.CompositionEvent<HTMLTextAreaElement>) => {
+        isComposingRef.current = true
+        skipCompositionEndCommitRef.current = false
+        compositionRangeRef.current = {
+          start: event.currentTarget.selectionStart,
+          end: event.currentTarget.selectionEnd,
+        }
+      }, [])
+
+      const onCompositionEnd = useCallback(
+        (event: React.CompositionEvent<HTMLTextAreaElement>) => {
+          isComposingRef.current = false
+          compositionRangeRef.current = null
+          if (skipCompositionEndCommitRef.current) {
+            skipCompositionEndCommitRef.current = false
+            return
+          }
+          commitValue(event.currentTarget.value)
+        },
+        [commitValue]
+      )
+
+      const handlePaste = useCallback(
+        (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+          if (isComposingRef.current) {
+            isComposingRef.current = false
+            skipCompositionEndCommitRef.current = true
+            const pasted = event.clipboardData?.getData('text/plain') ?? ''
+            if (pasted) {
+              event.preventDefault()
+              const committed = messageInputRef.current
+              const range = compositionRangeRef.current ?? { start: committed.length, end: committed.length }
+              compositionRangeRef.current = null
+              const next = committed.slice(0, range.start) + pasted + committed.slice(range.end)
+              const cursor = range.start + pasted.length
+              event.currentTarget.value = next
+              event.currentTarget.setSelectionRange(cursor, cursor)
+              commitValue(next)
+            } else {
+              setEditValue(messageInputRef.current)
+              compositionRangeRef.current = null
+            }
+          }
+          onPaste(event)
+        },
+        [commitValue, onPaste]
       )
 
       return (
@@ -91,12 +174,14 @@ export const MessageInputField = memo(
           autosize={true}
           minRows={2}
           maxRows={Math.max(4, Math.floor(viewportHeight / 100))}
-          value={messageInput}
+          value={editValue}
           autoFocus={autoFocus}
           readOnly={isReadOnly}
           onChange={onChange}
+          onCompositionStart={onCompositionStart}
+          onCompositionEnd={onCompositionEnd}
           onKeyDown={onKeyDown}
-          onPaste={onPaste}
+          onPaste={handlePaste}
           data-testid={TestId.chat.messageInput}
         />
       )

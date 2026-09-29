@@ -4,6 +4,7 @@ import { IconPlus, IconServer } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { Drawer } from 'vaul'
 import { ScalableIcon } from '@/components/common/ScalableIcon'
+import { ModelIcon } from '@/components/icons/ModelIcon'
 import ProviderIcon from '@/components/icons/ProviderIcon'
 import { HistoryListContent } from './HistoryPanel'
 
@@ -172,9 +173,12 @@ export function MobileModelDrawer({
                           ${isSelected ? 'bg-[var(--chatbox-background-brand-secondary)]' : 'hover:bg-[var(--chatbox-background-secondary)]'}
                         `}
                       >
-                        <Text size="sm" fw={isSelected ? 600 : 400}>
-                          {model.displayName}
-                        </Text>
+                        <Flex align="center" gap={10}>
+                          <ModelIcon providerId={group.providerId} modelId={model.modelId} size={20} />
+                          <Text size="sm" fw={isSelected ? 600 : 400}>
+                            {model.displayName}
+                          </Text>
+                        </Flex>
                       </UnstyledButton>
                     )
                   })}

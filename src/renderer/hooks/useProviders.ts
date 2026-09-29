@@ -34,7 +34,8 @@ export const useProviders = () => {
               (providerSettings?.apiKey ||
                 isUsingOAuth(providerSettings || {}, platform.type) ||
                 (p.id === ModelProviderEnum.Bedrock && providerSettings?.accessKey && providerSettings?.secretKey))) ||
-            ((p.isCustom || p.id === ModelProviderEnum.Ollama ||
+            ((p.isCustom ||
+              p.id === ModelProviderEnum.Ollama ||
               p.id === ModelProviderEnum.LMStudio ||
               p.id === ModelProviderEnum.Llmman) &&
               providerSettings?.models?.length)

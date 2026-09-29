@@ -1,11 +1,27 @@
-import { Anchor, Badge, Button, Group, Kbd, Paper, Radio, Stack, Text, Textarea, TextInput } from '@mantine/core'
+import {
+  ActionIcon,
+  Anchor,
+  Badge,
+  Button,
+  Group,
+  Kbd,
+  Paper,
+  Radio,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { IconRefresh } from '@tabler/icons-react'
+import type { ToolSet } from 'ai'
 import pTimeout from 'p-timeout'
-import { type FC, useRef, useState } from 'react'
+import { type FC, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from '@/components/layout/Overlay'
 import { AppTooltip as Tooltip } from '@/components/ui/tooltip'
-import { MCPServer } from '@/packages/mcp/controller'
+import { useMCPServerStatus } from '@/hooks/mcp'
+import { MCPServer, mcpController } from '@/packages/mcp/controller'
 import type { MCPServerConfig } from '@/packages/mcp/types'
 import { trackEvent } from '@/utils/track'
 import { getConfigFromFormValues, getFormValuesFromConfig, type MCPServerConfigFormValues } from './utils'
@@ -16,7 +32,15 @@ interface ConnectionTestingResult {
   error?: Error
 }
 
-const TestingResult: FC<{ result: ConnectionTestingResult }> = ({ result }) => {
+function toToolSummaries(tools: ToolSet): ConnectionTestingResult['tools'] {
+  return Object.entries(tools).map(([name, tool]) => ({ name, description: tool.description }))
+}
+
+const TestingResult: FC<{ result: ConnectionTestingResult; onRefresh?: () => void; refreshing?: boolean }> = ({
+  result,
+  onRefresh,
+  refreshing,
+}) => {
   const { t } = useTranslation()
   if (result.error) {
     return (
@@ -34,9 +58,16 @@ const TestingResult: FC<{ result: ConnectionTestingResult }> = ({ result }) => {
   }
   return (
     <Paper withBorder p="md" mt="md">
-      <Text fw="bold" mb="sm">
-        {t('Tools')}
-      </Text>
+      <Group justify="space-between" mb="sm">
+        <Text fw="bold">{t('Tools')}</Text>
+        {onRefresh && (
+          <Tooltip label={t('Refresh')} withArrow zIndex={3000}>
+            <ActionIcon variant="subtle" size="sm" loading={refreshing} onClick={onRefresh} aria-label={t('Refresh')}>
+              <IconRefresh size={16} />
+            </ActionIcon>
+          </Tooltip>
+        )}
+      </Group>
       <Group gap="xs">
         {result.tools.map((tool) => (
           <Badge key={tool.name} color="blue" variant="outline" size="md" className="!lowercase">
@@ -57,25 +88,54 @@ const ConfigForm: FC<{
   const { t } = useTranslation()
   const formRef = useRef<HTMLFormElement>(null)
   const [testing, setTesting] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [testingResult, setTestingResult] = useState<ConnectionTestingResult | null>()
   const testingAbortController = useRef<AbortController | null>(null)
+  const liveStatus = useMCPServerStatus(props.config.id)
 
   const form = useForm<MCPServerConfigFormValues>({
     mode: 'controlled',
     initialValues: getFormValuesFromConfig(props.config),
   })
 
+  // While editing, mirror the running instance so its tools (or its startup error) are always visible.
+  useEffect(() => {
+    if (props.mode !== 'edit') {
+      return
+    }
+    const server = mcpController.getServer(props.config.id)
+    if (liveStatus?.state === 'running' && server) {
+      setTestingResult({ config: props.config, tools: toToolSummaries(server.getAvailableTools()) })
+    } else if (liveStatus?.error) {
+      setTestingResult({ config: props.config, tools: [], error: new Error(liveStatus.error) })
+    }
+  }, [props.mode, props.config, liveStatus?.state, liveStatus?.error])
+
+  const refreshTools = async () => {
+    const server = mcpController.getServer(props.config.id)
+    if (!server || server.status.state !== 'running') {
+      return testConnection()
+    }
+    setRefreshing(true)
+    try {
+      setTestingResult({ config: props.config, tools: toToolSummaries(await server.refreshTools()) })
+    } catch (err) {
+      setTestingResult({ config: props.config, tools: [], error: err as Error })
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
   const testConnection = async () => {
     if (formRef.current && !formRef.current.reportValidity()) {
       return
     }
     const config = getConfigFromFormValues(form.getValues())
-    console.debug('Testing connection with config', config)
     setTesting(true)
     setTestingResult(null)
     trackEvent('test_mcp_server_connection', { type: config.transport.type })
     try {
-      const server = new MCPServer(config.transport)
+      const server = new MCPServer(config)
       testingAbortController.current = new AbortController()
       await pTimeout(server.start(), {
         milliseconds: 5 * 60_000,
@@ -101,8 +161,7 @@ const ConfigForm: FC<{
   }
 
   const handleSubmit = (values: typeof form.values) => {
-    console.debug('form onSubmit', values)
-    trackEvent('save_mcp_server', { type: values.transport.type, name: values.name })
+    trackEvent('save_mcp_server', { type: values.transport.type })
     return props.onSave(getConfigFromFormValues(values))
   }
 
@@ -121,6 +180,24 @@ const ConfigForm: FC<{
             <Radio variant="outline" size="sm" value="stdio" label={t('Local (stdio)')} />
           </Group>
         </Radio.Group>
+        <Stack gap={4}>
+          <Radio.Group
+            required
+            label={t('Protocol')}
+            {...form.getInputProps('protocolMode')}
+            labelProps={{ fw: 600, mb: 'xs' }}
+          >
+            <Group>
+              <Radio variant="outline" size="sm" value="auto" label={t('Auto (recommended)')} />
+              <Radio variant="outline" size="sm" value="legacy" label={t('Legacy')} />
+            </Group>
+          </Radio.Group>
+          <Text size="xs" c="chatbox-tertiary">
+            {t(
+              "If you're unsure, keep Auto. Choose Legacy only if you know the server does not support stateless MCP."
+            )}
+          </Text>
+        </Stack>
         {form.values.transport.type === 'stdio' && (
           <>
             <Textarea
@@ -167,12 +244,12 @@ const ConfigForm: FC<{
               </Button>
             )}
             <Button variant="outline" onClick={testConnection} loading={testing} disabled={testing}>
-              {t('Test')}
+              {t('Connect')}
             </Button>
             {props.mode === 'edit' || testingResult ? (
               <Button type="submit">{t('Save')}</Button>
             ) : (
-              <Tooltip label={t('Please test before saving')} withArrow zIndex={3000}>
+              <Tooltip label={t('Please connect before saving')} withArrow zIndex={3000}>
                 <Button data-disabled type="submit" onClick={(e) => e.preventDefault()}>
                   {t('Save')}
                 </Button>
@@ -180,7 +257,13 @@ const ConfigForm: FC<{
             )}
           </Group>
         </Group>
-        {testingResult && <TestingResult result={testingResult} />}
+        {testingResult && (
+          <TestingResult
+            result={testingResult}
+            onRefresh={props.mode === 'edit' ? refreshTools : undefined}
+            refreshing={refreshing}
+          />
+        )}
       </Stack>
     </form>
   )

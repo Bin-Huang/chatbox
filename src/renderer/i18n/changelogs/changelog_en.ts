@@ -1,4 +1,48 @@
 const changelog = `
+## v1.23.5 - 2026.09.24
+1. Fixed external one-click MCP setup links failing to open the prefilled server dialog when the app was not running
+
+## v1.23.4 - 2026.09.23
+1. You can now edit the last output of a Work Mode reply
+2. Fixed Image Creator history going blank or failing to finish loading when a record is incomplete
+3. Fixed undoing a new topic sometimes deleting the previous conversation
+4. Fixed leftover digits in the message input after pasting during nine-key typing
+
+## v1.23.3 - 2026.09.17
+1. When a reply is cut off, you'll see why and how to continue
+2. Fixed thinking controls for DeepSeek V4.1 Flash
+3. Added Turkish as an interface language
+4. Image generation model pickers now show model icons
+5. Improved OpenCode Go and Zen connectivity on mobile and the web
+
+## v1.23.2 - 2026.09.10
+1. Added OAuth authorization for remote MCP servers, with connection controls and a refreshable tool list in server settings
+2. Added custom conversation compaction prompts and one-time instructions, with improved compaction scope and trigger accuracy
+3. Added cached token usage to message statistics and configurable prompt cache duration for Claude
+4. Added support for more plain-text uploads, including Typst, Patch, and Diff files
+5. Added one-click undo for archived chats and improved recovery when a conversation fails to load at startup
+6. Fixed replies sometimes remaining in the generating state after completion
+7. Improved generated image loading, with an option to reload images that fail to display
+8. Added reasoning effort controls for GPT-6 and later models, and improved Kimi, OpenCode, and model catalog compatibility
+9. Fixed backup exports on HarmonyOS and improved window focus, small-screen layouts, and translations
+
+## v1.23.1 - 2026.09.02
+1. In long conversations, you'll be asked to confirm before deleting older messages or switching models if that would reset the cached context
+2. Copilot prompts can now be up to 40,000 characters
+3. Fixed the conversation settings menu sitting under the Android navigation bar
+4. Fixed errors related to keyboard shortcuts, conversation settings, and invalid max output tokens
+
+## v1.23.0 - 2026.09.01
+1. Added persistent memory: new chats can remember key facts you saved, as Global Memory or per Copilot
+2. Added Soul in Work Mode to set the AI's personality and boundaries
+3. You can queue a new message while a reply is generating, or insert one immediately
+4. Working directory and permissions carry over from last time, and can be changed above the input
+5. Full Access no longer pauses for confirmation every 25 steps by default
+6. Vision-capable models can open local images or newly downloaded files on their own
+7. Improved context for long tasks: tool results are not dropped too early, and recent messages are kept first when compacting
+8. You can clear all archived chats at once; text in tool results can be previewed
+9. Added Tencent Hunyuan, Xiaomi MiMo, LongCat, GLM Coding Plan, OpenCode Zen, and OpenCode Go, plus self-hosted SearXNG search
+
 ## v1.22.3 - 2026.08.09
 1. Fixed a performance issue that could cause lag when regenerating replies or switching response branches in long conversations
 2. Improved backup export compatibility on devices where backups could fail to export

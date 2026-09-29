@@ -52,7 +52,9 @@ import {
 import platform from '@/platform'
 import { canShareFile, shareFile } from '@/platform/web_file_share'
 import storage from '@/storage'
-import { getMetaStorage, recoverSessionList } from '@/stores/chatStore'
+import { withAgentPersonaLocks } from '@/stores/agentPersonaStore'
+import { rendererApplication } from '@/app/renderer-application'
+import { getMetaStorage } from '@/stores/sessionHelpers'
 import { migrateOnData } from '@/stores/migration'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useUIStore } from '@/stores/uiStore'
@@ -63,6 +65,21 @@ export const Route = createFileRoute('/settings/general')({
 
 const presetBadgeButtonClassName =
   'transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transform-none motion-reduce:transition-none'
+
+function serializeErrorForLog(error: unknown) {
+  if (error instanceof Error || error instanceof DOMException) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    }
+  }
+  return {
+    name: typeof error,
+    message: String(error),
+    stack: undefined,
+  }
+}
 
 export function RouteComponent() {
   const { t } = useTranslation()
@@ -523,7 +540,7 @@ const DataRecoverySection = () => {
     setIsRecovering(true)
     setRecoveryResult(null)
     try {
-      const result = await recoverSessionList()
+      const result = await rendererApplication.sessions.recoverSessionList()
       setRecoveryResult({ success: true, recovered: result.recovered, failed: result.failed })
     } catch (error) {
       console.error('Failed to recover session list:', error)
@@ -742,7 +759,7 @@ const ImportExportDataSection = () => {
       if (error instanceof DOMException && error.name === 'AbortError') {
         setExportNotice({ color: 'yellow', title: String(t('Export canceled')) })
       } else {
-        console.error('Export failed:', error)
+        console.error('Export failed:', serializeErrorForLog(error))
         setExportNotice({ color: 'red', title: String(t('Export failed')), body: String(error) })
       }
     } finally {
@@ -763,13 +780,18 @@ const ImportExportDataSection = () => {
     setProgress(null)
     try {
       if (await isZipBackupFile(file)) {
-        const result = await importBackupArchive(file, {
-          storage,
-          metaStorage: await getMetaStorage(),
-          signal: abortController.signal,
-          onProgress: setProgress,
-          rehydrateSession: rehydrateImportedSession,
-        })
+        // Restoring writes agent-soul/agent-memories directly through storage;
+        // holding the persona locks queues concurrent save_memory / Soul edits
+        // until the import transaction finishes so neither side is clobbered.
+        const result = await withAgentPersonaLocks(async () =>
+          importBackupArchive(file, {
+            storage,
+            metaStorage: await getMetaStorage(),
+            signal: abortController.signal,
+            onProgress: setProgress,
+            rehydrateSession: rehydrateImportedSession,
+          })
+        )
         if (result.warnings.length > 0) {
           const warningSummary = result.warnings
             .slice(0, 3)
@@ -795,7 +817,7 @@ const ImportExportDataSection = () => {
           metaStorage: await getMetaStorage(),
           migrateData: (dataStore) => migrateOnData(dataStore, false),
           recoverSessionList: async () => {
-            await recoverSessionList()
+            await rendererApplication.sessions.recoverSessionList()
           },
         })
       }

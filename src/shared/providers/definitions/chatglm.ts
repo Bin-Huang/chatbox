@@ -3,18 +3,25 @@ import { defineProvider } from '../registry'
 import ChatGLM from './models/chatglm'
 
 export const chatGLMProvider = defineProvider({
-  id: ModelProviderEnum.ChatGLM6B,
-  name: 'ChatGLM6B',
+  id: ModelProviderEnum.GLM,
+  name: 'GLM',
   type: ModelProviderType.OpenAI,
   modelsDevProviderId: 'zhipuai',
-  curatedModelIds: ['glm-5.1', 'glm-5', 'glm-5v-turbo', 'glm-4.7', 'glm-4.7-flash', 'glm-4.5'],
+  curatedModelIds: ['glm-5.2', 'glm-5.1', 'glm-5', 'glm-5v-turbo', 'glm-4.7', 'glm-4.7-flash', 'glm-4.5'],
   defaultSettings: {
     apiHost: 'https://open.bigmodel.cn/api/paas/v4/',
     models: [
       {
+        modelId: 'glm-5.2',
+        capabilities: ['reasoning', 'tool_use'],
+        contextWindow: 1_000_000,
+        maxOutput: 128_000,
+      },
+      {
         modelId: 'glm-5.1',
         capabilities: ['reasoning', 'tool_use'],
-        contextWindow: 128_000,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
       },
       {
         modelId: 'glm-5',
@@ -29,7 +36,8 @@ export const chatGLMProvider = defineProvider({
       {
         modelId: 'glm-4.7',
         capabilities: ['reasoning', 'tool_use'],
-        contextWindow: 128_000,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
       },
       {
         modelId: 'glm-4.7-flash',
@@ -67,6 +75,6 @@ export const chatGLMProvider = defineProvider({
     )
   },
   getDisplayName: (modelId, providerSettings) => {
-    return `ChatGLM API (${providerSettings?.models?.find((m) => m.modelId === modelId)?.nickname || modelId})`
+    return `GLM (${providerSettings?.models?.find((m) => m.modelId === modelId)?.nickname || modelId})`
   },
 })

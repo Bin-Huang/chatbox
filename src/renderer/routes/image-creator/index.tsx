@@ -53,17 +53,16 @@ import { queryClient } from '@/stores/queryClient'
 import { settingsStore, useSettingsStore } from '@/stores/settingsStore'
 import * as toastActions from '@/stores/toastActions'
 import { getHomeWelcomeCardMode } from '@/utils/homeWelcomeCard'
-import {
-  getRatioOptionsForModel,
-  HISTORY_IMAGE_MODEL_DISPLAY_NAMES,
-  HISTORY_PANEL_WIDTH,
-  MAX_REFERENCE_IMAGES,
-} from './-components/constants'
+import { getRatioOptionsForModel, HISTORY_PANEL_WIDTH, MAX_REFERENCE_IMAGES } from './-components/constants'
 import { EmptyState } from './-components/EmptyState'
 import { GeneratedImagesGallery } from './-components/GeneratedImagesGallery'
 import { HistoryPanel } from './-components/HistoryPanel'
 import { ImageGenerationErrorTips } from './-components/ImageGenerationErrorTips'
 import { MobileHistoryDrawer, MobileModelDrawer, MobileRatioDrawer } from './-components/MobileDrawers'
+import {
+  getHistoryImageModelDisplayName as resolveHistoryImageModelDisplayName,
+  getImageModelDisplayName as resolveImageModelDisplayName,
+} from './-components/model-display-name'
 import { resolveImageModelSelection } from './-components/model-selection'
 import { PromptDisplay } from './-components/PromptDisplay'
 import { ReferenceImagesPreview } from './-components/ReferenceImagesPreview'
@@ -489,20 +488,7 @@ function ImageCreatorPage() {
   }, [])
 
   const getImageModelDisplayName = useCallback(
-    (model: ImageGenerationModel) => {
-      const group = imageModelGroups.find((item) => item.providerId === model.provider)
-      const imageModel = group?.models.find((item) => item.modelId === model.modelId)
-      const provider = providers.find((item) => item.id === model.provider)
-      const providerModels = provider?.models || provider?.defaultSettings?.models || []
-      const providerModel = providerModels.find((item) => item.modelId === model.modelId)
-      const modelName = imageModel?.displayName || providerModel?.nickname || model.modelId || 'Image'
-
-      if (model.provider === ModelProviderEnum.ChatboxAI) {
-        return modelName
-      }
-      const providerName = group?.label || provider?.name || model.provider
-      return `${providerName} - ${modelName}`
-    },
+    (model: ImageGenerationModel) => resolveImageModelDisplayName(model, { imageModelGroups, providers }),
     [imageModelGroups, providers]
   )
 
@@ -515,20 +501,8 @@ function ImageCreatorPage() {
   }, [selectedProvider, selectedModel, getImageModelDisplayName, t])
 
   const getHistoryImageModelDisplayName = useCallback(
-    (model: ImageGenerationModel) => {
-      const legacyName = HISTORY_IMAGE_MODEL_DISPLAY_NAMES[model.modelId]
-      if (!legacyName) return getImageModelDisplayName(model)
-
-      if (model.provider === ModelProviderEnum.ChatboxAI) {
-        return legacyName
-      }
-
-      const group = imageModelGroups.find((item) => item.providerId === model.provider)
-      const provider = providers.find((item) => item.id === model.provider)
-      const providerName = group?.label || provider?.name || model.provider
-      return `${providerName} - ${legacyName}`
-    },
-    [getImageModelDisplayName, imageModelGroups, providers]
+    (model: ImageGenerationModel) => resolveHistoryImageModelDisplayName(model, { imageModelGroups, providers }),
+    [imageModelGroups, providers]
   )
 
   const headerRight = isSmallScreen ? (
@@ -574,6 +548,7 @@ function ImageCreatorPage() {
                     <Flex justify="center" w="100%">
                       <GeneratedImagesGallery
                         images={currentRecord.generatedImages}
+                        thumbnails={currentRecord.generatedImageThumbnails}
                         onUseAsReference={(urlOrKey) => handleUseAsReference(urlOrKey, currentRecord.id)}
                         onReport={() => void handleReportGeneratedImage(currentRecord)}
                       />

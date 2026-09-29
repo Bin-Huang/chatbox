@@ -1,13 +1,16 @@
 import { createDeepSeek, type DeepSeekChatOptions } from '@ai-sdk/deepseek'
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import type { LanguageModelV3 } from '@ai-sdk/provider'
 import AbstractAISDKModel, { type CallSettings } from '../../../models/abstract-ai-sdk'
 import { ApiError } from '../../../models/errors'
+import { getOpenAICompatibleProviderOptionsKey } from '../../../models/openai-compatible'
 import type { CallChatCompletionOptions } from '../../../models/types'
 import {
   isDeepSeekReasoningModel,
   isDeepSeekWeakToolUse,
   normalizeDeepSeekReasoningEffort,
 } from '../../../models/utils/deepseek'
+import { createOpenAIChatCompletionSseFetch } from '../../../models/utils/openai-chat-sse-termination'
 import type { ProviderModelInfo, ToolUseScope } from '../../../types'
 import type { ModelDependencies } from '../../../types/adapters'
 
@@ -30,14 +33,41 @@ export default class DeepSeek extends AbstractAISDKModel {
     super(options, dependencies)
   }
 
+  private usesVisionCompatibleTransport() {
+    return this.isSupportVision()
+  }
+
   protected getProvider() {
+    if (this.usesVisionCompatibleTransport()) {
+      return createOpenAICompatible({
+        name: this.name,
+        apiKey: this.options.apiKey,
+        baseURL: 'https://api.deepseek.com',
+        fetch: createOpenAIChatCompletionSseFetch(globalThis.fetch),
+      })
+    }
+
     return createDeepSeek({
       apiKey: this.options.apiKey,
+      fetch: createOpenAIChatCompletionSseFetch(globalThis.fetch),
     })
   }
 
   protected getChatModel(_options: CallChatCompletionOptions): LanguageModelV3 {
-    const provider = this.getProvider()
+    if (this.usesVisionCompatibleTransport()) {
+      const provider = createOpenAICompatible({
+        name: this.name,
+        apiKey: this.options.apiKey,
+        baseURL: 'https://api.deepseek.com',
+        fetch: createOpenAIChatCompletionSseFetch(globalThis.fetch),
+      })
+      return provider.chatModel(this.options.model.modelId)
+    }
+
+    const provider = createDeepSeek({
+      apiKey: this.options.apiKey,
+      fetch: createOpenAIChatCompletionSseFetch(globalThis.fetch),
+    })
     return provider.chat(this.options.model.modelId)
   }
 
@@ -59,13 +89,27 @@ export default class DeepSeek extends AbstractAISDKModel {
       settings.topP = this.options.topP
     }
 
-    if (this.isSupportReasoning() && (thinkingType || reasoningEffort)) {
-      settings.providerOptions = {
-        deepseek: {
-          ...(thinkingType ? { thinking: { type: thinkingType } } : {}),
-          ...(reasoningEffort ? { reasoningEffort } : {}),
-        } satisfies DeepSeekChatOptions,
+    if (!this.isSupportReasoning() || (!thinkingType && !reasoningEffort)) {
+      return settings
+    }
+
+    if (this.usesVisionCompatibleTransport()) {
+      const openAICompatibleOptions = {
+        ...(thinkingType ? { thinking: { type: thinkingType } } : {}),
+        ...(reasoningEffort ? { reasoningEffort } : {}),
       }
+      settings.providerOptions = {
+        openaiCompatible: openAICompatibleOptions,
+        [getOpenAICompatibleProviderOptionsKey(this.name)]: openAICompatibleOptions,
+      }
+      return settings
+    }
+
+    settings.providerOptions = {
+      deepseek: {
+        ...(thinkingType ? { thinking: { type: thinkingType } } : {}),
+        ...(reasoningEffort ? { reasoningEffort } : {}),
+      } satisfies DeepSeekChatOptions,
     }
 
     return settings

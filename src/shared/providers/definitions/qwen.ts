@@ -9,7 +9,17 @@ export const qwenProvider = defineProvider({
   name: 'Qwen',
   type: ModelProviderType.OpenAI,
   modelsDevProviderId: 'alibaba',
-  curatedModelIds: ['qwen3.7-max', 'qwen3.6-plus', 'qwen3.6-flash', 'qwen3-coder-plus', 'qwen3-vl-plus'],
+  curatedModelIds: [
+    'qwen3.7-max',
+    'qwen3.7-plus',
+    'qwen3.6-plus',
+    'qwen3.6-flash',
+    'qwen3-coder-plus',
+    'qwen3-vl-plus',
+    'qwen3-rerank',
+    'qwen3.7-text-rerank',
+    'text-embedding-v4',
+  ],
   urls: {
     website: 'https://chat.qwen.ai',
     docs: 'https://qwenlm.github.io/qwen-code-docs/en/users/overview/',
@@ -19,7 +29,15 @@ export const qwenProvider = defineProvider({
     models: [
       {
         modelId: 'qwen3.7-max',
-        capabilities: ['tool_use'],
+        capabilities: ['reasoning', 'tool_use'],
+        contextWindow: 1_000_000,
+        maxOutput: 65_536,
+      },
+      {
+        modelId: 'qwen3.7-plus',
+        capabilities: ['vision', 'reasoning', 'tool_use'],
+        contextWindow: 1_000_000,
+        maxOutput: 65_536,
       },
       {
         modelId: 'qwen3.6-plus',
@@ -36,6 +54,26 @@ export const qwenProvider = defineProvider({
       {
         modelId: 'qwen3-vl-plus',
         capabilities: ['vision', 'tool_use'],
+      },
+      {
+        modelId: 'qwen3-rerank',
+        type: 'rerank',
+      },
+      {
+        modelId: 'qwen3.7-text-rerank',
+        type: 'rerank',
+      },
+      {
+        modelId: 'qwen3-vl-rerank',
+        type: 'rerank',
+      },
+      {
+        modelId: 'text-embedding-v4',
+        type: 'embedding',
+      },
+      {
+        modelId: 'qwen3.7-text-embedding',
+        type: 'embedding',
       },
     ],
   },

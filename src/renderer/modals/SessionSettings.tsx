@@ -1,36 +1,32 @@
+import { isActionAvailableInMode, resolveSessionMode } from '@chatbox/core/session/mode-policy'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
-import { ActionIcon, Box, Button, FileButton, Flex, Input, Slider, Stack, Switch, Text, Textarea } from '@mantine/core'
+import { ActionIcon, Box, Button, FileButton, Flex, Input, Stack, Switch, Text, Textarea } from '@mantine/core'
 import { TestId } from '@shared/automation/testids'
-import { chatSessionSettings, pictureSessionSettings } from '@shared/defaults'
-import {
-  createMessage,
-  isChatSession,
-  isPictureSession,
-  ModelProviderEnum,
-  type Session,
-  type SessionSettings,
-} from '@shared/types'
-import { MAX_TOOL_CALLS_BEFORE_CONFIRMATION } from '@shared/utils/tool-call-limit-pause'
-import { IconInfoCircle, IconTrash, IconUpload } from '@tabler/icons-react'
+import { chatSessionSettings } from '@shared/defaults'
+import { createMessage, isChatSession, ModelProviderEnum, type Session } from '@shared/types'
+import { MAX_TOOL_CALLS_BEFORE_CONFIRMATION, shouldPauseOnToolCallLimit } from '@shared/utils/tool-call-limit-pause'
+import { IconTrash, IconUpload } from '@tabler/icons-react'
 import { pick } from 'lodash'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { rendererApplication } from '@/app/renderer-application'
 import { AdaptiveModal } from '@/components/common/AdaptiveModal'
 import { AssistantAvatar } from '@/components/common/Avatar'
 import LazyNumberInput from '@/components/common/LazyNumberInput'
 import MaxContextMessageCountSlider from '@/components/common/MaxContextMessageCountSlider'
 import { ScalableIcon } from '@/components/common/ScalableIcon'
+import SegmentedControl from '@/components/common/SegmentedControl'
 import SliderWithInput from '@/components/common/SliderWithInput'
+import { TooltipInfoTrigger } from '@/components/common/TooltipInfoTrigger'
 import { handleImageInputAndSave, ImageInStorage } from '@/components/Image'
-import ImageStyleSelect from '@/components/ImageStyleSelect'
 import { AppTooltip as Tooltip } from '@/components/ui/tooltip'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
 import { trackingEvent } from '@/packages/event'
 import storage from '@/storage'
 import { StorageKeyGenerator } from '@/storage/StoreStorage'
-import { updateSessionWithMessages } from '@/stores/chatStore'
-import { getSessionMeta, mergeSettings } from '@/stores/sessionHelpers'
-import { settingsStore, useSettingsStore } from '@/stores/settingsStore'
+import { getSessionAgentModeEntry } from '@/stores/session/agent-mode'
+import { getSessionMeta } from '@/stores/sessionHelpers'
+import { useSettingsStore } from '@/stores/settingsStore'
 import { add as addToast } from '@/stores/toastActions'
 import { getMessageText } from '../../shared/utils/message'
 
@@ -114,7 +110,7 @@ const SessionSettingsModal = NiceModal.create(
       }
 
       if (!disableAutoSave) {
-        void updateSessionWithMessages(editingData.id, (s) => {
+        void rendererApplication.sessions.updateSessionWithMessages(editingData.id, (s) => {
           const merged = {
             ...(s ?? {}),
             ...getSessionMeta(editingData),
@@ -135,6 +131,14 @@ const SessionSettingsModal = NiceModal.create(
     if (!session || !editingData) {
       return null
     }
+
+    // Work Mode ignores the conversation's system prompt at request time — its
+    // identity comes from the global Soul — so the field is not offered. The
+    // stored prompt is left untouched.
+    const showSystemPrompt = isActionAvailableInMode(
+      'session-system-prompt',
+      resolveSessionMode(getSessionAgentModeEntry(session.id, session).value)
+    )
 
     return (
       <AdaptiveModal
@@ -201,6 +205,7 @@ const SessionSettingsModal = NiceModal.create(
             <Stack gap="xs">
               <Text fw={700}>{t('Name')}</Text>
               <Input
+                data-testid={TestId.settings.sessionName}
                 placeholder={t('Name')}
                 autoFocus={!isSmallScreen}
                 value={editingData.name}
@@ -211,54 +216,69 @@ const SessionSettingsModal = NiceModal.create(
               />
             </Stack>
 
-            <Textarea
-              label={t('Instruction (System Prompt)')}
-              placeholder={t('Copilot Prompt Demo') || ''}
-              autosize
-              minRows={2}
-              maxRows={12}
-              value={systemPrompt}
-              onChange={(event) => setSystemPrompt(event.target.value)}
-              classNames={{
-                input: '!text-chatbox-tint-primary',
-              }}
-              styles={{
-                input: { touchAction: 'manipulation' },
-              }}
-            />
-
-            <Stack gap="xs">
-              <Flex align="center" justify="space-between">
-                <Text fw={700}>{t('Specific model settings')}</Text>
-                <Button size="compact-sm" color="chatbox-brand" variant="transparent" onClick={onReset} fw={600}>
-                  {t('Reset')}
-                </Button>
-              </Flex>
-
-              <Box p="sm" className="border border-solid border-chatbox-border-primary rounded-lg">
-                {isChatSession(session) && (
-                  <ChatConfig
-                    settings={editingData.settings}
-                    onSettingsChange={(d) =>
-                      setEditingData((_data) => {
-                        if (_data) {
-                          return {
-                            ..._data,
-                            settings: {
-                              ..._data?.settings,
-                              ...d,
-                            },
-                          }
-                        } else {
-                          return null
-                        }
-                      })
-                    }
+            {isChatSession(session) && (
+              <>
+                {showSystemPrompt ? (
+                  <Textarea
+                    data-testid={TestId.settings.sessionPrompt}
+                    label={t('Instruction (System Prompt)')}
+                    placeholder={t('Copilot Prompt Demo') || ''}
+                    autosize
+                    minRows={2}
+                    maxRows={12}
+                    value={systemPrompt}
+                    onChange={(event) => setSystemPrompt(event.target.value)}
+                    classNames={{
+                      input: '!text-chatbox-tint-primary',
+                    }}
+                    styles={{
+                      input: { touchAction: 'manipulation' },
+                    }}
                   />
+                ) : (
+                  <Stack gap={4}>
+                    <Text size="sm" fw={500}>
+                      {t('Instruction (System Prompt)')}
+                    </Text>
+                    <Text size="sm" c="dimmed">
+                      {t(
+                        'Work Mode does not use conversation system prompts. To use a custom prompt, create a Copilot and set its prompt.'
+                      )}
+                    </Text>
+                  </Stack>
                 )}
-                {isPictureSession(session) && <PictureConfig dataEdit={editingData} setDataEdit={setEditingData} />}
-              </Box>
-            </Stack>
+
+                <Stack gap="xs">
+                  <Flex align="center" justify="space-between">
+                    <Text fw={700}>{t('Specific model settings')}</Text>
+                    <Button size="compact-sm" color="chatbox-brand" variant="transparent" onClick={onReset} fw={600}>
+                      {t('Reset')}
+                    </Button>
+                  </Flex>
+
+                  <Box p="sm" className="border border-solid border-chatbox-border-primary rounded-lg">
+                    <ChatConfig
+                      settings={editingData.settings}
+                      onSettingsChange={(d) =>
+                        setEditingData((_data) => {
+                          if (_data) {
+                            return {
+                              ..._data,
+                              settings: {
+                                ..._data?.settings,
+                                ...d,
+                              },
+                            }
+                          } else {
+                            return null
+                          }
+                        })
+                      }
+                    />
+                  </Box>
+                </Stack>
+              </>
+            )}
 
             <Stack gap="xs">
               <Text fw={600}>{t('Background Settings')}</Text>
@@ -274,8 +294,12 @@ const SessionSettingsModal = NiceModal.create(
                     label={t('Support jpg or png file smaller than 5MB. Overrides global background when set.')}
                     withArrow
                     offset={4}
+                    maw={320}
+                    className="!whitespace-normal"
+                    zIndex={3000}
+                    openOnTouch
                   >
-                    <ScalableIcon icon={IconInfoCircle} size={20} className="text-chatbox-tint-tertiary" />
+                    <TooltipInfoTrigger label={t('Background Image')} />
                   </Tooltip>
                 </Flex>
 
@@ -342,7 +366,9 @@ const SessionSettingsModal = NiceModal.create(
 
         <AdaptiveModal.Actions>
           <AdaptiveModal.CloseButton onClick={onCancel} />
-          <Button onClick={onSave}>{t('Save')}</Button>
+          <Button data-testid={TestId.settings.sessionSave} onClick={onSave}>
+            {t('Save')}
+          </Button>
         </AdaptiveModal.Actions>
       </AdaptiveModal>
     )
@@ -365,6 +391,7 @@ export function ChatConfig({
   return (
     <Stack gap="md">
       <MaxContextMessageCountSlider
+        inputTestId={TestId.settings.sessionMaxContext}
         value={settings?.maxContextMessageCount ?? chatSessionSettings().maxContextMessageCount!}
         onChange={(v) => onSettingsChange({ maxContextMessageCount: v })}
       />
@@ -382,12 +409,18 @@ export function ChatConfig({
             maw={320}
             className="!whitespace-normal"
             zIndex={3000}
+            openOnTouch
           >
-            <ScalableIcon icon={IconInfoCircle} size={20} className="text-chatbox-tint-tertiary" />
+            <TooltipInfoTrigger label={t('Temperature')} />
           </Tooltip>
         </Flex>
 
-        <SliderWithInput value={settings?.temperature} onChange={(v) => onSettingsChange({ temperature: v })} max={2} />
+        <SliderWithInput
+          inputTestId={TestId.settings.sessionTemperature}
+          value={settings?.temperature}
+          onChange={(v) => onSettingsChange({ temperature: v })}
+          max={2}
+        />
       </Stack>
 
       <Stack gap="xs">
@@ -403,12 +436,18 @@ export function ChatConfig({
             maw={320}
             className="!whitespace-normal"
             zIndex={3000}
+            openOnTouch
           >
-            <ScalableIcon icon={IconInfoCircle} size={20} className="text-chatbox-tint-tertiary" />
+            <TooltipInfoTrigger label="Top P" />
           </Tooltip>
         </Flex>
 
-        <SliderWithInput value={settings?.topP} onChange={(v) => onSettingsChange({ topP: v })} max={1} />
+        <SliderWithInput
+          inputTestId={TestId.settings.sessionTopP}
+          value={settings?.topP}
+          onChange={(v) => onSettingsChange({ topP: v })}
+          max={1}
+        />
       </Stack>
 
       <Flex justify="space-between" align="center">
@@ -424,21 +463,59 @@ export function ChatConfig({
             maw={320}
             className="!whitespace-normal"
             zIndex={3000}
+            openOnTouch
           >
-            <ScalableIcon icon={IconInfoCircle} size={20} className="text-chatbox-tint-tertiary" />
+            <TooltipInfoTrigger label={t('Max Output Tokens')} />
           </Tooltip>
         </Flex>
 
         <LazyNumberInput
+          inputTestId={TestId.settings.sessionMaxTokens}
           width={96}
           value={settings?.maxTokens}
           onChange={(v) => onSettingsChange({ maxTokens: typeof v === 'number' ? v : undefined })}
-          min={0}
+          min={1}
           step={1024}
           allowDecimal={false}
           placeholder={t('Not set') || ''}
         />
       </Flex>
+
+      {settings?.provider === ModelProviderEnum.Claude && (
+        <Stack gap="xs">
+          <Flex align="center" gap="xs">
+            <Text size="sm" fw="600">
+              {t('Prompt cache duration')}
+            </Text>
+            <Tooltip
+              label={t("Choose how long Claude keeps prompt cache entries. Auto uses Claude's default.")}
+              withArrow={true}
+              maw={320}
+              className="!whitespace-normal"
+              zIndex={3000}
+              openOnTouch
+            >
+              <TooltipInfoTrigger label={t('Prompt cache duration')} />
+            </Tooltip>
+          </Flex>
+
+          <SegmentedControl
+            data-testid={TestId.settings.sessionClaudePromptCacheTTL}
+            aria-label={t('Prompt cache duration') as string}
+            value={settings.claudePromptCacheTTL ?? 'auto'}
+            onChange={(value) =>
+              onSettingsChange({
+                claudePromptCacheTTL: value === '5m' || value === '1h' ? value : undefined,
+              })
+            }
+            data={[
+              { label: t('Auto'), value: 'auto' },
+              { label: t('5 min'), value: '5m' },
+              { label: t('1 hour'), value: '1h' },
+            ]}
+          />
+        </Stack>
+      )}
 
       {settings?.provider !== ModelProviderEnum.ChatboxAI && (
         <Stack gap="xs" py="xs">
@@ -469,56 +546,19 @@ export function ChatConfig({
               maw={320}
               className="!whitespace-normal"
               zIndex={3000}
+              openOnTouch
             >
-              <ScalableIcon icon={IconInfoCircle} size={20} className="text-chatbox-tint-tertiary" />
+              <TooltipInfoTrigger
+                label={t('Pause after every {{count}} steps', { count: MAX_TOOL_CALLS_BEFORE_CONFIRMATION })}
+              />
             </Tooltip>
           </Flex>
           <Switch
             data-testid={TestId.settings.sessionPauseOnToolCallLimitSwitch}
-            checked={settings?.pauseOnToolCallLimit ?? globalPauseOnToolCallLimit ?? true}
+            checked={shouldPauseOnToolCallLimit(settings, { pauseOnToolCallLimit: globalPauseOnToolCallLimit })}
             onChange={(v) => onSettingsChange({ pauseOnToolCallLimit: v.target.checked })}
           />
         </Flex>
-      </Stack>
-    </Stack>
-  )
-}
-
-function PictureConfig(props: { dataEdit: Session; setDataEdit: (data: Session) => void }) {
-  const { t } = useTranslation()
-  const { dataEdit, setDataEdit } = props
-  const globalSettings = settingsStore.getState().getSettings()
-  const sessionSettings = mergeSettings(globalSettings, dataEdit.settings || {}, dataEdit.type || 'chat')
-  const updateSettingsEdit = (updated: Partial<SessionSettings>) => {
-    setDataEdit({
-      ...dataEdit,
-      settings: {
-        ...(dataEdit.settings || {}),
-        ...updated,
-      },
-    })
-  }
-  return (
-    <Stack gap="md" className="my-4">
-      <ImageStyleSelect
-        value={sessionSettings.dalleStyle || pictureSessionSettings().dalleStyle!}
-        onChange={(v) => updateSettingsEdit({ dalleStyle: v })}
-        className={sessionSettings.dalleStyle === undefined ? 'opacity-50' : ''}
-      />
-      <Stack>
-        <Text size="sm" fw="600">
-          {t('Number of Images per Reply')}
-        </Text>
-        <Slider
-          value={sessionSettings.imageGenerateNum || pictureSessionSettings().imageGenerateNum!}
-          onChange={(v) => updateSettingsEdit({ imageGenerateNum: v })}
-          min={1}
-          max={10}
-          step={1}
-          marks={Array.from({ length: 10 }).map((_, i) => ({
-            value: i + 1,
-          }))}
-        />
       </Stack>
     </Stack>
   )

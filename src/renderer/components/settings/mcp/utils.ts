@@ -124,6 +124,7 @@ export function getConfigFromFormValues(values: MCPServerConfigFormValues): MCPS
     id: values.id,
     name: values.name,
     enabled: values.enabled,
+    protocolMode: values.protocolMode ?? 'legacy',
     transport,
   }
 }
@@ -147,6 +148,7 @@ export function getFormValuesFromConfig(config: MCPServerConfig): MCPServerConfi
     id: config.id,
     name: config.name,
     enabled: config.enabled,
+    protocolMode: config.protocolMode ?? 'legacy',
     transport,
   }
 }
@@ -162,20 +164,32 @@ const serverConfigSchema = z.union([
     .transform((data) => ({ ...data, type: 'stdio' as const })),
   z
     .object({
-      url: z.string(),
+      url: z.string().optional(),
+      // Cherry Studio style remote config, as emitted by vendor "one-click install" pages
+      baseUrl: z.string().optional(),
       headers: z.record(z.string(), z.string()).optional(),
       name: z.string().optional(),
     })
-    .transform((data) => ({ ...data, type: 'http' as const })),
+    .transform(({ url, baseUrl, ...data }, ctx) => {
+      const resolvedUrl = url ?? baseUrl
+      if (!resolvedUrl) {
+        ctx.addIssue({ code: 'custom', message: 'url is required' })
+        return z.NEVER
+      }
+      return { ...data, url: resolvedUrl, type: 'http' as const }
+    }),
 ])
 
 export function parseServerFromJson(text: string): MCPServerConfig | undefined {
   const json = JSON.parse(text)
-  const parsed = serverConfigSchema.parse(json)
+  // Accept both a bare server object and a `{ mcpServers: { name: {...} } }` wrapper with one entry
+  const [key, value] = json?.mcpServers ? (Object.entries(json.mcpServers)[0] ?? []) : [undefined, json]
+  const parsed = serverConfigSchema.parse(value)
   return {
     id: uuid(),
-    name: parsed.name ?? '',
+    name: parsed.name ?? key ?? '',
     enabled: true,
+    protocolMode: 'auto',
     transport: parsed,
   }
 }
@@ -191,6 +205,7 @@ export function parseServersFromJson(text: string): MCPServerConfig[] {
           id: uuid(),
           name: parsed.name ?? key,
           enabled: false,
+          protocolMode: 'auto',
           transport: parsed,
         })
       } catch (err) {

@@ -1654,7 +1654,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
     platforms: ['all'],
     platformNotes: [],
     previewModes: [],
-    text: ['AI-generated content may be inaccurate. Please verify important information.'],
+    text: ['AI can be wrong. Verify key facts.'],
     stories: [],
     storyNames: [],
     storyTargets: [],

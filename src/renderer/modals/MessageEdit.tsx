@@ -1,34 +1,52 @@
+import { getSessionActionGate } from '@chatbox/core/session/action-gates'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import { Button, Combobox, Input, InputBase, Stack, Text, Textarea, useCombobox } from '@mantine/core'
+import { findMessageLocation } from '@shared/session/message-forks'
 import { type Message, type MessageContentParts, type MessageRole, MessageRoleEnum } from '@shared/types'
+import { applyLastOutputTextEdit, getEditableTextPartIndexes } from '@shared/utils/message'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { rendererApplication } from '@/app/renderer-application'
 import { AdaptiveModal } from '@/components/common/AdaptiveModal'
 import { AssistantAvatar, SystemAvatar, UserAvatar } from '@/components/common/Avatar'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
-import { generateMoreInNewFork, modifyMessage } from '@/stores/sessionActions'
+import { getSessionLockStateNow } from '@/stores/session/action-guard'
+import { saveAndResendMessage } from '@/stores/session/generation'
+import { modifyMessage } from '@/stores/session/messages'
+import * as toastActions from '@/stores/toastActions'
+import { notifySessionLockBlocked } from '@/utils/session-lock-copy'
 
-const MessageEdit = NiceModal.create((props: { sessionId: string; msg: Message; hideSaveAndResend?: boolean }) => {
-  const modal = useModal()
+const MessageEdit = NiceModal.create(
+  (props: {
+    sessionId: string
+    msg: Message
+    hideSaveAndResend?: boolean
+    resendOnly?: boolean
+    lastOutputTextOnly?: boolean
+  }) => {
+    const modal = useModal()
 
-  if (!props.msg) {
-    return null
+    if (!props.msg) {
+      return null
+    }
+
+    return (
+      <MessageEditModal
+        key={`${props.msg.id}-${modal.visible}`}
+        sessionId={props.sessionId}
+        msg={props.msg}
+        opened={modal.visible}
+        hideSaveAndResend={props.hideSaveAndResend}
+        resendOnly={props.resendOnly}
+        lastOutputTextOnly={props.lastOutputTextOnly}
+        onClose={() => {
+          modal.resolve()
+          modal.hide()
+        }}
+      />
+    )
   }
-
-  return (
-    <MessageEditModal
-      key={`${props.msg.id}-${modal.visible}`}
-      sessionId={props.sessionId}
-      msg={props.msg}
-      opened={modal.visible}
-      hideSaveAndResend={props.hideSaveAndResend}
-      onClose={() => {
-        modal.resolve()
-        modal.hide()
-      }}
-    />
-  )
-})
+)
 
 export default MessageEdit
 
@@ -38,12 +56,25 @@ const MessageEditModal = ({
   opened,
   onClose,
   hideSaveAndResend,
+  resendOnly,
+  lastOutputTextOnly,
 }: {
   sessionId: string
   msg: Message
   opened: boolean
   onClose(): void
   hideSaveAndResend?: boolean
+  /**
+   * Work mode user messages: editing must resend (append-only history — a
+   * silent save would rewrite context the assistant never saw). Hides plain
+   * Save and locks the role selector; Ctrl+Enter maps to Save & Resend.
+   */
+  resendOnly?: boolean
+  /**
+   * Work-mode assistant edits: keep tool history and earlier step text, and
+   * only rewrite the last visible output text.
+   */
+  lastOutputTextOnly?: boolean
 }) => {
   const { t } = useTranslation()
   const isSmallScreen = useIsSmallScreen()
@@ -102,6 +133,20 @@ const MessageEditModal = ({
     return ids
   }, [msg.id])
 
+  const lockRole = Boolean(resendOnly || lastOutputTextOnly)
+  const textPartIndexes = useMemo(
+    () => getEditableTextPartIndexes(msg.contentParts, { lastOutputTextOnly }),
+    [lastOutputTextOnly, msg.contentParts]
+  )
+
+  const buildSavedMessage = useCallback((): Message => {
+    if (!lastOutputTextOnly) return msg
+    return {
+      ...msg,
+      contentParts: applyLastOutputTextEdit(initialMsg.contentParts, msg.contentParts),
+    }
+  }, [initialMsg.contentParts, lastOutputTextOnly, msg])
+
   // Handle close with dirty check
   const handleClose = useCallback(() => {
     if (isDirty) {
@@ -117,19 +162,74 @@ const MessageEditModal = ({
     onClose()
   }, [onClose])
 
-  const onSave = () => {
-    if (!msg) {
-      return
+  // The modal can stay open long enough for the world to change (another
+  // reply starts streaming, the message gets deleted from another surface),
+  // so both actions read the live state at click time instead of holding a
+  // subscription for their whole lifetime.
+  const findLiveMessage = async (): Promise<Message | null | 'missing'> => {
+    const session = await rendererApplication.sessionQueryBridge.getSession(sessionId)
+    if (!session) {
+      return 'missing'
     }
-    void modifyMessage(sessionId, msg, true)
+    const location = findMessageLocation(session, msg.id)
+    return location ? (location.list[location.index] ?? 'missing') : 'missing'
+  }
+
+  // Deleted elsewhere while the modal was open: there is nothing to save onto
+  // or resend into. Both buttons converge here — tell the user and close
+  // (skipping the dirty-check dialog on purpose: the edit has no target left,
+  // so "continue editing" could never lead to a save).
+  const closeForMissingMessage = () => {
+    toastActions.add(t('This message has been deleted'), 2500)
     onClose()
   }
-  const onSaveAndReply = () => {
+
+  const onSave = async () => {
     if (!msg) {
       return
     }
-    onSave()
-    void generateMoreInNewFork(sessionId, msg.id)
+    const liveMessage = await findLiveMessage()
+    if (liveMessage === 'missing') {
+      closeForMissingMessage()
+      return
+    }
+    if (liveMessage?.generating) {
+      // Saving a snapshot of a streaming message would be silently
+      // overwritten by the next chunk; keep the modal open so the edit
+      // survives until the stream finishes.
+      void notifySessionLockBlocked('message-streaming', t)
+      return
+    }
+    void modifyMessage(sessionId, buildSavedMessage(), true)
+    onClose()
+  }
+  const onSaveAndReply = async () => {
+    if (!msg) {
+      return
+    }
+    // hideSaveAndResend only reflects the locks at modal-open; re-check with
+    // live state so a generation started meanwhile still blocks the
+    // regenerate-class action. Blocking keeps the modal open — the edit and
+    // the resend intent both survive instead of being silently downgraded.
+    // (A stream that starts in the instant after this check is caught by the
+    // store-side guard inside saveAndResendMessage; in that residual race
+    // the edit is saved in place and only the resend is stopped, with the
+    // standard notice.)
+    const liveMessage = await findLiveMessage()
+    const locks = liveMessage === 'missing' ? null : await getSessionLockStateNow(sessionId)
+    if (liveMessage === 'missing' || !locks) {
+      closeForMissingMessage()
+      return
+    }
+    const gate = getSessionActionGate('save-and-resend', locks, {
+      messageGenerating: liveMessage?.generating === true,
+    })
+    if (!gate.allowed) {
+      void notifySessionLockBlocked(gate.reason, t)
+      return
+    }
+    onClose()
+    void saveAndResendMessage(sessionId, buildSavedMessage())
   }
 
   const onContentPartInput = (index: number, text: string) => {
@@ -149,13 +249,8 @@ const MessageEditModal = ({
     const cursorPosition = target.selectionStart
     const textLength = target.value.length
 
-    // Find the indices of all text parts
-    const textPartIndices: number[] = []
-    msg.contentParts.forEach((part, idx) => {
-      if (part.type === 'text') {
-        textPartIndices.push(idx)
-      }
-    })
+    // Find the indices of editable text parts
+    const textPartIndices = getEditableTextPartIndexes(msg.contentParts, { lastOutputTextOnly })
 
     const currentTextPartIndex = textPartIndices.indexOf(index)
 
@@ -204,15 +299,15 @@ const MessageEditModal = ({
     const shift = event.shiftKey
 
     // ctrl + shift + enter 保存并生成 (skip if hideSaveAndResend is true)
-    if (event.key === 'Enter' && ctrlOrCmd && shift && !hideSaveAndResend) {
+    if (event.key === 'Enter' && ctrlOrCmd && shift && (!hideSaveAndResend || resendOnly)) {
       event.preventDefault()
-      onSaveAndReply()
+      void onSaveAndReply()
       return
     }
-    // ctrl + enter 保存
+    // ctrl + enter 保存（resend-only 模式下等同保存并生成）
     if (event.key === 'Enter' && ctrlOrCmd && !shift) {
       event.preventDefault()
-      onSave()
+      void (resendOnly ? onSaveAndReply() : onSave())
       return
     }
   }
@@ -259,10 +354,12 @@ const MessageEditModal = ({
                 component="button"
                 type="button"
                 classNames={{ root: 'self-start', input: 'p-xs pr-8 h-auto ' }}
-                pointer
-                rightSection={<Combobox.Chevron />}
+                pointer={!lockRole}
+                rightSection={lockRole ? undefined : <Combobox.Chevron />}
                 rightSectionPointerEvents="none"
-                onClick={() => combobox.toggleDropdown()}
+                onClick={() => {
+                  if (!lockRole) combobox.toggleDropdown()
+                }}
               >
                 {msg.role ? avatars[msg.role] : <Input.Placeholder>Pick value</Input.Placeholder>}
               </InputBase>
@@ -278,7 +375,7 @@ const MessageEditModal = ({
               </Combobox.Options>
             </Combobox.Dropdown>
           </Combobox>
-          {msg.contentParts.filter((part) => part.type === 'text').length === 0 ? (
+          {textPartIndexes.length === 0 ? (
             <Textarea
               id={`${msg.id}-input`}
               autoFocus={!isSmallScreen}
@@ -290,7 +387,7 @@ const MessageEditModal = ({
               onChange={(e) => {
                 if (e.target.value) {
                   setMsg({
-                    contentParts: [{ type: 'text', text: e.target.value }],
+                    contentParts: [...msg.contentParts, { type: 'text', text: e.target.value }],
                   })
                 }
               }}
@@ -300,39 +397,38 @@ const MessageEditModal = ({
               }}
             />
           ) : (
-            msg.contentParts.map((part, index, arr) => {
-              if (part.type === 'text') {
-                return (
-                  <Textarea
-                    key={textPartIds[index] || `text-part-${index}`}
-                    id={`${msg.id}-input-${index}`}
-                    autoFocus={!isSmallScreen && index === 0}
-                    autosize
-                    minRows={arr.length > 1 ? 1 : 5}
-                    maxRows={15}
-                    placeholder="prompt"
-                    value={part.text}
-                    onChange={(e) => onContentPartInput(index, e.target.value)}
-                    onKeyDown={(e) => handleTextPartKeyDown(e, index)}
-                    styles={{
-                      input: { touchAction: 'manipulation' },
-                    }}
-                  />
-                )
-              }
-              return null
+            textPartIndexes.map((index, visibleIndex) => {
+              const part = msg.contentParts[index]
+              if (part?.type !== 'text') return null
+              return (
+                <Textarea
+                  key={textPartIds[index] || `text-part-${index}`}
+                  id={`${msg.id}-input-${index}`}
+                  autoFocus={!isSmallScreen && visibleIndex === 0}
+                  autosize
+                  minRows={textPartIndexes.length > 1 ? 1 : 5}
+                  maxRows={15}
+                  placeholder="prompt"
+                  value={part.text}
+                  onChange={(e) => onContentPartInput(index, e.target.value)}
+                  onKeyDown={(e) => handleTextPartKeyDown(e, index)}
+                  styles={{
+                    input: { touchAction: 'manipulation' },
+                  }}
+                />
+              )
             })
           )}
         </Stack>
 
         <AdaptiveModal.Actions>
           <AdaptiveModal.CloseButton onClick={handleClose} />
-          {!hideSaveAndResend && (
-            <Button onClick={onSaveAndReply} variant="light">
+          {(!hideSaveAndResend || resendOnly) && (
+            <Button onClick={onSaveAndReply} variant={resendOnly ? 'filled' : 'light'}>
               {t('Save & Resend')}
             </Button>
           )}
-          <Button onClick={onSave}>{t('Save')}</Button>
+          {!resendOnly && <Button onClick={onSave}>{t('Save')}</Button>}
         </AdaptiveModal.Actions>
       </AdaptiveModal>
 

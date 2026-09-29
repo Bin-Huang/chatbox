@@ -8,7 +8,7 @@ export const aiProviderNameHash: Record<ModelProviderEnum, string> = {
   [ModelProviderEnum.OpenAI]: 'OpenAI API',
   [ModelProviderEnum.OpenAIResponses]: 'OpenAI Responses API',
   [ModelProviderEnum.Azure]: 'Azure OpenAI API',
-  [ModelProviderEnum.ChatGLM6B]: 'ChatGLM API',
+  [ModelProviderEnum.GLM]: 'GLM',
   [ModelProviderEnum.ChatboxAI]: 'Chatbox AI',
   [ModelProviderEnum.Claude]: 'Claude API',
   [ModelProviderEnum.Gemini]: 'Google Gemini API',
@@ -31,6 +31,12 @@ export const aiProviderNameHash: Record<ModelProviderEnum, string> = {
   [ModelProviderEnum.OpenRouter]: 'OpenRouter API',
   [ModelProviderEnum.Bedrock]: 'AWS Bedrock',
   [ModelProviderEnum.VercelAIGateway]: 'Vercel AI Gateway',
+  [ModelProviderEnum.OpenCodeGo]: 'OpenCode Go',
+  [ModelProviderEnum.OpenCodeZen]: 'OpenCode Zen',
+  [ModelProviderEnum.TencentHunyuan]: 'Tencent Hunyuan API',
+  [ModelProviderEnum.XiaomiMiMo]: 'Xiaomi MiMo API',
+  [ModelProviderEnum.LongCat]: 'LongCat API',
+  [ModelProviderEnum.ZhipuGLMCodingPlan]: 'GLM Coding Plan',
   [ModelProviderEnum.Custom]: 'Custom Provider',
 }
 
@@ -152,13 +158,38 @@ export const AIModelProviderMenuOptionList = [
     disabled: false,
   },
   {
-    value: ModelProviderEnum.ChatGLM6B,
-    label: aiProviderNameHash[ModelProviderEnum.ChatGLM6B],
+    value: ModelProviderEnum.OpenCodeGo,
+    label: aiProviderNameHash[ModelProviderEnum.OpenCodeGo],
     disabled: false,
   },
-  // {
-  //     value: 'hunyuan',
-  //     label: '腾讯混元',
-  //     disabled: true,
-  // },
+  {
+    value: ModelProviderEnum.OpenCodeZen,
+    label: aiProviderNameHash[ModelProviderEnum.OpenCodeZen],
+    disabled: false,
+  },
+  {
+    value: ModelProviderEnum.GLM,
+    label: aiProviderNameHash[ModelProviderEnum.GLM],
+    disabled: false,
+  },
+  {
+    value: ModelProviderEnum.TencentHunyuan,
+    label: aiProviderNameHash[ModelProviderEnum.TencentHunyuan],
+    disabled: false,
+  },
+  {
+    value: ModelProviderEnum.XiaomiMiMo,
+    label: aiProviderNameHash[ModelProviderEnum.XiaomiMiMo],
+    disabled: false,
+  },
+  {
+    value: ModelProviderEnum.LongCat,
+    label: aiProviderNameHash[ModelProviderEnum.LongCat],
+    disabled: false,
+  },
+  {
+    value: ModelProviderEnum.ZhipuGLMCodingPlan,
+    label: aiProviderNameHash[ModelProviderEnum.ZhipuGLMCodingPlan],
+    disabled: false,
+  },
 ]

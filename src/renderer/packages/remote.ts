@@ -2,7 +2,7 @@ import { ofetch } from 'ofetch'
 import { z } from 'zod'
 import { getLogger } from '@/lib/utils'
 import { type ClaimedAgentModeReward, ClaimFreeAgentModeRewardResponseSchema } from '@/packages/agent-mode-reward'
-import { VibedropEmailRequiredError } from '@/packages/vibedrop'
+import { VibedropEmailRequiredError } from '@/packages/vibedrop-errors'
 import platform from '@/platform'
 import { authInfoStore } from '@/stores/authInfoStore'
 import { CHATBOX_BUILD_CHANNEL, USE_BETA_CHATBOX, USE_LOCAL_CHATBOX } from '@/variables'
@@ -587,12 +587,20 @@ const RemoteModelInfoSchema = z.object({
 
 export type RemoteModelInfo = z.infer<typeof RemoteModelInfoSchema>
 
+// Model catalogs may include protocols or capabilities this client cannot use.
+const RemoteModelListSchema = z.array(z.unknown()).transform((items) =>
+  items.flatMap((item) => {
+    const result = RemoteModelInfoSchema.safeParse(item)
+    return result.success ? [result.data] : []
+  })
+)
+
 const ModelManifestResponseSchema = z.object({
   success: z.boolean().optional(),
   data: z.object({
     groupName: z.string(),
-    models: z.array(RemoteModelInfoSchema),
-    imageModels: z.array(RemoteModelInfoSchema).optional().default([]),
+    models: RemoteModelListSchema,
+    imageModels: RemoteModelListSchema.optional().default([]),
   }),
 })
 
@@ -671,8 +679,15 @@ const ChatboxAIModelListResponseSchema = z.object({
           featuredModelIds: z.array(z.string()).optional(),
         })
       ),
-      models: z.record(z.string(), ChatboxAIModelInfoSchema),
-      imageModels: z.array(RemoteModelInfoSchema).optional().default([]),
+      models: z.record(z.string(), z.unknown()).transform((items) =>
+        Object.fromEntries(
+          Object.entries(items).flatMap(([id, item]) => {
+            const result = ChatboxAIModelInfoSchema.safeParse(item)
+            return result.success ? [[id, result.data] as const] : []
+          })
+        )
+      ),
+      imageModels: RemoteModelListSchema.optional().default([]),
       links: z
         .object({
           modelPricing: z.string().optional(),
