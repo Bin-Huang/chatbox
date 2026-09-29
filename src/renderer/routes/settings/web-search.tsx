@@ -12,6 +12,7 @@ import { AppTooltip as Tooltip } from '@/components/ui/tooltip'
 import { PROVIDERS_WITH_PARSE_LINK } from '@/packages/web-search'
 import { BochaSearch } from '@/packages/web-search/bocha'
 import { WEB_SEARCH_PROVIDERS, type WebSearchProviderValue } from '@/packages/web-search/constants'
+import { FirecrawlSearch } from '@/packages/web-search/firecrawl'
 import { QUERIT_SEARCH_URL } from '@/packages/web-search/querit'
 import { SearxngSearch } from '@/packages/web-search/searxng'
 import platform from '@/platform'
@@ -93,6 +94,23 @@ export function RouteComponent() {
         setTavilyAvaliable(false)
       } finally {
         setCheckingTavily(false)
+      }
+    }
+  }
+
+  const [checkingFirecrawl, setCheckingFirecrawl] = useState(false)
+  const [firecrawlAvailable, setFirecrawlAvailable] = useState<boolean>()
+  const checkFirecrawl = async () => {
+    if (extension.webSearch.firecrawlApiKey) {
+      setCheckingFirecrawl(true)
+      setFirecrawlAvailable(undefined)
+      try {
+        await new FirecrawlSearch(extension.webSearch.firecrawlApiKey).search('Chatbox')
+        setFirecrawlAvailable(true)
+      } catch {
+        setFirecrawlAvailable(false)
+      } finally {
+        setCheckingFirecrawl(false)
       }
     }
   }
@@ -483,6 +501,66 @@ export function RouteComponent() {
               />
             </Stack>
           </Stack>
+        </Stack>
+      )}
+      {/* Firecrawl API Key */}
+      {extension.webSearch.provider === 'firecrawl' && (
+        <Stack gap="xs">
+          <Text fw="600">{t('Firecrawl API Key')}</Text>
+          <Flex align="center" gap="xs">
+            <PasswordInput
+              flex={1}
+              maw={320}
+              value={extension.webSearch.firecrawlApiKey}
+              onChange={(e) => {
+                setFirecrawlAvailable(undefined)
+                setSettings({
+                  extension: {
+                    ...extension,
+                    webSearch: {
+                      ...extension.webSearch,
+                      firecrawlApiKey: e.currentTarget.value,
+                    },
+                  },
+                })
+              }}
+              error={firecrawlAvailable === false}
+            />
+            <Button
+              color="blue"
+              variant="light"
+              onClick={checkFirecrawl}
+              loading={checkingFirecrawl}
+              disabled={!extension.webSearch.firecrawlApiKey?.trim()}
+            >
+              {t('Check')}
+            </Button>
+          </Flex>
+
+          {typeof firecrawlAvailable === 'boolean' ? (
+            firecrawlAvailable ? (
+              <Text size="xs" c="chatbox-success">
+                {t('Connection successful!')}
+              </Text>
+            ) : (
+              <Text size="xs" c="chatbox-error">
+                {t('API key invalid!')}
+              </Text>
+            )
+          ) : null}
+          <Button
+            variant="transparent"
+            size="compact-xs"
+            px={0}
+            className="self-start"
+            onClick={() =>
+              platform.openLink(
+                'https://www.firecrawl.dev/signin?utm_source=chatbox&utm_medium=integration&redirect=%2Fapp%2Fapi-keys'
+              )
+            }
+          >
+            {t('Get API Key')}
+          </Button>
         </Stack>
       )}
       {extension.webSearch.provider !== 'build-in' && !licenseKey && (
