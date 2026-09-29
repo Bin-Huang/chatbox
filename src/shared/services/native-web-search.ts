@@ -13,7 +13,7 @@ export interface NativeWebSearchResultItem {
 }
 
 /** Same provider set the renderer's Web Search settings expose. */
-export type NativeWebSearchProvider = 'build-in' | 'bing' | 'tavily' | 'bocha' | 'querit'
+export type NativeWebSearchProvider = 'build-in' | 'bing' | 'tavily' | 'bocha' | 'querit' | 'firecrawl'
 
 export const nativeWebSearchProviderOptions: Array<{ id: NativeWebSearchProvider; label: string }> = [
   { id: 'build-in', label: 'Chatbox AI' },
@@ -21,6 +21,7 @@ export const nativeWebSearchProviderOptions: Array<{ id: NativeWebSearchProvider
   { id: 'tavily', label: 'Tavily' },
   { id: 'bocha', label: 'BoCha' },
   { id: 'querit', label: 'Querit' },
+  { id: 'firecrawl', label: 'Firecrawl' },
 ]
 
 export interface NativeWebSearchSettings {
@@ -88,7 +89,12 @@ export function hasNativeWebSearchConfiguration(
   settings: Pick<NativeWebSearchSettings, 'provider' | 'apiKey'>,
   licenseKey?: string
 ): boolean {
-  if (settings.provider === 'tavily' || settings.provider === 'bocha' || settings.provider === 'querit') {
+  if (
+    settings.provider === 'tavily' ||
+    settings.provider === 'bocha' ||
+    settings.provider === 'querit' ||
+    settings.provider === 'firecrawl'
+  ) {
     return Boolean(settings.apiKey.trim())
   }
   if (settings.provider === 'build-in') return Boolean(licenseKey?.trim())
@@ -104,6 +110,7 @@ export async function searchNativeWeb(
   if (provider === 'build-in') return searchNativeChatbox(query, options)
   if (provider === 'bocha') return searchNativeBocha(query, options)
   if (provider === 'querit') return searchNativeQuerit(query, options)
+  if (provider === 'firecrawl') return searchNativeFirecrawl(query, options)
   return searchNativeTavily(query, options)
 }
 
@@ -221,6 +228,55 @@ async function searchNativeQuerit(
     link: result.url,
     snippet: result.snippet,
   }))
+}
+
+export const FIRECRAWL_DEFAULT_HOST = 'https://api.firecrawl.dev'
+// Sent with every Firecrawl request so the traffic is attributed to Chatbox.
+export const FIRECRAWL_ORIGIN = 'chatbox'
+
+async function searchNativeFirecrawl(
+  query: string,
+  options: NativeWebSearchOptions
+): Promise<NativeWebSearchResultItem[]> {
+  const fetchFn = options.fetchFn ?? fetch
+  const host = (options.apiHost?.trim() || FIRECRAWL_DEFAULT_HOST).replace(/\/+$/, '')
+  // highlights: false keeps `description` a short plain-text snippet instead of page markdown.
+  const body: { query: string; sources: string[]; highlights: boolean; origin: string; limit?: number } = {
+    query,
+    sources: ['web'],
+    highlights: false,
+    origin: FIRECRAWL_ORIGIN,
+  }
+  if (options.maxResults !== undefined) {
+    body.limit = options.maxResults
+  }
+
+  const response = await fetchFn(`${host}/v2/search`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${options.apiKey ?? ''}`,
+    },
+    body: JSON.stringify(body),
+    signal: options.signal,
+  })
+  const payload = (await response.json().catch(() => null)) as {
+    success?: boolean
+    error?: string
+    data?: { web?: Array<{ url?: string; title?: string; description?: string }> }
+  } | null
+  if (!response.ok || payload?.success === false) {
+    // Firecrawl returns `{ success: false, error }`, e.g. "Unauthorized: Invalid token" or "Insufficient credits".
+    throw new Error(payload?.error || `Firecrawl search failed with status ${response.status}`)
+  }
+  const results = Array.isArray(payload?.data?.web) ? payload.data.web : []
+  return results
+    .filter((result) => result.url)
+    .map((result) => ({
+      title: result.title ?? '',
+      link: result.url ?? '',
+      snippet: result.description ?? '',
+    }))
 }
 
 async function searchNativeTavily(
