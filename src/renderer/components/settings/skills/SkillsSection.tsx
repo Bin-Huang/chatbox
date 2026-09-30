@@ -1,7 +1,9 @@
 import { ActionIcon, Badge, Box, Button, Flex, Loader, Paper, SimpleGrid, Switch, Text, TextInput } from '@mantine/core'
+import { parseGitLabProjectUrl } from '@shared/skills/gitlab-url'
 import { DEFAULT_ENABLED_BUILTIN_SKILL_NAMES, type SkillInfo } from '@shared/types/skills'
 import {
   IconBrandGithub,
+  IconBrandGitlab,
   IconDots,
   IconFolderOpen,
   IconPlus,
@@ -21,7 +23,7 @@ import { useSkillTranslation } from '@/hooks/useSkillTranslation'
 import { notifySkillsChanged, skillsController } from '@/packages/skills/controller'
 import { toastError } from '@/packages/toast'
 import { settingsStore, useSettingsStore } from '@/stores/settingsStore'
-import GitHubInstallModal, { type DetectedSkill } from './GitHubInstallModal'
+import RemoteSkillInstallModal, { type DetectedSkill, type RemoteSkillProvider } from './SkillInstallModal'
 import SkillsSpotlight, { skillsSpotlight } from './SkillsSpotlight'
 
 const SkillCard: FC<{
@@ -180,10 +182,19 @@ export const SkillsSection: FC = () => {
   const [loading, setLoading] = useState(false)
   const [githubUrl, setGithubUrl] = useState('')
   const [scanning, setScanning] = useState(false)
+  const [gitlabUrl, setGitlabUrl] = useState('')
+  const [gitlabToken, setGitlabToken] = useState('')
+  const [scanningGitlab, setScanningGitlab] = useState(false)
   const [detectedSkills, setDetectedSkills] = useState<DetectedSkill[]>([])
   const [installModalOpen, setInstallModalOpen] = useState(false)
+  const [installProvider, setInstallProvider] = useState<RemoteSkillProvider>('github')
   const [repoInfo, setRepoInfo] = useState({ owner: '', repo: '' })
+  // GitLab project reference captured at scan time, reused for each install in the modal.
+  const [gitlabProject, setGitlabProject] = useState<{ projectPath: string; host?: string }>({
+    projectPath: '',
+  })
   const [showGithubInput, setShowGithubInput] = useState(false)
+  const [showGitlabInput, setShowGitlabInput] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const skillSettings = useSettingsStore((state) => state.skills)
   const { translatedSkills, getTranslatedName, isTranslating, translationEnabled, toggleTranslation } =
@@ -343,6 +354,7 @@ export const SkillsSection: FC = () => {
       const discovered = await skillsController.scanRepo(parsed.owner, parsed.repo)
       setDetectedSkills(discovered)
       setRepoInfo(parsed)
+      setInstallProvider('github')
 
       if (!discovered.length) {
         toastError(t('No skills found in this repository'))
@@ -356,6 +368,42 @@ export const SkillsSection: FC = () => {
       setScanning(false)
     }
   }, [githubUrl, parseGitHubRepo, t])
+
+  const handleScanGitLabRepo = useCallback(async () => {
+    const parsed = parseGitLabProjectUrl(gitlabUrl)
+    if (!parsed) {
+      toastError(t('Please enter a valid GitLab project URL'))
+      return
+    }
+
+    setScanningGitlab(true)
+    try {
+      const token = gitlabToken.trim() || undefined
+      const discovered = await skillsController.scanGitLabRepo(parsed.projectPath, { host: parsed.host, token })
+      setDetectedSkills(discovered)
+      setGitlabProject({ projectPath: parsed.projectPath, host: parsed.host })
+      setInstallProvider('gitlab')
+
+      if (!discovered.length) {
+        // The project was reachable (no API error) but contains no SKILL.md, which
+        // is a different situation from a missing token or a wrong project path.
+        toastError(
+          t(
+            'No skills found in this project. Add a SKILL.md file at the root or inside a skills/ folder to make it installable.'
+          )
+        )
+        return
+      }
+
+      setInstallModalOpen(true)
+    } catch (error) {
+      // Access failures (wrong path, private project without a token, rate limit)
+      // arrive with a specific message from the main process — show it as-is.
+      toastError(error instanceof Error ? error.message : t('Failed to scan repository'))
+    } finally {
+      setScanningGitlab(false)
+    }
+  }, [gitlabUrl, gitlabToken, t])
 
   const handleDeleteSkill = useCallback(
     async (name: string) => {
@@ -382,6 +430,24 @@ export const SkillsSection: FC = () => {
     [fetchSkills, t]
   )
 
+  const handleUpdateSkill = useCallback(
+    async (name: string) => {
+      try {
+        const result = await skillsController.updateSkill(name)
+        if (!result.success) {
+          toastError(result.error ?? t('Failed to update skill'))
+          return
+        }
+
+        toast.success(t('Skill updated'))
+        await fetchSkills()
+      } catch (error) {
+        toastError(error instanceof Error ? error.message : t('Failed to update skill'))
+      }
+    },
+    [fetchSkills, t]
+  )
+
   const handleCheckUpdate = useCallback(
     async (name: string) => {
       try {
@@ -392,7 +458,16 @@ export const SkillsSection: FC = () => {
         }
 
         if (result.hasUpdate) {
-          toast.success(t('Update available for {{name}}', { name }))
+          // Offer the update inline instead of only announcing it: the stored GitLab
+          // token lets the re-download happen without re-entering credentials.
+          toast.success(t('Update available for {{name}}', { name }), {
+            action: {
+              label: t('Update'),
+              onClick: () => {
+                void handleUpdateSkill(name)
+              },
+            },
+          })
           return
         }
 
@@ -401,7 +476,7 @@ export const SkillsSection: FC = () => {
         toastError(error instanceof Error ? error.message : t('Failed to check for updates'))
       }
     },
-    [t]
+    [handleUpdateSkill, t]
   )
 
   return (
@@ -424,6 +499,15 @@ export const SkillsSection: FC = () => {
             onClick={() => setShowGithubInput((v) => !v)}
           >
             {t('Install from GitHub')}
+          </Button>
+          <Button
+            variant="subtle"
+            size="xs"
+            color="gray"
+            leftSection={<ScalableIcon icon={IconBrandGitlab} size={14} />}
+            onClick={() => setShowGitlabInput((v) => !v)}
+          >
+            {t('Install from GitLab')}
           </Button>
         </Flex>
 
@@ -459,6 +543,55 @@ export const SkillsSection: FC = () => {
               {t('Scan')}
             </Button>
           </Flex>
+        </Paper>
+      )}
+
+      {showGitlabInput && (
+        <Paper radius="lg" withBorder p="sm" mb="lg" className="bg-chatbox-background-gray-secondary/30">
+          <Flex align="center" gap={8} mb={8}>
+            <ScalableIcon icon={IconBrandGitlab} size={16} className="text-chatbox-tint-tertiary" />
+            <Text size="xs" fw={500}>
+              {t('Install from GitLab Repository')}
+            </Text>
+          </Flex>
+          <Flex gap="xs" wrap="wrap">
+            <TextInput
+              size="xs"
+              value={gitlabUrl}
+              placeholder="https://gitlab.com/group/subgroup/repo"
+              onChange={(event) => setGitlabUrl(event.currentTarget.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  void handleScanGitLabRepo()
+                }
+              }}
+              flex={1}
+              style={{ minWidth: 220 }}
+            />
+            <TextInput
+              size="xs"
+              type="password"
+              value={gitlabToken}
+              placeholder={String(t('Access token (optional)'))}
+              onChange={(event) => setGitlabToken(event.currentTarget.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  void handleScanGitLabRepo()
+                }
+              }}
+              w={200}
+            />
+            <Button size="xs" loading={scanningGitlab} onClick={() => void handleScanGitLabRepo()}>
+              {t('Scan')}
+            </Button>
+          </Flex>
+          <Text size="xs" c="chatbox-tertiary" mt={6}>
+            {t(
+              'Works with gitlab.com and self-hosted GitLab. Accepted forms: https://gitlab.com/group/subgroup/repo, gitlab.example.com/group/repo, or group/subgroup/repo (gitlab.com). The token is saved with the skill so it can be updated later — prefer a project access token with read_api scope.'
+            )}
+          </Text>
         </Paper>
       )}
 
@@ -541,6 +674,19 @@ export const SkillsSection: FC = () => {
                   void handleCheckUpdate(originalSkill.name)
                 },
               },
+              // Re-pull from the recorded repository. Only meaningful when the skill
+              // knows its source (installed from GitHub/GitLab or the marketplace).
+              ...(skill.source?.repo
+                ? [
+                    {
+                      text: t('Update'),
+                      icon: IconRefresh,
+                      onClick: () => {
+                        void handleUpdateSkill(originalSkill.name)
+                      },
+                    } satisfies ActionMenuItemProps,
+                  ]
+                : []),
               {
                 text: t('Delete'),
                 icon: IconTrash,
@@ -619,12 +765,16 @@ export const SkillsSection: FC = () => {
         </>
       )}
 
-      <GitHubInstallModal
+      <RemoteSkillInstallModal
         opened={installModalOpen}
         onClose={() => setInstallModalOpen(false)}
         skills={detectedSkills}
+        provider={installProvider}
         repoOwner={repoInfo.owner}
         repoName={repoInfo.repo}
+        projectPath={gitlabProject.projectPath}
+        host={gitlabProject.host}
+        token={gitlabToken.trim() || undefined}
         onInstallComplete={() => {
           void fetchSkills()
         }}

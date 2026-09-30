@@ -6,23 +6,35 @@ export const DEFAULT_ENABLED_BUILTIN_SKILL_NAMES = ['chatbox-product-info', 'vib
 
 /**
  * SkillSource: Metadata about where a skill comes from
- * - type: Source type (builtin, local, marketplace, github, chat, claude-code, agents)
+ * - type: Source type (builtin, local, marketplace, github, gitlab, chat, claude-code, agents)
  *   - claude-code: discovered from Claude Code's ~/.claude/skills
  *   - agents: discovered from the shared agent skills dir ~/.agents/skills (codex, etc.)
- * - repo: Optional repository URL or identifier
+ *   - gitlab: installed from a GitLab project (gitlab.com or self-hosted)
+ * - repo: Optional repository URL or identifier (GitLab: `group/subgroup/project`)
+ * - host: Optional GitLab instance base URL, e.g. `https://gitlab.example.com`
  * - commitHash: Optional repo HEAD commit hash (legacy version tracking)
  * - treeSha: Optional git subtree SHA scoped to skillPath (preferred for update checks)
  * - installedAt: Optional ISO timestamp of installation
  * - skillPath: Optional file system path to skill
+ * - token: Optional GitLab access token, used by the main process for update checks.
+ *   NEVER send this to the renderer: `discoverSkills` strips it before building SkillInfo.
  */
 export interface SkillSource {
-  type: 'builtin' | 'local' | 'marketplace' | 'github' | 'chat' | 'claude-code' | 'agents'
+  type: 'builtin' | 'local' | 'marketplace' | 'github' | 'gitlab' | 'chat' | 'claude-code' | 'agents'
   repo?: string
+  host?: string
   commitHash?: string
   treeSha?: string
   installedAt?: string
   skillPath?: string
+  token?: string
 }
+
+/**
+ * SkillSource without the credential: the shape safe to send across IPC to the
+ * renderer. `discoverSkills` narrows stored sources to this before building SkillInfo.
+ */
+export type PublicSkillSource = Omit<SkillSource, 'token'>
 
 /**
  * MarketplaceSkill: Skill metadata from marketplace
@@ -67,12 +79,14 @@ export interface SkillMetadata {
  * - Extends SkillMetadata with path and isBuiltin
  * - path: File system path to the skill
  * - isBuiltin: Whether this is a built-in skill
- * - source: Optional source metadata (builtin, local, marketplace, github, chat, claude-code)
+ * - source: Optional source metadata (builtin, local, marketplace, github, gitlab, chat, claude-code)
+ *   Deliberately `PublicSkillSource`: skills are discovered in the main process and sent
+ *   to the renderer, so credentials stored alongside a skill must be stripped first.
  */
 export interface SkillInfo extends SkillMetadata {
   path: string
   isBuiltin: boolean
-  source?: SkillSource
+  source?: PublicSkillSource
 }
 
 // ===== Zod Schemas =====

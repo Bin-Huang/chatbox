@@ -1,4 +1,4 @@
-import type { SkillInfo, SkillSource } from '@shared/types/skills'
+import type { PublicSkillSource, SkillInfo, SkillSource } from '@shared/types/skills'
 import fs from 'fs'
 import path from 'path'
 import { getLogger } from '../util'
@@ -6,6 +6,21 @@ import { parseSkillFile } from './parser'
 import { normalizeClaudeSkillName } from './validation'
 
 const log = getLogger('skills:discovery')
+
+/**
+ * Drop credentials from a stored source before it becomes part of a SkillInfo.
+ *
+ * `source.json` may hold a GitLab access token so the main process can check for
+ * updates on private projects. SkillInfo crosses the IPC boundary into the
+ * renderer (badges, search, translation), so the token must never be attached:
+ * it would end up in renderer memory, devtools and logs. Typed as
+ * `PublicSkillSource` so the compiler rejects accidental leaks.
+ */
+function toPublicSource(source: SkillSource | undefined): PublicSkillSource | undefined {
+  if (!source) return undefined
+  const { token: _token, ...publicSource } = source
+  return publicSource
+}
 
 export function discoverSkills(skillsDir: string): SkillInfo[] {
   if (!fs.existsSync(skillsDir)) {
@@ -40,7 +55,7 @@ export function discoverSkills(skillsDir: string): SkillInfo[] {
         ...parsed.metadata,
         path: path.join(skillsDir, entry.name),
         isBuiltin: false,
-        source,
+        source: toPublicSource(source),
       })
     }
   } catch (error) {
