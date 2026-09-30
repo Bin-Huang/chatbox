@@ -26,6 +26,15 @@ interface SkillUpdateResult {
 
 const skillsChangeListeners = new Set<() => void>()
 
+// Electron wraps a thrown main-process error as
+//   Error invoking remote method 'skills:scan-gitlab-repo': Error: <real message>
+// which is unreadable in a toast. Strip both wrappers so the user sees the actual
+// reason (missing token, wrong project path, rate limit, ...).
+function unwrapIpcError(error: unknown): Error {
+  const raw = error instanceof Error ? error.message : String(error)
+  return new Error(raw.replace(/^Error invoking remote method '[^']*':\s*/, '').replace(/^Error:\s*/, ''))
+}
+
 export function notifySkillsChanged(): void {
   for (const listener of skillsChangeListeners) {
     listener()
@@ -64,6 +73,16 @@ export const skillsController = {
 
   async installSkill(owner: string, repo: string, skillPath: string): Promise<SkillInstallResult> {
     const result = await window.electronAPI.invoke('skills:install', { owner, repo, skillPath })
+    if (result.success) notifySkillsChanged()
+    return result
+  },
+
+  async installGitLabSkill(
+    projectPath: string,
+    skillPath: string,
+    options?: { host?: string; token?: string }
+  ): Promise<SkillInstallResult> {
+    const result = await window.electronAPI.invoke('skills:install-gitlab', { projectPath, skillPath, ...options })
     if (result.success) notifySkillsChanged()
     return result
   },
@@ -125,12 +144,33 @@ export const skillsController = {
     return result
   },
 
-  scanRepo(owner: string, repo: string): Promise<Array<{ name: string; path: string; description?: string }>> {
-    return window.electronAPI.invoke('skills:scan-repo', owner, repo)
+  async scanRepo(owner: string, repo: string): Promise<Array<{ name: string; path: string; description?: string }>> {
+    try {
+      return await window.electronAPI.invoke('skills:scan-repo', owner, repo)
+    } catch (error) {
+      throw unwrapIpcError(error)
+    }
+  },
+
+  async scanGitLabRepo(
+    projectPath: string,
+    options?: { host?: string; token?: string }
+  ): Promise<Array<{ name: string; path: string; description?: string }>> {
+    try {
+      return await window.electronAPI.invoke('skills:scan-gitlab-repo', projectPath, options)
+    } catch (error) {
+      throw unwrapIpcError(error)
+    }
   },
 
   checkForUpdate(name: string): Promise<SkillUpdateResult> {
     return window.electronAPI.invoke('skills:check-update', name)
+  },
+
+  async updateSkill(name: string): Promise<SkillInstallResult> {
+    const result = await window.electronAPI.invoke('skills:update', name)
+    if (result.success) notifySkillsChanged()
+    return result
   },
 
   checkForUpdatesBatch(): Promise<Record<string, { hasUpdate: boolean; error?: string }>> {

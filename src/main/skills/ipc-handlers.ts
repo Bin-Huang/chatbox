@@ -10,12 +10,15 @@ import { getLogger } from '../util'
 import { discoverBuiltinSkills, ensureBuiltinSeeded, syncBuiltinSkills } from './builtin-sync'
 import { discoverAgentSkills, discoverClaudeSkills, discoverSkills } from './discovery'
 import { detectSkillsInRepo } from './github-fetcher'
+import { detectSkillsInRepo as detectGitLabSkillsInRepo } from './gitlab-fetcher'
 import {
   checkForUpdates,
   deleteSkill,
   installSkillFromGitHub,
+  installSkillFromGitLab,
   installSkillFromMarketplace,
   installSkillFromSandbox,
+  updateSkill,
 } from './installer'
 import { parseSkillFile } from './parser'
 import { collectSkillFiles, MAX_SKILL_FILES } from './skill-files'
@@ -301,6 +304,37 @@ export function registerSkillsHandlers() {
     }
   })
 
+  // GitLab project paths can contain subgroups (`group/subgroup/repo`), so the whole
+  // path is passed as one argument instead of an owner/repo pair.
+  ipcMain.handle(
+    'skills:scan-gitlab-repo',
+    async (_event, projectPath: string, options?: { host?: string; token?: string }) => {
+      try {
+        return await detectGitLabSkillsInRepo(projectPath, options)
+      } catch (error) {
+        log.error(`skills:scan-gitlab-repo failed for ${projectPath}`, error)
+        throw error
+      }
+    }
+  )
+
+  ipcMain.handle(
+    'skills:install-gitlab',
+    async (_event, params: { projectPath: string; skillPath: string; host?: string; token?: string }) => {
+      try {
+        const result = await installSkillFromGitLab(params.projectPath, params.skillPath, {
+          host: params.host,
+          token: params.token,
+        })
+        if (result.success) invalidateSkillCache()
+        return result
+      } catch (error) {
+        log.error('skills:install-gitlab failed', error)
+        throw error
+      }
+    }
+  )
+
   ipcMain.handle('skills:install-marketplace', async (_event, skill: MarketplaceSkill) => {
     try {
       const result = await installSkillFromMarketplace(skill)
@@ -342,6 +376,17 @@ export function registerSkillsHandlers() {
       return await checkForUpdates(skillName)
     } catch (error) {
       log.error(`skills:check-update failed for "${skillName}"`, error)
+      throw error
+    }
+  })
+
+  ipcMain.handle('skills:update', async (_event, skillName: string) => {
+    try {
+      const result = await updateSkill(skillName)
+      if (result.success) invalidateSkillCache()
+      return result
+    } catch (error) {
+      log.error(`skills:update failed for "${skillName}"`, error)
       throw error
     }
   })

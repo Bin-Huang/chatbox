@@ -23,6 +23,7 @@ import { ProviderList } from '@/components/settings/provider/ProviderList'
 import ProviderSpotlight, { providerSpotlight } from '@/components/settings/provider/ProviderSpotlight'
 import { ProviderIconImage } from '@/components/settings/provider/providerIcons'
 import GitHubInstallModal, { type DetectedSkill } from '@/components/settings/skills/GitHubInstallModal'
+import SkillInstallModal from '@/components/settings/skills/SkillInstallModal'
 import { SkillsSection } from '@/components/settings/skills/SkillsSection'
 import SkillsSpotlight, { skillsSpotlight } from '@/components/settings/skills/SkillsSpotlight'
 import type { MCPServerConfig } from '@/packages/mcp/types'
@@ -421,6 +422,29 @@ export const GitHubInstallModalStates: StoryObj = {
   ),
 }
 
+export const GitLabInstallModalStates: StoryObj = {
+  name: 'GitLab install modal detected skill selection states',
+  parameters: {
+    uiInventoryTargets: ['src/renderer/components/settings/skills/SkillInstallModal'],
+  },
+  render: () => (
+    <SettingsSurface
+      title="SkillInstallModal (GitLab)"
+      description="Install-from-GitLab modal for a self-hosted project: detected skills, checkboxes, install status badges, cancel, and install action."
+    >
+      <SkillInstallModal
+        opened
+        onClose={() => undefined}
+        skills={detectedSkills}
+        provider="gitlab"
+        projectPath="team/subgroup/chatbox-skills"
+        host="https://gitlab.com"
+        onInstallComplete={() => undefined}
+      />
+    </SettingsSurface>
+  ),
+}
+
 function SeedSettingsManagement() {
   settingsStore.setState((state) => ({
     ...state,
@@ -499,7 +523,13 @@ function SeedSettingsManagement() {
       if (channel === 'skills:scan-repo') {
         return Promise.resolve(detectedSkills)
       }
+      if (channel === 'skills:scan-gitlab-repo') {
+        return Promise.resolve(detectedSkills)
+      }
       if (channel === 'skills:install' || channel === 'skills:install-marketplace') {
+        return Promise.resolve({ success: true, skillName: 'repo-code-review' })
+      }
+      if (channel === 'skills:install-gitlab') {
         return Promise.resolve({ success: true, skillName: 'repo-code-review' })
       }
       if (channel === 'skills:delete') {
@@ -507,6 +537,9 @@ function SeedSettingsManagement() {
       }
       if (channel === 'skills:check-update') {
         return Promise.resolve({ hasUpdate: true, currentHash: 'abc', latestHash: 'def' })
+      }
+      if (channel === 'skills:update') {
+        return Promise.resolve({ success: true, skillName: 'repo-code-review' })
       }
       return Promise.resolve(null)
     },
