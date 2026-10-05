@@ -59,4 +59,86 @@ describe('mobile request native streaming', () => {
 
     expect(createNativeReadableStream).toHaveBeenCalledWith(expect.any(Object), { signal: undefined })
   })
+
+  test('retries once when the stream fails before delivering anything', async () => {
+    const encoder = new TextEncoder()
+    vi.mocked(createNativeReadableStream)
+      .mockReturnValueOnce(
+        new ReadableStream<Uint8Array>({
+          pull(controller) {
+            controller.error(new TypeError('Load failed'))
+          },
+        })
+      )
+      .mockReturnValueOnce(
+        new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(encoder.encode('recovered'))
+            controller.close()
+          },
+        })
+      )
+
+    const response = await handleMobileRequest(
+      'https://example.com/stream',
+      'POST',
+      new Headers(),
+      JSON.stringify({ stream: true })
+    )
+
+    await expect(response.text()).resolves.toBe('recovered')
+    expect(createNativeReadableStream).toHaveBeenCalledTimes(2)
+  })
+
+  test('does not retry once bytes have reached the consumer', async () => {
+    const encoder = new TextEncoder()
+    let pulls = 0
+    vi.mocked(createNativeReadableStream).mockReturnValue(
+      new ReadableStream<Uint8Array>({
+        // One chunk, then a failure. Queued chunks are dropped by
+        // controller.error(), so this has to be handed over a pull at a time.
+        pull(controller) {
+          if (pulls++ === 0) {
+            controller.enqueue(encoder.encode('partial'))
+            return
+          }
+          controller.error(new TypeError('Load failed'))
+        },
+      })
+    )
+
+    const response = await handleMobileRequest(
+      'https://example.com/stream',
+      'POST',
+      new Headers(),
+      JSON.stringify({ stream: true })
+    )
+
+    // Retrying here would append a second answer to a half-written one.
+    await expect(response.text()).rejects.toThrow('Load failed')
+    expect(createNativeReadableStream).toHaveBeenCalledTimes(1)
+  })
+
+  test('does not retry a stream the caller aborted', async () => {
+    const abortController = new AbortController()
+    abortController.abort()
+    vi.mocked(createNativeReadableStream).mockReturnValue(
+      new ReadableStream<Uint8Array>({
+        pull(controller) {
+          controller.error(new DOMException('The operation was aborted.', 'AbortError'))
+        },
+      })
+    )
+
+    const response = await handleMobileRequest(
+      'https://example.com/stream',
+      'POST',
+      new Headers(),
+      JSON.stringify({ stream: true }),
+      abortController.signal
+    )
+
+    await expect(response.text()).rejects.toThrow()
+    expect(createNativeReadableStream).toHaveBeenCalledTimes(1)
+  })
 })
