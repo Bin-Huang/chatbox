@@ -6,6 +6,7 @@ import changelogEn from './changelogs/changelog_en'
 import changelogZhHans from './changelogs/changelog_zh_Hans'
 import changelogZhHant from './changelogs/changelog_zh_Hant'
 import ar from './locales/ar/translation.json'
+import be from './locales/be/translation.json'
 import de from './locales/de/translation.json'
 import en from './locales/en/translation.json'
 import es from './locales/es/translation.json'
@@ -67,6 +68,9 @@ i18n.use(initReactI18next).init({
     },
     tr: {
       translation: tr,
+    },
+    be: {
+      translation: be,
     },
   },
   fallbackLng: 'en',
