@@ -30,12 +30,13 @@ export function needEditSetting() {
     if (providers[ModelProviderEnum.Bedrock]?.accessKey && providers[ModelProviderEnum.Bedrock]?.secretKey) {
       return false
     }
-    // Ollama / LMStudio/ custom provider 配置了至少一个模型
+    // Ollama / LMStudio / LiteLLM / custom provider 配置了至少一个模型
     if (
       keys.filter(
         (key) =>
           (key === ModelProviderEnum.Ollama ||
             key === ModelProviderEnum.LMStudio ||
+            key === ModelProviderEnum.LiteLLM ||
             key.startsWith('custom-provider')) &&
           providers[key].models?.length
       ).length > 0

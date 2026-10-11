@@ -93,6 +93,7 @@ const BUILTIN_API_HOST_PROVIDERS = new Set<string>([
   ModelProviderEnum.XiaomiMiMo,
   ModelProviderEnum.LongCat,
   ModelProviderEnum.ZhipuGLMCodingPlan,
+  ModelProviderEnum.LiteLLM,
 ])
 
 const OAUTH_ONLY_PROVIDERS = new Set<string>([ModelProviderEnum.QwenPortal])
@@ -298,6 +299,8 @@ function ProviderSettings({ providerId }: { providerId: string }) {
   )
   const isOAuthOnlyProvider = baseInfo?.id ? OAUTH_ONLY_PROVIDERS.has(baseInfo.id) : false
   const providerWebsite = baseInfo?.urls?.website || ''
+  // A LiteLLM proxy can run without authentication, so its API key is optional.
+  const isApiKeyOptional = baseInfo?.id === ModelProviderEnum.LiteLLM
 
   const handleApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProviderSettings({
@@ -690,9 +693,9 @@ function ProviderSettings({ providerId }: { providerId: string }) {
                 />
                 <Tooltip
                   openOnTouch
-                  disabled={!!providerSettings?.apiKey && displayModels.length > 0}
+                  disabled={(!!providerSettings?.apiKey || isApiKeyOptional) && displayModels.length > 0}
                   label={
-                    !providerSettings?.apiKey
+                    !providerSettings?.apiKey && !isApiKeyOptional
                       ? t('API Key is required to check connection')
                       : displayModels.length === 0
                         ? t('Add at least one model to check connection')
@@ -702,7 +705,9 @@ function ProviderSettings({ providerId }: { providerId: string }) {
                   <Button
                     data-testid={TestId.settings.providerCheck}
                     size="sm"
-                    disabled={isOAuthActive || !providerSettings?.apiKey || displayModels.length === 0}
+                    disabled={
+                      isOAuthActive || (!providerSettings?.apiKey && !isApiKeyOptional) || displayModels.length === 0
+                    }
                     loading={modelTestResult?.testing || false}
                     onClick={() => setShowTestModelSelector(true)}
                   >
