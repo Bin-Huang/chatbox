@@ -1,5 +1,6 @@
 import { settings as getDefaultSettings, newConfigs } from 'src/shared/defaults'
 import { getModel } from 'src/shared/providers'
+import LiteLLM from 'src/shared/providers/definitions/models/litellm'
 import LongCat from 'src/shared/providers/definitions/models/longcat'
 import OpenAI from 'src/shared/providers/definitions/models/openai'
 import OpenAIResponses from 'src/shared/providers/definitions/models/openai-responses'
@@ -175,6 +176,7 @@ describe('getModel', () => {
       'https://open.bigmodel.cn/api/coding/paas/v4',
       ZhipuGLMCodingPlan,
     ],
+    [ModelProviderEnum.LiteLLM, 'gpt-6-luna', 'http://localhost:4000', LiteLLM],
   ])('returns OpenAI-compatible model instances for %s', (provider, modelId, apiHost, expectedModelClass) => {
     const sessionSettings: SessionSettings = {
       provider,
