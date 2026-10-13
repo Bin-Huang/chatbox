@@ -1,4 +1,5 @@
 import { useCallback, useSyncExternalStore } from 'react'
+import { rendererApplication } from '@/app/renderer-application'
 import {
   getGenerationStopStatus,
   messageStopOperationKey,
@@ -10,7 +11,7 @@ import { stopAllMessageGenerations, stopMessageGeneration } from '@/stores/sessi
 
 export type { GenerationStopStatus } from '@/stores/generationStopOperations'
 
-function useStopOperation(key: string | undefined, run: () => Promise<void>) {
+function useStopOperation(key: string | undefined, run: () => Promise<void>, onWatchdog?: () => void) {
   const status = useSyncExternalStore(
     subscribeGenerationStopOperations,
     () => getGenerationStopStatus(key),
@@ -19,14 +20,14 @@ function useStopOperation(key: string | undefined, run: () => Promise<void>) {
 
   const requestStop = useCallback((): boolean => {
     if (!key) return false
-    void startGenerationStop(key, run)
+    void startGenerationStop(key, run, { onWatchdog })
     return true
-  }, [key, run])
+  }, [key, run, onWatchdog])
 
   const stopAndWait = useCallback((): Promise<void> => {
     if (!key) return Promise.resolve()
-    return startGenerationStop(key, run)
-  }, [key, run])
+    return startGenerationStop(key, run, { onWatchdog })
+  }, [key, run, onWatchdog])
 
   return { requestStop, status, stopAndWait }
 }
@@ -36,7 +37,13 @@ export function useGenerationStop(
   stop: (sessionId: string) => Promise<void> = stopAllMessageGenerations
 ) {
   const run = useCallback(() => (sessionId ? stop(sessionId) : Promise.resolve()), [sessionId, stop])
-  return useStopOperation(sessionId ? sessionStopOperationKey(sessionId) : undefined, run)
+  // Watchdog recovery (issue #3959): if the stop pipeline never settles, drop
+  // the stuck generation runtimes so the session cannot stay permanently
+  // locked with nothing actually running.
+  const onWatchdog = useCallback(() => {
+    if (sessionId) rendererApplication.generationRuntime.clear(sessionId)
+  }, [sessionId])
+  return useStopOperation(sessionId ? sessionStopOperationKey(sessionId) : undefined, run, onWatchdog)
 }
 
 export function useMessageGenerationStop(
@@ -45,5 +52,8 @@ export function useMessageGenerationStop(
   stop: (sessionId: string, messageId: string) => Promise<void> = stopMessageGeneration
 ) {
   const run = useCallback(() => stop(sessionId, messageId), [messageId, sessionId, stop])
-  return useStopOperation(messageStopOperationKey(sessionId, messageId), run)
+  const onWatchdog = useCallback(() => {
+    rendererApplication.generationRuntime.clear(sessionId, messageId)
+  }, [sessionId, messageId])
+  return useStopOperation(messageStopOperationKey(sessionId, messageId), run, onWatchdog)
 }

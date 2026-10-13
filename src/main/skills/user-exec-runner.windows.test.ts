@@ -236,4 +236,28 @@ describe.skipIf(process.platform !== 'win32')('user_exec on native Windows', () 
       resetWindowsPowerShellResolutionCache()
     }
   })
+
+  test('settles even when the command leaves a long-running child holding stdio (issue #3958)', async () => {
+    const startedAt = Date.now()
+    const result = await executeUserExecCommand({
+      command: [
+        '$psi = New-Object System.Diagnostics.ProcessStartInfo',
+        '$psi.FileName = "ping.exe"',
+        '$psi.Arguments = "-n 8 127.0.0.1"',
+        '$psi.UseShellExecute = $false',
+        '$psi.CreateNoWindow = $true',
+        '$psi.WorkingDirectory = $env:SystemRoot',
+        '[System.Diagnostics.Process]::Start($psi) | Out-Null',
+        "Write-Output 'DAEMON_STARTED'",
+      ].join('\n'),
+      cwd: workDir,
+      injectBundledNode: false,
+      timeout: 30_000,
+    })
+    const elapsed = Date.now() - startedAt
+    expect(result.stdout).toContain('DAEMON_STARTED')
+    // The leaked child keeps the wrapper's stdio open; the call must settle on
+    // the shell's exit (drain grace) instead of waiting ~7s for `close`.
+    expect(elapsed).toBeLessThan(5_000)
+  }, 40_000)
 })

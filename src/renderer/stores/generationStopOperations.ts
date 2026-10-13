@@ -29,13 +29,51 @@ export function getGenerationStopStatus(key: string | undefined): GenerationStop
   return (key && operations.get(key)?.status) || 'idle'
 }
 
-export function startGenerationStop(key: string, run: () => Promise<void>): Promise<void> {
+export interface GenerationStopOptions {
+  /** How long a stop task may stay unsettled before the watchdog self-heals it. */
+  watchdogMs?: number
+  /** Called when the watchdog fires so the host can clear a wedged runtime. */
+  onWatchdog?: () => void
+}
+
+/**
+ * A stop that never settles (a tool call wedged on a leaked child, a
+ * persistence write that never returns) must not poison the session forever:
+ * the de-dup below returns the same pending promise to every later Stop/Retry,
+ * so one dead task blocks them all (issue #3959). After this budget the
+ * operation is dropped and the host's watchdog hook runs.
+ */
+const DEFAULT_STOP_WATCHDOG_MS = 15_000
+
+export function startGenerationStop(
+  key: string,
+  run: () => Promise<void>,
+  options: GenerationStopOptions = {}
+): Promise<void> {
   const current = operations.get(key)
   if (current?.status === 'stopping' && current.task) return current.task
 
   const operation: StopOperation = { status: 'stopping' }
   operations.set(key, operation)
   notifyListeners()
+
+  const watchdogMs = options.watchdogMs ?? DEFAULT_STOP_WATCHDOG_MS
+  let watchdogHandle: ReturnType<typeof setTimeout> | undefined
+  if (watchdogMs > 0) {
+    watchdogHandle = setTimeout(() => {
+      if (operations.get(key) !== operation || operation.status !== 'stopping') return
+      operations.delete(key)
+      notifyListeners()
+      try {
+        options.onWatchdog?.()
+      } catch {
+        // Recovery is best-effort and must never throw out of a timer.
+      }
+    }, watchdogMs)
+  }
+  const clearWatchdog = () => {
+    if (watchdogHandle) clearTimeout(watchdogHandle)
+  }
 
   let task: Promise<void>
   try {
@@ -45,8 +83,12 @@ export function startGenerationStop(key: string, run: () => Promise<void>): Prom
   }
   operation.task = task
   void task.then(
-    () => clearGenerationStopOperation(key, operation),
     () => {
+      clearWatchdog()
+      clearGenerationStopOperation(key, operation)
+    },
+    () => {
+      clearWatchdog()
       if (operations.get(key) !== operation) return
       operation.status = 'failed'
       operation.task = undefined

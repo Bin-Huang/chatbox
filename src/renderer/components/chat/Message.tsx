@@ -240,16 +240,27 @@ const _Message: FC<Props> = (props) => {
 
   const handleStop = useCallback(async (): Promise<boolean> => {
     if (msg.generating) {
+      let watchdog: ReturnType<typeof setTimeout> | undefined
       try {
-        await stopMessageAndWait()
+        // Never let Stop hang invisibly: bound the wait so a wedged stop
+        // surfaces a message instead of a dead button (issue #3959).
+        await Promise.race([
+          stopMessageAndWait(),
+          new Promise<never>((_, reject) => {
+            watchdog = setTimeout(() => reject(new Error('stop-timeout')), 15_000)
+          }),
+        ])
         return true
       } catch {
+        toastActions.add(t('Stopping the reply failed or is taking too long. Please try again.'), 4000)
         return false
+      } finally {
+        if (watchdog) clearTimeout(watchdog)
       }
     }
     await modifyMessage(sessionId, { ...msg, generating: false }, true)
     return true
-  }, [msg, sessionId, stopMessageAndWait])
+  }, [msg, sessionId, stopMessageAndWait, t])
 
   const generationLocked = isGenerationLocked(sessionLocks)
 

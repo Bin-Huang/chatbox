@@ -173,6 +173,9 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
       let timedOut = false
       let outputLimitExceeded = false
       let forceKillHandle: ReturnType<typeof setTimeout> | undefined
+      let drainHandle: ReturnType<typeof setTimeout> | undefined
+      let lastExit: { code: number | null; signal: NodeJS.Signals | null } | null = null
+      const TERMINAL_DRAIN_GRACE_MS = 2_000
       const activeKey = getUserExecKey(sessionId, toolCallId)
 
       const resolveOnce = (result: UserExecResult) => {
@@ -211,6 +214,40 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
         })()
       }
 
+      // Shared result builder for every terminal path (close / exit-drain /
+      // cancel / timeout).
+      const buildResult = (code: number | null, signal: NodeJS.Signals | null): UserExecResult =>
+        cancelled
+          ? { success: false, stdout, stderr, exitCode: 130, cancelled: true }
+          : outputLimitExceeded
+            ? {
+                success: false,
+                stdout,
+                stderr: `${stderr}${stderr ? '\n' : ''}[Command terminated: output exceeded the 10MB capture limit]`,
+                exitCode: 1,
+              }
+            : timedOut || signal === 'SIGTERM'
+              ? { success: false, stdout, stderr: stderr || `Command timed out (${timeoutMs / 1000}s)`, exitCode: null }
+              : { success: code === 0, stdout, stderr, exitCode: code }
+
+      // `close` fires only after every stdio stream is closed. A daemon-style
+      // grandchild that inherited our pipes keeps them open forever, so the
+      // shell exits but `close` never arrives and the tool call would hang the
+      // session lock indefinitely (issue #3958). Once the shell itself exits,
+      // give stdio a bounded drain grace — re-armed while output still flows —
+      // and then settle on the shell's exit code regardless.
+      const armDrain = () => {
+        const exitInfo = lastExit
+        if (!exitInfo) return
+        if (drainHandle) clearTimeout(drainHandle)
+        drainHandle = setTimeout(() => {
+          if (settled) return
+          killProcessTree(child, 'SIGTERM')
+          resolveOnce(buildResult(exitInfo.code, exitInfo.signal))
+        }, TERMINAL_DRAIN_GRACE_MS)
+        drainHandle.unref?.()
+      }
+
       const child = spawn(shellCommand, shellArgs, {
         cwd,
         stdio: [isWindows ? 'pipe' : 'ignore', 'pipe', 'pipe'],
@@ -229,6 +266,9 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
             clearTimeout(timeoutHandle)
             killProcessTree(child, 'SIGTERM')
             forceKillHandle = setTimeout(() => killProcessTree(child, 'SIGKILL'), 3_000)
+            // Settle immediately so Stop is terminal even when a leaked
+            // descendant still holds our stdio pipes open (issue #3958).
+            resolveOnce({ success: false, stdout, stderr, exitCode: 130, cancelled: true })
           },
         })
       }
@@ -238,6 +278,10 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
         timedOut = true
         killProcessTree(child, 'SIGTERM')
         forceKillHandle = setTimeout(() => killProcessTree(child, 'SIGKILL'), 3_000)
+        // The shell may already be gone (only a leaked descendant holds the
+        // pipes); arm the drain so the call still settles instead of hanging.
+        if (!lastExit) lastExit = { code: null, signal: 'SIGTERM' }
+        armDrain()
       }, timeoutMs)
 
       if (!child.stdout || !child.stderr) {
@@ -257,6 +301,7 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
 
       stdoutStream.on('data', (data: Buffer) => {
         stdoutBytes += data.byteLength
+        if (lastExit) armDrain()
         if (!outputCapture.append('stdout', data)) {
           stdoutStream.pause()
           outputCapture.onDrain(() => stdoutStream.resume())
@@ -271,6 +316,7 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
       })
       stderrStream.on('data', (data: Buffer) => {
         stderrBytes += data.byteLength
+        if (lastExit) armDrain()
         if (!outputCapture.append('stderr', data)) {
           stderrStream.pause()
           outputCapture.onDrain(() => stderrStream.resume())
@@ -290,25 +336,15 @@ export async function executeUserExecCommand(params: UserExecParams): Promise<Us
       })
       child.on('close', (code, signal) => {
         if (forceKillHandle) clearTimeout(forceKillHandle)
-        resolveOnce(
-          cancelled
-            ? { success: false, stdout, stderr, exitCode: 130, cancelled: true }
-            : outputLimitExceeded
-              ? {
-                  success: false,
-                  stdout,
-                  stderr: `${stderr}${stderr ? '\n' : ''}[Command terminated: output exceeded the 10MB capture limit]`,
-                  exitCode: 1,
-                }
-              : timedOut || signal === 'SIGTERM'
-                ? {
-                    success: false,
-                    stdout,
-                    stderr: stderr || `Command timed out (${timeoutMs / 1000}s)`,
-                    exitCode: null,
-                  }
-                : { success: code === 0, stdout, stderr, exitCode: code }
-        )
+        if (drainHandle) clearTimeout(drainHandle)
+        resolveOnce(buildResult(code, signal))
+      })
+      child.on('exit', (code, signal) => {
+        if (forceKillHandle) clearTimeout(forceKillHandle)
+        lastExit = { code, signal }
+        // 'close' may never arrive when a leaked child holds our pipes; arm a
+        // bounded drain so the tool call always settles once the shell exits.
+        armDrain()
       })
     })
   } catch (error) {
