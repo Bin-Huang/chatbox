@@ -1,127 +1,243 @@
-import { CapacitorSQLite, type SQLiteConnection, type SQLiteDBConnection } from '@capacitor-community/sqlite'
+import {
+  CapacitorSQLite,
+  SQLiteConnection,
+  type capSQLiteSet,
+  type SQLiteDBConnection,
+} from '@capacitor-community/sqlite'
+import { planOrphanCleanup } from '@shared/session-attachment-rag/ownership'
 import type {
-  SessionAttachment,
+  CreateSessionAttachmentParams,
+  SessionAttachmentChunkRecord,
   SessionAttachmentParent,
+  SessionAttachmentParentRecord,
+  SessionAttachmentRecord,
+  SessionAttachmentStatus,
+  SessionAttachmentIndexingStage,
   SessionAttachmentRagDebugSnapshot,
-  SessionAttachmentRagMaintenanceResult,
-  SessionAttachmentRagMaintenanceScope,
-} from '@shared/types'
-import type { MobileChildChunk, MobileParentBlock } from './types'
+} from './types'
 
 const DB_NAME = 'chatbox-session-rag'
 
+function mapRowToAttachmentRecord(row: Record<string, unknown>): SessionAttachmentRecord {
+  return {
+    id: Number(row.id),
+    sessionId: String(row.session_id),
+    messageId: String(row.message_id),
+    attachmentStorageKey: String(row.attachment_storage_key),
+    filename: String(row.filename),
+    mimeType: String(row.mime_type ?? ''),
+    fileSize: Number(row.file_size ?? 0),
+    tokenEstimate: Number(row.token_estimate ?? 0),
+    parserType: row.parser_type ? String(row.parser_type) : undefined,
+    status: String(row.status) as SessionAttachmentStatus,
+    indexingStage: row.indexing_stage ? (String(row.indexing_stage) as SessionAttachmentIndexingStage) : undefined,
+    totalChunks: Number(row.total_chunks ?? 0),
+    embeddedChunks: Number(row.embedded_chunks ?? 0),
+    chunkCount: Number(row.total_chunks ?? 0),
+    embeddingModel: row.embedding_model ? String(row.embedding_model) : undefined,
+    embeddingDimension:
+      row.embedding_dimension !== null && row.embedding_dimension !== undefined
+        ? Number(row.embedding_dimension)
+        : undefined,
+    error: row.error ? String(row.error) : undefined,
+    createdAt: row.created_at ? String(row.created_at) : undefined,
+    processingStartedAt: row.processing_started_at ? String(row.processing_started_at) : undefined,
+    completedAt: row.completed_at ? String(row.completed_at) : undefined,
+  }
+}
+
+function mapRowToParentRecord(row: Record<string, unknown>): SessionAttachmentParentRecord {
+  return {
+    id: Number(row.id),
+    attachmentId: Number(row.attachment_id),
+    parentOrder: Number(row.parent_order),
+    sectionPath: row.section_path ? String(row.section_path) : undefined,
+    docType: row.doc_type ? String(row.doc_type) : undefined,
+    pageStart: row.page_start !== null && row.page_start !== undefined ? Number(row.page_start) : undefined,
+    pageEnd: row.page_end !== null && row.page_end !== undefined ? Number(row.page_end) : undefined,
+    text: String(row.text),
+    tokenEstimate: Number(row.token_estimate ?? 0),
+    charCount: Number(row.char_count ?? 0),
+    createdAt: row.created_at ? String(row.created_at) : undefined,
+  }
+}
+
+function parseJsonArray(val: unknown): string[] | undefined {
+  if (!val) return undefined
+  if (Array.isArray(val)) return val.map(String)
+  try {
+    const parsed = JSON.parse(String(val))
+    return Array.isArray(parsed) ? parsed.map(String) : undefined
+  } catch {
+    return [String(val)]
+  }
+}
+
+function parseJsonObject(val: unknown): Record<string, unknown> | undefined {
+  if (!val) return undefined
+  if (typeof val === 'object' && !Array.isArray(val)) return val as Record<string, unknown>
+  try {
+    const parsed = JSON.parse(String(val))
+    return typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as Record<string, unknown>) : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function mapRowToChunkRecord(row: Record<string, unknown>): SessionAttachmentChunkRecord {
+  return {
+    id: Number(row.id),
+    attachmentId: Number(row.attachment_id),
+    parentId: Number(row.parent_id),
+    chunkOrder: Number(row.chunk_order),
+    sectionPath: row.section_path ? String(row.section_path) : undefined,
+    pageStart: row.page_start !== null && row.page_start !== undefined ? Number(row.page_start) : undefined,
+    pageEnd: row.page_end !== null && row.page_end !== undefined ? Number(row.page_end) : undefined,
+    rawText: String(row.raw_text),
+    embeddedText: String(row.embedded_text),
+    tokenEstimate: Number(row.token_estimate ?? 0),
+    entities: parseJsonArray(row.entities),
+    keywords: parseJsonArray(row.keywords),
+    chapterOrder: row.chapter_order !== null && row.chapter_order !== undefined ? Number(row.chapter_order) : undefined,
+    storyTime: row.story_time ? String(row.story_time) : undefined,
+    priorityRank: row.priority_rank !== null && row.priority_rank !== undefined ? Number(row.priority_rank) : 2,
+    kind: row.kind ? String(row.kind) : undefined,
+    metadata: parseJsonObject(row.metadata),
+    createdAt: row.created_at ? String(row.created_at) : undefined,
+  }
+}
+
 export class MobileRagDatabase {
-  private db: SQLiteDBConnection | null = null
-  private sqlite: SQLiteConnection | null = null
+  private sqlite: SQLiteConnection
+  private database!: SQLiteDBConnection
   private initPromise: Promise<void> | null = null
 
-  constructor() {}
+  constructor(sqliteConnection?: SQLiteConnection) {
+    this.sqlite = sqliteConnection ?? new SQLiteConnection(CapacitorSQLite)
+  }
 
-  async initialize(): Promise<void> {
-    if (this.db) return
-    if (!this.initPromise) {
-      this.initPromise = this.initInternal()
+  public initialize(): Promise<void> {
+    if (this.initPromise) {
+      return this.initPromise
     }
+    this.initPromise = this.openDatabase()
     return this.initPromise
   }
 
-  getDatabase(): SQLiteDBConnection {
-    if (!this.db) {
-      throw new Error('MobileRagDatabase not initialized')
-    }
-    return this.db
+  public getDatabase(): SQLiteDBConnection {
+    return this.database
   }
 
-  // Allow injecting mock connection for tests
-  setMockDatabase(mockDb: any) {
-    this.db = mockDb
-  }
-
-  private async initInternal(): Promise<void> {
+  private async openDatabase(): Promise<void> {
     try {
-      this.sqlite = new (CapacitorSQLite as any)()
-      const isConn = await this.sqlite!.isConnection(DB_NAME, false)
-      if (isConn.result) {
-        this.db = await this.sqlite!.retrieveConnection(DB_NAME, false)
-      } else {
-        this.db = await this.sqlite!.createConnection(DB_NAME, false, 'no-encryption', 1, false)
-      }
-      await this.db!.open()
-      await this.db!.execute('PRAGMA foreign_keys = ON;')
-      await this.createTables()
-      await this.cleanupInterruptedIndexingAttachments()
-    } catch (error) {
-      console.error('[MobileRagDatabase] Failed to initialize SQLite:', error)
-      throw error
+      this.sqlite.closeConnection(DB_NAME, false)
+    } catch {
+      // ignore
     }
-  }
 
-  private async createTables(): Promise<void> {
-    if (!this.db) return
-    const schema = `
-      CREATE TABLE IF NOT EXISTS session_attachments (
+    this.database = await this.sqlite.createConnection(DB_NAME, false, 'no-encryption', 1, false)
+    await this.database.open()
+
+    await this.database.execute(`
+      CREATE TABLE IF NOT EXISTS session_attachment (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         session_id TEXT NOT NULL,
         message_id TEXT NOT NULL,
-        storage_key TEXT NOT NULL,
+        attachment_storage_key TEXT NOT NULL,
         filename TEXT NOT NULL,
-        file_size INTEGER NOT NULL,
+        mime_type TEXT NOT NULL,
+        file_size INTEGER DEFAULT 0,
         token_estimate INTEGER DEFAULT 0,
-        status TEXT NOT NULL,
+        parser_type TEXT,
+        status TEXT NOT NULL DEFAULT 'pending',
+        indexing_stage TEXT DEFAULT NULL,
         total_chunks INTEGER DEFAULT 0,
         embedded_chunks INTEGER DEFAULT 0,
-        embedding_model TEXT,
-        embedding_dimension INTEGER,
+        embedding_model TEXT DEFAULT NULL,
+        embedding_dimension INTEGER DEFAULT NULL,
+        error TEXT,
         created_at INTEGER NOT NULL,
-        completed_at INTEGER,
-        error TEXT
+        processing_started_at INTEGER,
+        completed_at INTEGER
       );
-      CREATE INDEX IF NOT EXISTS idx_sa_session ON session_attachments(session_id);
-      CREATE INDEX IF NOT EXISTS idx_sa_message ON session_attachments(message_id);
 
-      CREATE TABLE IF NOT EXISTS session_attachment_parents (
+      CREATE TABLE IF NOT EXISTS session_attachment_parent (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         attachment_id INTEGER NOT NULL,
         parent_order INTEGER NOT NULL,
         section_path TEXT,
+        doc_type TEXT,
+        page_start INTEGER,
+        page_end INTEGER,
         text TEXT NOT NULL,
-        token_estimate INTEGER,
-        char_count INTEGER,
-        FOREIGN KEY (attachment_id) REFERENCES session_attachments(id) ON DELETE CASCADE
+        token_estimate INTEGER DEFAULT 0,
+        char_count INTEGER DEFAULT 0,
+        created_at INTEGER NOT NULL
       );
-      CREATE INDEX IF NOT EXISTS idx_sap_att ON session_attachment_parents(attachment_id);
 
-      CREATE TABLE IF NOT EXISTS session_attachment_chunks (
+      CREATE TABLE IF NOT EXISTS session_attachment_chunk (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         attachment_id INTEGER NOT NULL,
         parent_id INTEGER NOT NULL,
         chunk_order INTEGER NOT NULL,
+        section_path TEXT,
+        page_start INTEGER,
+        page_end INTEGER,
         raw_text TEXT NOT NULL,
-        token_estimate INTEGER,
-        FOREIGN KEY (attachment_id) REFERENCES session_attachments(id) ON DELETE CASCADE,
-        FOREIGN KEY (parent_id) REFERENCES session_attachment_parents(id) ON DELETE CASCADE
+        embedded_text TEXT NOT NULL,
+        token_estimate INTEGER DEFAULT 0,
+        entities TEXT,
+        keywords TEXT,
+        chapter_order INTEGER,
+        story_time TEXT,
+        priority_rank INTEGER DEFAULT 2,
+        kind TEXT,
+        metadata TEXT,
+        created_at INTEGER NOT NULL
       );
-      CREATE INDEX IF NOT EXISTS idx_sac_att ON session_attachment_chunks(attachment_id);
 
-      CREATE TABLE IF NOT EXISTS session_attachment_vectors (
+      CREATE TABLE IF NOT EXISTS session_attachment_vector (
         chunk_id INTEGER PRIMARY KEY,
         attachment_id INTEGER NOT NULL,
-        vector TEXT NOT NULL,
-        FOREIGN KEY (chunk_id) REFERENCES session_attachment_chunks(id) ON DELETE CASCADE
+        vector TEXT NOT NULL
       );
-      CREATE INDEX IF NOT EXISTS idx_sav_att ON session_attachment_vectors(attachment_id);
-    `
-    await this.db.execute(schema)
+
+      CREATE INDEX IF NOT EXISTS idx_sa_session_id ON session_attachment(session_id);
+      CREATE INDEX IF NOT EXISTS idx_sa_message_id ON session_attachment(message_id);
+      CREATE INDEX IF NOT EXISTS idx_sa_status ON session_attachment(status);
+      CREATE INDEX IF NOT EXISTS idx_sap_attachment_id ON session_attachment_parent(attachment_id);
+      CREATE INDEX IF NOT EXISTS idx_sac_attachment_id ON session_attachment_chunk(attachment_id);
+      CREATE INDEX IF NOT EXISTS idx_sac_parent_id ON session_attachment_chunk(parent_id);
+      CREATE INDEX IF NOT EXISTS idx_sac_chapter ON session_attachment_chunk(attachment_id, chapter_order);
+      CREATE INDEX IF NOT EXISTS idx_sac_priority ON session_attachment_chunk(attachment_id, priority_rank);
+      CREATE INDEX IF NOT EXISTS idx_sav_attachment_id ON session_attachment_vector(attachment_id);
+    `)
+
+    const colsToAdd: Array<{ name: string; type: string }> = [
+      { name: 'entities', type: 'TEXT' },
+      { name: 'keywords', type: 'TEXT' },
+      { name: 'chapter_order', type: 'INTEGER' },
+      { name: 'story_time', type: 'TEXT' },
+      { name: 'priority_rank', type: 'INTEGER DEFAULT 2' },
+      { name: 'kind', type: 'TEXT' },
+      { name: 'metadata', type: 'TEXT' },
+    ]
+    for (const col of colsToAdd) {
+      try {
+        await this.database.execute(`ALTER TABLE session_attachment_chunk ADD COLUMN ${col.name} ${col.type};`)
+      } catch {
+        // Column already exists or table just created with it
+      }
+    }
   }
 
-  async cleanupInterruptedIndexingAttachments(): Promise<number> {
-    if (!this.db) return 0
+  public async cleanupInterruptedIndexingAttachments(): Promise<number> {
     try {
-      const res = await this.db.query("SELECT id FROM session_attachments WHERE status = 'indexing';")
+      const res = await this.database.query("SELECT id FROM session_attachment WHERE status = 'indexing'")
       const rows = res.values ?? []
       if (rows.length > 0) {
-        await this.db.run(
-          "UPDATE session_attachments SET status = 'failed', error = 'interrupted' WHERE status = 'indexing';"
+        await this.database.run(
+          "UPDATE session_attachment SET status = 'failed', error = 'interrupted', processing_started_at = NULL WHERE status = 'indexing'"
         )
       }
       return rows.length
@@ -130,261 +246,654 @@ export class MobileRagDatabase {
     }
   }
 
-  async createAttachment(params: {
-    sessionId: string
-    messageId: string
-    attachmentStorageKey: string
-    filename: string
-    fileSize: number
-    tokenEstimate: number
-  }): Promise<SessionAttachment> {
+  public async createAttachment(params: CreateSessionAttachmentParams): Promise<number> {
     await this.initialize()
     const now = Date.now()
-    const res = await this.db!.run(
-      `INSERT INTO session_attachments (session_id, message_id, storage_key, filename, file_size, token_estimate, status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, 'pending', ?);`,
+    const result = await this.database.run(
+      `INSERT INTO session_attachment (
+        session_id, message_id, attachment_storage_key, filename, mime_type,
+        file_size, token_estimate, parser_type, status, indexing_stage, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'queued', ?)`,
       [
         params.sessionId,
         params.messageId,
         params.attachmentStorageKey,
         params.filename,
+        params.mimeType,
         params.fileSize,
         params.tokenEstimate,
+        params.parserType ?? null,
         now,
       ]
     )
-    const id = res.changes?.lastId ?? 1
-    return {
-      id,
-      sessionId: params.sessionId,
-      messageId: params.messageId,
-      filename: params.filename,
-      status: 'pending',
-      indexStatus: 'pending',
-      availability: 'allowed',
-      chunkCount: 0,
-      createdAt: new Date(now).toISOString(),
+
+    const lastId = result.changes?.lastId
+    if (lastId === undefined || lastId === null) {
+      const queryResult = await this.database.query('SELECT last_insert_rowid() as id')
+      return Number(queryResult.values?.[0]?.id)
     }
+    return Number(lastId)
   }
 
-  async getAttachments(ids: number[]): Promise<SessionAttachment[]> {
+  public async getAttachment(id: number): Promise<SessionAttachmentRecord | null> {
+    await this.initialize()
+    const result = await this.database.query('SELECT * FROM session_attachment WHERE id = ?', [id])
+    const row = result.values?.[0]
+    return row ? mapRowToAttachmentRecord(row) : null
+  }
+
+  public async getAttachments(ids: number[]): Promise<SessionAttachmentRecord[]> {
     if (ids.length === 0) return []
     await this.initialize()
     const placeholders = ids.map(() => '?').join(',')
-    const res = await this.db!.query(
-      `SELECT * FROM session_attachments WHERE id IN (${placeholders});`,
+    const result = await this.database.query(
+      `SELECT * FROM session_attachment WHERE id IN (${placeholders})`,
       ids
     )
-    const rows: any[] = res.values ?? []
-    return rows.map((r) => ({
-      id: Number(r.id),
-      sessionId: r.session_id,
-      messageId: r.message_id,
-      filename: r.filename,
-      status: r.status === 'failed' ? 'error' : r.status,
-      indexStatus: r.status === 'failed' ? 'error' : r.status,
-      availability: 'allowed',
-      chunkCount: Number(r.total_chunks || 0),
-      createdAt: new Date(Number(r.created_at)).toISOString(),
-      completedAt: r.completed_at ? new Date(Number(r.completed_at)).toISOString() : undefined,
-      error: r.error || undefined,
-    }))
+    return (result.values ?? []).map(mapRowToAttachmentRecord)
   }
 
-  async markIndexing(id: number): Promise<void> {
+  public async listPendingAttachments(limit = 5): Promise<SessionAttachmentRecord[]> {
     await this.initialize()
-    await this.db!.run("UPDATE session_attachments SET status = 'indexing', error = NULL WHERE id = ?;", [id])
+    const result = await this.database.query(
+      'SELECT * FROM session_attachment WHERE status = ? ORDER BY id ASC LIMIT ?',
+      ['pending', limit]
+    )
+    return (result.values ?? []).map(mapRowToAttachmentRecord)
   }
 
-  async markReady(id: number, meta: { totalChunks: number; model?: string; dimension?: number }): Promise<void> {
+  public async updateAttachment(id: number, updates: Partial<SessionAttachmentRecord>): Promise<void> {
+    await this.initialize()
+    const setClauses: string[] = []
+    const values: unknown[] = []
+
+    if (updates.status !== undefined) {
+      setClauses.push('status = ?')
+      values.push(updates.status)
+    }
+    if (updates.indexingStage !== undefined) {
+      setClauses.push('indexing_stage = ?')
+      values.push(updates.indexingStage)
+    }
+    if (updates.totalChunks !== undefined) {
+      setClauses.push('total_chunks = ?')
+      values.push(updates.totalChunks)
+    }
+    if (updates.embeddedChunks !== undefined) {
+      setClauses.push('embedded_chunks = ?')
+      values.push(updates.embeddedChunks)
+    }
+    if (updates.embeddingModel !== undefined) {
+      setClauses.push('embedding_model = ?')
+      values.push(updates.embeddingModel)
+    }
+    if (updates.embeddingDimension !== undefined) {
+      setClauses.push('embedding_dimension = ?')
+      values.push(updates.embeddingDimension)
+    }
+    if (updates.error !== undefined) {
+      setClauses.push('error = ?')
+      values.push(updates.error)
+    }
+    if (updates.processingStartedAt !== undefined) {
+      setClauses.push('processing_started_at = ?')
+      values.push(updates.processingStartedAt)
+    }
+    if (updates.completedAt !== undefined) {
+      setClauses.push('completed_at = ?')
+      values.push(updates.completedAt)
+    }
+
+    if (setClauses.length === 0) return
+    values.push(id)
+    await this.database.run(
+      `UPDATE session_attachment SET ${setClauses.join(', ')} WHERE id = ?`,
+      values
+    )
+  }
+
+  public async updateAttachmentProgress(
+    id: number,
+    progress: {
+      indexingStage?: SessionAttachmentIndexingStage
+      totalChunks?: number
+      embeddedChunks?: number
+      embeddingModel?: string
+      embeddingDimension?: number
+    }
+  ): Promise<void> {
+    await this.updateAttachment(id, progress)
+  }
+
+  public async markAttachmentStatus(
+    id: number,
+    status: SessionAttachmentStatus,
+    error?: string
+  ): Promise<void> {
+    const now = Date.now()
+    if (status === 'indexing') {
+      await this.updateAttachment(id, {
+        status,
+        indexingStage: 'chunking',
+        processingStartedAt: String(now),
+        error: undefined,
+      })
+    } else if (status === 'ready') {
+      await this.updateAttachment(id, {
+        status,
+        indexingStage: 'ready',
+        completedAt: String(now),
+        error: undefined,
+      })
+    } else if (status === 'failed') {
+      await this.updateAttachment(id, {
+        status,
+        error: error || 'Indexing failed',
+      })
+    } else {
+      await this.updateAttachment(id, { status, error })
+    }
+  }
+
+  public async rebindAttachment(attachmentId: number, sessionId: string, messageId: string): Promise<void> {
+    await this.initialize()
+    await this.database.run(
+      'UPDATE session_attachment SET session_id = ?, message_id = ? WHERE id = ?',
+      [sessionId, messageId, attachmentId]
+    )
+  }
+
+  public async deleteAttachment(attachmentId: number): Promise<void> {
+    await this.initialize()
+    const set: capSQLiteSet[] = [
+      { statement: 'DELETE FROM session_attachment_vector WHERE attachment_id = ?', values: [attachmentId] },
+      { statement: 'DELETE FROM session_attachment_chunk WHERE attachment_id = ?', values: [attachmentId] },
+      { statement: 'DELETE FROM session_attachment_parent WHERE attachment_id = ?', values: [attachmentId] },
+      { statement: 'DELETE FROM session_attachment WHERE id = ?', values: [attachmentId] },
+    ]
+    await this.database.executeSet(set)
+  }
+
+  public async deleteMessageAttachments(messageId: string): Promise<number[]> {
+    await this.initialize()
+    const rows = await this.database.query('SELECT id FROM session_attachment WHERE message_id = ?', [messageId])
+    const ids = (rows.values ?? []).map((r) => Number(r.id))
+    for (const id of ids) {
+      await this.deleteAttachment(id)
+    }
+    return ids
+  }
+
+  public async deleteSessionAttachments(sessionId: string): Promise<number[]> {
+    await this.initialize()
+    const rows = await this.database.query('SELECT id FROM session_attachment WHERE session_id = ?', [sessionId])
+    const ids = (rows.values ?? []).map((r) => Number(r.id))
+    for (const id of ids) {
+      await this.deleteAttachment(id)
+    }
+    return ids
+  }
+
+  public async replaceParentsAndChunks(
+    attachmentId: number,
+    parents: Array<{
+      parentOrder: number
+      sectionPath?: string
+      docType?: string
+      pageStart?: number
+      pageEnd?: number
+      text: string
+      tokenEstimate: number
+      charCount: number
+    }>,
+    children: Array<{
+      parentOrder: number
+      chunkOrder: number
+      sectionPath?: string
+      pageStart?: number
+      pageEnd?: number
+      rawText: string
+      embeddedText: string
+      tokenEstimate: number
+      entities?: string[]
+      keywords?: string[]
+      chapterOrder?: number
+      storyTime?: string
+      priorityRank?: number
+      kind?: string
+      metadata?: Record<string, unknown>
+    }>
+  ): Promise<number[]> {
     await this.initialize()
     const now = Date.now()
-    await this.db!.run(
-      `UPDATE session_attachments 
-       SET status = 'ready', total_chunks = ?, embedded_chunks = ?, embedding_model = ?, embedding_dimension = ?, completed_at = ?, error = NULL
-       WHERE id = ?;`,
-      [meta.totalChunks, meta.totalChunks, meta.model ?? '', meta.dimension ?? 0, now, id]
-    )
-  }
 
-  async markFailed(id: number, error: string): Promise<void> {
-    await this.initialize()
-    await this.db!.run("UPDATE session_attachments SET status = 'failed', error = ? WHERE id = ?;", [error, id])
-  }
+    // Clean previous parent/chunk/vector records for this attachment
+    await this.database.executeSet([
+      { statement: 'DELETE FROM session_attachment_vector WHERE attachment_id = ?', values: [attachmentId] },
+      { statement: 'DELETE FROM session_attachment_chunk WHERE attachment_id = ?', values: [attachmentId] },
+      { statement: 'DELETE FROM session_attachment_parent WHERE attachment_id = ?', values: [attachmentId] },
+    ])
 
-  async retryAttachment(id: number): Promise<void> {
-    await this.initialize()
-    await this.db!.run("UPDATE session_attachments SET status = 'pending', error = NULL WHERE id = ?;", [id])
-  }
+    const useBatchExecuteSet = parents.length > 50 || children.length > 100
+    const parentIdByOrder = new Map<number, number>()
 
-  async rebindAttachment(params: { attachmentId: number; sessionId: string; messageId: string }): Promise<void> {
-    await this.initialize()
-    await this.db!.run(
-      'UPDATE session_attachments SET session_id = ?, message_id = ? WHERE id = ?;',
-      [params.sessionId, params.messageId, params.attachmentId]
-    )
-  }
+    if (useBatchExecuteSet) {
+      const BATCH = 400
+      for (let i = 0; i < parents.length; i += BATCH) {
+        const slice = parents.slice(i, i + BATCH)
+        const set: capSQLiteSet[] = slice.map((p) => ({
+          statement: `INSERT INTO session_attachment_parent (
+            attachment_id, parent_order, section_path, doc_type,
+            page_start, page_end, text, token_estimate, char_count, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          values: [
+            attachmentId,
+            p.parentOrder,
+            p.sectionPath ?? null,
+            p.docType ?? null,
+            p.pageStart ?? null,
+            p.pageEnd ?? null,
+            p.text,
+            p.tokenEstimate,
+            p.charCount,
+            now,
+          ],
+        }))
+        await this.database.executeSet(set)
+      }
+      const parentRows = await this.database.query(
+        'SELECT id, parent_order FROM session_attachment_parent WHERE attachment_id = ? ORDER BY parent_order ASC',
+        [attachmentId]
+      )
+      for (const r of parentRows.values ?? []) {
+        parentIdByOrder.set(Number(r.parent_order), Number(r.id))
+      }
 
-  async deleteAttachment(attachmentId: number): Promise<void> {
-    await this.initialize()
-    await this.db!.run('DELETE FROM session_attachments WHERE id = ?;', [attachmentId])
-    await this.db!.run('DELETE FROM session_attachment_parents WHERE attachment_id = ?;', [attachmentId])
-    await this.db!.run('DELETE FROM session_attachment_chunks WHERE attachment_id = ?;', [attachmentId])
-    await this.db!.run('DELETE FROM session_attachment_vectors WHERE attachment_id = ?;', [attachmentId])
-  }
-
-  async deleteMessageAttachments(messageId: string): Promise<number[]> {
-    await this.initialize()
-    const res = await this.db!.query('SELECT id FROM session_attachments WHERE message_id = ?;', [messageId])
-    const ids: number[] = (res.values ?? []).map((r: any) => Number(r.id))
-    for (const id of ids) {
-      await this.deleteAttachment(id)
+      for (let i = 0; i < children.length; i += BATCH) {
+        const slice = children.slice(i, i + BATCH)
+        const set: capSQLiteSet[] = slice.map((c) => {
+          const parentId = parentIdByOrder.get(c.parentOrder) ?? 0
+          const entitiesJson = c.entities?.length ? JSON.stringify(c.entities) : null
+          const keywordsJson = c.keywords?.length ? JSON.stringify(c.keywords) : null
+          const metadataJson = c.metadata ? JSON.stringify(c.metadata) : null
+          return {
+            statement: `INSERT INTO session_attachment_chunk (
+              attachment_id, parent_id, chunk_order, section_path,
+              page_start, page_end, raw_text, embedded_text, token_estimate,
+              entities, keywords, chapter_order, story_time, priority_rank, kind, metadata, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            values: [
+              attachmentId,
+              parentId,
+              c.chunkOrder,
+              c.sectionPath ?? null,
+              c.pageStart ?? null,
+              c.pageEnd ?? null,
+              c.rawText,
+              c.embeddedText,
+              c.tokenEstimate,
+              entitiesJson,
+              keywordsJson,
+              c.chapterOrder ?? null,
+              c.storyTime ?? null,
+              c.priorityRank ?? 2,
+              c.kind ?? null,
+              metadataJson,
+              now,
+            ],
+          }
+        })
+        await this.database.executeSet(set)
+      }
+      const chunkRows = await this.database.query(
+        'SELECT id FROM session_attachment_chunk WHERE attachment_id = ? ORDER BY chunk_order ASC',
+        [attachmentId]
+      )
+      return (chunkRows.values ?? []).map((r) => Number(r.id))
     }
-    return ids
-  }
 
-  async deleteSessionAttachments(sessionId: string): Promise<number[]> {
-    await this.initialize()
-    const res = await this.db!.query('SELECT id FROM session_attachments WHERE session_id = ?;', [sessionId])
-    const ids: number[] = (res.values ?? []).map((r: any) => Number(r.id))
-    for (const id of ids) {
-      await this.deleteAttachment(id)
-    }
-    return ids
-  }
-
-  async cleanupOrphans(params: { sessionIds: string[]; messageIds: string[] }): Promise<number[]> {
-    await this.initialize()
-    const sessionPlaceholders = params.sessionIds.length > 0 ? params.sessionIds.map(() => '?').join(',') : "''"
-    const messagePlaceholders = params.messageIds.length > 0 ? params.messageIds.map(() => '?').join(',') : "''"
-
-    const res = await this.db!.query(
-      `SELECT id FROM session_attachments WHERE session_id NOT IN (${sessionPlaceholders}) OR message_id NOT IN (${messagePlaceholders});`,
-      [...params.sessionIds, ...params.messageIds]
-    )
-    const orphanIds: number[] = (res.values ?? []).map((r: any) => Number(r.id))
-    for (const id of orphanIds) {
-      await this.deleteAttachment(id)
-    }
-    return orphanIds
-  }
-
-  async clearAll(): Promise<number> {
-    await this.initialize()
-    const countRes = await this.db!.query('SELECT COUNT(*) as count FROM session_attachments;')
-    const count = Number(countRes.values?.[0]?.count ?? 0)
-    await this.db!.run('DELETE FROM session_attachments;')
-    await this.db!.run('DELETE FROM session_attachment_parents;')
-    await this.db!.run('DELETE FROM session_attachment_chunks;')
-    await this.db!.run('DELETE FROM session_attachment_vectors;')
-    return count
-  }
-
-  async runMaintenance(params: SessionAttachmentRagMaintenanceScope): Promise<SessionAttachmentRagMaintenanceResult> {
-    await this.initialize()
-    const interruptedFailedCount = await this.cleanupInterruptedIndexingAttachments()
-    const orphanDeletedIds = await this.cleanupOrphans({
-      sessionIds: params.sessionIds ?? [],
-      messageIds: params.messageIds ?? [],
-    })
-    return {
-      interruptedFailedCount,
-      canceledPurgedCount: 0,
-      orphanDeletedIds,
-    }
-  }
-
-  async getDebugSnapshot(): Promise<SessionAttachmentRagDebugSnapshot> {
-    await this.initialize()
-    const attCount = await this.db!.query('SELECT COUNT(*) as count FROM session_attachments;')
-    const chunkCount = await this.db!.query('SELECT COUNT(*) as count FROM session_attachment_chunks;')
-    const vectorCount = await this.db!.query('SELECT COUNT(*) as count FROM session_attachment_vectors;')
-    return {
-      dbPath: DB_NAME,
-      vectorDbPath: DB_NAME,
-      attachmentCount: Number(attCount.values?.[0]?.count ?? 0),
-      indexCount: Number(vectorCount.values?.[0]?.count ?? 0),
-      databaseSizeBytes: 0,
-      vectorDatabaseSizeBytes: 0,
-      chunkCount: Number(chunkCount.values?.[0]?.count ?? 0),
-    }
-  }
-
-  async insertParentsAndChunks(
-    attachmentId: number,
-    parents: MobileParentBlock[],
-    children: MobileChildChunk[]
-  ): Promise<{ parentMap: Map<number, number>; createdChunks: { id: number; chunkOrder: number; text: string }[] }> {
-    await this.initialize()
-    const parentMap = new Map<number, number>()
-
+    // Insert parents individually to get their generated IDs (small attachments & unit tests)
     for (const p of parents) {
-      const res = await this.db!.run(
-        `INSERT INTO session_attachment_parents (attachment_id, parent_order, section_path, text, token_estimate, char_count)
-         VALUES (?, ?, ?, ?, ?, ?);`,
-        [attachmentId, p.parentOrder, p.sectionPath ?? '', p.text, p.tokenEstimate, p.charCount]
+      const res = await this.database.run(
+        `INSERT INTO session_attachment_parent (
+          attachment_id, parent_order, section_path, doc_type,
+          page_start, page_end, text, token_estimate, char_count, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          attachmentId,
+          p.parentOrder,
+          p.sectionPath ?? null,
+          p.docType ?? null,
+          p.pageStart ?? null,
+          p.pageEnd ?? null,
+          p.text,
+          p.tokenEstimate,
+          p.charCount,
+          now,
+        ]
       )
-      const insertedParentId = Number(res.changes?.lastId ?? 1)
-      parentMap.set(p.parentOrder, insertedParentId)
+      const parentId = res.changes?.lastId ?? (await this.database.query('SELECT last_insert_rowid() as id')).values?.[0]?.id
+      parentIdByOrder.set(p.parentOrder, Number(parentId))
     }
 
-    const createdChunks: { id: number; chunkOrder: number; text: string }[] = []
-
+    // Insert children chunks with hybrid metadata
+    const chunkIds: number[] = []
     for (const c of children) {
-      const parentId = parentMap.get(c.parentOrder) ?? 0
-      const res = await this.db!.run(
-        `INSERT INTO session_attachment_chunks (attachment_id, parent_id, chunk_order, raw_text, token_estimate)
-         VALUES (?, ?, ?, ?, ?);`,
-        [attachmentId, parentId, c.chunkOrder, c.rawText, c.tokenEstimate]
+      const parentId = parentIdByOrder.get(c.parentOrder) ?? 0
+      const entitiesJson = c.entities?.length ? JSON.stringify(c.entities) : null
+      const keywordsJson = c.keywords?.length ? JSON.stringify(c.keywords) : null
+      const metadataJson = c.metadata ? JSON.stringify(c.metadata) : null
+
+      const res = await this.database.run(
+        `INSERT INTO session_attachment_chunk (
+          attachment_id, parent_id, chunk_order, section_path,
+          page_start, page_end, raw_text, embedded_text, token_estimate,
+          entities, keywords, chapter_order, story_time, priority_rank, kind, metadata, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          attachmentId,
+          parentId,
+          c.chunkOrder,
+          c.sectionPath ?? null,
+          c.pageStart ?? null,
+          c.pageEnd ?? null,
+          c.rawText,
+          c.embeddedText,
+          c.tokenEstimate,
+          entitiesJson,
+          keywordsJson,
+          c.chapterOrder ?? null,
+          c.storyTime ?? null,
+          c.priorityRank ?? 2,
+          c.kind ?? null,
+          metadataJson,
+          now,
+        ]
       )
-      const chunkId = Number(res.changes?.lastId ?? 1)
-      createdChunks.push({ id: chunkId, chunkOrder: c.chunkOrder, text: c.rawText })
+      const chunkId = res.changes?.lastId ?? (await this.database.query('SELECT last_insert_rowid() as id')).values?.[0]?.id
+      chunkIds.push(Number(chunkId))
     }
 
-    return { parentMap, createdChunks }
+    return chunkIds
   }
 
-  async getChunksByIds(
+  public async searchKeywordChunks(
+    attachmentIds: number[],
+    options: {
+      keywords?: string[]
+      entities?: string[]
+      maxChapter?: number
+      limit?: number
+    }
+  ): Promise<Array<SessionAttachmentChunkRecord & { filename: string; matchScore: number }>> {
+    if (attachmentIds.length === 0) return []
+    await this.initialize()
+
+    const genericHighFreq = new Set([
+      '方源', '古月方源', '蛊师', '蛊虫', '仙蛊', '杀招', '仙道杀招', '仙道',
+      '仙尊', '魔尊', '尊者', '名号', '底蕴', '流派', '境界', '功法', '能力',
+    ])
+    const entitySet = new Set((options.entities ?? []).map((t) => t.trim().toLowerCase()).filter(Boolean))
+    const rawTerms = [
+      ...(options.entities ?? []),
+      ...(options.keywords ?? []),
+    ]
+      .map((t) => t.trim().toLowerCase())
+      .filter((t) => t.length > 0)
+
+    if (rawTerms.length === 0) return []
+
+    // Order specific entities/keywords ahead of ultra-frequent protagonist/generic terms,
+    // and drop redundant 2-char substrings that are already covered by a 3+ char specific term
+    const rawSpecific = [...new Set(rawTerms.filter((t) => !genericHighFreq.has(t)))]
+    const longSpecific = rawSpecific.filter((t) => t.length >= 3)
+    const filteredSpecific = rawSpecific.filter(
+      (t) => t.length >= 3 || !longSpecific.some((longTerm) => longTerm !== t && longTerm.includes(t))
+    )
+    const fallbackGenericTerms = [...new Set(rawTerms.filter((t) => genericHighFreq.has(t)))]
+    const uniqueTerms = [...filteredSpecific, ...fallbackGenericTerms].slice(0, 14)
+    const hasSpecificTerm = filteredSpecific.length > 0
+
+    const placeholders = attachmentIds.map(() => '?').join(',')
+
+    const scoreExpressions = uniqueTerms.map((term) => {
+      if (hasSpecificTerm && genericHighFreq.has(term)) {
+        return `(CASE WHEN LOWER(c.section_path) LIKE ? OR LOWER(c.entities) LIKE ? THEN 2 WHEN LOWER(c.keywords) LIKE ? THEN 1 WHEN LOWER(c.raw_text) LIKE ? THEN 1 ELSE 0 END)`
+      }
+      if (entitySet.has(term) || term.length >= 4) {
+        const w = 6
+        return `(CASE WHEN LOWER(c.section_path) LIKE ? OR LOWER(c.entities) LIKE ? THEN ${w * 4} WHEN LOWER(c.keywords) LIKE ? THEN ${w * 3} WHEN LOWER(c.raw_text) LIKE ? THEN ${w * 3} ELSE 0 END)`
+      }
+      if (term.length === 3) {
+        const w = 5
+        return `(CASE WHEN LOWER(c.section_path) LIKE ? OR LOWER(c.entities) LIKE ? THEN ${w * 4} WHEN LOWER(c.keywords) LIKE ? THEN ${w * 3} WHEN LOWER(c.raw_text) LIKE ? THEN ${w * 3} ELSE 0 END)`
+      }
+      const w = 2
+      return `(CASE WHEN LOWER(c.section_path) LIKE ? OR LOWER(c.entities) LIKE ? THEN ${w * 3} WHEN LOWER(c.keywords) LIKE ? THEN ${w * 2} WHEN LOWER(c.raw_text) LIKE ? THEN ${w} ELSE 0 END)`
+    })
+
+    const termConditions = uniqueTerms
+      .map(
+        () =>
+          '(LOWER(c.raw_text) LIKE ? OR LOWER(c.section_path) LIKE ? OR LOWER(c.entities) LIKE ? OR LOWER(c.keywords) LIKE ?)'
+      )
+      .join(' OR ')
+
+    let sql = `
+      SELECT c.*, a.filename, (${scoreExpressions.join(' + ')}) AS sql_match_score
+      FROM session_attachment_chunk c
+      JOIN session_attachment a ON c.attachment_id = a.id
+      WHERE c.attachment_id IN (${placeholders})
+        AND (${termConditions})
+    `
+    const params: unknown[] = []
+    for (const term of uniqueTerms) {
+      const pattern = `%${term}%`
+      params.push(pattern, pattern, pattern, pattern)
+    }
+    params.push(...attachmentIds)
+    for (const term of uniqueTerms) {
+      const pattern = `%${term}%`
+      params.push(pattern, pattern, pattern, pattern)
+    }
+
+    if (options.maxChapter !== undefined && Number.isFinite(options.maxChapter)) {
+      sql += ' AND (c.chapter_order IS NULL OR c.chapter_order <= ?)'
+      params.push(options.maxChapter)
+    }
+
+    const limit = Math.max(1, Math.min(options.limit ?? 50, 100))
+    sql += ` ORDER BY CASE WHEN c.priority_rank = 0 THEN 0 ELSE 1 END DESC, sql_match_score DESC, c.priority_rank DESC, c.id ASC LIMIT ${limit}`
+
+    const res = await this.database.query(sql, params)
+    const rows = res.values ?? []
+
+    const getTermWeight = (term: string): number => {
+      if (hasSpecificTerm && genericHighFreq.has(term)) return 0.35
+      if (entitySet.has(term) || term.length >= 4) return 4.0
+      return term.length === 3 ? 3.0 : 1.5
+    }
+
+    const totalPossibleWeight = uniqueTerms.reduce((acc, term) => acc + getTermWeight(term), 0)
+
+    const scored = rows.map((row) => {
+      const chunk = mapRowToChunkRecord(row)
+      const sectionAndEntities = `${chunk.sectionPath || ''} ${(chunk.entities || []).join(' ')}`.toLowerCase()
+      const keywordsText = (chunk.keywords || []).join(' ').toLowerCase()
+      const rawTextLower = chunk.rawText.toLowerCase()
+
+      let weightedHits = 0
+      let specificEntityHit = false
+      for (const term of uniqueTerms) {
+        const w = getTermWeight(term)
+        const isSpecific = !hasSpecificTerm || !genericHighFreq.has(term)
+        if (sectionAndEntities.includes(term)) {
+          weightedHits += w
+          if (term.length >= 2 && isSpecific) specificEntityHit = true
+        } else if (keywordsText.includes(term)) {
+          weightedHits += w * 0.9
+          if (term.length >= 2 && isSpecific) specificEntityHit = true
+        } else if (rawTextLower.includes(term)) {
+          weightedHits += w * 0.8
+          if ((entitySet.has(term) || term.length >= 3) && isSpecific) specificEntityHit = true
+        }
+      }
+      const rawRatio = totalPossibleWeight > 0 ? weightedHits / totalPossibleWeight : 0
+      const matchScore = Math.min(1.0, specificEntityHit ? Math.max(0.48, rawRatio * 1.35) : rawRatio)
+      return {
+        ...chunk,
+        filename: String(row.filename),
+        matchScore,
+      }
+    })
+
+    return scored
+      .sort((a, b) => b.matchScore - a.matchScore || (b.priorityRank ?? 2) - (a.priorityRank ?? 2) || a.id - b.id)
+      .slice(0, limit)
+  }
+
+  public async listChunks(attachmentId: number): Promise<SessionAttachmentChunkRecord[]> {
+    await this.initialize()
+    const result = await this.database.query(
+      'SELECT * FROM session_attachment_chunk WHERE attachment_id = ? ORDER BY chunk_order ASC',
+      [attachmentId]
+    )
+    return (result.values ?? []).map(mapRowToChunkRecord)
+  }
+
+  public async listChunksWithDetails(
     chunkIds: number[]
-  ): Promise<{ id: number; attachmentId: number; parentId: number; chunkOrder: number; rawText: string }[]> {
+  ): Promise<Array<SessionAttachmentChunkRecord & { filename: string }>> {
     if (chunkIds.length === 0) return []
     await this.initialize()
     const placeholders = chunkIds.map(() => '?').join(',')
-    const res = await this.db!.query(
-      `SELECT id, attachment_id, parent_id, chunk_order, raw_text FROM session_attachment_chunks WHERE id IN (${placeholders});`,
+    const result = await this.database.query(
+      `SELECT c.*, a.filename
+       FROM session_attachment_chunk c
+       JOIN session_attachment a ON c.attachment_id = a.id
+       WHERE c.id IN (${placeholders})`,
       chunkIds
     )
-    return (res.values ?? []).map((r: any) => ({
-      id: Number(r.id),
-      attachmentId: Number(r.attachment_id),
-      parentId: Number(r.parent_id),
-      chunkOrder: Number(r.chunk_order),
-      rawText: r.raw_text,
+    return (result.values ?? []).map((row) => ({
+      ...mapRowToChunkRecord(row),
+      filename: String(row.filename),
     }))
   }
 
-  async readParents(parentIds: number[], allowedAttachmentIds: number[]): Promise<SessionAttachmentParent[]> {
+  public async readParents(
+    parentIds: number[],
+    allowedAttachmentIds: number[]
+  ): Promise<SessionAttachmentParent[]> {
     if (parentIds.length === 0 || allowedAttachmentIds.length === 0) return []
     await this.initialize()
-    const pPlaceholders = parentIds.map(() => '?').join(',')
-    const aPlaceholders = allowedAttachmentIds.map(() => '?').join(',')
-
-    const res = await this.db!.query(
-      `SELECT p.id, p.attachment_id, p.parent_order, p.section_path, p.text, p.token_estimate, p.char_count, a.filename
-       FROM session_attachment_parents p
-       JOIN session_attachments a ON p.attachment_id = a.id
-       WHERE p.id IN (${pPlaceholders}) AND p.attachment_id IN (${aPlaceholders});`,
+    const parentPlaceholders = parentIds.map(() => '?').join(',')
+    const attachmentPlaceholders = allowedAttachmentIds.map(() => '?').join(',')
+    const result = await this.database.query(
+      `SELECT p.*, a.filename
+       FROM session_attachment_parent p
+       JOIN session_attachment a ON p.attachment_id = a.id
+       WHERE p.id IN (${parentPlaceholders}) AND p.attachment_id IN (${attachmentPlaceholders})`,
       [...parentIds, ...allowedAttachmentIds]
     )
-
-    return (res.values ?? []).map((r: any) => ({
-      id: Number(r.id),
-      attachmentId: Number(r.attachment_id),
-      filename: r.filename,
-      sectionPath: r.section_path || undefined,
-      text: r.text,
-      tokenEstimate: Number(r.token_estimate ?? 0),
-      charCount: Number(r.char_count ?? 0),
+    return (result.values ?? []).map((row) => ({
+      ...mapRowToParentRecord(row),
+      filename: String(row.filename),
     }))
+  }
+
+  public async clearAll(): Promise<number> {
+    await this.initialize()
+    const countRes = await this.database.query('SELECT count(*) as cnt FROM session_attachment')
+    const count = Number(countRes.values?.[0]?.cnt ?? 0)
+    await this.database.executeSet([
+      { statement: 'DELETE FROM session_attachment_vector', values: [] },
+      { statement: 'DELETE FROM session_attachment_chunk', values: [] },
+      { statement: 'DELETE FROM session_attachment_parent', values: [] },
+      { statement: 'DELETE FROM session_attachment', values: [] },
+    ])
+    return count
+  }
+
+  public async cleanupOrphans(
+    sessionIds: string[],
+    messageIds: string[],
+    attachmentReferences: Array<{ attachmentId: number; sessionId: string; messageId: string }> = []
+  ): Promise<number[]> {
+    await this.initialize()
+    const allAttachmentsResult = await this.database.query(
+      'SELECT id, session_id, message_id FROM session_attachment'
+    )
+    const records = (allAttachmentsResult.values ?? []).map((r) => ({
+      id: Number(r.id),
+      sessionId: String(r.session_id),
+      messageId: String(r.message_id),
+    }))
+
+    const cleanupPlan = planOrphanCleanup(records, {
+      sessionIds,
+      messageIds,
+      attachmentReferences,
+    })
+
+    for (const repair of cleanupPlan.repairs) {
+      await this.rebindAttachment(repair.attachmentId, repair.sessionId, repair.messageId)
+    }
+
+    for (const id of cleanupPlan.deleteIds) {
+      await this.deleteAttachment(id)
+    }
+
+    return cleanupPlan.deleteIds
+  }
+
+  public async getDebugSnapshot(): Promise<SessionAttachmentRagDebugSnapshot> {
+    await this.initialize()
+    const [attachmentCountRes, parentCountRes, chunkCountRes, statusCountsRes, recentAttachmentsRes] =
+      await Promise.all([
+        this.database.query('SELECT count(*) as cnt FROM session_attachment'),
+        this.database.query('SELECT count(*) as cnt FROM session_attachment_parent'),
+        this.database.query('SELECT count(*) as cnt FROM session_attachment_chunk'),
+        this.database.query(
+          `SELECT
+            sum(case when status = 'pending' then 1 else 0 end) as pending,
+            sum(case when status = 'indexing' then 1 else 0 end) as indexing,
+            sum(case when status = 'ready' then 1 else 0 end) as ready,
+            sum(case when status = 'failed' then 1 else 0 end) as failed
+           FROM session_attachment`
+        ),
+        this.database.query(
+          'SELECT * FROM session_attachment ORDER BY id DESC LIMIT 10'
+        ),
+      ])
+
+    const statusRow = statusCountsRes.values?.[0] ?? {}
+    const recent = (recentAttachmentsRes.values ?? [])
+      .map(mapRowToAttachmentRecord)
+      .map((a) => ({
+        ...a,
+        chunkCount: a.chunkCount ?? 0,
+        createdAt: a.createdAt ? Number(a.createdAt) : undefined,
+        processingStartedAt: a.processingStartedAt ? Number(a.processingStartedAt) : undefined,
+        completedAt: a.completedAt ? Number(a.completedAt) : undefined,
+        status: (a.status === 'canceled' ? 'failed' : a.status) as 'pending' | 'indexing' | 'ready' | 'failed',
+      }))
+
+    return {
+      dbPath: DB_NAME,
+      dbSizeBytes: 0,
+      vectorDbPath: DB_NAME,
+      vectorDbSizeBytes: 0,
+      attachmentCount: Number(attachmentCountRes.values?.[0]?.cnt ?? 0),
+      parentCount: Number(parentCountRes.values?.[0]?.cnt ?? 0),
+      chunkCount: Number(chunkCountRes.values?.[0]?.cnt ?? 0),
+      vectorIndexNames: [],
+      statusCounts: {
+        pending: Number(statusRow.pending ?? 0),
+        indexing: Number(statusRow.indexing ?? 0),
+        ready: Number(statusRow.ready ?? 0),
+        failed: Number(statusRow.failed ?? 0),
+      },
+      recentAttachments: recent,
+    }
   }
 }
