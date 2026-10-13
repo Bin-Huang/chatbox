@@ -182,6 +182,13 @@ export default class MenuBuilder {
       label: 'View',
       submenu: [
         {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click: () => {
+            this.mainWindow.webContents.reload()
+          },
+        },
+        {
           label: 'Toggle Full Screen',
           accelerator: 'Ctrl+Command+F',
           click: () => {
@@ -296,6 +303,13 @@ export default class MenuBuilder {
                 // },
               ]
             : [
+                {
+                  label: '&Reload',
+                  accelerator: 'Ctrl+R',
+                  click: () => {
+                    this.mainWindow.webContents.reload()
+                  },
+                },
                 {
                   label: 'Toggle &Full Screen',
                   accelerator: 'F11',

@@ -29,9 +29,26 @@ export interface GenerationCancellationDependencies {
 
 const sessionStopTasks = new Map<string, Promise<void>>()
 
+// A stop that never settles (a tool call wedged on a leaked child, or a
+// persistence write that never returns) must not queue every later Stop/Retry
+// behind it forever (issue #3959). Cap how long a previous attempt may hold
+// the per-session chain.
+const SESSION_STOP_CHAIN_TIMEOUT_MS = 15_000
+
+function waitForPreviousStop(previous: Promise<void>): Promise<void> {
+  const settled = previous.catch(() => {})
+  return Promise.race([
+    settled,
+    new Promise<void>((resolve) => {
+      const handle = setTimeout(resolve, SESSION_STOP_CHAIN_TIMEOUT_MS)
+      ;(handle as unknown as { unref?: () => void }).unref?.()
+    }),
+  ])
+}
+
 function serializeSessionStop(sessionId: string, operation: () => Promise<void>): Promise<void> {
   const previous = sessionStopTasks.get(sessionId)
-  const task = previous ? previous.catch(() => {}).then(operation) : operation()
+  const task = previous ? waitForPreviousStop(previous).then(operation) : operation()
   const trackedTask = task.finally(() => {
     if (sessionStopTasks.get(sessionId) === trackedTask) sessionStopTasks.delete(sessionId)
   })
