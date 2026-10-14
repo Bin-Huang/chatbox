@@ -157,7 +157,7 @@ async function buildToolsForPausedToolCall(session: Session, settings: SessionSe
     sessionId: session.id,
     webBrowsing,
     knowledgeBase,
-    messages: promptMessages,
+    messages: messagesBeforeTarget,
     agentMode: effectiveAgentMode,
     sessionSettings: settings,
     codeExecution,
