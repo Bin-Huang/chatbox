@@ -93,6 +93,7 @@ const BUILTIN_API_HOST_PROVIDERS = new Set<string>([
   ModelProviderEnum.XiaomiMiMo,
   ModelProviderEnum.LongCat,
   ModelProviderEnum.ZhipuGLMCodingPlan,
+  ModelProviderEnum.Ionet,
 ])
 
 const OAUTH_ONLY_PROVIDERS = new Set<string>([ModelProviderEnum.QwenPortal])
@@ -816,7 +817,9 @@ function ProviderSettings({ providerId }: { providerId: string }) {
         {/* Network compatibility for built-in providers */}
         {(baseInfo.id === ModelProviderEnum.Ollama ||
           (platform.type === 'web' &&
-            (baseInfo.id === ModelProviderEnum.OpenCodeGo || baseInfo.id === ModelProviderEnum.OpenCodeZen))) && (
+            (baseInfo.id === ModelProviderEnum.OpenCodeGo ||
+              baseInfo.id === ModelProviderEnum.OpenCodeZen ||
+              baseInfo.id === ModelProviderEnum.Ionet))) && (
           <Switch
             label={t('Improve Network Compatibility')}
             description={t('Only enable this when necessary, as it may reduce connection speed.')}
