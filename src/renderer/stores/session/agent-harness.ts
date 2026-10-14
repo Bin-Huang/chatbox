@@ -145,7 +145,7 @@ function getToolCallPreserveMessageIds(
 }
 
 export async function refreshSessionAttachmentStatuses(messages: Message[]): Promise<Message[]> {
-  if (platform.type !== 'desktop') {
+  if (platform.type !== 'desktop' && platform.type !== 'mobile') {
     return messages
   }
 
@@ -369,7 +369,7 @@ export async function prepareAgentGenerationHarness(
     sessionId: session.id,
     webBrowsing,
     knowledgeBase,
-    messages: promptMsgs,
+    messages: messagesForPrompt,
     agentMode: effectiveAgentMode,
     sessionSettings: settings,
     codeExecution: codeExecutionOption,

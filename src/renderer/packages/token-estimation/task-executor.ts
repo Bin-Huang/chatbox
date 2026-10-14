@@ -162,6 +162,21 @@ async function executeAttachmentTask(task: ComputationTask): Promise<TaskResult>
     return { success: false, error: 'attachment_not_found', silent: true }
   }
 
+  if ('ragMode' in attachment && attachment.ragMode === 'session-retrieval') {
+    return {
+      success: true,
+      result: {
+        type: 'attachment',
+        sessionId,
+        messageId,
+        attachmentId,
+        tokenizerType,
+        contentMode,
+        tokenCount: 0,
+      },
+    }
+  }
+
   const storageKey = attachment.storageKey
   if (!storageKey) {
     log.debug('No storage key', { taskId: task.id, attachmentId })

@@ -39,6 +39,7 @@ import {
   getContextTokensCacheKey,
   getLatestCompactionBoundaryId,
 } from './context-tokens'
+import { sumCachedTokensFromMessages } from '../token'
 
 function createMessage(id: string, role: (typeof MessageRoleEnum)[keyof typeof MessageRoleEnum], text = ''): Message {
   return {
@@ -265,3 +266,31 @@ describe('getLatestCompactionBoundaryId', () => {
     expect(result).toBe('msg-1')
   })
 })
+
+describe('sumCachedTokensFromMessages with RAG attachments', () => {
+  it('ignores session-retrieval files even if tokenCountMap contains values', () => {
+    const messages: Message[] = [
+      {
+        ...createMessage('msg-1', 'user', 'Hello'),
+        files: [
+          {
+            id: 'file-rag',
+            name: 'gur-kb.json',
+            size: 18000000,
+            ragMode: 'session-retrieval',
+            storageKey: 'key-1',
+            tokenCountMap: {
+              default: 4500000,
+              deepseek: 4500000,
+            },
+          },
+        ],
+      },
+    ]
+
+    const tokens = sumCachedTokensFromMessages(messages)
+    // Should NOT include the 4.5M tokens from the RAG attachment
+    expect(tokens).toBeLessThan(100)
+  })
+})
+

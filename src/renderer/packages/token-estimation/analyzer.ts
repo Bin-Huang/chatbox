@@ -366,6 +366,9 @@ function analyzeMessageAttachments(
   }
 
   for (const { attachment, type } of allAttachments) {
+    // Skip RAG session retrieval attachments (they are indexed into vector/sqlite, not inlined in full)
+    if ('ragMode' in attachment && attachment.ragMode === 'session-retrieval') continue
+
     // Skip attachments without storage key (not yet uploaded/processed)
     if (!attachment.storageKey) continue
 

@@ -99,8 +99,30 @@ function applyCompaction(messages: Message[], compactionPoints: CompactionPoint[
   }
 
   const messagesAfterBoundary = messages.slice(boundaryIndex + 1).filter((m) => !m.isSummary)
+  const messagesBeforeBoundary = messages.slice(0, boundaryIndex + 1)
+  const ragFiles = messagesBeforeBoundary
+    .flatMap((m) => m.files ?? [])
+    .filter((f) => f.ragMode === 'session-retrieval')
 
-  let contextMessages: Message[] = [summaryMessage, ...messagesAfterBoundary]
+  const effectiveSummaryMessage: Message =
+    ragFiles.length > 0
+      ? {
+          ...summaryMessage,
+          files: [
+            ...(summaryMessage.files ?? []),
+            ...ragFiles.filter(
+              (rf) =>
+                !(summaryMessage.files ?? []).some(
+                  (f) =>
+                    (f.sessionAttachmentId && f.sessionAttachmentId === rf.sessionAttachmentId) ||
+                    (f.storageKey && f.storageKey === rf.storageKey)
+                )
+            ),
+          ],
+        }
+      : summaryMessage
+
+  let contextMessages: Message[] = [effectiveSummaryMessage, ...messagesAfterBoundary]
 
   const systemMessage = messages.find((m) => m.role === 'system')
   if (systemMessage && !contextMessages.some((m) => m.id === systemMessage.id)) {

@@ -183,6 +183,7 @@ export function sumCachedTokensFromMessages(messages: Message[], model?: TokenMo
       // Read cached file tokens
       if (msg.files?.length) {
         for (const file of msg.files) {
+          if (file.ragMode === 'session-retrieval') continue
           total += file.tokenCountMap?.[cacheKey] ?? 0
         }
       }

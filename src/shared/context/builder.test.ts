@@ -378,6 +378,50 @@ describe('buildContext', () => {
       expect(result[0].id).toBe('sys')
     })
 
+    it('should inherit session-retrieval RAG attachments onto summary message across compaction', async () => {
+      const compactionPoints: CompactionPoint[] = [
+        { boundaryMessageId: '2', summaryMessageId: 'summary', createdAt: Date.now() },
+      ]
+
+      const messages: Message[] = [
+        createMessage({
+          id: '1',
+          role: 'user',
+          files: [
+            {
+              id: 'file-1',
+              name: 'gur-kb.json',
+              size: 1000,
+              storageKey: 'key-1',
+              ragMode: 'session-retrieval',
+              sessionAttachmentId: 101,
+            },
+          ],
+        }),
+        createMessage({ id: '2', role: 'assistant' }),
+        createMessage({ id: 'summary', role: 'assistant', isSummary: true }),
+        createMessage({ id: '3', role: 'user' }),
+      ]
+
+      const result = await buildContext(messages, {
+        attachmentResolver: createMockResolver(),
+        toolCleanupMode: 'none',
+        compactionPoints,
+      })
+
+      const summary = result.find((m) => m.id === 'summary')
+      expect(summary).toBeDefined()
+      expect(summary?.files).toEqual([
+        expect.objectContaining({
+          sessionAttachmentId: 101,
+          ragMode: 'session-retrieval',
+        }),
+      ])
+      // Also verify that the retrieval attachment XML block is injected
+      expect(summary?.contentParts[0]?.text).toContain('<RETRIEVAL_MODE>session_attachment_rag</RETRIEVAL_MODE>')
+      expect(summary?.contentParts[0]?.text).toContain('session-attachment:101')
+    })
+
     it('should ignore a compaction point whose summary is missing from the path', async () => {
       const compactionPoints: CompactionPoint[] = [
         { boundaryMessageId: '2', summaryMessageId: 'missing-summary', createdAt: Date.now() },
