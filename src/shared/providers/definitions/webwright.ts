@@ -9,7 +9,7 @@ export const webwrightProvider = defineProvider({
   name: 'WebWright',
   type: ModelProviderType.OpenAI,
   description:
-    'WebWright is an AI API platform serving the Wren R1 model through an OpenAI-compatible endpoint.',
+    'WebWright is an AI API platform serving the Wren R1 models through an OpenAI-compatible endpoint.',
   urls: {
     website: 'https://webwright.ai',
     apiKey: 'https://webwright.ai/account',
@@ -22,6 +22,11 @@ export const webwrightProvider = defineProvider({
       {
         modelId: 'wren-r1',
         nickname: 'Wren R1',
+        contextWindow: 200_000,
+      },
+      {
+        modelId: 'wren-r1-fast',
+        nickname: 'Wren R1 (Priority)',
         contextWindow: 200_000,
       },
     ],
