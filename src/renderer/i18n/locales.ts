@@ -16,9 +16,7 @@ export const languageNameMap: Record<Language, string> = {
   sv: 'Svenska', // Swedish 瑞典语
   'nb-NO': 'Norsk', // Norwegian 挪威语
   tr: 'Türkçe', // Turkish
-  'pt-BR': 'Português (Brasil)',
-  id: 'Bahasa Indonesia',
-  pl: 'Polski',
+  pl: 'Polski', // Polish
 }
 
 export const languages = Array.from(Object.keys(languageNameMap)) as Language[]

@@ -545,8 +545,6 @@ export const SettingsSchema = GlobalSessionSettingsSchema.extend({
     'sv',
     'nb-NO',
     'tr',
-    'pt-BR',
-    'id',
     'pl',
   ]),
   languageInited: z.boolean().optional(),
