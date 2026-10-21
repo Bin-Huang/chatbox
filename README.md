@@ -238,7 +238,7 @@ We welcome contributions from the community! Here's how you can help make Chatbo
 
 ### 🌍 Translations
 Help make Chatbox accessible to more people by contributing translations:
-- Translation files are located in the `src/locales` directory
+- Translation files are located in the `src/renderer/i18n/locales` directory
 - Follow the existing translation format
 - Submit a PR with your translation improvements
 

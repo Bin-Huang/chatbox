@@ -18,6 +18,7 @@ import ptPT from './locales/pt-PT/translation.json'
 import ru from './locales/ru/translation.json'
 import sv from './locales/sv/translation.json'
 import tr from './locales/tr/translation.json'
+import pl from './locales/pl/translation.json'
 import zhHans from './locales/zh-Hans/translation.json'
 import zhHant from './locales/zh-Hant/translation.json'
 
@@ -67,6 +68,9 @@ i18n.use(initReactI18next).init({
     },
     tr: {
       translation: tr,
+    },
+    pl: {
+      translation: pl,
     },
   },
   fallbackLng: 'en',
