@@ -43,6 +43,7 @@ export function cleanSettingsForBackup(settings: Settings, includeKeys: boolean)
       if (settings.extension.webSearch) {
         const webSearch = { ...settings.extension.webSearch }
         delete webSearch.tavilyApiKey
+        delete webSearch.contextfetchApiKey
         delete webSearch.bochaApiKey
         delete webSearch.queritApiKey
         extension.webSearch = webSearch

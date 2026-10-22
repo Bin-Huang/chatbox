@@ -79,6 +79,7 @@ export function createDefaultSettings(): Settings {
       webSearch: {
         provider: 'build-in',
         tavilyApiKey: '',
+        contextfetchApiKey: '',
         bochaApiKey: '',
         queritApiKey: '',
         queritMaxResults: 5,

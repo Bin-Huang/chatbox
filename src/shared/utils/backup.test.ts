@@ -33,6 +33,7 @@ function credentialSettings(): Settings {
       webSearch: {
         provider: 'tavily',
         tavilyApiKey: 'tavily-key',
+        contextfetchApiKey: 'contextfetch-key',
         bochaApiKey: 'bocha-key',
         queritApiKey: 'querit-key',
         queritMaxResults: 5,

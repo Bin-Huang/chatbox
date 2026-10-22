@@ -3,6 +3,7 @@ import type { WebSearchProviderValue } from './constants'
 type WebSearchConfiguration = {
   provider: WebSearchProviderValue
   tavilyApiKey?: string
+  contextfetchApiKey?: string
   bochaApiKey?: string
   queritApiKey?: string
   searxngBaseUrl?: string
@@ -11,6 +12,7 @@ type WebSearchConfiguration = {
 export type WebSearchConfigurationIssue =
   | 'chatbox-ai-sign-in'
   | 'tavily-api-key'
+  | 'contextfetch-api-key'
   | 'bocha-api-key'
   | 'querit-api-key'
   | 'searxng-instance'
@@ -24,6 +26,8 @@ export function getWebSearchConfigurationIssue(
       return licenseKey ? null : 'chatbox-ai-sign-in'
     case 'tavily':
       return configuration.tavilyApiKey ? null : 'tavily-api-key'
+    case 'contextfetch':
+      return configuration.contextfetchApiKey ? null : 'contextfetch-api-key'
     case 'bocha':
       return configuration.bochaApiKey ? null : 'bocha-api-key'
     case 'querit':

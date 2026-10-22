@@ -334,6 +334,12 @@ export class ChatboxAIAPIError extends BaseError {
       i18nKey:
         'You have selected BoCha as the search provider, but an API key has not been entered yet. Please <OpenExtensionSettingButton>click here to open Settings</OpenExtensionSettingButton> and enter your API key, or choose a different search provider.',
     },
+    contextfetch_api_key_required: {
+      name: 'contextfetch_api_key_required',
+      code: 20047,
+      i18nKey:
+        'You have selected ContextFetch as the search provider, but an API key has not been entered yet. Please <OpenExtensionSettingButton>click here to open Settings</OpenExtensionSettingButton> and enter your API key, or choose a different search provider.',
+    },
     searxng_base_url_required: {
       name: 'searxng_base_url_required',
       code: 20036,

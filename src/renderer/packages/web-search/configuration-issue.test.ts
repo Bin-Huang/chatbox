@@ -10,6 +10,7 @@ describe('getWebSearchConfigurationIssue', () => {
 
   it('reports missing third-party provider configuration', () => {
     expect(getWebSearchConfigurationIssue({ provider: 'tavily' })).toBe('tavily-api-key')
+    expect(getWebSearchConfigurationIssue({ provider: 'contextfetch' })).toBe('contextfetch-api-key')
     expect(getWebSearchConfigurationIssue({ provider: 'bocha' })).toBe('bocha-api-key')
     expect(getWebSearchConfigurationIssue({ provider: 'querit' })).toBe('querit-api-key')
     expect(getWebSearchConfigurationIssue({ provider: 'searxng', searxngBaseUrl: '  ' })).toBe('searxng-instance')
