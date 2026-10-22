@@ -14,6 +14,7 @@ import { BochaSearch } from '@/packages/web-search/bocha'
 import { WEB_SEARCH_PROVIDERS, type WebSearchProviderValue } from '@/packages/web-search/constants'
 import { QUERIT_SEARCH_URL } from '@/packages/web-search/querit'
 import { SearxngSearch } from '@/packages/web-search/searxng'
+import { CONTEXTFETCH_API_HOST, TavilySearch } from '@/packages/web-search/tavily'
 import platform from '@/platform'
 import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -93,6 +94,23 @@ export function RouteComponent() {
         setTavilyAvaliable(false)
       } finally {
         setCheckingTavily(false)
+      }
+    }
+  }
+
+  const [checkingContextfetch, setCheckingContextfetch] = useState(false)
+  const [contextfetchAvailable, setContextfetchAvailable] = useState<boolean>()
+  const checkContextfetch = async () => {
+    if (extension.webSearch.contextfetchApiKey) {
+      setCheckingContextfetch(true)
+      setContextfetchAvailable(undefined)
+      try {
+        await new TavilySearch(extension.webSearch.contextfetchApiKey, CONTEXTFETCH_API_HOST).search('Chatbox')
+        setContextfetchAvailable(true)
+      } catch (e) {
+        setContextfetchAvailable(false)
+      } finally {
+        setCheckingContextfetch(false)
       }
     }
   }
@@ -274,6 +292,62 @@ export function RouteComponent() {
             px={0}
             className="self-start"
             onClick={() => platform.openLink('https://app.tavily.com?utm_source=chatbox')}
+          >
+            {t('Get API Key')}
+          </Button>
+        </Stack>
+      )}
+      {/* ContextFetch API Key */}
+      {extension.webSearch.provider === 'contextfetch' && (
+        <Stack gap="xs">
+          <Text fw="600">{t('ContextFetch API Key')}</Text>
+          <Flex align="center" gap="xs">
+            <PasswordInput
+              flex={1}
+              maw={320}
+              value={extension.webSearch.contextfetchApiKey}
+              onChange={(e) => {
+                setContextfetchAvailable(undefined)
+                setSettings({
+                  extension: {
+                    ...extension,
+                    webSearch: {
+                      ...extension.webSearch,
+                      contextfetchApiKey: e.currentTarget.value,
+                    },
+                  },
+                })
+              }}
+              error={contextfetchAvailable === false}
+            />
+            <Button
+              color="blue"
+              variant="light"
+              onClick={checkContextfetch}
+              loading={checkingContextfetch}
+              disabled={!extension.webSearch.contextfetchApiKey?.trim()}
+            >
+              {t('Check')}
+            </Button>
+          </Flex>
+
+          {typeof contextfetchAvailable === 'boolean' ? (
+            contextfetchAvailable ? (
+              <Text size="xs" c="chatbox-success">
+                {t('Connection successful!')}
+              </Text>
+            ) : (
+              <Text size="xs" c="chatbox-error">
+                {t('API key invalid!')}
+              </Text>
+            )
+          ) : null}
+          <Button
+            variant="transparent"
+            size="compact-xs"
+            px={0}
+            className="self-start"
+            onClick={() => platform.openLink('https://contextfetch.dev')}
           >
             {t('Get API Key')}
           </Button>

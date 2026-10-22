@@ -4,20 +4,31 @@ import type { SearchResult } from '@shared/types'
 import { ofetch } from 'ofetch'
 import WebSearch, { type ParseLinkResult } from './base'
 
+export const TAVILY_API_HOST = 'https://api.tavily.com'
+// ContextFetch serves the Tavily search/extract API shapes under /tavily.
+export const CONTEXTFETCH_API_HOST = 'https://api.contextfetch.dev/tavily'
+
 export class TavilySearch extends WebSearch {
   private apiKey: string
+  private apiHost: string
 
   override supportsParseLink = true
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, apiHost: string = TAVILY_API_HOST) {
     super()
     this.apiKey = apiKey
+    this.apiHost = apiHost
   }
 
   async search(query: string, signal?: AbortSignal): Promise<SearchResult> {
     try {
       // Shared implementation, also used by the native mobile shell.
-      const items = await searchNativeWeb(query, { provider: 'tavily', apiKey: this.apiKey, signal })
+      const items = await searchNativeWeb(query, {
+        provider: 'tavily',
+        apiKey: this.apiKey,
+        apiHost: this.apiHost,
+        signal,
+      })
       return { items }
     } catch (error) {
       console.error('Tavily search error:', error)
@@ -26,7 +37,7 @@ export class TavilySearch extends WebSearch {
   }
 
   async parseLink(url: string, signal?: AbortSignal): Promise<ParseLinkResult> {
-    const response = await ofetch('https://api.tavily.com/extract', {
+    const response = await ofetch(`${this.apiHost}/extract`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

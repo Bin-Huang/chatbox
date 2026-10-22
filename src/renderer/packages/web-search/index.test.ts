@@ -26,13 +26,18 @@ vi.mock('./bing-news', () => {
   }
 })
 
-vi.mock('./tavily', () => {
+vi.mock('./tavily', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./tavily')>()
   return {
+    ...actual,
     TavilySearch: class {
-      constructor(private readonly apiKey: string) {}
+      constructor(
+        private readonly apiKey: string,
+        private readonly apiHost: string = actual.TAVILY_API_HOST
+      ) {}
       search = vi.fn().mockImplementation(async () => {
         if (this.apiKey === 'failing-key') throw new Error('Tavily unavailable')
-        return { items: [{ title: 'Tavily Result', snippet: 'test', link: 'https://example.com' }] }
+        return { items: [{ title: `Tavily Result ${this.apiHost}`, snippet: 'test', link: 'https://example.com' }] }
       })
     },
   }
@@ -88,7 +93,7 @@ describe('webSearchExecutor', () => {
 
     const tavilyResult = await webSearchExecutor({ query: 'test query' }, {})
     expect(tavilyResult.searchResults).toHaveLength(1)
-    expect(tavilyResult.searchResults[0].title).toBe('Tavily Result')
+    expect(tavilyResult.searchResults[0].title).toBe('Tavily Result https://api.tavily.com')
   })
 
   it('returns cached results for same provider and query', async () => {
@@ -152,6 +157,25 @@ describe('webSearchExecutor', () => {
 
     await expect(webSearchExecutor({ query: 'missing url' }, {})).rejects.toMatchObject({
       code: 20036,
+    })
+  })
+
+  it('routes the ContextFetch provider through the Tavily client at the ContextFetch host', async () => {
+    mockGetExtensionSettings.mockReturnValue({
+      webSearch: { provider: 'contextfetch', contextfetchApiKey: 'cf-key' },
+    } as ReturnType<typeof getExtensionSettings>)
+
+    const result = await webSearchExecutor({ query: 'contextfetch query' }, {})
+    expect(result.searchResults[0].title).toBe('Tavily Result https://api.contextfetch.dev/tavily')
+  })
+
+  it('requires an API key for the ContextFetch provider', async () => {
+    mockGetExtensionSettings.mockReturnValue({
+      webSearch: { provider: 'contextfetch', contextfetchApiKey: '' },
+    } as ReturnType<typeof getExtensionSettings>)
+
+    await expect(webSearchExecutor({ query: 'contextfetch missing key' }, {})).rejects.toMatchObject({
+      code: 20047,
     })
   })
 

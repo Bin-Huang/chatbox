@@ -255,6 +255,7 @@ const AgentModePanel = forwardRef<AgentModePanelHandle, AgentModePanelProps>(fun
   const setSettings = useSettingsStore((s) => s.setSettings)
   const licenseKey = useSettingsStore((s) => s.licenseKey)
   const tavilyApiKey = useSettingsStore((s) => s.extension.webSearch.tavilyApiKey)
+  const contextfetchApiKey = useSettingsStore((s) => s.extension.webSearch.contextfetchApiKey)
   const bochaApiKey = useSettingsStore((s) => s.extension.webSearch.bochaApiKey)
   const queritApiKey = useSettingsStore((s) => s.extension.webSearch.queritApiKey)
   const searxngBaseUrl = useSettingsStore((s) => s.extension.webSearch.searxngBaseUrl)
@@ -265,6 +266,7 @@ const AgentModePanel = forwardRef<AgentModePanelHandle, AgentModePanelProps>(fun
         {
           provider: webSearchProvider,
           tavilyApiKey,
+          contextfetchApiKey,
           bochaApiKey,
           queritApiKey,
           searxngBaseUrl,
@@ -323,12 +325,12 @@ const AgentModePanel = forwardRef<AgentModePanelHandle, AgentModePanelProps>(fun
     (provider: WebSearchProviderValue) => {
       return (
         getWebSearchConfigurationIssue(
-          { provider, tavilyApiKey, bochaApiKey, queritApiKey, searxngBaseUrl },
+          { provider, tavilyApiKey, contextfetchApiKey, bochaApiKey, queritApiKey, searxngBaseUrl },
           licenseKey
         ) === null
       )
     },
-    [bochaApiKey, licenseKey, queritApiKey, searxngBaseUrl, tavilyApiKey]
+    [bochaApiKey, contextfetchApiKey, licenseKey, queritApiKey, searxngBaseUrl, tavilyApiKey]
   )
 
   // MCP state

@@ -11,7 +11,7 @@ import { BochaSearch } from './bocha'
 import { ChatboxSearch } from './chatbox-search'
 import { QueritSearch } from './querit'
 import { normalizeSearxngBaseUrl, SearxngSearch } from './searxng'
-import { TavilySearch } from './tavily'
+import { CONTEXTFETCH_API_HOST, TavilySearch } from './tavily'
 
 const MAX_CONTEXT_ITEMS = 10
 
@@ -45,6 +45,12 @@ function getSearchProviders() {
         throw ChatboxAIAPIError.fromCodeName('tavily_api_key_required', 'tavily_api_key_required')
       }
       selectedProviders.push(new TavilySearch(settings.webSearch.tavilyApiKey))
+      break
+    case 'contextfetch':
+      if (!settings.webSearch.contextfetchApiKey) {
+        throw ChatboxAIAPIError.fromCodeName('contextfetch_api_key_required', 'contextfetch_api_key_required')
+      }
+      selectedProviders.push(new TavilySearch(settings.webSearch.contextfetchApiKey, CONTEXTFETCH_API_HOST))
       break
     case 'bocha':
       if (!settings.webSearch.bochaApiKey) {
@@ -149,7 +155,7 @@ export const webSearchExecutor = async (
  * Single source of truth: which configured providers offer the parse_link tool.
  * Keep in sync with the provider classes' `supportsParseLink` flags.
  */
-export const PROVIDERS_WITH_PARSE_LINK: ReadonlySet<string> = new Set(['build-in', 'tavily'])
+export const PROVIDERS_WITH_PARSE_LINK: ReadonlySet<string> = new Set(['build-in', 'tavily', 'contextfetch'])
 
 /**
  * Returns the first configured search provider that supports parseLink.
