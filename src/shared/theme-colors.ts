@@ -37,6 +37,24 @@ export const INTERFACE_COLOR_PRESETS = [
     colors: DEFAULT_INTERFACE_COLORS,
   },
   {
+    id: 'codex-neutral',
+    label: 'Codex Neutral',
+    colors: {
+      light: {
+        backgroundPrimary: '#ffffff',
+        backgroundSecondary: '#f5f5f5',
+        backgroundTertiary: '#e9e9e9',
+        brand: '#353535',
+      },
+      dark: {
+        backgroundPrimary: '#181818',
+        backgroundSecondary: '#242424',
+        backgroundTertiary: '#303030',
+        brand: '#b8b8b8',
+      },
+    },
+  },
+  {
     id: 'claude-classic',
     label: 'Claude Classic',
     colors: {

@@ -1903,6 +1903,7 @@ const InputBox = forwardRef<InputBoxRef, InputBoxProps>(
                   model={reasoningModelInfo}
                   providerOptions={effectiveProviderOptions}
                   iconSize={toolbarIconSize}
+                  compact={isSmallScreen}
                   onChange={(level) => void handleReasoningLevelChange(level)}
                 />
 
